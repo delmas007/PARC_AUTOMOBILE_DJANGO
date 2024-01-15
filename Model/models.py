@@ -31,7 +31,6 @@ class Conducteur(models.Model):
 
 class Entretien(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL,null=True)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL,null=True)
     date_entretien = models.DateField()
     type_entretien = models.CharField(max_length=100)
     cout_entretien = models.DecimalField(max_digits=10, decimal_places=2)
