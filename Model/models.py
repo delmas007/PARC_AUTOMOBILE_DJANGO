@@ -19,7 +19,7 @@ class Vehicule(models.Model):
 class Conducteur(models.Model):
     nom = models.CharField(max_length=50)
     prenom = models.CharField(max_length=50)
-    ate_de_naissance = models.DateField()
+    date_de_naissance = models.DateField()
     numero_permis_conduire = models.CharField(max_length=20, unique=True)
     date_embauche = models.DateField()
     numero_telephone = models.CharField(max_length=15)
