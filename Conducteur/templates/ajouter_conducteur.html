@@ -23,43 +23,82 @@
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
                            <h4 class="card-title">Ajout d'un nouveau conducteur</h4>
+                            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true" style="top:0; bottom: 0">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="successModalLabel">Conducteur ajouter avec succes</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{ message }}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary align-items-center" data-dismiss="modal">Fermer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                      </div>
                      <div class="iq-card-body">
                         <div class="new-user-info">
                            <form method="post">
                                {% csrf_token %}
-                              <div class="row">
-                                 <div class="form-group col-md-6">
-                                    <label for="nom">Nom</label>
-                                    <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom">
-                                 </div>
-                                 <div class="form-group col-md-6">
-                                    <label for="prenom">Prenom</label>
-                                    <input type="text" class="form-control" id="prenom" placeholder="Prenom" name="prenom">
-                                 </div>
-                                 <div class="form-group col-md-6">
-                                    <label for="adresse">Adresse</label>
-                                    <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="adresse">
-                                 </div>
-                                 <div class="form-group col-md-6">
-                                    <label for="numero_telephone">Numero de telephone:</label>
-                                    <input type="number" class="form-control" id="numero_telephone" placeholder="Numero de telephone" name="numero_telephone">
-                                 </div>
-                                  <div class="form-group col-md-6">
-                                      <label for="date_de_naissance">Date de naissance:</label>
-                                      <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance">
-                                  </div>
-                                 <div class="form-group col-md-6">
-                                    <label for="date_de_naissance">Date d'embauche:</label>
-                                    <input type="date" class="form-control" id="date_de_naissance" placeholder="date d'embauche" name="date_embauche">
-                                 </div>
-                                 <div class="form-group col-md-6">
-                                    <label for="numero_permis_conduire">Numero du permis de conduire:</label>
-                                    <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire">
-                                 </div>
-                              </div>
-                              <button type="submit" class="btn btn-primary">Ajouter</button>
+                               <div class="row">
+                                   <div class="form-group col-md-6 {% if form.nom.errors %}has-error{% endif %}">
+                                       <label for="nom">Nom</label>
+                                       <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom">
+                                       {% if form.nom.errors %}
+                                           <p class="help-block">{{ form.nom.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.prenom.errors %}has-error{% endif %}">
+                                       <label for="prenom">Prenom</label>
+                                       <input type="text" class="form-control" id="prenom" placeholder="Prenom" name="prenom">
+                                       {% if form.prenom.errors %}
+                                           <p class="help-block">{{ form.prenom.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.adresse.errors %}has-error{% endif %}">
+                                       <label for="adresse">Adresse</label>
+                                       <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="adresse">
+                                       {% if form.adresse.errors %}
+                                           <p class="help-block">{{ form.adresse.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.numero_telephone.errors %}has-error{% endif %}">
+                                       <label for="numero_telephone">Numero de telephone:</label>
+                                       <input type="number" class="form-control" id="numero_telephone" placeholder="Numero de telephone" name="numero_telephone">
+                                       {% if form.numero_telephone.errors %}
+                                           <p class="help-block">{{ form.numero_telephone.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.date_de_naissance.errors %}has-error{% endif %}">
+                                       <label for="date_de_naissance">Date de naissance:</label>
+                                       <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance">
+                                       {% if form.date_de_naissance.errors %}
+                                           <p class="help-block">{{ form.date_de_naissance.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.date_embauche.errors %}has-error{% endif %}">
+                                       <label for="date_embauche">Date d'embauche:</label>
+                                       <input type="date" class="form-control" id="date_embauche" placeholder="date d'embauche" name="date_embauche">
+                                       {% if form.date_embauche.errors %}
+                                           <p class="help-block">{{ form.date_embauche.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.numero_permis_conduire.errors %}has-error{% endif %}">
+                                       <label for="numero_permis_conduire">Numero du permis de conduire:</label>
+                                       <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire">
+                                       {% if form.numero_permis_conduire.errors %}
+                                           <p class="help-block">{{ form.numero_permis_conduire.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                               </div>
+                               <button type="submit" class="btn btn-primary">Ajouter</button>
                            </form>
                         </div>
                      </div>
@@ -70,5 +109,16 @@
    </div>
    </div>
       {% include 'footer.html' %}
+      <script>
+          {% if messages %}
+              document.addEventListener('DOMContentLoaded', function() {
+                  var successMessage = "{% for message in messages %}{{ message }}{% endfor %}";
+                  if (successMessage.trim() !== "") {
+                      // Utilisez Bootstrap modal pour afficher le message
+                      $('#successModal').modal('show');
+                  }
+              });
+          {% endif %}
+      </script>
    </body>
 {% endblock %}

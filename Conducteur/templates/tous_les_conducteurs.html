@@ -59,6 +59,7 @@
                                         <th>Adresse</th>
                                         <th>Date de naissance</th>
                                         <th>Date d'embauche</th>
+                                        <th>Numero du permis </th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -74,11 +75,12 @@
                                         <td>{{ conducteur.adresse}}</td>
                                         <td>{{ conducteur.date_de_naissance}}</td>
                                         <td>{{ conducteur.date_embauche}}</td>
+                                        <td>{{ conducteur.numero_permis_conduire}}</td>
                                         <td><span class="badge dark-icon-light iq-bg-primary">Active</span></td>
                                         <td>
                                             <div class="flex align-items-center list-user-action">
                                                 <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add" href="#"><i class="ri-user-add-line"></i></a>
-                                                <a class="iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="#"><i class="ri-pencil-line"></i></a>
+                                                <a class="iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
                                                 <a class="iq-bg-danger" data-toggle="tooltip" data-placement="top" title="Delete" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
                                             </div>
                                         </td>

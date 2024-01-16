@@ -9,3 +9,10 @@ class ConducteurForm(forms.ModelForm):
     class Meta:
         model = Conducteur
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(ConducteurForm, self).__init__(*args, **kwargs)
+        self.fields['nom'].required = True
+        self.fields['prenom'].required = True
+        self.fields['numero_telephone'].required = True
+        self.fields['numero_permis_conduire'].required = True
