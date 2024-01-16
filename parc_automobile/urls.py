@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from parc_automobile.views import Accueil
+
 urlpatterns = [
+    path('', Accueil, name='Accueil'),
     path('admin/', admin.site.urls),
 ]
