@@ -1,3 +1,4 @@
+{% load static %}
 <div class="iq-sidebar">
     <div class="iq-sidebar-logo d-flex justify-content-between">
         <a href="index.html">
@@ -23,18 +24,21 @@
             </div>
         </div>
     </div>
+
+            {% url 'vehicule:Ajouter_vehicule' as vehicule_Ajouter_vehicule_url %}
+
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
             <ul id="iq-sidebar-toggle" class="iq-menu">
                 <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Home</span></li>
-                <li class="active">
+                <li >
                     <a href="index.html" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></a>
                 </li>
                 <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Apps</span></li>
 
                 <li><a href="todo.html" class="iq-waves-effect" aria-expanded="false"><i class="ri-chat-check-line"></i><span>Todo</span></a></li>
-                <li>
-                    <a href="#userinfo" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>User</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                <li class="{% if request.path == vehicule_Ajouter_vehicule_url %}active{% endif %}">
+                    <a href="#userinfo" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Vehicule</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="userinfo" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li><a href="profile.html"><i class="ri-profile-line"></i>User Profile</a></li>
                         <li><a href="profile-edit.html"><i class="ri-file-edit-line"></i>User Edit</a></li>
@@ -42,9 +46,9 @@
                         <li><a href="user-list.html"><i class="ri-file-list-line"></i>User List</a></li>
                     </ul>
                 </li>
-                <li>
-                    <a href="#userinfo" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>User</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
-                    <ul id="userinfo" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                <li >
+                    <a href="#vehicule" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>User</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="vehicule" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li><a href="profile.html"><i class="ri-profile-line"></i>User Profile</a></li>
                         <li><a href="profile-edit.html"><i class="ri-file-edit-line"></i>User Edit</a></li>
                         <li><a href="add-user.html"><i class="ri-user-add-line"></i>User Add</a></li>
