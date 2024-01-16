@@ -67,33 +67,11 @@
                                          <td>{{ vehicule.annee_fabrication }}</td>
                                         <td>
                                            <div class="flex align-items-center list-user-action">
-                                               <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" href="#" data-vehicule-id="{{ vehicule.pk }}" data-toggle="modal" data-target="#deleteConfirmationModal">
-                                                   <i class="ri-delete-bin-line"></i>
-                                               </a>
-                                               <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" href="{% url 'vehicule:supprimer_vehicule' pk=vehicule.pk %}"><i class="ri-delete-bin-line"></i></a>
+                                               <a class="iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="{% url 'vehicule:modifier_vehicule' pk=vehicule.pk %}"><i class="ri-pencil-line"></i></a>
+                                               <a class="iq-bg-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" data-vehicle-id="{{ vehicule.pk }}" href="#" onclick="confirmDelete(this)"><i class="ri-delete-bin-line"></i></a>
                                            </div>
                                         </td>
                                      </tr>
-{#                                     <tr>#}
-{#                                        <td>Brock Lee</td>#}
-{#                                        <td>+62 5689 458 658</td>#}
-{#                                        <td>brocklee@gmail.com</td>#}
-{#                                        <td>Indonesia</td>#}
-{#                                        <td><span class="badge  dark-icon-light iq-bg-primary">Active</span></td>#}
-{#                                        <td>Soylent Corp</td>#}
-{#                                        <td>2019/12/01</td>#}
-{#                                        <td>#}
-{#                                           <div class="flex align-items-center list-user-action">#}
-{#                                               <a href="">#}
-{#                                                   <button class="btn btn-primary btn-sm">#}
-{#                                                       <i class="fa fa-edit"></i> Modifier#}
-{#                                                   </button>#}
-{#                                               </a>#}
-{#                                              <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="{% url 'vehicule:modifier_vehicule' pk=vehicule.pk %}"><i class="ri-pencil-line"></i></a>#}
-{#                                              <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" href="{% url 'vehicule:supprimer_vehicule' pk=vehicule.pk %}"><i class="ri-delete-bin-line"></i></a>#}
-{#                                           </div>#}
-{#                                        </td>#}
-{#                                     </tr>#}
                                 {% endfor %}
                              {% endif %}
                              </tbody>
@@ -126,13 +104,16 @@
       </div>
    </div>
    </div>
+   <!-- Wrapper END -->
+    <!-- Footer -->
+      {% include 'footer.html' %}
 
-      <!-- Modal de confirmation de suppression -->
-      <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
+      <!-- Modal de confirmation -->
+      <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmer la suppression</h5>
+                      <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de la suppression</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>
@@ -142,29 +123,34 @@
                   </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                      <a id="deleteConfirmationButton" href="#" class="btn btn-danger">Supprimer</a>
+                      <button type="button" class="btn btn-danger" onclick="executeDelete()">Confirmer</button>
                   </div>
               </div>
           </div>
       </div>
 
       <script>
-          $(document).ready(function () {
-              // Récupérer l'ID du véhicule lorsqu'un lien de suppression est cliqué
-              $('[data-toggle="modal"]').click(function () {
-                  var vehiculeId = $(this).data('vehicule-id');
-                  $('#deleteConfirmationButton').attr('href', '{% url 'vehicule:supprimer_vehicule' pk='' %}' + vehiculeId + '/');
-              });
+          // Fonction pour afficher le modal de confirmation
+          function confirmDelete(linkElement) {
+              var vehicleId = linkElement.getAttribute('data-vehicle-id');
+              // Afficher le modal
+              $('#confirmDeleteModal').modal('show');
 
-              // Rafraîchir la page après la suppression
-              $('#deleteConfirmationButton').on('click', function () {
-                  $('#deleteConfirmationModal').modal('hide');
-                  location.reload();
-              });
-          });
+              // Enregistrer l'ID du véhicule dans un champ caché du modal
+              $('#confirmDeleteModal').data('vehicle-id', vehicleId);
+          }
+
+          // Fonction pour exécuter la suppression
+          function executeDelete() {
+              // Récupérer l'ID du véhicule depuis le champ caché du modal
+              var vehicleId = $('#confirmDeleteModal').data('vehicle-id');
+
+              // Rediriger vers l'URL de suppression avec l'ID du véhicule
+              window.location.href = "{% url 'vehicule:supprimer_vehicule' 0 %}".replace(0, vehicleId);
+
+              // Fermer le modal
+              $('#confirmDeleteModal').modal('hide');
+          }
       </script>
-   <!-- Wrapper END -->
-    <!-- Footer -->
-      {% include 'footer.html' %}
 </body>
 {% endblock %}

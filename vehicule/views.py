@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 
 from Model.models import Vehicule
-from vehicule.forms import VehiculeForm
+from vehicule.forms import VehiculeForm, VehiculeForme
 
 
 # Create your views here.
@@ -35,13 +35,16 @@ def supprimer_vehicule(request, pk):
 
 
 def modifier_vehicule(request, pk):
+    context = {}
     vehicule = get_object_or_404(Vehicule, pk=pk)
     if request.method == 'POST':
-        form = VehiculeForm(request.POST, instance=vehicule)
+        form = VehiculeForme(request.POST, instance=vehicule)
         if form.is_valid():
             form.save()
-            return redirect('liste_vehicules')
-    else:
-        form = VehiculeForm(instance=vehicule)
+            messages.success(request, 'Modifier avec succès !')
+        else:
+            context['errors'] = form.errors
 
-    return render(request, 'afficher_vehicule.html', {'form': form})
+    form = VehiculeForme(instance=vehicule)
+    context['form'] = form
+    return render(request, 'modifier_vehicule.html', context)
