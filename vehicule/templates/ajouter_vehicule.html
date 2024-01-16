@@ -23,11 +23,10 @@
                      <div class="iq-card">
                         <div class="iq-card-header d-flex justify-content-between">
                            <div class="iq-header-title">
-                              <h4 class="card-title">Horizontal Form</h4>
+                              <h4 class="card-title">Formulaire d'ajout de vehicule</h4>
                            </div>
                         </div>
                         <div class="iq-card-body">
-                           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate, ex ac venenatis mollis, diam nibh finibus leo</p>
                            <form class="form-horizontal" method="post" action="{% url 'vehicule:Ajouter_vehicule' %}">
                                {% csrf_token %}
                                <div class="form-group row">
@@ -78,13 +77,9 @@
                                        {{ form.kilometrage }}
                                    </div>
                                </div>
-                                  <div class="form-group">
-                                      <button type="submit" class="btn btn-primary">
-                                      Créer
-                                  </button>
+                               <div class="form-group">
 
                                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                    <button type="submit" class="btn iq-bg-danger">Annuler</button>
                               </div>
                                {% if form.errors %}
                                    {% for field, errors in form.errors.items %}
