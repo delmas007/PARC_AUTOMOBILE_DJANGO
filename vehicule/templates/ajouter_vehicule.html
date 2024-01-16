@@ -28,41 +28,85 @@
                         </div>
                         <div class="iq-card-body">
                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate, ex ac venenatis mollis, diam nibh finibus leo</p>
-                           <form class="form-horizontal" action="/action_page.php">
-                              <div class="form-group row">
-                                 <label class="control-label col-sm-2 align-self-center mb-0" for="email">Email:</label>
-                                 <div class="col-sm-10">
-                                    <input type="email" class="form-control" id="email" placeholder="Enter Your  email">
-                                 </div>
-                              </div>
+                           <form class="form-horizontal" method="post" action="{% url 'vehicule:Ajouter_vehicule' %}">
+                               {% csrf_token %}
                                <div class="form-group row">
                                    <label class="control-label col-sm-2 align-self-center mb-0" for="email">Marque:</label>
                                    <div class="col-sm-10">
-                                       <input type="text" class="form-control" id="marque" placeholder="Enter Your  email">
+                                       {{ form.marque }}
                                    </div>
                                </div>
                                <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Model:</label>
+                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Modele:</label>
                                    <div class="col-sm-10">
-                                       <input type="text" class="form-control" id="model" placeholder="Enter Your  email">
+                                       {{ form.modele }}
                                    </div>
                                </div>
                                <div class="form-group row">
                                    <label class="control-label col-sm-2 align-self-center mb-0" for="email">Couleur:</label>
                                    <div class="col-sm-10">
-                                       <input type="text" class="form-control" id="couleur" placeholder="Enter Your  email">
+                                       {{ form.couleur }}
                                    </div>
                                </div>
                                <div class="form-group row">
                                    <label class="control-label col-sm-2 align-self-center mb-0" for="email">Numero d'immatriculation:</label>
                                    <div class="col-sm-10">
-                                       <input type="text" class="form-control" id="numero" placeholder="Enter Your  email">
+                                       {{ form.numero_immatriculation }}
                                    </div>
                                </div>
-                              <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                    <button type="submit" class="btn iq-bg-danger">cancle</button>
+                               <div class="form-group row">
+                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Date mise en service:</label>
+                                   <div class="col-sm-10">
+                                       {{ form.date_mise_en_service }}
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Annee fabrication:</label>
+                                   <div class="col-sm-10">
+                                       {{ form.annee_fabrication }}
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">type carburant:</label>
+                                   <div class="col-sm-10">
+                                       {{ form.type_carburant }}
+                                   </div>
+                               </div>
+                               <div class="form-group row">
+                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">kilometrage:</label>
+                                   <div class="col-sm-10">
+                                       {{ form.kilometrage }}
+                                   </div>
+                               </div>
+                                  <div class="form-group">
+                                      <button type="submit" class="btn btn-primary">
+                                      Créer
+                                  </button>
+
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    <button type="submit" class="btn iq-bg-danger">Annuler</button>
                               </div>
+                               {% if form.errors %}
+                                   {% for field, errors in form.errors.items %}
+                                       {% for error in errors %}
+                                           <div class="alert alert-dark mt-4" role="alert">
+                                               <strong>Erreur :</strong> {{ error }}
+                                           </div>
+                                       {% endfor %}
+                                   {% endfor %}
+                               {% endif %}
+                               {% if messages %}
+                                   <ul class="messages" style="list-style: none;padding: 0;">
+                                       {% for messages in messages %}
+                                           <li{% if messages.tags %} class="{{ messages.tags }}"{% endif %} id="message-alert" style=" margin: 10px 0; padding: 10px; border-radius: 5px;">{{ messages }}</li>
+                                       {% endfor %}
+                                       <script>
+                                           setTimeout(function() {
+                                               document.getElementById('message-alert').style.display = 'none';
+                                           }, 5000);
+                                       </script>
+                                   </ul>
+                               {% endif %}
                            </form>
                         </div>
                      </div>
