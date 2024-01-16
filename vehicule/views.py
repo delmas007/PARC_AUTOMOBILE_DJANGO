@@ -80,13 +80,3 @@ def vehicule_pdf(request, pk):
     return response
 
 
-def vehicules_pdf(request):
-    vehicules = Vehicule.objects.all()
-    numero_filter = request.GET.get('numero', None)
-    modele_filter = request.GET.get('modele', None)
-
-    if numero_filter:
-        vehicules = vehicules.filter(numero_immatriculation=numero_filter)
-    if modele_filter:
-        vehicules = vehicules.filter(modele=modele_filter)
-    return render(request, 'exporter_vehicule.html', {'vehicules': vehicules})
