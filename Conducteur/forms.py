@@ -16,3 +16,11 @@ class ConducteurForm(forms.ModelForm):
         self.fields['prenom'].required = True
         self.fields['numero_telephone'].required = True
         self.fields['numero_permis_conduire'].required = True
+
+
+class ConducteurSearchForm(forms.Form):
+    q = forms.CharField(
+        label='',
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Rechercher un conducteur: Nom, Prenom, Numero...', 'class': 'form-control'}),
+    )

@@ -1,7 +1,11 @@
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 from Model.models import Conducteur
-from .forms import ConducteurForm
+from .forms import ConducteurForm, ConducteurSearchForm
 
 
 def ajouter_conducteur(request):
@@ -42,3 +46,32 @@ def modifier_conducteur(request, conducteur_id):
         })
 
     return render(request, 'modifier_conducteur.html', {'form': form, 'conducteur': conducteur})
+
+
+def conducteur_search(request):
+    form = ConducteurSearchForm(request.GET)
+    conducteurs = Conducteur.objects.all()
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            conducteurs = conducteurs.filter(
+                nom__icontains=query) | conducteurs.filter(
+                prenom__icontains=query) | conducteurs.filter(
+                numero_telephone__icontains=query)
+
+    return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'search_form': form})
+
+
+def telecharger_pdf(request, conducteur_id):
+    info = get_object_or_404(Conducteur, id=conducteur_id)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="facture_rendez_vous_.pdf"'
+    template_path = 'info_conducteur.html'
+    template = get_template(template_path)
+    html = template.render({'infos': info})
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Erreur lors de la génération du PDF', status=500)
+
+    return response

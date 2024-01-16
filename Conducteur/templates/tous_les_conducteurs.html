@@ -28,9 +28,9 @@
                                 <div class="row justify-content-between">
                                     <div class="col-sm-12 col-md-6">
                                         <div id="user_list_datatable_info" class="dataTables_filter">
-                                            <form class="mr-3 position-relative">
-                                                <div class="form-group mb-0">
-                                                    <input type="search" class="form-control" id="exampleInputSearch" placeholder="Search" aria-controls="user-list-table">
+                                            <form class="mr-3 position-relative" method="get" action="{% url 'conducteur:conducteur_search' %}">
+                                                    {{ search_form.as_p }}
+                                                    <button type="submit" class="btn btn-primary">Rechercher</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -78,10 +78,13 @@
                                         <td>{{ conducteur.numero_permis_conduire}}</td>
                                         <td><span class="badge dark-icon-light iq-bg-primary">Active</span></td>
                                         <td>
+
                                             <div class="flex align-items-center list-user-action">
-                                                <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add" href="#"><i class="ri-user-add-line"></i></a>
-                                                <a class="iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
-                                                <a class="iq-bg-danger" data-toggle="tooltip" data-placement="top" title="Delete" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
+                                                <a class="iq-bg-primary download-info" data-toggle="tooltip" data-placement="top" title="Télécharger ses informations" data-conducteur-id="{{ conducteur.id }}" href="#">
+                                                    <i class="ri-download-2-fill"></i>
+                                                </a>
+                                                <a class="iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
+                                                <a class="iq-bg-danger" data-toggle="tooltip" data-placement="top" title="Supprimer" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
                                             </div>
                                         </td>
                                     </tr>
@@ -148,6 +151,31 @@
             </div>
         </div>
     </div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Telecharger les informations du conduteur </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="telechargerButton"><i class="ri-download-2-fill"></i> Télécharger</button>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
     {% include 'footer.html' %}
 <script>
@@ -161,6 +189,21 @@
         window.location.href = "{% url 'conducteur:supprimer_conducteur' 0 %}".replace('0', conducteurId);
     }
 </script>
+<!-- ... -->
+<script>
+    $(document).ready(function () {
+        $('.download-info').on('click', function (e) {
+            e.preventDefault();
+            var conducteurId = $(this).data('conducteur-id');
+            window.location.href = "/conducteur/conducteur/" + conducteurId + "/";
+        });
+
+        $('#telechargerButton').on('click', function () {
+        });
+    });
+</script>
+<!-- ... -->
+
 
 </body>
 {% endblock %}
