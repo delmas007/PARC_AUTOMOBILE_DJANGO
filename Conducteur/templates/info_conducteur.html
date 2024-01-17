@@ -61,41 +61,34 @@
         <tbody>
         <tr>
             <td><strong>Nom:</strong></td>
-            <td>John</td>
+            <td>{{ conducteur.nom }}</td>
         </tr>
         <tr>
             <td><strong>Prénom:</strong></td>
-            <td>Doe</td>
+            <td>{{ conducteur.prenom }}</td>
         </tr>
         <tr>
             <td><strong>Numéro de téléphone:</strong></td>
-            <td>+123456789</td>
+            <td>+{{ conducteur.numero_telephone }}</td>
         </tr>
         <tr>
             <td><strong>Adresse:</strong></td>
-            <td>123 Main Street, City</td>
+            <td>{{ conducteur.adresse }}</td>
         </tr>
         <tr>
             <td><strong>Date de naissance:</strong></td>
-            <td>01/01/1990</td>
+            <td>{{ conducteur.date_de_naissance }}</td>
         </tr>
         <tr>
             <td><strong>Date d'embauche:</strong></td>
-            <td>15/05/2022</td>
+            <td>{{ conducteur.date_embauche }}</td>
         </tr>
         <tr>
             <td><strong>Numéro de permis de conduire:</strong></td>
-            <td>ABC123</td>
-        </tr>
-        <tr>
-            <td><strong>Statut:</strong></td>
-            <td><span class="badge-success">Actif</span></td>
+            <td>{{ conducteur.numero_permis_conduire }}</td>
         </tr>
         </tbody>
     </table>
-
-    <!-- Ajoutez plus de tables pour chaque conducteur -->
-
 </div>
 
 </body>

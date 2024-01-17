@@ -1,6 +1,7 @@
 from django.urls import path
 
-from vehicule.views import Ajouter_vehicule, liste_vehicules, supprimer_vehicule, modifier_vehicule,vehicule_pdf
+from vehicule.views import Ajouter_vehicule, liste_vehicules, supprimer_vehicule, modifier_vehicule,  \
+    vehicule_pdf
 
 app_name = 'vehicule'
 
