@@ -67,10 +67,10 @@ def conducteur_pdf(request, pk):
     conducteur = get_object_or_404(Conducteur, pk=pk)
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="facture_rendez_vous_{conducteur.pk}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="Conducteur_{conducteur.pk}.pdf"'
 
     template = get_template('info_conducteur.html')
-    html = template.render({'rendez_vous': conducteur})
+    html = template.render({'conducteur': conducteur})
     pisa_status = pisa.CreatePDF(html, dest=response)
 
     if pisa_status.err:
