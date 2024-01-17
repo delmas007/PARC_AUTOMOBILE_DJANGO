@@ -64,6 +64,7 @@ def modifier_vehicule(request, pk):
             form.save()
             messages.success(request, 'Modifier avec succès !')
         else:
+
             context['errors'] = form.errors
 
     form = VehiculeForme(instance=vehicule)
