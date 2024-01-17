@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
@@ -56,9 +57,10 @@ def conducteur_search(request):
         query = form.cleaned_data.get('q')
         if query:
             conducteurs = conducteurs.filter(
-                nom__icontains=query) | conducteurs.filter(
-                prenom__icontains=query) | conducteurs.filter(
-                numero_telephone__icontains=query)
+                Q(nom__icontains=query) |
+                Q(prenom__icontains=query) |
+                Q(numero_telephone__icontains=query)
+            )
 
     return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'search_form': form})
 

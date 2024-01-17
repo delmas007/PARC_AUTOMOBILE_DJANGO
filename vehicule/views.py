@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -6,7 +7,7 @@ from django.urls import reverse
 from xhtml2pdf import pisa
 
 from Model.models import Vehicule
-from vehicule.forms import VehiculeForm, VehiculeForme
+from vehicule.forms import VehiculeForm, VehiculeForme, VehiculSearchForm
 
 
 # Create your views here.
@@ -29,14 +30,23 @@ def Ajouter_vehicule(request):
 
 def liste_vehicules(request):
     vehicules = Vehicule.objects.all()
-    numero_filter = request.GET.get('numero', None)
-    modele_filter = request.GET.get('modele', None)
-
-    if numero_filter:
-        vehicules = vehicules.filter(numero_immatriculation=numero_filter)
-    if modele_filter:
-        vehicules = vehicules.filter(modele=modele_filter)
     return render(request, 'afficher_vehicule.html', {'vehicules': vehicules})
+
+
+def vehicul_search(request):
+    form = VehiculSearchForm(request.GET)
+    vehicules = Vehicule.objects.all()
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            vehicules = vehicules.filter(
+                Q(marque__icontains=query) |
+                Q(numero_immatriculation__icontains=query) |
+                Q(modele__icontains=query)
+            )
+
+    return render(request, 'afficher_vehicule.html', {'vehicules': vehicules, 'form': form})
 
 
 def supprimer_vehicule(request, pk):

@@ -1,7 +1,7 @@
 from django.urls import path
 
-from vehicule.views import Ajouter_vehicule, liste_vehicules, supprimer_vehicule, modifier_vehicule,  \
-    vehicule_pdf
+from vehicule.views import Ajouter_vehicule, liste_vehicules, supprimer_vehicule, modifier_vehicule, \
+    vehicule_pdf, vehicul_search
 
 app_name = 'vehicule'
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path('liste_vehicules/', liste_vehicules, name='liste_vehicules'),
     path('supprimer_vehicule/<int:pk>/', supprimer_vehicule, name='supprimer_vehicule'),
     path('modifier_vehicule/<int:pk>/', modifier_vehicule, name='modifier_vehicule'),
+    path('recherche/', vehicul_search, name='vehicul_search'),
 ]

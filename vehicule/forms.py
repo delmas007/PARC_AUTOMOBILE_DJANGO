@@ -80,6 +80,7 @@ class VehiculeForm(forms.ModelForm):
             }),
         }
 
+
 class VehiculeForme(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -142,3 +143,11 @@ class VehiculeForme(forms.ModelForm):
                 'id': 'date',  # Utilisez l'ID généré par Django
             }),
         }
+
+
+class VehiculSearchForm(forms.Form):
+    q = forms.CharField(
+        label='',
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Rechercher un vehicul: Marque, model, matricule...', 'class': 'form-control'}),
+    )
