@@ -63,14 +63,16 @@ def conducteur_search(request):
     return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'search_form': form})
 
 
-def telecharger_pdf(request, conducteur_id):
-    info = get_object_or_404(Conducteur, id=conducteur_id)
+def conducteur_pdf(request, pk):
+    conducteur = get_object_or_404(Conducteur, pk=pk)
+
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="facture_rendez_vous_.pdf"'
-    template_path = 'info_conducteur.html'
-    template = get_template(template_path)
-    html = template.render({'infos': info})
+    response['Content-Disposition'] = f'attachment; filename="facture_rendez_vous_{conducteur.pk}.pdf"'
+
+    template = get_template('info_conducteur.html')
+    html = template.render({'rendez_vous': conducteur})
     pisa_status = pisa.CreatePDF(html, dest=response)
+
     if pisa_status.err:
         return HttpResponse('Erreur lors de la génération du PDF', status=500)
 

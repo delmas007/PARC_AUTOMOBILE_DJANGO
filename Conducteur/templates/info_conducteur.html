@@ -2,9 +2,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations du Conducteur</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+            width: 80%;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #6546d2;
+            color: #fff;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 <body>
+
+<div class="container">
+
+    <table>
+        <thead>
+        <tr>
+            <th colspan="2">Informations du Conducteur</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><strong>Nom:</strong></td>
+            <td>John</td>
+        </tr>
+        <tr>
+            <td><strong>Prénom:</strong></td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td><strong>Numéro de téléphone:</strong></td>
+            <td>+123456789</td>
+        </tr>
+        <tr>
+            <td><strong>Adresse:</strong></td>
+            <td>123 Main Street, City</td>
+        </tr>
+        <tr>
+            <td><strong>Date de naissance:</strong></td>
+            <td>01/01/1990</td>
+        </tr>
+        <tr>
+            <td><strong>Date d'embauche:</strong></td>
+            <td>15/05/2022</td>
+        </tr>
+        <tr>
+            <td><strong>Numéro de permis de conduire:</strong></td>
+            <td>ABC123</td>
+        </tr>
+        <tr>
+            <td><strong>Statut:</strong></td>
+            <td><span class="badge-success">Actif</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Ajoutez plus de tables pour chaque conducteur -->
+
+</div>
 
 </body>
 </html>

@@ -31,21 +31,8 @@
                                             <form class="mr-3 position-relative" method="get" action="{% url 'conducteur:conducteur_search' %}">
                                                     {{ search_form.as_p }}
                                                     <button type="submit" class="btn btn-primary">Rechercher</button>
-                                                </div>
+
                                             </form>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="user-list-files d-flex float-right">
-                                            <a class="iq-bg-primary" href="javascript:void();" >
-                                                Print
-                                            </a>
-                                            <a class="iq-bg-primary" href="javascript:void();">
-                                                Excel
-                                            </a>
-                                            <a class="iq-bg-primary" href="javascript:void();">
-                                                Pdf
-                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -80,9 +67,7 @@
                                         <td>
 
                                             <div class="flex align-items-center list-user-action">
-                                                <a class="iq-bg-primary download-info" data-toggle="tooltip" data-placement="top" title="Télécharger ses informations" data-conducteur-id="{{ conducteur.id }}" href="#">
-                                                    <i class="ri-download-2-fill"></i>
-                                                </a>
+                                                <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Supprimer" data-vehicle-id="{{ conducteur.id  }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>
                                                 <a class="iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
                                                 <a class="iq-bg-danger" data-toggle="tooltip" data-placement="top" title="Supprimer" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
                                             </div>
@@ -145,39 +130,33 @@
                                     </tr>
                                     </thead>
                                 {% endif %}
+                                </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-    Launch demo modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="confirmDeleteModald" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabeld" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Telecharger les informations du conduteur </h5>
+                <h5 class="modal-title" id="confirmDeleteModalLabeld">Confirmation de la suppression</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-
+                Êtes-vous sûr de vouloir supprimer ce véhicule ?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" id="telechargerButton"><i class="ri-download-2-fill"></i> Télécharger</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" onclick="executeDeleted()">Confirmer</button>
             </div>
         </div>
     </div>
 </div>
-</div>
-    {% include 'footer.html' %}
+
 <script>
     function confirmDelete(conducteurId) {
         // Afficher le modal de confirmation
@@ -200,10 +179,32 @@
 
         $('#telechargerButton').on('click', function () {
         });
-    });
+    }
+    );
+    function confirmDeleted(linkElement) {
+        var vehicleId = linkElement.getAttribute('data-vehicle-id');
+        // Afficher le modal
+        $('#confirmDeleteModald').modal('show');
+
+        // Enregistrer l'ID du véhicule dans un champ caché du modal
+        $('#confirmDeleteModald').data('vehicle-id', vehicleId);
+    }
+
+    // Fonction pour exécuter la suppression
+    function executeDeleted() {
+        // Récupérer l'ID du véhicule depuis le champ caché du modal
+        var vehicleId = $('#confirmDeleteModald').data('vehicle-id');
+
+        // Rediriger vers l'URL de suppression avec l'ID du véhicule
+        window.location.href = "{% url 'conducteur:conducteur_pdf' 0 %}".replace(0, vehicleId);
+
+        // Fermer le modal
+        $('#confirmDeleteModal').modal('hide');
+    }
 </script>
 <!-- ... -->
 
-
+</div>
+{% include 'footer.html' %}
 </body>
 {% endblock %}

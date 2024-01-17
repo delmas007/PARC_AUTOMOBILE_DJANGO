@@ -61,7 +61,6 @@ def modifier_vehicule(request, pk):
     return render(request, 'modifier_vehicule.html', context)
 
 
-
 def vehicule_pdf(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
 
@@ -78,5 +77,3 @@ def vehicule_pdf(request, pk):
         return HttpResponse('Erreur lors de la génération du PDF', status=500)
 
     return response
-
-
