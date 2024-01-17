@@ -67,8 +67,8 @@ def vehicule_pdf(request, pk):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="facture_rendez_vous_{vehicule.pk}.pdf"'
 
-    template = get_template('facture_template.html')
-    html = template.render({'rendez_vous': vehicule})
+    template = get_template('info_vehicule.html')
+    html = template.render({'vehicule': vehicule})
 
     # Create a PDF file
     pisa_status = pisa.CreatePDF(html, dest=response)
