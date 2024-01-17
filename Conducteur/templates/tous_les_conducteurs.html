@@ -2,6 +2,16 @@
 {% load static %}
 {% block content%}
 <body>
+<style>
+    .zoom-on-hover {
+        transition: transform 0.3s ease-in-out; /* Ajoute une transition douce pour l'effet de zoom */
+    }
+
+    .zoom-on-hover:hover {
+        transform: scale(2); /* Applique le zoom au survol */
+    }
+
+</style>
 <!-- loader Start -->
 <div id="loading">
     <div id="loading-center">
@@ -40,9 +50,9 @@
                                     </div>
                                 </div>
                                 {% if conducteurs %}
-                                <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
-                                    <thead>
-                                    <tr>
+                                <table id="user-list-table" class=" table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info" >
+                                    <thead >
+                                    <tr style="background-color: #8861d2">
                                         <th>Nom</th>
                                         <th>Prenom </th>
                                         <th>Numero</th>
@@ -70,9 +80,10 @@
                                         <td>
 
                                             <div class="flex align-items-center list-user-action">
-                                                <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Supprimer" data-vehicle-id="{{ conducteur.id  }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>
-                                                <a class="iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
-                                                <a class="iq-bg-danger" data-toggle="tooltip" data-placement="top" title="Supprimer" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
+                                                <a class="iq-bg-primary zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Supprimer" data-vehicle-id="{{ conducteur.id }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>
+                                                <a class="iq-bg-success zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
+                                                <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
+
                                             </div>
                                         </td>
                                     </tr>

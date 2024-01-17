@@ -27,6 +27,8 @@
 
             {% url 'vehicule:Ajouter_vehicule' as vehicule_Ajouter_vehicule_url %}
             {% url 'vehicule:liste_vehicules' as vehicule_liste_vehicules_url %}
+            {% url 'conducteur:tous_les_conducteurs' as conducteur_liste_conducteur_url %}
+            {% url 'conducteur:ajouter_conducteur' as conducteur_ajouter_conducteu_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -45,11 +47,11 @@
                         <li class="{% if request.path == vehicule_liste_vehicules_url %}active{% endif %}"><a href="{% url 'vehicule:liste_vehicules' %}"><i class="ri-file-edit-line"></i>List</a></li>
                     </ul>
                 </li>
-                <li >
+                <li class="{% if request.path == conducteur_liste_conducteur_url or request.path == conducteur_ajouter_conducteu_url %}active{% endif %}" >
                     <a href="#vehicule" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Conducteur</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="vehicule" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li><a href="{% url 'conducteur:ajouter_conducteur' %}"><i class="ri-profile-line"></i>Ajouter un conducteur</a></li>
-                        <li><a href="{% url 'conducteur:tous_les_conducteurs' %}"><i class="ri-file-list-line"></i>Liste des conducteurs</a></li>
+                        <li class="{% if request.path == conducteur_ajouter_conducteu_url %}active{% endif %}"><a href="{% url 'conducteur:ajouter_conducteur' %}"><i class="ri-profile-line"></i>Ajouter un conducteur</a></li>
+                        <li class=" {% if request.path == conducteur_liste_conducteur_url %}active{% endif %}"><a href="{% url 'conducteur:tous_les_conducteurs' %}"><i class="ri-file-list-line"></i>Liste des conducteurs</a></li>
                     </ul>
                 </li>
                 <li><a href="calendar.html" class="iq-waves-effect"><i class="ri-calendar-2-line"></i><span>Calendar</span></a></li>
