@@ -20,8 +20,11 @@ def Ajouter_vehicule(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Vehicule ajouté avec succès !')
+            context['success'] = True
         else:
-            context['errors'] = form.errors
+            messages.error(request, 'Erreur de modification')
+            context['form_errors'] = form.errors
+            print(form.errors)
 
     form = VehiculeForm()
     context['form'] = form

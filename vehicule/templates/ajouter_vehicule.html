@@ -2,6 +2,15 @@
 {% load static %}
 {% block content%}
    <body>
+   <style>
+       .zoom-on-hover {
+           transition: transform 0.3s ease-in-out; /* Ajoute une transition douce pour l'effet de zoom */
+       }
+
+       .zoom-on-hover:hover {
+           transform: scale(1.1); /* Applique le zoom au survol */
+       }
+   </style>
       <!-- loader Start -->
       <div id="loading">
          <div id="loading-center">
@@ -81,15 +90,6 @@
 
                                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                               </div>
-                               {% if form.errors %}
-                                   {% for field, errors in form.errors.items %}
-                                       {% for error in errors %}
-                                           <div class="alert alert-dark mt-4" role="alert">
-                                               <strong>Erreur :</strong> {{ error }}
-                                           </div>
-                                       {% endfor %}
-                                   {% endfor %}
-                               {% endif %}
                            </form>
                         </div>
                      </div>
@@ -114,21 +114,49 @@
                       <img src="{% static 'images/Success.gif' %}" alt="GIF animé" style="max-width: 30%; height: auto;">
                   </div>
                   <div class="modal-footer text-center" style="display: flex; justify-content: center; align-items: center;">
-                      <button type="button" class="btn btn-secondary align-items-center" data-dismiss="modal">Fermer</button>
+                      <button type="button" class="zoom-on-hover btn btn-danger align-items-center" data-dismiss="modal">Fermer</button>
+                      <a type="button" class="zoom-on-hover btn btn-success align-items-center text-white" href="{% url 'vehicule:liste_vehicules' %}">Voir tout les vehiculs</a>
                   </div>
               </div>
           </div>
       </div>
-      <script>
-          {% if messages %}
-              document.addEventListener('DOMContentLoaded', function() {
-                  var successMessage = "{% for message in messages %}{{ message }}{% endfor %}";
-                  if (successMessage.trim() !== "") {
-                      // Utilisez Bootstrap modal pour afficher le message
-                      $('#successModal').modal('show');
-                  }
-              });
-          {% endif %}
-      </script>
+
+   <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true" style="top:0; bottom: 0">
+       <div class="modal-dialog modal-dialog-centered" role="document">
+           <div class="modal-content">
+               <div class="modal-header h4 text-center" style="text-align: center">
+                   Erreur lors de l'ajout du véhicule
+               </div>
+               <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
+                   <div id="formErrors" class="text-danger h5">
+                      <div class="text-center"> <img src="{% static 'images/error.gif' %}" alt="GIF animé" style="max-width: 30%; height: auto;text-align: center"><br></div>
+                       {% if form_errors %}
+                           {% for field, errors in form_errors.items %}
+                               <p><strong>{{ field|title }}:</strong> {{ errors.0 }}</p>
+                           {% endfor %}
+                       {% endif %}
+                   </div>
+               </div>
+               <div class="modal-footer text-center" style="display: flex; justify-content: center; align-items: center;">
+                   <button type="button" class="zoom-on-hover btn btn-danger align-items-center" data-dismiss="modal">Fermer</button>
+               </div>
+           </div>
+       </div>
+   </div>
+   <script>
+       {% if success %}
+           $(document).ready(function() {
+               $('#successModal').modal('show');
+           });
+       {% endif %}
+
+       {% if form_errors %}
+           $(document).ready(function() {
+               $('#errorModal').modal('show');
+           });
+       {% endif %}
+   </script>
+
+
    </body>
 {% endblock %}

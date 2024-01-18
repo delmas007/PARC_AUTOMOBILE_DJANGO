@@ -17,7 +17,7 @@
       <!-- Page Content  -->
    <div id="content-page" class="content-page">
       <div class="container-fluid">
-         <div class="row">
+         <div class="row d-flex justify-content-center">
             <div class="col-lg-9">
                   <div class="iq-card">
                      <div class="iq-card-header d-flex justify-content-between">
@@ -47,7 +47,7 @@
                         <div class="new-user-info">
                            <form method="post">
                                {% csrf_token %}
-                               <div class="row">
+                               <div class="row ">
                                    <div class="form-group col-md-6 {% if form.nom.errors %}has-error{% endif %}">
                                        <label for="nom">Nom</label>
                                        <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom">
@@ -98,7 +98,7 @@
                                        {% endif %}
                                    </div>
                                </div>
-                               <button type="submit" class="btn btn-primary">Ajouter</button>
+                               <button type="submit" class="btn btn-primary" style="width: 100%">Ajouter</button>
                            </form>
                         </div>
                      </div>
