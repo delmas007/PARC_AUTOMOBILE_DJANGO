@@ -53,7 +53,7 @@
                                          <td ><div class="badge badge-pill iq-bg-secondary">{{ deplacement.statut }}</div></td>
                                          <td>{{ deplacement.details }}</td>
                                          <td>
-                                                 <button type="submit" class="btn btn-primary btn-sm" data-vehicle-id="{{ deplacement.pk }}" onclick="confirmDelete(this)"> <i class="fas fa-trash text-white">
+                                                 <button type="submit" class="btn btn-secondary btn-sm" data-vehicle-id="{{ deplacement.pk }}" onclick="confirmDelete(this)">  <i class="fa fa-car"></i>
                                                  </i>Arrivée</button>
                                          </td>
                                      </tr>
@@ -101,13 +101,13 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h5 class="modal-title" id="confirmDeleteModalLabel" style="display: flex; justify-content: center; align-items: center;">Confirmation de la suppression</h5>
+                      <h5 class="modal-title" id="confirmDeleteModalLabel" style="display: flex; justify-content: center; align-items: center;">Confirmation de l'arrivée du conducteur</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>
                   </div>
                   <div class="modal-body">
-                      Êtes-vous sûr de vouloir supprimer ce véhicule ?
+                      Êtes-vous sûr de vouloir confirmer de l'arrivée du conducteur ?
                   </div>
                   <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
