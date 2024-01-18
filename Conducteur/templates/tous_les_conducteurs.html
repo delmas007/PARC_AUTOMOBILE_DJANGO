@@ -83,7 +83,8 @@
                                                    <div class="flex align-items-center list-user-action">
                                                        <a class="iq-bg-primary zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Telecharger les informations du conducteur " data-vehicle-id="{{ conducteur.id }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>
                                                        <a class="iq-bg-success zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
-                                                       <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
+                                                       <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer" href="#" onclick="confirmDeleteModal(this)" data-conducteur-id="{{ conducteur.id }}"><i class="ri-delete-bin-line"></i></a>
+
 
                                                    </div>
                                                </td>
@@ -102,7 +103,7 @@
                                                        </div>
                                                        <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                                           <a href="#" class="btn btn-danger" onclick="deleteConducteur('{{ conducteur.id }}')">Supprimer</a>
+                                                           <a href="#" class="btn btn-danger" onclick="executeDelete('{{ conducteur.id }}')">Supprimer</a>
                                                        </div>
                                                    </div>
                                                </div>
@@ -168,16 +169,22 @@
     </div>
 </div>
 
-<script>
-    function confirmDelete(conducteurId) {
-        $('#confirmDeleteModal' + conducteurId).modal('show');
-    }
+    <!-- Modifiez la fonction confirmDeleteModal -->
+    <script>
+        function confirmDeleteModal(linkElement) {
+            var conducteurId = linkElement.getAttribute('data-conducteur-id');
+            $('#confirmDeleteModal').modal('show');
+            $('#confirmDeleteModal').data('conducteur-id', conducteurId);
+        }
+        function executeDelete() {
+            var conducteurId = $('#confirmDeleteModal').data('conducteur-id');
+            window.location.href = "{% url 'conducteur:supprimer_conducteur' 0 %}".replace(0, conducteurId);
 
-    function deleteConducteur(conducteurId) {
-        window.location.href = "{% url 'conducteur:supprimer_conducteur' 0 %}".replace('0', conducteurId);
-    }
-</script>
-<!-- ... -->
+            // Fermer le modal
+            $('#confirmDeleteModal').modal('hide');
+        }
+    </script>
+
 <script>
     $(document).ready(function () {
         $('.download-info').on('click', function (e) {
