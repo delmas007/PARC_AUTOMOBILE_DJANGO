@@ -40,6 +40,8 @@ def modifier_conducteur(request, conducteur_id):
         if form.is_valid():
             form.save()
             return redirect('conducteur:tous_les_conducteurs')
+        else:
+            messages.success(request, 'Erreur de modification')
     else:
         form = ConducteurForm(instance=conducteur, initial={
             'date_de_naissance': conducteur.date_de_naissance,
