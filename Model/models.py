@@ -24,7 +24,7 @@ class Vehicule(models.Model):
     disponibilite = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.marque} {self.modele} - {self.numero_immatriculation}"
+        return f"{self.marque} - {self.modele} - {self.numero_immatriculation}"
 
 
 class Conducteur(models.Model):

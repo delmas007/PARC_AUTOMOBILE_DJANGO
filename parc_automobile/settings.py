@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Model',
     'vehicule',
     'Conducteur',
+    'deplacement'
 ]
 
 MIDDLEWARE = [

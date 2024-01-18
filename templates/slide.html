@@ -29,6 +29,7 @@
             {% url 'vehicule:liste_vehicules' as vehicule_liste_vehicules_url %}
             {% url 'conducteur:tous_les_conducteurs' as conducteur_liste_conducteur_url %}
             {% url 'conducteur:ajouter_conducteur' as conducteur_ajouter_conducteu_url %}
+            {% url 'deplacement:enregistrer_deplacement' as deplacement_enregistrer_deplacement_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -52,6 +53,12 @@
                     <ul id="vehicule" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == conducteur_ajouter_conducteu_url %}active{% endif %}"><a href="{% url 'conducteur:ajouter_conducteur' %}"><i class="ri-profile-line"></i>Ajouter un conducteur</a></li>
                         <li class=" {% if request.path == conducteur_liste_conducteur_url %}active{% endif %}"><a href="{% url 'conducteur:tous_les_conducteurs' %}"><i class="ri-file-list-line"></i>Liste des conducteurs</a></li>
+                    </ul>
+                </li>
+                <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}">
+                    <a href="#userinfo" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Deplacement</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="userinfo" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                        <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:enregistrer_deplacement' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
                     </ul>
                 </li>
                 <li><a href="calendar.html" class="iq-waves-effect"><i class="ri-calendar-2-line"></i><span>Calendar</span></a></li>
