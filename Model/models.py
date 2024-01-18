@@ -59,7 +59,7 @@ class Deplacement(models.Model):
             ('en cours', 'En cours...'),
             ('arrivée', 'Arrivée')
         ],
-        default='Départ'
+        default='en attente de départ'
     )
 
     def save(self, *args, **kwargs):
