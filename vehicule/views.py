@@ -64,10 +64,12 @@ def modifier_vehicule(request, pk):
             form.save()
             messages.success(request, 'Modifier avec succès !')
         else:
-
             context['errors'] = form.errors
 
-    form = VehiculeForme(instance=vehicule)
+    form = VehiculeForme(instance=vehicule, initial={
+        'date_mise_en_service': vehicule.date_mise_en_service,
+        'annee_fabrication': vehicule.annee_fabrication,
+    })
     context['form'] = form
     return render(request, 'modifier_vehicule.html', context)
 
