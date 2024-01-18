@@ -17,6 +17,20 @@ class XYZ_DateInput(forms.DateInput):
         super().__init__(**kwargs)
 
 
+class XYZ_DateInpute(forms.DateInput):
+    input_type = "date"
+
+    def __init__(self, **kwargs):
+        kwargs.setdefault('attrs', {})
+        kwargs['attrs'].update({
+            'class': 'form-control',
+            'required': False,
+        })
+        kwargs["format"] = "%m-%d-%Y"
+        # kwargs["format"] = "%d-%m-%Y"
+        super().__init__(**kwargs)
+
+
 class VehiculeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,7 +55,7 @@ class VehiculeForm(forms.ModelForm):
             'class': "form-control",
             'id': "couleur",
             'placeholder': "Entrez la couleur du vehicule",
-            'required': True,
+            'required': False,
             'name': 'couleur',
         })
         self.fields['numero_immatriculation'].widget.attrs.update({
@@ -62,7 +76,7 @@ class VehiculeForm(forms.ModelForm):
             'type': "number",
             'class': "form-control",
             'id': "marque",
-            'required': True,
+            'required': False,
             'name': 'kilometrage',
         })
 
@@ -135,19 +149,20 @@ class VehiculeForme(forms.ModelForm):
         fields = ['marque', 'modele', 'couleur', 'numero_immatriculation', 'date_mise_en_service', 'annee_fabrication',
                   'type_carburant', 'kilometrage']
 
-        widgets = {
-            'date_mise_en_service': XYZ_DateInput(attrs={
-                'id': 'date',  # Utilisez l'ID généré par Django
-            }),
-            'annee_fabrication': XYZ_DateInput(attrs={
-                'id': 'date',  # Utilisez l'ID généré par Django
-            }),
-        }
+        # widgets = {
+        #     'date_mise_en_service': XYZ_DateInpute(attrs={
+        #         'id': 'date',  # Utilisez l'ID généré par Django
+        #     }),
+        #     'annee_fabrication': XYZ_DateInpute(attrs={
+        #         'id': 'date',  # Utilisez l'ID généré par Django
+        #     }),
+        # }
 
 
 class VehiculSearchForm(forms.Form):
     q = forms.CharField(
         label='',
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Rechercher un vehicul: Marque, model, matricule...', 'class': 'form-control'}),
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Rechercher un vehicul: Marque, model, matricule...', 'class': 'form-control'}),
     )

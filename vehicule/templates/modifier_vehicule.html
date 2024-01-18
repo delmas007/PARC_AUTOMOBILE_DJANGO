@@ -57,13 +57,15 @@
                                <div class="form-group row">
                                    <label class="control-label col-sm-2 align-self-center mb-0" for="email">Date mise en service:</label>
                                    <div class="col-sm-10">
-                                       {{ form.date_mise_en_service }}
+                                       <input type="date" class="form-control" id="exampleInputdate" value="2019-12-18" name="date_mise_en_service">
+{#                                       {{ form.date_mise_en_service }}#}
                                    </div>
                                </div>
                                <div class="form-group row">
                                    <label class="control-label col-sm-2 align-self-center mb-0" for="email">Annee fabrication:</label>
                                    <div class="col-sm-10">
-                                       {{ form.annee_fabrication }}
+                                       <input type="date" class="form-control" id="exampleInputdate" value="2019-12-18" name="annee_fabrication">
+{#                                       {{ form.annee_fabrication }}#}
                                    </div>
                                </div>
                                <div class="form-group row">
@@ -90,18 +92,6 @@
                                            </div>
                                        {% endfor %}
                                    {% endfor %}
-                               {% endif %}
-                               {% if messages %}
-                                   <ul class="messages" style="list-style: none;padding: 0;">
-                                       {% for messages in messages %}
-                                           <li{% if messages.tags %} class="{{ messages.tags }}"{% endif %} id="message-alert" style=" margin: 10px 0; padding: 10px; border-radius: 5px;">{{ messages }}</li>
-                                       {% endfor %}
-                                       <script>
-                                           setTimeout(function() {
-                                               document.getElementById('message-alert').style.display = 'none';
-                                           }, 5000);
-                                       </script>
-                                   </ul>
                                {% endif %}
                            </form>
                         </div>

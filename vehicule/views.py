@@ -55,23 +55,39 @@ def supprimer_vehicule(request, pk):
     return redirect('vehicule:liste_vehicules')
 
 
+# def modifier_vehicule(request, pk):
+#     context = {}
+#     vehicule = get_object_or_404(Vehicule, pk=pk)
+#
+#     if request.method == 'POST':
+#         form = VehiculeForme(request.POST, instance=vehicule)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Modifié avec succès !')
+#         else:
+#             context['errors'] = form.errors
+#     else:
+#         form = VehiculeForme(instance=vehicule, initial={
+#             'date_mise_en_service': vehicule.date_mise_en_service,
+#             'annee_fabrication': vehicule.annee_fabrication,
+#         })
+#
+#     context['form'] = form
+#     return render(request, 'modifier_vehicule.html', context)
 def modifier_vehicule(request, pk):
-    context = {}
     vehicule = get_object_or_404(Vehicule, pk=pk)
+
     if request.method == 'POST':
         form = VehiculeForme(request.POST, instance=vehicule)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Modifier avec succès !')
-        else:
-            context['errors'] = form.errors
-
-    form = VehiculeForme(instance=vehicule, initial={
-        'date_mise_en_service': vehicule.date_mise_en_service,
-        'annee_fabrication': vehicule.annee_fabrication,
-    })
-    context['form'] = form
-    return render(request, 'modifier_vehicule.html', context)
+            return redirect('vehicule:liste_vehicules')
+    else:
+        form = VehiculeForme(instance=vehicule, initial={
+            'date_mise_en_service': vehicule.date_mise_en_service,
+            'annee_fabrication': vehicule.annee_fabrication,
+        })
+    return render(request, 'modifier_vehicule.html', {'form': form})
 
 
 def vehicule_pdf(request, pk):
