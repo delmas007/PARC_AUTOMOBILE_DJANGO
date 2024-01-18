@@ -31,6 +31,8 @@
             {% url 'conducteur:ajouter_conducteur' as conducteur_ajouter_conducteu_url %}
             {% url 'deplacement:enregistrer_deplacement' as deplacement_enregistrer_deplacement_url %}
             {% url 'deplacement:liste_deplacement' as deplacement_liste_deplacement_url %}
+            {% url 'deplacement:liste_deplacement_en_cours' as deplacement_liste_deplacement_en_cours_url %}
+            {% url 'deplacement:liste_deplacement_arrive' as deplacement_liste_deplacement_arrive_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -56,11 +58,13 @@
                         <li class=" {% if request.path == conducteur_liste_conducteur_url %}active{% endif %}"><a href="{% url 'conducteur:tous_les_conducteurs' %}"><i class="ri-file-list-line"></i>Liste des conducteurs</a></li>
                     </ul>
                 </li>
-                <li class="{% if request.path == deplacement_enregistrer_deplacement_url or request.path == deplacement_liste_deplacement_url  %}active{% endif %}">
+                <li class="{% if request.path == deplacement_enregistrer_deplacement_url or request.path == deplacement_liste_deplacement_url  or request.path == deplacement_liste_deplacement_en_cours_url or request.path == deplacement_liste_deplacement_arrive_url %}active{% endif %}">
                     <a href="#deplacement" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Deplacement</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="deplacement" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:enregistrer_deplacement' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
                         <li class="{% if request.path == deplacement_liste_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement' %}"><i class="ri-profile-line"></i>En attente de départ</a></li>
+                        <li class="{% if request.path == deplacement_liste_deplacement_en_cours_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_en_cours' %}"><i class="ri-profile-line"></i>En cours...</a></li>
+                        <li class="{% if request.path == deplacement_liste_deplacement_arrive_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_arrive' %}"><i class="ri-profile-line"></i>Arrivé</a></li>
                     </ul>
                 </li>
                 <li><a href="calendar.html" class="iq-waves-effect"><i class="ri-calendar-2-line"></i><span>Calendar</span></a></li>

@@ -50,7 +50,7 @@
                                          <td>{{ deplacement.vehicule.numero_immatriculation }}</td>
                                          <td>{{ deplacement.lieu_depart }}</td>
                                          <td>{{ deplacement.lieu_arrivee }}</td>
-                                         <td>{{ deplacement.statut }}</td>
+                                         <td ><div class="badge badge-pill iq-bg-danger">{{ deplacement.statut }}</div></td>
                                          <td>{{ deplacement.details }}</td>
                                          <td>
                                                  <button type="submit" class="btn btn-danger btn-sm" data-vehicle-id="{{ deplacement.pk }}" onclick="confirmDelete(this)"> <i class="fas fa-trash text-white">

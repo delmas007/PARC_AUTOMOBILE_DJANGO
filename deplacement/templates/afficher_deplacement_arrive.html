@@ -38,7 +38,6 @@
                                      <th>Lieu d'arriver</th>
                                      <th>Status</th>
                                      <th>Détail</th>
-                                     <th>confirmer depart</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -50,13 +49,9 @@
                                          <td>{{ deplacement.vehicule.numero_immatriculation }}</td>
                                          <td>{{ deplacement.lieu_depart }}</td>
                                          <td>{{ deplacement.lieu_arrivee }}</td>
-                                         <td ><div class="badge badge-pill iq-bg-secondary">{{ deplacement.statut }}</div></td>
+                                         <td ><div class="badge badge-pill iq-bg-success">{{ deplacement.statut }}</div></td>
                                          <td>{{ deplacement.details }}</td>
-                                         <td>
-                                                 <button type="submit" class="btn btn-primary btn-sm" data-vehicle-id="{{ deplacement.pk }}" onclick="confirmDelete(this)"> <i class="fas fa-trash text-white">
-                                                 </i>Arrivée</button>
-                                         </td>
-                                     </tr>
+                                         </tr>
                                 {% endfor %}
                                  <tr>
                                      <td colspan="10">Aucun service disponible</td>
@@ -95,49 +90,5 @@
    <!-- Wrapper END -->
     <!-- Footer -->
       {% include 'footer.html' %}
-
-      <!-- Modal de confirmation -->
-      <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="confirmDeleteModalLabel" style="display: flex; justify-content: center; align-items: center;">Confirmation de la suppression</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>
-                  <div class="modal-body">
-                      Êtes-vous sûr de vouloir supprimer ce véhicule ?
-                  </div>
-                  <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                      <button type="button" class="btn btn-danger" onclick="executeDelete()">Confirmer</button>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <script>
-          // Fonction pour afficher le modal de confirmation
-          function confirmDelete(linkElement) {
-              var vehicleId = linkElement.getAttribute('data-vehicle-id');
-              // Afficher le modal
-              $('#confirmDeleteModal').modal('show');
-
-              // Enregistrer l'ID du véhicule dans un champ caché du modal
-              $('#confirmDeleteModal').data('vehicle-id', vehicleId);
-          }
-
-          // Fonction pour exécuter la suppression
-          function executeDelete() {
-              // Récupérer l'ID du véhicule depuis le champ caché du modal
-              var vehicleId = $('#confirmDeleteModal').data('vehicle-id');
-
-              // Rediriger vers l'URL de suppression avec l'ID du véhicule
-              window.location.href = "{% url 'deplacement:arrivee' 0 %}".replace(0, vehicleId);
-
-              // Fermer le modal
-              $('#confirmDeleteModal').modal('hide');
-          }
-      </script>
 </body>
 {% endblock %}
