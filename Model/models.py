@@ -55,7 +55,7 @@ class Deplacement(models.Model):
     statut = models.CharField(
         max_length=50,
         choices=[
-            ('Départ', 'Départ'),
+            ('en attente de départ', 'en attente de départ'),
             ('en cours', 'En cours...'),
             ('arrivée', 'Arrivée')
         ],

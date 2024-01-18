@@ -1,0 +1,143 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content%}
+   <body>
+      <!-- loader Start -->
+      <div id="loading">
+         <div id="loading-center">
+         </div>
+      </div>
+      <!-- loader END -->
+      <!-- Wrapper Start -->
+      <div class="wrapper">
+      <!-- Sidebar  -->
+          {% include 'slide.html' %}
+      <!-- TOP Nav Bar -->
+          {% include 'top_navbar.html' %}
+      <!-- TOP Nav Bar END -->
+      <!-- Page Content  -->
+   <div id="content-page" class="content-page">
+      <div class="container-fluid">
+         <div class="row">
+            <div class="col-sm-12">
+                  <div class="iq-card">
+                     <div class="iq-card-header d-flex justify-content-between">
+                        <div class="iq-header-title">
+                           <h4 class="card-title">Liste des vehicules</h4>
+                        </div>
+                     </div>
+                     <div class="iq-card-body">
+                        <div class="table-responsive">
+                           <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
+                             <thead>
+                                 <tr>
+                                     <th>Marque</th>
+                                     <th>Modèle</th>
+                                     <th>Numéro d'immatriculation</th>
+                                     <th>Lieu de départ</th>
+                                     <th>Lieu d'arriver</th>
+                                     <th>Status</th>
+                                     <th>Détail</th>
+                                     <th>confirmer depart</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                             {% if deplacements %}
+                                {% for deplacement in deplacements %}
+                                     <tr>
+                                         <td>{{ deplacement.vehicule.marque }}</td>
+                                         <td>{{ deplacement.vehicule.modele }}</td>
+                                         <td>{{ deplacement.vehicule.numero_immatriculation }}</td>
+                                         <td>{{ deplacement.lieu_depart }}</td>
+                                         <td>{{ deplacement.lieu_arrivee }}</td>
+                                         <td>{{ deplacement.statut }}</td>
+                                         <td>{{ deplacement.details }}</td>
+                                         <td>
+                                                 <button type="submit" class="btn btn-danger btn-sm" data-vehicle-id="{{ deplacement.pk }}" onclick="confirmDelete(this)"> <i class="fas fa-trash text-white">
+                                                 </i>Depart</button>
+                                         </td>
+                                     </tr>
+                                {% endfor %}
+                                 <tr>
+                                     <td colspan="10">Aucun service disponible</td>
+                                 </tr>
+                             {% endif %}
+                             </tbody>
+                           </table>
+                        </div>
+                           <div class="row justify-content-between mt-3">
+                              <div id="user-list-page-info" class="col-md-6">
+                                 <span>Showing 1 to 5 of 5 entries</span>
+                              </div>
+                              <div class="col-md-6">
+                                 <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-end mb-0">
+                                       <li class="page-item disabled">
+                                          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                       </li>
+                                       <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                       <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                       <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                       <li class="page-item">
+                                          <a class="page-link" href="#">Next</a>
+                                       </li>
+                                    </ul>
+                                 </nav>
+                              </div>
+                           </div>
+                     </div>
+                  </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+   <!-- Wrapper END -->
+    <!-- Footer -->
+      {% include 'footer.html' %}
+
+      <!-- Modal de confirmation -->
+      <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="confirmDeleteModalLabel" style="display: flex; justify-content: center; align-items: center;">Confirmation de la suppression</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      Êtes-vous sûr de vouloir supprimer ce véhicule ?
+                  </div>
+                  <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                      <button type="button" class="btn btn-danger" onclick="executeDelete()">Confirmer</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <script>
+          // Fonction pour afficher le modal de confirmation
+          function confirmDelete(linkElement) {
+              var vehicleId = linkElement.getAttribute('data-vehicle-id');
+              // Afficher le modal
+              $('#confirmDeleteModal').modal('show');
+
+              // Enregistrer l'ID du véhicule dans un champ caché du modal
+              $('#confirmDeleteModal').data('vehicle-id', vehicleId);
+          }
+
+          // Fonction pour exécuter la suppression
+          function executeDelete() {
+              // Récupérer l'ID du véhicule depuis le champ caché du modal
+              var vehicleId = $('#confirmDeleteModal').data('vehicle-id');
+
+              // Rediriger vers l'URL de suppression avec l'ID du véhicule
+              window.location.href = "{% url 'deplacement:depart' 0 %}".replace(0, vehicleId);
+
+              // Fermer le modal
+              $('#confirmDeleteModal').modal('hide');
+          }
+      </script>
+</body>
+{% endblock %}

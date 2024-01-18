@@ -30,6 +30,7 @@
             {% url 'conducteur:tous_les_conducteurs' as conducteur_liste_conducteur_url %}
             {% url 'conducteur:ajouter_conducteur' as conducteur_ajouter_conducteu_url %}
             {% url 'deplacement:enregistrer_deplacement' as deplacement_enregistrer_deplacement_url %}
+            {% url 'deplacement:liste_deplacement' as deplacement_liste_deplacement_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -42,23 +43,24 @@
 
                 <li><a href="todo.html" class="iq-waves-effect" aria-expanded="false"><i class="ri-chat-check-line"></i><span>Todo</span></a></li>
                 <li class="{% if request.path == vehicule_Ajouter_vehicule_url or request.path == vehicule_liste_vehicules_url %}active{% endif %}">
-                    <a href="#userinfo" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Vehicule</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
-                    <ul id="userinfo" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                    <a href="#vehicule" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Vehicule</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="vehicule" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == vehicule_Ajouter_vehicule_url %}active{% endif %}" ><a href="{% url 'vehicule:Ajouter_vehicule' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
                         <li class="{% if request.path == vehicule_liste_vehicules_url %}active{% endif %}"><a href="{% url 'vehicule:liste_vehicules' %}"><i class="ri-file-edit-line"></i>List</a></li>
                     </ul>
                 </li>
                 <li class="{% if request.path == conducteur_liste_conducteur_url or request.path == conducteur_ajouter_conducteu_url %}active{% endif %}" >
-                    <a href="#vehicule" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Conducteur</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
-                    <ul id="vehicule" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                    <a href="#conducteur" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Conducteur</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="conducteur" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == conducteur_ajouter_conducteu_url %}active{% endif %}"><a href="{% url 'conducteur:ajouter_conducteur' %}"><i class="ri-profile-line"></i>Ajouter un conducteur</a></li>
                         <li class=" {% if request.path == conducteur_liste_conducteur_url %}active{% endif %}"><a href="{% url 'conducteur:tous_les_conducteurs' %}"><i class="ri-file-list-line"></i>Liste des conducteurs</a></li>
                     </ul>
                 </li>
-                <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}">
-                    <a href="#userinfo" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Deplacement</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
-                    <ul id="userinfo" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                <li class="{% if request.path == deplacement_enregistrer_deplacement_url or request.path == deplacement_liste_deplacement_url  %}active{% endif %}">
+                    <a href="#deplacement" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Deplacement</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="deplacement" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:enregistrer_deplacement' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
+                        <li class="{% if request.path == deplacement_liste_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement' %}"><i class="ri-profile-line"></i>En attente de départ</a></li>
                     </ul>
                 </li>
                 <li><a href="calendar.html" class="iq-waves-effect"><i class="ri-calendar-2-line"></i><span>Calendar</span></a></li>
