@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Model',
     'vehicule',
     'Conducteur',
+    'deplacement'
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'parc',
         'USER': 'postgres',
-        'PASSWORD': '09102079Darius',
+        'PASSWORD': 'delmas',
         'HOST': 'localhost',
         'PORT': '5432',
     }

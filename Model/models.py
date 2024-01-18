@@ -24,7 +24,7 @@ class Vehicule(models.Model):
     disponibilite = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.marque} {self.modele} - {self.numero_immatriculation}"
+        return f"{self.marque} - {self.modele} - {self.numero_immatriculation}"
 
 
 class Conducteur(models.Model):
@@ -55,7 +55,7 @@ class Deplacement(models.Model):
     statut = models.CharField(
         max_length=50,
         choices=[
-            ('Départ', 'Départ'),
+            ('en attente de départ', 'en attente de départ'),
             ('en cours', 'En cours...'),
             ('arrivée', 'Arrivée')
         ],
