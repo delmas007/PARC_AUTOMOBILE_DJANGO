@@ -10,7 +10,6 @@
     .zoom-on-hover:hover {
         transform: scale(2); /* Applique le zoom au survol */
     }
-
 </style>
 <!-- loader Start -->
 <div id="loading">
@@ -50,66 +49,68 @@
                                     </div>
                                 </div>
                                 {% if conducteurs %}
-                                <table id="user-list-table" class=" table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info" >
-                                    <thead >
-                                    <tr style="background-color: #8861d2">
-                                        <th>Nom</th>
-                                        <th>Prenom </th>
-                                        <th>Numero</th>
-                                        <th>Adresse</th>
-                                        <th>Date de naissance</th>
-                                        <th>Date d'embauche</th>
-                                        <th>Numero du permis </th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
+                               <div class="table-responsive">
+                                   <table id="user-list-table" class=" table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info" >
+                                       <thead >
+                                       <tr style="background-color: #8861d2; color:white">
+                                           <th style="color: white">Nom</th>
+                                           <th style="color: white">Prenom </th>
+                                           <th style="color: white">Numero</th>
+                                           <th style="color: white">Adresse</th>
+                                           <th style="color: white">Date de naissance</th>
+                                           <th style="color: white">Date d'embauche</th>
+                                           <th style="color: white">Numero du permis </th>
+                                           <th style="color: white">Status</th>
+                                           <th style="color: white">Action</th>
+                                       </tr>
 
-                                    </thead>
-                                    {% for conducteur in conducteurs %}
-                                    <tbody>
+                                       </thead>
 
-                                    <tr>
-                                        <td>{{ conducteur.nom}}</td>
-                                        <td>{{ conducteur.prenom}}</td>
-                                        <td>{{ conducteur.numero_telephone}}</td>
-                                        <td>{{ conducteur.adresse}}</td>
-                                        <td>{{ conducteur.date_de_naissance}}</td>
-                                        <td>{{ conducteur.date_embauche}}</td>
-                                        <td>{{ conducteur.numero_permis_conduire}}</td>
-                                        <td><span class="badge dark-icon-light iq-bg-primary">Active</span></td>
-                                        <td>
+                                           <tbody>
+                                           {% for conducteur in conducteurs %}
+                                           <tr>
+                                               <td>{{ conducteur.nom}}</td>
+                                               <td>{{ conducteur.prenom}}</td>
+                                               <td>{{ conducteur.numero_telephone}}</td>
+                                               <td>{{ conducteur.adresse}}</td>
+                                               <td>{{ conducteur.date_de_naissance}}</td>
+                                               <td>{{ conducteur.date_embauche}}</td>
+                                               <td>{{ conducteur.numero_permis_conduire}}</td>
+                                               <td><span class="badge dark-icon-light iq-bg-primary">Active</span></td>
+                                               <td>
 
-                                            <div class="flex align-items-center list-user-action">
-                                                <a class="iq-bg-primary zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Supprimer" data-vehicle-id="{{ conducteur.id }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>
-                                                <a class="iq-bg-success zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
-                                                <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
+                                                   <div class="flex align-items-center list-user-action">
+                                                       <a class="iq-bg-primary zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Telecharger les informations du conducteur " data-vehicle-id="{{ conducteur.id }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>
+                                                       <a class="iq-bg-success zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
+                                                       <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer" href="#" onclick="confirmDelete('{{ conducteur.id }}')"> <i class="ri-delete-bin-line"></i></a>
 
-                                            </div>
-                                        </td>
-                                    </tr>
+                                                   </div>
+                                               </td>
+                                           </tr>
+                                           {% endfor %}
+                                           </tbody>
+                                           <!-- Modal de confirmation pour chaque conducteur -->
+                                           <div class="modal fade" id="confirmDeleteModal{{ conducteur.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel{{ conducteur.id }}" aria-hidden="true">
+                                               <div class="modal-dialog modal-dialog-centered" role="document">
+                                                   <div class="modal-content">
+                                                       <div class="modal-header" style="display: flex; justify-content: center; align-items: center;">
+                                                           <h5 class="modal-title" id="confirmDeleteModalLabel{{ conducteur.id }}">Confirmation de la suppression</h5>
+                                                       </div>
+                                                       <div class="modal-body">
+                                                           Êtes-vous sûr de vouloir supprimer ce conducteur ?
+                                                       </div>
+                                                       <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
+                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                                           <a href="#" class="btn btn-danger" onclick="deleteConducteur('{{ conducteur.id }}')">Supprimer</a>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div>
 
-                                    </tbody>
-                                        <!-- Modal de confirmation pour chaque conducteur -->
-                                        <div class="modal fade" id="confirmDeleteModal{{ conducteur.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel{{ conducteur.id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header" style="display: flex; justify-content: center; align-items: center;">
-                                                        <h5 class="modal-title" id="confirmDeleteModalLabel{{ conducteur.id }}">Confirmation de la suppression</h5>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Êtes-vous sûr de vouloir supprimer ce conducteur ?
-                                                    </div>
-                                                    <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                                        <a href="#" class="btn btn-danger" onclick="deleteConducteur('{{ conducteur.id }}')">Supprimer</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                    {% endfor %}
 
-                                </table>
+                                   </table>
+                               </div>
 
                             </div>
                             <div class="row justify-content-between mt-3">
