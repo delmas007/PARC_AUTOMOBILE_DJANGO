@@ -107,7 +107,6 @@
             document.addEventListener('DOMContentLoaded', function() {
                 var successMessage = "{% for message in messages %}{{ message }}{% endfor %}";
                 if (successMessage.trim() !== "") {
-                    // Utilisez Bootstrap modal pour afficher le message
                     $('#successModal').modal('show');
                 }
             });

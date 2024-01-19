@@ -1,15 +1,16 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from Model.models import Deplacement
 from deplacement.forms import DeplacementForm
 
 
-# Create your views here.
 def enregistrer_deplacement(request):
     if request.method == 'POST':
         form = DeplacementForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Vehicule ajouté avec succès !')
             return redirect('deplacement:enregistrer_deplacement')
     else:
         form = DeplacementForm()

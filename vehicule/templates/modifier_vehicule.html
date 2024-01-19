@@ -80,9 +80,9 @@
                                        {{ form.kilometrage }}
                                    </div>
                                </div>
-                               <div>
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                    <a href="{% url 'vehicule:liste_vehicules' %}" class="btn iq-bg-danger">Annuler</a>
+                               <div class="row">
+                                    <button type="submit" class="col btn btn-primary" >Enregistrer</button>
+                                    <a href="{% url 'vehicule:liste_vehicules' %}" class="col btn iq-bg-danger">Annuler</a>
                               </div>
                                {% if form.errors %}
                                    {% for field, errors in form.errors.items %}
