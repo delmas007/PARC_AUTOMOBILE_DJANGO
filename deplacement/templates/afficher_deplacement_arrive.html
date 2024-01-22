@@ -31,6 +31,7 @@
                            <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
                              <thead>
                                  <tr>
+                                     <th>Conducteur</th>
                                      <th>Marque</th>
                                      <th>Modèle</th>
                                      <th>Numéro d'immatriculation</th>
@@ -44,6 +45,7 @@
                              {% if deplacements %}
                                 {% for deplacement in deplacements %}
                                      <tr>
+                                         <td>{{ deplacement.conducteur.nom }} {{ deplacement.conducteur.prenom }}</td>
                                          <td>{{ deplacement.vehicule.marque }}</td>
                                          <td>{{ deplacement.vehicule.modele }}</td>
                                          <td>{{ deplacement.vehicule.numero_immatriculation }}</td>
