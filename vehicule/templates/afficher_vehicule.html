@@ -62,6 +62,7 @@
                                      <th>Type de carburant</th>
                                      <th>Kilométrage</th>
                                      <th>Année de fabrication</th>
+                                     <th>Image</th>
                                      <th>Actions</th>
                                  </tr>
                              </thead>
@@ -77,6 +78,7 @@
                                          <td>{{ vehicule.get_type_carburant_display }}</td>
                                          <td>{{ vehicule.kilometrage }}</td>
                                          <td>{{ vehicule.annee_fabrication }}</td>
+                                         <td> <img src="{{ vehicule.image.url }}" style="max-width: 100px"> </td>
                                         <td>
                                            <div class="flex align-items-center list-user-action">
                                                <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'vehicule:modifier_vehicule' pk=vehicule.pk %}"><i class="ri-pencil-line"></i></a>
@@ -149,7 +151,7 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h5 class="modal-title" id="confirmDeleteModalLabeld">Confirmation de la suppression</h5>
+                      <h5 class="modal-title" id="confirmDeleteModalLabeld">Confirmation l'exportation</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>

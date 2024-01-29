@@ -46,6 +46,11 @@
             padding: 5px 10px;
             border-radius: 3px;
         }
+
+        .vehicule-image {
+            max-width: 10px;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -91,10 +96,13 @@
             <td><strong>ANNÉE DE FABRICATION:</strong></td>
             <td>{{ vehicule.annee_fabrication }}</td>
         </tr>
+        <tr>
+            <td><strong>IMAGE:</strong></td>
+            <td><img src="{{ vehicule.image.path }}" alt="Vehicule Image" class="vehicule-image"></td>
+        </tr>
+
         </tbody>
     </table>
-
-    <!-- Ajoutez plus de tables pour chaque conducteur -->
 
 </div>
 

@@ -81,7 +81,7 @@ def modifier_vehicule(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
 
     if request.method == 'POST':
-        form = VehiculeForme(request.POST, instance=vehicule)
+        form = VehiculeForme(request.POST, request.FILES, instance=vehicule)
         if form.is_valid():
             form.save()
             return redirect('vehicule:liste_vehicules')

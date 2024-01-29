@@ -79,19 +79,22 @@ class VehiculeForm(forms.ModelForm):
             'required': False,
             'name': 'kilometrage',
         })
+        self.fields['image'].widget.attrs.update({
+            'type': "file",
+            'class': "form-control",
+            'id': "marque",
+            'required': True,
+            'name': 'image',
+        })
 
     class Meta:
         model = Vehicule
         fields = ['marque', 'modele', 'couleur', 'numero_immatriculation', 'date_mise_en_service', 'annee_fabrication',
-                  'type_carburant', 'kilometrage']
+                  'type_carburant', 'kilometrage', 'image']
 
         widgets = {
-            'date_mise_en_service': XYZ_DateInput(attrs={
-                'id': 'date',  # Utilisez l'ID généré par Django
-            }),
-            'annee_fabrication': XYZ_DateInput(attrs={
-                'id': 'date',  # Utilisez l'ID généré par Django
-            }),
+            'date_mise_en_service': XYZ_DateInput(attrs={'id': 'date'}),
+            'annee_fabrication': XYZ_DateInput(attrs={'id': 'date'}),
         }
 
 
@@ -143,20 +146,18 @@ class VehiculeForme(forms.ModelForm):
             'required': True,
             'name': 'kilometrage',
         })
+        self.fields['image'].widget.attrs.update({
+            'type': "file",
+            'class': "form-control",
+            'id': "marque",
+            'required': False,
+            'name': 'image',
+        })
 
     class Meta:
         model = Vehicule
         fields = ['marque', 'modele', 'couleur', 'numero_immatriculation', 'date_mise_en_service', 'annee_fabrication',
-                  'type_carburant', 'kilometrage']
-
-        # widgets = {
-        #     'date_mise_en_service': XYZ_DateInpute(attrs={
-        #         'id': 'date',  # Utilisez l'ID généré par Django
-        #     }),
-        #     'annee_fabrication': XYZ_DateInpute(attrs={
-        #         'id': 'date',  # Utilisez l'ID généré par Django
-        #     }),
-        # }
+                  'type_carburant', 'kilometrage', 'image']
 
 
 class VehiculSearchForm(forms.Form):

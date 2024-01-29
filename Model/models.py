@@ -22,6 +22,7 @@ class Vehicule(models.Model):
     kilometrage = models.IntegerField()
     annee_fabrication = models.DateField(blank=True, null=True)
     disponibilite = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='vehicule_images/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.marque} - {self.modele} - {self.numero_immatriculation}"
