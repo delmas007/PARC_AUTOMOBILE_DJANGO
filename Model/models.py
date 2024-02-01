@@ -110,4 +110,4 @@ class Incident(models.Model):
 
 class Photo(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
-    image = models.ImageField(upload_to='Images/', null=True, blank=True)
+    images = models.ImageField(upload_to='Images/', null=True, blank=True)
