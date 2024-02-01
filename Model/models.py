@@ -4,12 +4,8 @@ from django.utils import timezone
 from django.db import models
 
 
-class Photo(models.Model):
-    image = models.ImageField(upload_to='Images/', null=True, blank=True)
-
-
 class Marque(models.Model):
-    marque = models.CharField(max_length=250)
+    marque = models.CharField(unique=True, max_length=250)
 
     def __str__(self):
         return self.marque
@@ -20,16 +16,15 @@ class Vehicule(models.Model):
     numero_immatriculation = models.CharField(max_length=250)
     couleur = models.CharField(max_length=250)
     carte_grise = models.CharField(max_length=250)
-    date_mise_circulation = models.DateField()
-    date_d_edition = models.DateField()
+    date_mise_circulation = models.DateField(blank=True, null=True)
+    date_d_edition = models.DateField(blank=True, null=True)
     type_commercial = models.CharField(max_length=250)
-    carrosserie = models.CharField(max_length=250)
-    energie = models.CharField(max_length=250)
-    place_assises = models.IntegerField()
-    date_expiration_assurance = models.DateField()
-    date_videnge = models.DateField()
-    kilometrage = models.IntegerField()
-    image = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
+    carrosserie = models.CharField(max_length=250, blank=True, null=True)
+    energie = models.CharField(max_length=250, blank=True, null=True)
+    place_assises = models.IntegerField(blank=True, null=True)
+    date_expiration_assurance = models.DateField(blank=True, null=True)
+    date_videnge = models.DateField(blank=True, null=True)
+    kilometrage = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.numero_immatriculation}"
@@ -96,7 +91,6 @@ class Entretien(models.Model):
 
 class EtatArrive(models.Model):
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
-    photo = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
     kilometrage_arrive = models.IntegerField()
     niveau_carburant_a = models.IntegerField()
     date_arrive = models.DateField()
@@ -106,4 +100,8 @@ class Incident(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     description_incident = models.TextField()
-    image = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
+
+
+class Photo(models.Model):
+    vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
+    image = models.ImageField(upload_to='Images/', null=True, blank=True)

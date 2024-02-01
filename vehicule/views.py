@@ -1,24 +1,31 @@
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.template.loader import get_template
+from django.views.decorators.http import require_POST
 from xhtml2pdf import pisa
 
-from Model.models import Vehicule
-from vehicule.forms import VehiculeForm, VehiculSearchForm
+from Model.models import Vehicule, Photo, Marque
+from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm
 
 
 # Create your views here.
 
 def Ajouter_vehicule(request):
     context = {}
+
     if request.method == 'POST':
-        # Associez l'utilisateur connecté à la partie employer du formulaire
         form = VehiculeForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Vehicule ajouté avec succès !')
+            # Enregistrez d'abord le véhicule sans l'image
+            vehicule = form.save()
+
+            # Traitez chaque fichier téléchargé et associez-le au véhicule
+            for uploaded_file in request.FILES.getlist('image'):
+                photo = Photo.objects.create(vehicule=vehicule, image=uploaded_file)
+
+            messages.success(request, 'Véhicule ajouté avec succès !')
             context['success'] = True
         else:
             messages.error(request, 'Erreur de modification')
@@ -56,25 +63,6 @@ def supprimer_vehicule(request, pk):
     return redirect('vehicule:liste_vehicules')
 
 
-# def modifier_vehicule(request, pk):
-#     context = {}
-#     vehicule = get_object_or_404(Vehicule, pk=pk)
-#
-#     if request.method == 'POST':
-#         form = VehiculeForme(request.POST, instance=vehicule)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, 'Modifié avec succès !')
-#         else:
-#             context['errors'] = form.errors
-#     else:
-#         form = VehiculeForme(instance=vehicule, initial={
-#             'date_mise_en_service': vehicule.date_mise_en_service,
-#             'annee_fabrication': vehicule.annee_fabrication,
-#         })
-#
-#     context['form'] = form
-#     return render(request, 'modifier_vehicule.html', context)
 def modifier_vehicule(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
 
@@ -107,3 +95,20 @@ def vehicule_pdf(request, pk):
         return HttpResponse('Erreur lors de la génération du PDF', status=500)
 
     return response
+
+
+def ajouter_marque(request):
+    if request.method == 'POST':
+        form = marqueForm(request.POST)
+        if form.is_valid():
+            marque = form.cleaned_data['marque']
+            if Marque.objects.filter(marque=marque).exists():
+                return JsonResponse({'error': 'Cette marque existe déjà.'}, status=400)
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            errors = dict(form.errors.items())
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        form = marqueForm()
+    return render(request, 'ajouter_vehicule.html', {'form': form})
