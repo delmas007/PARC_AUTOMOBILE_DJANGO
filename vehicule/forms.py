@@ -48,7 +48,8 @@ class VehiculeForm(forms.ModelForm):
         fields = '__all__'
 
     marque = forms.ModelChoiceField(queryset=Marque.objects.all(), required=True)
-    image = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+    images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+    energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
 
     def __init__(self, *args, **kwargs):
         super(VehiculeForm, self).__init__(*args, **kwargs)
@@ -59,11 +60,15 @@ class VehiculeForm(forms.ModelForm):
         })
         self.fields['kilometrage'].required = True
         self.fields['date_d_edition'].required = True
-        self.fields['image'].required = True
         self.fields['carte_grise'].required = True
         self.fields['date_expiration_assurance'].required = True
         self.fields['date_videnge'].required = True
         self.fields['type_commercial'].required = True
+        self.fields['energie'].widget.attrs.update({
+            'class': "form-control",
+            'id': "energie",
+            'required': True,
+        })
 
 
 class VehiculSearchForm(forms.Form):

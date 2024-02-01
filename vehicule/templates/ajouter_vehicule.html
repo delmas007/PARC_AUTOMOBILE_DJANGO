@@ -43,9 +43,6 @@
                                     <div class="form-group col-md-12">
                                         <div class="row justify-content-evenly">
                                             <div class="col-8" style="margin-top: 15px">
-                                                {% if form.errors %}
-                                                    Cette marque existe deja
-                                                {% endif %}
                                                 <label for="numero_immatriculation">Marque:</label>
                                             </div>
                                             <div class="col-4" >
@@ -56,55 +53,59 @@
                                         </div>
                                         {{ form.marque }}
                                     </div>
-                                    <div class="form-group col-md-12 {% if form.numero_immatriculation.errors %}has-error{% endif %}">
+                                    <div class="form-group col-md-12">
                                         <label for="numero_immatriculation">Numero Immatriculation</label>
                                         <input type="text" class="form-control" id="numero_immatriculation" placeholder="Numero Immatriculation" name="numero_immatriculation">
-                                        {% if form.numero_immatriculation.errors %}
-                                            <p class="help-block">{{ form.numero_immatriculation.errors.0 }}</p>
-                                        {% endif %}
                                     </div>
-                                    <div class="form-group col-md-12 {% if form.couleur.errors %}has-error{% endif %}">
-                                        <label for="adresse">Adresse</label>
-                                        <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="couleur">
-                                        {% if form.couleur.errors %}
-                                            <p class="help-block">{{ form.couleur.errors.0 }}</p>
-                                        {% endif %}
+                                    <div class="form-group col-md-12">
+                                        <label for="carte_grise">Numero de la carte grise:</label>
+                                        <input type="text" class="form-control" id="carte_grise" placeholder="Numero de la carte grise" name="carte_grise">
                                     </div>
-                                    <div class="form-group col-md-12 {% if form.kilometrage.errors %}has-error{% endif %}">
+                                    <div class="form-group col-md-12">
+                                        <label for="couleur de la voiture">Couleur de la voiture:</label>
+                                        <input type="text" class="form-control" id="couleur de la voiture" placeholder="Couleur de la voiture" name="couleur">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="date_mise_circulation">Date mise circulation:</label>
+                                        <input type="date" class="form-control" id="date_mise_circulation" placeholder="date mise circulation" name="date_mise_circulation">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="date_d_edition">Date d'edition:</label>
+                                        <input type="date" class="form-control" id="date_d_edition" placeholder="Date d'edition" name="date_d_edition">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="date_expiration_assurance">Date expiration assurance:</label>
+                                        <input type="date" class="form-control" id="date_expiration_assurance" placeholder="Date expiration assurance" name="date_expiration_assurance">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="date_videnge">Date videnge:</label>
+                                        <input type="date" class="form-control" id="date_videnge" placeholder="Date videnge" name="date_videnge">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="type_commercial">Type commercial:</label>
+                                        <input type="text" class="form-control" id="type_commercial" placeholder="Type commercial" name="type_commercial">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="carrosserie">carrosserie:</label>
+                                        <input type="text" class="form-control" id="carrosserie" placeholder="carrosserie" name="carrosserie">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="place_assises">Place assises:</label>
+                                        <input type="number" class="form-control" id="place_assises" placeholder="Place assises" name="place_assises">
+                                    </div>
+                                    <div class="form-group col-md-12">
                                         <label for="kilometrage">Kilometrage:</label>
-                                        <input type="number" class="form-control" id="kilometrage" placeholder="Kilometrage" name="kilometrage">
-                                        {% if form.numero_telephone.errors %}
-                                            <p class="help-block">{{ form.numero_telephone.errors.0 }}</p>
-                                        {% endif %}
+                                        <input type="text" class="form-control" id="kilometrage" placeholder="Kilometrage" name="kilometrage">
                                     </div>
-                                    <div class="form-group col-md-12 {% if form.date_de_naissance.errors %}has-error{% endif %}">
-                                        <label for="date_de_naissance">Date de naissance:</label>
-                                        <input type="date" class="form-control" id="date_de_naissance" placeholder="Date de naissance" name="date_de_naissance">
-                                        {% if form.date_de_naissance.errors %}
-                                            <p class="help-block">{{ form.date_de_naissance.errors.0 }}</p>
-                                        {% endif %}
+                                    <div class="form-group col-md-12">
+                                        <label for="energie">Energie:</label>
+                                        {{ form.energie }}
                                     </div>
-                                    <div class="form-group col-md-12 {% if form.date_embauche.errors %}has-error{% endif %}">
-                                        <label for="date_embauche">Date d'embauche:</label>
-                                        <input type="date" class="form-control" id="date_embauche" placeholder="Date d'embauche" name="date_embauche">
-                                        {% if form.date_embauche.errors %}
-                                            <p class="help-block">{{ form.date_embauche.errors.0 }}</p>
-                                        {% endif %}
-                                    </div>
-                                    <div class="form-group col-md-12 {% if form.numero_permis_conduire.errors %}has-error{% endif %}">
-                                        <label for="numero_permis_conduire">Numero du permis de conduire:</label>
-                                        <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire">
-                                        {% if form.numero_permis_conduire.errors %}
-                                            <p class="help-block">{{ form.numero_permis_conduire.errors.0 }}</p>
-                                        {% endif %}
-                                    </div>
-                                    <div class="form-group col-md-12 {% if form.images.errors %}has-error{% endif %}">
+
+                                    <div class="form-group col-md-12">
                                         <label for="images">Images:</label>
-                                        <input type="file" class="custom-file-input" id="customFile" name="image" multiple>
+                                        <input type="file" class="custom-file-input" id="customFile" name="images" multiple>
                                         <label class="custom-file-label" for="customFile">Choisir des images</label>
-                                        {% if form.images.errors %}
-                                            <p class="help-block">{{ form.images.errors.0 }}</p>
-                                        {% endif %}
                                     </div>
 
                                 </div>
