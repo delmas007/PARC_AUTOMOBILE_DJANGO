@@ -14,33 +14,45 @@ class Marque(models.Model):
 class Vehicule(models.Model):
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     numero_immatriculation = models.CharField(max_length=250)
-    couleur = models.CharField(max_length=250)
+    couleur = models.CharField(max_length=250, blank=True, null=True)
     carte_grise = models.CharField(max_length=250)
     date_mise_circulation = models.DateField(blank=True, null=True)
     date_d_edition = models.DateField(blank=True, null=True)
-    type_commercial = models.CharField(max_length=250)
+    type_commercial = models.CharField(max_length=250, blank=True, null=True)
     carrosserie = models.CharField(max_length=250, blank=True, null=True)
-    energie = models.CharField(max_length=250, blank=True, null=True)
     place_assises = models.IntegerField(blank=True, null=True)
-    date_expiration_assurance = models.DateField(blank=True, null=True)
-    date_videnge = models.DateField(blank=True, null=True)
-    kilometrage = models.IntegerField(blank=True, null=True)
+    date_expiration_assurance = models.DateField(blank=False)
+    date_videnge = models.DateField(blank=False)
+    kilometrage = models.IntegerField(blank=False)
+    energie = models.CharField(
+        blank=False,
+        max_length=250,
+        choices=[
+            ('essence', 'Essence'),
+            ('diesel', 'Diesel'),
+            ('electrique', 'Électrique'),
+            ('hybride', 'Hybride'),
+            ('hybride_rechargeable', 'Hybride Rechargeable'),
+            ('gaz_naturel', 'Gaz Naturel'),
+            ('hydrogene', 'Hydrogène'),
+        ]
+    )
 
     def __str__(self):
         return f"{self.numero_immatriculation}"
 
 
 class Conducteur(models.Model):
-    nom = models.CharField(max_length=250, blank=True, null=True)
-    prenom = models.CharField(max_length=250, blank=True, null=True)
-    numero_permis_conduire = models.CharField(max_length=20, unique=True)
+    nom = models.CharField(max_length=250, blank=False)
+    prenom = models.CharField(max_length=250, blank=False)
+    numero_permis_conduire = models.CharField(max_length=20, unique=True, blank=False)
     date_embauche = models.DateField(blank=True, null=True)
-    numero_telephone = models.CharField(max_length=15)
-    adresse = models.TextField(blank=True, null=True)
+    numero_telephone = models.CharField(max_length=15, blank=False)
+    adresse = models.TextField(blank=False)
     disponibilite = models.BooleanField(default=True)
-    email = models.CharField(max_length=250)
-    permis = models.CharField(max_length=250)
-    num_cni = models.CharField(max_length=250)
+    email = models.CharField(max_length=250, blank=True, null=True)
+    permis = models.CharField(max_length=250, blank=False)
+    num_cni = models.CharField(max_length=250, blank=False)
 
     def __str__(self):
         return f"{self.nom} {self.prenom} - {self.numero_permis_conduire}"
@@ -49,14 +61,14 @@ class Conducteur(models.Model):
 class Deplacement(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
-    date_depart = models.DateTimeField(blank=True, null=True)
-    lieu_depart = models.CharField(max_length=250)
-    niveau_carburant = models.IntegerField()
-    lieu_arrivee = models.CharField(max_length=250)
-    duree_deplacement = models.CharField(max_length=250)
+    date_depart = models.DateTimeField(blank=False)
+    lieu_depart = models.CharField(max_length=250, blank=False)
+    niveau_carburant = models.IntegerField(blank=False)
+    lieu_arrivee = models.CharField(max_length=250, blank=False)
+    duree_deplacement = models.CharField(max_length=250, blank=False)
     depart = models.BooleanField(default=False)
     arrivee = models.BooleanField(default=False)
-    kilometrage_depart = models.IntegerField()
+    kilometrage_depart = models.IntegerField(blank=False)
     statut = models.CharField(
         max_length=50,
         choices=[
@@ -71,33 +83,30 @@ class Deplacement(models.Model):
         if self.depart and not self.date_depart:
             self.date_depart = timezone.now()
 
-        if self.arrivee and not self.date_arrivee:
-            self.date_arrivee = timezone.now()
-
         super(Deplacement, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.vehicule} - {self.date_depart} to {self.date_arrivee}"
+        return f"{self.vehicule} - {self.date_depart}"
 
 
 class Entretien(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
-    date_entretien = models.DateField(blank=True, null=True)
-    prix_entretient = models.DecimalField(max_digits=10, decimal_places=2)
+    date_entretien = models.DateField(blank=False)
+    prix_entretient = models.IntegerField(blank=False)
     description = models.TextField(blank=True, null=True)
 
 
 class EtatArrive(models.Model):
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
-    kilometrage_arrive = models.IntegerField()
-    niveau_carburant_a = models.IntegerField()
-    date_arrive = models.DateField()
+    kilometrage_arrive = models.IntegerField(blank=False)
+    niveau_carburant_a = models.IntegerField(blank=False)
+    date_arrive = models.DateField(blank=False)
 
 
 class Incident(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
-    description_incident = models.TextField()
+    description_incident = models.TextField(blank=False)
 
 
 class Photo(models.Model):
