@@ -21,11 +21,10 @@ class Vehicule(models.Model):
     type_commercial = models.CharField(max_length=250, blank=True, null=True)
     carrosserie = models.CharField(max_length=250, blank=True, null=True)
     place_assises = models.IntegerField(blank=True, null=True)
-    date_expiration_assurance = models.DateField(blank=False)
-    date_videnge = models.DateField(blank=False)
-    kilometrage = models.IntegerField(blank=False)
+    date_expiration_assurance = models.DateField()
+    date_videnge = models.DateField()
+    kilometrage = models.IntegerField()
     energie = models.CharField(
-        blank=False,
         max_length=250,
         choices=[
             ('essence', 'Essence'),
@@ -43,16 +42,16 @@ class Vehicule(models.Model):
 
 
 class Conducteur(models.Model):
-    nom = models.CharField(max_length=250, blank=False)
-    prenom = models.CharField(max_length=250, blank=False)
-    numero_permis_conduire = models.CharField(max_length=20, unique=True, blank=False)
+    nom = models.CharField(max_length=250 )
+    prenom = models.CharField(max_length=250, )
+    numero_permis_conduire = models.CharField(max_length=20, unique=True, )
     date_embauche = models.DateField(blank=True, null=True)
-    numero_telephone = models.CharField(max_length=15, blank=False)
-    adresse = models.TextField(blank=False)
+    numero_telephone = models.CharField(max_length=15, )
+    adresse = models.TextField(blank=True, null=True)
     disponibilite = models.BooleanField(default=True)
     email = models.CharField(max_length=250, blank=True, null=True)
-    permis = models.CharField(max_length=250, blank=False)
-    num_cni = models.CharField(max_length=250, blank=False)
+    permis = models.CharField(max_length=250, )
+    num_cni = models.CharField(max_length=250, )
 
     def __str__(self):
         return f"{self.nom} {self.prenom} - {self.numero_permis_conduire}"
@@ -61,14 +60,14 @@ class Conducteur(models.Model):
 class Deplacement(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
-    date_depart = models.DateTimeField(blank=False)
-    lieu_depart = models.CharField(max_length=250, blank=False)
-    niveau_carburant = models.IntegerField(blank=False)
-    lieu_arrivee = models.CharField(max_length=250, blank=False)
-    duree_deplacement = models.CharField(max_length=250, blank=False)
+    date_depart = models.DateTimeField()
+    lieu_depart = models.CharField(max_length=250, )
+    niveau_carburant = models.IntegerField()
+    lieu_arrivee = models.CharField(max_length=250, )
+    duree_deplacement = models.CharField(max_length=250, )
     depart = models.BooleanField(default=False)
     arrivee = models.BooleanField(default=False)
-    kilometrage_depart = models.IntegerField(blank=False)
+    kilometrage_depart = models.IntegerField()
     statut = models.CharField(
         max_length=50,
         choices=[
@@ -91,22 +90,22 @@ class Deplacement(models.Model):
 
 class Entretien(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
-    date_entretien = models.DateField(blank=False)
-    prix_entretient = models.IntegerField(blank=False)
+    date_entretien = models.DateField()
+    prix_entretient = models.IntegerField()
     description = models.TextField(blank=True, null=True)
 
 
 class EtatArrive(models.Model):
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
-    kilometrage_arrive = models.IntegerField(blank=False)
-    niveau_carburant_a = models.IntegerField(blank=False)
-    date_arrive = models.DateField(blank=False)
+    kilometrage_arrive = models.IntegerField()
+    niveau_carburant_a = models.IntegerField()
+    date_arrive = models.DateField()
 
 
 class Incident(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
-    description_incident = models.TextField(blank=False)
+    description_incident = models.TextField()
 
 
 class Photo(models.Model):

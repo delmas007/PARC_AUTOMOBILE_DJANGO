@@ -57,13 +57,13 @@ class VehiculeForm(forms.ModelForm):
             'id': "selectMarque",
             'required': True,
         })
-        self.fields['kilometrage'].required = False
-        self.fields['date_d_edition'].required = False
-        self.fields['image'].required = False
-        self.fields['carte_grise'].required = False
-        self.fields['date_expiration_assurance'].required = False
-        self.fields['date_videnge'].required = False
-        self.fields['type_commercial'].required = False
+        self.fields['kilometrage'].required = True
+        self.fields['date_d_edition'].required = True
+        self.fields['image'].required = True
+        self.fields['carte_grise'].required = True
+        self.fields['date_expiration_assurance'].required = True
+        self.fields['date_videnge'].required = True
+        self.fields['type_commercial'].required = True
 
 
 class VehiculSearchForm(forms.Form):
