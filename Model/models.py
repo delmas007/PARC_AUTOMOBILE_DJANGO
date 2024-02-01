@@ -4,39 +4,48 @@ from django.utils import timezone
 from django.db import models
 
 
-class Vehicule(models.Model):
-    carburant = [
-        ('Essence (essence sans plomb)', 'Essence'),
-        ('Diesel', 'Diesel'),
-        ('GPL (Gaz de pétrole liquéfié)', 'GPL'),
-        ('Électricité ', 'Électricité'),
-        ('Hydrogène ', 'Hydrogène'),
-    ]
+class Photo(models.Model):
+    image = models.ImageField(upload_to='Images/', null=True, blank=True)
 
-    marque = models.CharField(max_length=250, blank=False)
-    couleur = models.CharField(max_length=250, blank=True, null=True)
-    modele = models.CharField(max_length=250, blank=False)
-    numero_immatriculation = models.CharField(max_length=100, unique=True)
-    date_mise_en_service = models.DateField(blank=True, null=True)
-    type_carburant = models.CharField(max_length=250, choices=carburant, blank=True, null=True)
-    kilometrage = models.IntegerField()
-    annee_fabrication = models.DateField(blank=True, null=True)
-    disponibilite = models.BooleanField(default=True)
-    image = models.ImageField(upload_to='vehicule_images/', blank=True, null=True)
+
+class Marque(models.Model):
+    marque = models.CharField(max_length=250)
 
     def __str__(self):
-        return f"{self.marque} - {self.modele} - {self.numero_immatriculation}"
+        return self.marque
+
+
+class Vehicule(models.Model):
+    marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
+    numero_immatriculation = models.CharField(max_length=250)
+    couleur = models.CharField(max_length=250)
+    carte_grise = models.CharField(max_length=250)
+    date_mise_circulation = models.DateField()
+    date_d_edition = models.DateField()
+    type_commercial = models.CharField(max_length=250)
+    carrosserie = models.CharField(max_length=250)
+    energie = models.CharField(max_length=250)
+    place_assises = models.IntegerField()
+    date_expiration_assurance = models.DateField()
+    date_videnge = models.DateField()
+    kilometrage = models.IntegerField()
+    image = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"{self.numero_immatriculation}"
 
 
 class Conducteur(models.Model):
     nom = models.CharField(max_length=250, blank=True, null=True)
     prenom = models.CharField(max_length=250, blank=True, null=True)
-    date_de_naissance = models.DateField(blank=True, null=True)
     numero_permis_conduire = models.CharField(max_length=20, unique=True)
     date_embauche = models.DateField(blank=True, null=True)
     numero_telephone = models.CharField(max_length=15)
     adresse = models.TextField(blank=True, null=True)
     disponibilite = models.BooleanField(default=True)
+    email = models.CharField(max_length=250)
+    permis = models.CharField(max_length=250)
+    num_cni = models.CharField(max_length=250)
 
     def __str__(self):
         return f"{self.nom} {self.prenom} - {self.numero_permis_conduire}"
@@ -48,11 +57,13 @@ class Deplacement(models.Model):
     date_depart = models.DateTimeField(blank=True, null=True)
     date_arrivee = models.DateTimeField(blank=True, null=True)
     lieu_depart = models.CharField(max_length=250)
+    niveau_carburant = models.IntegerField()
     lieu_arrivee = models.CharField(max_length=250)
-    details = models.TextField(blank=True, null=True)
+    duree_deplacement = models.CharField(max_length=250)
     depart = models.BooleanField(default=False)
     arrivee = models.BooleanField(default=False)
     prix = models.IntegerField(blank=True, null=True)
+    kilometrage_depart = models.IntegerField()
     statut = models.CharField(
         max_length=50,
         choices=[
@@ -79,9 +90,20 @@ class Deplacement(models.Model):
 class Entretien(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     date_entretien = models.DateField(blank=True, null=True)
-    type_entretien = models.CharField(max_length=100)
-    cout_entretien = models.DecimalField(max_digits=10, decimal_places=2)
-    details_entretien = models.TextField(blank=True, null=True)
+    prix_entretient = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return f"Entretien de {self.vehicule} - {self.type_entretien}"
+
+class EtatArrive(models.Model):
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
+    photo = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
+    kilometrage_arrive = models.IntegerField()
+    niveau_carburant_a = models.IntegerField()
+    date_arrive = models.DateField()
+
+
+class Incident(models.Model):
+    vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
+    description_incident = models.TextField()
+    image = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)

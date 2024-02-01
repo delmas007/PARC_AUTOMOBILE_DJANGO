@@ -3,11 +3,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.template.loader import get_template
-from django.urls import reverse
 from xhtml2pdf import pisa
 
 from Model.models import Vehicule
-from vehicule.forms import VehiculeForm, VehiculeForme, VehiculSearchForm
+from vehicule.forms import VehiculeForm, VehiculSearchForm
 
 
 # Create your views here.
@@ -45,8 +44,7 @@ def vehicul_search(request):
         if query:
             vehicules = vehicules.filter(
                 Q(marque__icontains=query) |
-                Q(numero_immatriculation__icontains=query) |
-                Q(modele__icontains=query)
+                Q(numero_immatriculation__icontains=query)
             )
 
     return render(request, 'afficher_vehicule.html', {'vehicules': vehicules, 'form': form})
@@ -81,14 +79,14 @@ def modifier_vehicule(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
 
     if request.method == 'POST':
-        form = VehiculeForme(request.POST, request.FILES, instance=vehicule)
+        form = VehiculeForm(request.POST, request.FILES, instance=vehicule)
         if form.is_valid():
             form.save()
             return redirect('vehicule:liste_vehicules')
     else:
-        form = VehiculeForme(instance=vehicule, initial={
-            'date_mise_en_service': vehicule.date_mise_en_service,
-            'annee_fabrication': vehicule.annee_fabrication,
+        form = VehiculeForm(instance=vehicule, initial={
+            'date_mise_circulation': vehicule.date_mise_circulation,
+            'date_d_edition': vehicule.date_d_edition,
         })
     return render(request, 'modifier_vehicule.html', {'form': form})
 
