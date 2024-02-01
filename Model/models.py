@@ -50,14 +50,12 @@ class Deplacement(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     date_depart = models.DateTimeField(blank=True, null=True)
-    date_arrivee = models.DateTimeField(blank=True, null=True)
     lieu_depart = models.CharField(max_length=250)
     niveau_carburant = models.IntegerField()
     lieu_arrivee = models.CharField(max_length=250)
     duree_deplacement = models.CharField(max_length=250)
     depart = models.BooleanField(default=False)
     arrivee = models.BooleanField(default=False)
-    prix = models.IntegerField(blank=True, null=True)
     kilometrage_depart = models.IntegerField()
     statut = models.CharField(
         max_length=50,
