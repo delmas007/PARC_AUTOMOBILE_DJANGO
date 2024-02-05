@@ -97,6 +97,20 @@
                                            <p class="help-block">{{ form.numero_permis_conduire.errors.0 }}</p>
                                        {% endif %}
                                    </div>
+                                   <div class="form-group col-md-6 {% if form.email.errors %}has-error{% endif %}">
+                                       <label for="email">Email:</label>
+                                       <input type="email" class="form-control" id="email" placeholder="email" name="email">
+                                       {% if form.email.errors %}
+                                           <p class="help-block">{{ form.email.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.num_cni.errors %}has-error{% endif %}">
+                                       <label for="num_cni">numero cni:</label>
+                                       <input type="text" class="form-control" id="num_cni" placeholder="numero cni" name="num_cni">
+                                       {% if form.num_cni.errors %}
+                                           <p class="help-block">{{ form.num_cni.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
                                </div>
                                <button type="submit" class="btn btn-primary" style="width: 100%">Ajouter</button>
                            </form>
