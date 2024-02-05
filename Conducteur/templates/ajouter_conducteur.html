@@ -45,7 +45,7 @@
                      </div>
                      <div class="iq-card-body">
                         <div class="new-user-info">
-                           <form method="post">
+                           <form method="post" enctype="multipart/form-data">
                                {% csrf_token %}
                                <div class="row ">
                                    <div class="form-group col-md-6 {% if form.nom.errors %}has-error{% endif %}">
@@ -110,6 +110,11 @@
                                        {% if form.num_cni.errors %}
                                            <p class="help-block">{{ form.num_cni.errors.0 }}</p>
                                        {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-12">
+                                       <label for="image">Images:</label>
+                                       <input type="file" class="custom-file-input" id="customFile" name="image" >
+                                       <label class="custom-file-label" for="customFile">Choisir des images</label>
                                    </div>
                                </div>
                                <button type="submit" class="btn btn-primary" style="width: 100%">Ajouter</button>

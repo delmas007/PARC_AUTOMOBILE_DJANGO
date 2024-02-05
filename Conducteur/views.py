@@ -11,7 +11,7 @@ from .forms import ConducteurForm, ConducteurSearchForm
 
 def ajouter_conducteur(request):
     if request.method == 'POST':
-        form = ConducteurForm(request.POST)
+        form = ConducteurForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Le conducteur a été ajouté avec succès.')
