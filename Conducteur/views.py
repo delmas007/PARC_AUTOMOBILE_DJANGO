@@ -16,6 +16,8 @@ def ajouter_conducteur(request):
             form.save()
             messages.success(request, 'Le conducteur a été ajouté avec succès.')
             return redirect('conducteur:ajouter_conducteur')
+        else:
+            print(form.errors)
     else:
         form = ConducteurForm()
     return render(request, 'ajouter_conducteur.html', {'form': form})
