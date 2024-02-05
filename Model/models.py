@@ -42,7 +42,7 @@ class Vehicule(models.Model):
 
 
 class Conducteur(models.Model):
-    nom = models.CharField(max_length=250 )
+    nom = models.CharField(max_length=250)
     prenom = models.CharField(max_length=250, )
     numero_permis_conduire = models.CharField(max_length=20, unique=True, )
     date_embauche = models.DateField(blank=True, null=True)
@@ -50,8 +50,8 @@ class Conducteur(models.Model):
     adresse = models.TextField(blank=True, null=True)
     disponibilite = models.BooleanField(default=True)
     email = models.CharField(max_length=250, blank=True, null=True)
-    permis = models.CharField(max_length=250, )
     num_cni = models.CharField(max_length=250, )
+    image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.nom} {self.prenom} - {self.numero_permis_conduire}"
