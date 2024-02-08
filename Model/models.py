@@ -215,8 +215,9 @@ class Entretien(models.Model):
 
 
 class EtatArrive(models.Model):
-    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True)
-    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True,
+                                    related_name='deplacement_etat')
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='utilisateur_etat')
     location = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True)
     kilometrage_arrive = models.IntegerField()
     niveau_carburant_a = models.IntegerField()
