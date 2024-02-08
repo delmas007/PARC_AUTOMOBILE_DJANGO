@@ -115,13 +115,25 @@ class Vehicule(models.Model):
         return f"{self.numero_immatriculation}"
 
 
+class Demande_prolongement(models.Model):
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
+    duree = models.CharField(max_length=250, )
+    motif = models.CharField(max_length=250, )
+    en_cours = models.BooleanField(default=True)
+    accepter = models.BooleanField(default=False)
+    refuser = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.conducteur.nom} {self.conducteur.prenom}"
+
+
 class Deplacement(models.Model):
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
+    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL, null=True)
     date_depart = models.DateTimeField()
-    lieu_depart = models.CharField(max_length=250, )
     niveau_carburant = models.IntegerField()
-    lieu_arrivee = models.CharField(max_length=250, )
     duree_deplacement = models.CharField(max_length=250, )
     depart = models.BooleanField(default=False)
     arrivee = models.BooleanField(default=False)
@@ -129,11 +141,10 @@ class Deplacement(models.Model):
     statut = models.CharField(
         max_length=50,
         choices=[
-            ('en attente de départ', 'en attente de départ'),
             ('en cours', 'En cours...'),
             ('arrivée', 'Arrivée')
         ],
-        default='en attente de départ'
+        default='en cours'
     )
 
     def save(self, *args, **kwargs):
@@ -143,7 +154,27 @@ class Deplacement(models.Model):
         super(Deplacement, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.vehicule} - {self.date_depart}"
+        return f"{self.vehicule} - {self.conducteur.nom}"
+
+
+class Carburant(models.Model):
+    vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
+
+    type = models.CharField(
+        max_length=250,
+        choices=[
+            ('essence', 'Essence'),
+            ('diesel', 'Diesel'),
+            ('electrique', 'Électrique'),
+            ('hybride', 'Hybride'),
+            ('hybride_rechargeable', 'Hybride Rechargeable'),
+            ('gaz_naturel', 'Gaz Naturel'),
+            ('hydrogene', 'Hydrogène'),
+        ]
+    )
+    prix = models.IntegerField()
+    quantite = models.IntegerField()
 
 
 class Entretien(models.Model):
@@ -158,6 +189,13 @@ class EtatArrive(models.Model):
     kilometrage_arrive = models.IntegerField()
     niveau_carburant_a = models.IntegerField()
     date_arrive = models.DateField()
+
+
+class Demande_location(models.Model):
+    date = models.DateField()
+    en_cours = models.BooleanField(default=True)
+    accepter = models.BooleanField(default=False)
+    refuser = models.BooleanField(default=False)
 
 
 class Incident(models.Model):
