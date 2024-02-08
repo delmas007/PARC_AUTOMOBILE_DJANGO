@@ -29,18 +29,19 @@ class MyUserManager(BaseUserManager):
         return user
 
 
-class Role(Enum):
+class Roles(models.Model):
     ADMIN = 'admin'
     GESTIONNAIRE = 'gestionnaire'
     CONDUCTEUR = 'conducteur'
     CLIENT = 'client'
 
+    ROLE_CHOICES = [
+        (ADMIN, 'admin'),
+        (GESTIONNAIRE, 'gestionnaire'),
+        (CONDUCTEUR, 'conducteur'),
+        (CLIENT, 'client'),
 
-class Profile(models.Model):
-    role = EnumField(Role)
-
-    def __str__(self):
-        return f"{self.role}"
+    ]
 
 
 class Conducteur(models.Model):
@@ -70,6 +71,7 @@ class Utilisateur(AbstractBaseUser):
     nom = models.CharField(max_length=250, verbose_name='nom')
     prenom = models.CharField(max_length=250)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
+    roles = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -218,14 +220,14 @@ class EtatArrive(models.Model):
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True,
                                     related_name='deplacement_etat')
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='utilisateur_etat')
-    location = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, blank=True, null=True)
     kilometrage_arrive = models.IntegerField()
     niveau_carburant_a = models.IntegerField()
     date_arrive = models.DateField()
 
     def save(self, *args, **kwargs):
-        if self.date:
-            self.date = timezone.now()
+        if self.date_arrive:
+            self.date_arrive = timezone.now()
         super().save(*args, **kwargs)
 
 
@@ -238,3 +240,8 @@ class Incident(models.Model):
 class Photo(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     images = models.ImageField(upload_to='Images/', null=True, blank=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, blank=True, null=True)
+    incident = models.ForeignKey(Incident, on_delete=models.SET_NULL, blank=True, null=True)
+    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL, blank=True, null=True)
+    etat_arrive = models.ForeignKey(EtatArrive, on_delete=models.SET_NULL, blank=True, null=True)
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True)
