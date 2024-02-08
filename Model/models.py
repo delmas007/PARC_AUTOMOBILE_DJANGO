@@ -42,6 +42,10 @@ class Roles(models.Model):
         (CLIENT, 'client'),
 
     ]
+    role = models.CharField(max_length=200, choices=ROLE_CHOICES)
+
+    def __str__(self):
+        return self.get_role_display()
 
 
 class Conducteur(models.Model):
