@@ -1,116 +1,143 @@
 {% extends 'header.html' %}
 {% load static %}
 {% block content%}
-    <body>
-    <!-- loader Start -->
-    <div id="loading">
-        <div id="loading-center">
-        </div>
-    </div>
-    <!-- loader END -->
-    <!-- Wrapper Start -->
-    <div class="wrapper">
-        {% include 'slide.html' %}
-        <!-- TOP Nav Bar -->
-        {% include 'top_navbar.html' %}
-        <!-- TOP Nav Bar END -->
-        <!-- Page Content  -->
-        <div id="content-page" class="content-page">
-            <div class="container-fluid">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-lg-9">
-                        <div class="iq-card">
-                            <div class="iq-card-header d-flex justify-content-between">
-                                <div class="iq-header-title">
-                                    <h4 class="card-title">Modifier les informations du conducteur</h4>
-                                    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true" style="top:0; bottom: 0">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="display: flex; justify-content: center; align-items: center;text-align: center">
-                                                    <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;text-align: center">Erreur de modification</h5>
-                                                </div>
-                                                <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
-                                                    <img src="{% static 'images/error.gif' %}" alt="GIF animé" style="max-width: 30%; height: auto;">
-                                                    {% if form.errors.nom %}
-                                                        <div class="text-danger h4">Le Nom est obligatoire</div>
-                                                    {% elif form.errors.numero_telephone %}
-                                                        <div class="text-danger h4">Le Numero est obligatoire</div>
-                                                    {% elif form.errors.prenom %}
-                                                        <div class="text-danger h4">Le Prenom est obligatoire</div>
-                                                    {% elif form.errors.numero_permis_conduire %}
-                                                        <div class="text-danger h4">Le Numero de permis est obligatoire</div>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="modal-footer text-center" style="display: flex; justify-content: center; align-items: center;">
-                                                    <button type="button" class="btn btn-secondary align-items-center" data-dismiss="modal">Fermer</button>
-                                                </div>
-                                            </div>
+   <body>
+      <!-- loader Start -->
+      <div id="loading">
+         <div id="loading-center">
+         </div>
+      </div>
+      <!-- loader END -->
+      <!-- Wrapper Start -->
+      <div class="wrapper">
+          {% include 'slide.html' %}
+          <!-- TOP Nav Bar -->
+          {% include 'top_navbar.html' %}
+      <!-- TOP Nav Bar END -->
+      <!-- Page Content  -->
+   <div id="content-page" class="content-page">
+      <div class="container-fluid">
+         <div class="row d-flex justify-content-center">
+            <div class="col-lg-9">
+                  <div class="iq-card">
+                     <div class="iq-card-header d-flex justify-content-between">
+                        <div class="iq-header-title">
+                           <h4 class="card-title">Ajout d'un nouveau conducteur</h4>
+                            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true" style="top:0; bottom: 0">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;">Conducteur ajouter avec succes!</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
+                                            <img src="{% static 'images/Success.gif' %}" alt="GIF animé" style="max-width: 30%; height: auto;">
+                                        </div>
+                                        <div class="modal-footer text-center" style="display: flex; justify-content: center; align-items: center;">
+                                            <button type="button" class="btn btn-secondary align-items-center" data-dismiss="modal">Fermer</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="iq-card-body">
-                                <div class="new-user-info">
-                                    <form method="post">
-                                        {% csrf_token %}
-                                        <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label for="nom">Nom</label>
-                                                <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom"  value="{{ form.nom.value }}">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="prenom">Prenom</label>
-                                                <input type="text" class="form-control" id="prenom" placeholder="Prenom" name="prenom" value="{{ form.prenom.value }}">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="adresse">Adresse</label>
-                                                <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="adresse" value="{{ form.adresse.value }}">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="numero_telephone">Numero de telephone:</label>
-                                                <input type="number" class="form-control" id="numero_telephone" placeholder="Numero de telephone" name="numero_telephone" value="{{ form.numero_telephone.value }}">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="date_de_naissance">Date de naissance:</label>
-                                                {% if form.initial.date_de_naissance %}
-                                                    <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance" value="{{ form.initial.date_de_naissance|date:'Y-m-d' }}">
-                                                {% else %}
-                                                    <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance">
-                                                {% endif %}
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="date_embauche">Date d'embauche:</label>
-                                                {% if form.initial.date_embauche %}
-                                                    <input type="date" class="form-control" id="date_embauche" placeholder="date d'embauche" name="date_embauche" value="{{ form.initial.date_embauche|date:'Y-m-d' }}">
-                                                {% else %}
-                                                    <input type="date" class="form-control" id="date_embauche" placeholder="date d'embauche" name="date_embauche">
-                                                {% endif %}
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="numero_permis_conduire">Numero du permis de conduire:</label>
-                                                <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire" value="{{ form.numero_permis_conduire.value }}">
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary" style="width: 100%">Modifier</button>
-                                    </form>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                     <div class="iq-card-body">
+                        <div class="new-user-info">
+                           <form method="post" enctype="multipart/form-data">
+                               {% csrf_token %}
+                               <div class="row ">
+                                   <div class="form-group col-md-6 {% if form.nom.errors %}has-error{% endif %}">
+                                       <label for="nom">Nom</label>
+                                       <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom">
+                                       {% if form.nom.errors %}
+                                           <p class="help-block">{{ form.nom.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.prenom.errors %}has-error{% endif %}">
+                                       <label for="prenom">Prenom</label>
+                                       <input type="text" class="form-control" id="prenom" placeholder="Prenom" name="prenom">
+                                       {% if form.prenom.errors %}
+                                           <p class="help-block">{{ form.prenom.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.adresse.errors %}has-error{% endif %}">
+                                       <label for="adresse">Adresse</label>
+                                       <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="adresse">
+                                       {% if form.adresse.errors %}
+                                           <p class="help-block">{{ form.adresse.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.numero_telephone.errors %}has-error{% endif %}">
+                                       <label for="numero_telephone">Numero de telephone:</label>
+                                       <input type="number" class="form-control" id="numero_telephone" placeholder="Numero de telephone" name="numero_telephone">
+                                       {% if form.numero_telephone.errors %}
+                                           <p class="help-block">{{ form.numero_telephone.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.date_de_naissance.errors %}has-error{% endif %}">
+                                       <label for="date_de_naissance">Date de naissance:</label>
+                                       <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance">
+                                       {% if form.date_de_naissance.errors %}
+                                           <p class="help-block">{{ form.date_de_naissance.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.date_embauche.errors %}has-error{% endif %}">
+                                       <label for="date_embauche">Date d'embauche:</label>
+                                       <input type="date" class="form-control" id="date_embauche" placeholder="date d'embauche" name="date_embauche">
+                                       {% if form.date_embauche.errors %}
+                                           <p class="help-block">{{ form.date_embauche.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.numero_permis_conduire.errors %}has-error{% endif %}">
+                                       <label for="numero_permis_conduire">Numero du permis de conduire:</label>
+                                       <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire">
+                                       {% if form.numero_permis_conduire.errors %}
+                                           <p class="help-block">{{ form.numero_permis_conduire.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.email.errors %}has-error{% endif %}">
+                                       <label for="email">Email:</label>
+                                       <input type="email" class="form-control" id="email" placeholder="email" name="email">
+                                       {% if form.email.errors %}
+                                           <p class="help-block">{{ form.email.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-6 {% if form.num_cni.errors %}has-error{% endif %}">
+                                       <label for="num_cni">numero cni:</label>
+                                       <input type="text" class="form-control" id="num_cni" placeholder="numero cni" name="num_cni">
+                                       {% if form.num_cni.errors %}
+                                           <p class="help-block">{{ form.num_cni.errors.0 }}</p>
+                                       {% endif %}
+                                   </div>
+                                   <div class="form-group col-md-12">
+                                       <label for="image">Images:</label>
+                                       <input type="file" class="custom-file-input" id="customFile" name="image" >
+                                       <label class="custom-file-label" for="customFile">Choisir des images</label>
+                                   </div>
+                               </div>
+                               <button type="submit" class="btn btn-primary" style="width: 100%">Ajouter</button>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
             </div>
-        </div>
-    </div>
-    {% include 'footer.html' %}
-    <script>
-        {% if messages %}
-            document.addEventListener('DOMContentLoaded', function() {
-                var successMessage = "{% for message in messages %}{{ message }}{% endfor %}";
-                if (successMessage.trim() !== "") {
-                    $('#successModal').modal('show');
-                }
-            });
-        {% endif %}
-    </script>
-    </body>
+         </div>
+      </div>
+   </div>
+   </div>
+      {% include 'footer.html' %}
+      <script>
+          {% if messages %}
+              document.addEventListener('DOMContentLoaded', function() {
+                  var successMessage = "{% for message in messages %}{{ message }}{% endfor %}";
+                  if (successMessage.trim() !== "") {
+                      // Utilisez Bootstrap modal pour afficher le message
+                      $('#successModal').modal('show');
+                  }
+              });
+          {% endif %}
+      </script>
+   </body>
 {% endblock %}
