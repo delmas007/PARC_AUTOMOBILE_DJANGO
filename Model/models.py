@@ -157,6 +157,35 @@ class Deplacement(models.Model):
         return f"{self.vehicule} - {self.conducteur.nom}"
 
 
+class Demande_location(models.Model):
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
+    date = models.DateField()
+    en_cours = models.BooleanField(default=True)
+    accepter = models.BooleanField(default=False)
+    refuser = models.BooleanField(default=False)
+    paniers = models.ManyToManyField(Vehicule)
+
+
+class Location(models.Model):
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
+    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL, null=True)
+    demande_location = models.ForeignKey(Demande_location, on_delete=models.SET_NULL, null=True)
+    date_depart = models.DateTimeField()
+    niveau_carburant = models.IntegerField()
+    duree_deplacement = models.CharField(max_length=250, )
+    depart = models.BooleanField(default=False)
+    arrivee = models.BooleanField(default=False)
+    kilometrage_depart = models.IntegerField()
+    statut = models.CharField(
+        max_length=50,
+        choices=[
+            ('en cours', 'En cours...'),
+            ('arrivée', 'Arrivée')
+        ],
+        default='en cours'
+    )
+
+
 class Carburant(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
@@ -179,23 +208,24 @@ class Carburant(models.Model):
 
 class Entretien(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
     date_entretien = models.DateField()
     prix_entretient = models.IntegerField()
     description = models.TextField(blank=True, null=True)
 
 
 class EtatArrive(models.Model):
-    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True)
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
+    location = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True)
     kilometrage_arrive = models.IntegerField()
     niveau_carburant_a = models.IntegerField()
     date_arrive = models.DateField()
 
-
-class Demande_location(models.Model):
-    date = models.DateField()
-    en_cours = models.BooleanField(default=True)
-    accepter = models.BooleanField(default=False)
-    refuser = models.BooleanField(default=False)
+    def save(self, *args, **kwargs):
+        if self.date:
+            self.date = timezone.now()
+        super().save(*args, **kwargs)
 
 
 class Incident(models.Model):
