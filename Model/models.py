@@ -5,8 +5,6 @@ from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.utils import timezone
 
 from django.db import models
-from enum import Enum
-from django_enum import EnumField
 
 
 class MyUserManager(BaseUserManager):
