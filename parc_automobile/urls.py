@@ -23,6 +23,8 @@ from parc_automobile.views import Accueil
 
 urlpatterns = [
                   path('', Accueil, name='Accueil'),
+                  path('admins/', include('Admin.urls')),
+                  path('authentification/', include('Model.urls')),
                   path('vehicule/', include('vehicule.urls')),
                   path('deplacement/', include('deplacement.urls')),
                   path('admin/', admin.site.urls),

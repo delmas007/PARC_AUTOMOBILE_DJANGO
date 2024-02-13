@@ -9,12 +9,12 @@
       </div>
       <!-- loader END -->
         <!-- Sign in Start -->
-        <section class="sign-in-">
-            <div class="container mt-5 p-0 bg-white">
+        <section class="sign-in-page">
+            <div class="container bg-white mt-5 p-0">
                 <div class="row no-gutters">
-                    <div class="col-sm-6 align-center">
+                    <div class="col-sm-6 align-self-center">
                         <div class="sign-in-from">
-                            <h1 class="mb-0">Sign Up</h1>
+                            <h1 class="mb-0 dark-signin">Sign in</h1>
                             <p>Enter your email address and password to access admin panel.</p>
                             <form class="mt-4" method="POST">
                                 {% csrf_token %}
@@ -23,31 +23,16 @@
                                     <input type="text" class="form-control mb-0" id="exampleInputEmail1" name="username" placeholder="Entrer votre nom d'utilisateur">
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Nom</label>
-                                    <input type="text" class="form-control mb-0" id="exampleInputEmail1" name="nom" placeholder="Entrer votre nom">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Prenom</label>
-                                    <input type="text" class="form-control mb-0" id="exampleInputEmail1" name="prenom" placeholder="Entrer votre prenom">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail2">Adresse email</label>
-                                    <input type="email" class="form-control mb-0" id="exampleInputEmail2" name="email" placeholder="Enter email">
-                                </div>
-                                <div class="form-group">
                                     <label for="exampleInputPassword1">Mot de passe</label>
-                                    <input type="password" class="form-control mb-0" id="exampleInputPassword1" name="password1" placeholder="Mot de passe">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Confirme mot de passe</label>
-                                    <input type="password" class="form-control mb-0" id="exampleInputPassword1" name="password2" placeholder="Confirmez votre mot de passe">
+                                    <a href="#" class="float-right">Forgot password?</a>
+                                    <input type="password" class="form-control mb-0" id="exampleInputPassword1" name="password" placeholder="Mot de passe">
                                 </div>
                                 <div class="d-inline-block w-100">
                                     <div class="custom-control custom-checkbox d-inline-block mt-2 pt-1">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                        <label class="custom-control-label" for="customCheck1">I accept <a href="#">Terms and Conditions</a></label>
+                                        <label class="custom-control-label" for="customCheck1">Remember Me</label>
                                     </div>
-                                    <button type="submit" class="btn btn-primary float-right">Sign Up</button>
+                                    <button type="submit" class="btn btn-primary float-right">Sign in</button>
                                 </div>
                                 {% if form.errors %}
                                     {% for field, errors in form.errors.items %}
@@ -91,5 +76,5 @@
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
       {% include 'footer-inscription.html' %}
    </body>
-</html>
+    </html>
 {% endblock %}
