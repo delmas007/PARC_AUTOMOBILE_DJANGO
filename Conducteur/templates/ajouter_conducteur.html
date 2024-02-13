@@ -2,19 +2,13 @@
 {% load static %}
 {% block content%}
    <body>
-      <!-- loader Start -->
       <div id="loading">
          <div id="loading-center">
          </div>
       </div>
-      <!-- loader END -->
-      <!-- Wrapper Start -->
       <div class="wrapper">
           {% include 'slide.html' %}
-          <!-- TOP Nav Bar -->
           {% include 'top_navbar.html' %}
-      <!-- TOP Nav Bar END -->
-      <!-- Page Content  -->
    <div id="content-page" class="content-page">
       <div class="container-fluid">
          <div class="row d-flex justify-content-center">
@@ -48,73 +42,78 @@
                            <form method="post" enctype="multipart/form-data">
                                {% csrf_token %}
                                <div class="row ">
-                                   <div class="form-group col-md-6 {% if form.nom.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 {% if form.nom.errors %}has-error{% endif %}" >
                                        <label for="nom">Nom</label>
-                                       <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom">
+                                       <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom"  value="{% if form.nom.value %}{{ form.nom.value }}{% endif %}">
                                        {% if form.nom.errors %}
                                            <p class="help-block">{{ form.nom.errors.0 }}</p>
                                        {% endif %}
                                    </div>
                                    <div class="form-group col-md-6 {% if form.prenom.errors %}has-error{% endif %}">
                                        <label for="prenom">Prenom</label>
-                                       <input type="text" class="form-control" id="prenom" placeholder="Prenom" name="prenom">
+                                       <input type="text" class="form-control" id="prenom" placeholder="Prenom" name="prenom" value="{% if form.prenom.value %}{{ form.prenom.value }}{% endif %}">
                                        {% if form.prenom.errors %}
                                            <p class="help-block">{{ form.prenom.errors.0 }}</p>
                                        {% endif %}
                                    </div>
                                    <div class="form-group col-md-6 {% if form.adresse.errors %}has-error{% endif %}">
                                        <label for="adresse">Adresse</label>
-                                       <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="adresse">
+                                       <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="adresse" value="{% if form.adresse.value %}{{ form.adresse.value }}{% endif %}">
                                        {% if form.adresse.errors %}
                                            <p class="help-block">{{ form.adresse.errors.0 }}</p>
                                        {% endif %}
                                    </div>
                                    <div class="form-group col-md-6 {% if form.numero_telephone.errors %}has-error{% endif %}">
                                        <label for="numero_telephone">Numero de telephone:</label>
-                                       <input type="number" class="form-control" id="numero_telephone" placeholder="Numero de telephone" name="numero_telephone">
+                                       <input type="number" class="form-control" id="numero_telephone" placeholder="Numero de telephone" name="numero_telephone" value="{% if form.numero_telephone.value %}{{ form.numero_telephone.value }}{% endif %}">
                                        {% if form.numero_telephone.errors %}
                                            <p class="help-block">{{ form.numero_telephone.errors.0 }}</p>
                                        {% endif %}
                                    </div>
                                    <div class="form-group col-md-6 {% if form.date_de_naissance.errors %}has-error{% endif %}">
                                        <label for="date_de_naissance">Date de naissance:</label>
-                                       <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance">
+                                       <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance" value="{% if form.date_de_naissance.value %}{{ form.date_de_naissance.value }}{% endif %}">
                                        {% if form.date_de_naissance.errors %}
                                            <p class="help-block">{{ form.date_de_naissance.errors.0 }}</p>
                                        {% endif %}
                                    </div>
                                    <div class="form-group col-md-6 {% if form.date_embauche.errors %}has-error{% endif %}">
                                        <label for="date_embauche">Date d'embauche:</label>
-                                       <input type="date" class="form-control" id="date_embauche" placeholder="date d'embauche" name="date_embauche">
+                                       <input type="date" class="form-control" id="date_embauche" placeholder="date d'embauche" name="date_embauche" value="{% if form.date_embauche.value %}{{ form.date_embauche.value }}{% endif %}">
                                        {% if form.date_embauche.errors %}
                                            <p class="help-block">{{ form.date_embauche.errors.0 }}</p>
                                        {% endif %}
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.numero_permis_conduire.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 {% if form.numero_permis_conduire.errors %}has-error{% endif %}" >
                                        <label for="numero_permis_conduire">Numero du permis de conduire:</label>
-                                       <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire">
+                                       <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire" value="{% if form.numero_permis_conduire.value %}{{ form.numero_permis_conduire.value }}{% endif %}">
                                        {% if form.numero_permis_conduire.errors %}
                                            <p class="help-block">{{ form.numero_permis_conduire.errors.0 }}</p>
                                        {% endif %}
                                    </div>
                                    <div class="form-group col-md-6 {% if form.email.errors %}has-error{% endif %}">
                                        <label for="email">Email:</label>
-                                       <input type="email" class="form-control" id="email" placeholder="email" name="email">
+                                       <input type="email" class="form-control" id="email" placeholder="email" name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
                                        {% if form.email.errors %}
                                            <p class="help-block">{{ form.email.errors.0 }}</p>
                                        {% endif %}
                                    </div>
                                    <div class="form-group col-md-6 {% if form.num_cni.errors %}has-error{% endif %}">
                                        <label for="num_cni">numero cni:</label>
-                                       <input type="text" class="form-control" id="num_cni" placeholder="numero cni" name="num_cni">
+                                       <input type="text" class="form-control" id="num_cni" placeholder="numero cni" name="num_cni" value="{% if form.num_cni.value %}{{ form.num_cni.value }}{% endif %}">
                                        {% if form.num_cni.errors %}
                                            <p class="help-block">{{ form.num_cni.errors.0 }}</p>
                                        {% endif %}
                                    </div>
-                                   <div class="form-group col-md-12">
-                                       <label for="image">Images:</label>
-                                       <input type="file" class="custom-file-input" id="customFile" name="image" >
-                                       <label class="custom-file-label" for="customFile">Choisir des images</label>
+                                   <div class="form-group col-md-6 {% if form.email.errors %}has-error{% endif %}" style="margin-top: 33px">
+                                       <div class="form-control h-auto" style="border-radius: 10px">
+                                           <input placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image"  value="{% if form.image.value %}{{ form.image.value }}{% endif %}">
+                                       </div>
+                                       {% if form.image.errors %}
+                                           <p class="help-block">Veillez joindre une image</p>
+                                       {% endif %}
+                                   <div>
+                                   </div>
                                    </div>
                                </div>
                                <button type="submit" class="btn btn-primary" style="width: 100%">Ajouter</button>
@@ -129,15 +128,9 @@
    </div>
       {% include 'footer.html' %}
       <script>
-          {% if messages %}
-              document.addEventListener('DOMContentLoaded', function() {
-                  var successMessage = "{% for message in messages %}{{ message }}{% endfor %}";
-                  if (successMessage.trim() !== "") {
-                      // Utilisez Bootstrap modal pour afficher le message
+          {% for messages  in messages %}
                       $('#successModal').modal('show');
-                  }
-              });
-          {% endif %}
+          {% endfor %}
       </script>
    </body>
 {% endblock %}

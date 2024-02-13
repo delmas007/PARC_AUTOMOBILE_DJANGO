@@ -58,9 +58,9 @@ ROOT_URLCONF = 'parc_automobile.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'templates', os.path.join(BASE_DIR, 'parc_automobile/templates')
-                 ],
+        'DIRS': [BASE_DIR / 'templates',
+                 os.path.join(BASE_DIR, 'parc_automobile/templates')]
+        ,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'parc',
         'USER': 'postgres',
-        'PASSWORD': 'ivan',
+        'PASSWORD': 'delmas',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -128,8 +128,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-AUTH_USER_MODEL = 'Model.Utilisateur'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

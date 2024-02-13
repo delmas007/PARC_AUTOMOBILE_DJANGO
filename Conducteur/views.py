@@ -20,6 +20,7 @@ def ajouter_conducteur(request):
             print(form.errors)
     else:
         form = ConducteurForm()
+
     return render(request, 'ajouter_conducteur.html', {'form': form})
 
 
@@ -36,20 +37,20 @@ def supprimer_conducteur(request, conducteur_id):
 
 def modifier_conducteur(request, conducteur_id):
     conducteur = get_object_or_404(Conducteur, pk=conducteur_id)
-
     if request.method == 'POST':
-        form = ConducteurForm(request.POST, instance=conducteur)
+        form = ConducteurForm(request.POST, request.FILES, instance=conducteur)
         if form.is_valid():
-            form.save()
+            conducteur = form.save(commit=False)
+            nouveau_fichier = request.FILES.get('image', None)
+            if nouveau_fichier:
+                conducteur.image = nouveau_fichier
+            conducteur.save()
             return redirect('conducteur:tous_les_conducteurs')
-        else:
-            messages.success(request, 'Erreur de modification')
     else:
         form = ConducteurForm(instance=conducteur, initial={
             'date_de_naissance': conducteur.date_de_naissance,
             'date_embauche': conducteur.date_embauche,
         })
-
     return render(request, 'modifier_conducteur.html', {'form': form, 'conducteur': conducteur})
 
 

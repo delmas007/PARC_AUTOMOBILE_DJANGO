@@ -28,12 +28,6 @@
             background-color: #fff;
         }
 
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
         th {
             background-color: #6546d2;
             color: #fff;
@@ -45,6 +39,17 @@
             color: #fff;
             padding: 5px 10px;
             border-radius: 3px;
+        }
+
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Ajout de la classe 'center-text' pour centrer le contenu spécifique */
+        .center-text {
+            text-align: center;
         }
     </style>
 </head>
@@ -60,32 +65,35 @@
         </thead>
         <tbody>
         <tr>
-            <td><strong>Nom:</strong></td>
-            <td>{{ conducteur.nom }}</td>
+            <td ><img src="{{ conducteur.image.path }}" alt="Image du conducteur"></td>
         </tr>
         <tr>
-            <td><strong>Prénom:</strong></td>
-            <td>{{ conducteur.prenom }}</td>
+            <td ><strong>Numéro de permis de conduire:</strong></td>
+            <td class="center-text">{{ conducteur.numero_permis_conduire }}</td>
         </tr>
         <tr>
-            <td><strong>Numéro de téléphone:</strong></td>
-            <td>+{{ conducteur.numero_telephone }}</td>
+            <td ><strong>Nom:</strong></td>
+            <td class="center-text">{{ conducteur.nom }}</td>
         </tr>
         <tr>
-            <td><strong>Adresse:</strong></td>
-            <td>{{ conducteur.adresse }}</td>
+            <td ><strong>Prénom:</strong></td>
+            <td class="center-text">{{ conducteur.prenom }}</td>
         </tr>
         <tr>
-            <td><strong>Date de naissance:</strong></td>
-            <td>{{ conducteur.date_de_naissance }}</td>
+            <td ><strong>Numéro de téléphone:</strong></td>
+            <td class="center-text">+{{ conducteur.numero_telephone }}</td>
         </tr>
         <tr>
-            <td><strong>Date d'embauche:</strong></td>
-            <td>{{ conducteur.date_embauche }}</td>
+            <td ><strong>Adresse:</strong></td>
+            <td class="center-text">{{ conducteur.adresse }}</td>
         </tr>
         <tr>
-            <td><strong>Numéro de permis de conduire:</strong></td>
-            <td>{{ conducteur.numero_permis_conduire }}</td>
+            <td ><strong>Date de naissance:</strong></td>
+            <td class="center-text">{{ conducteur.date_de_naissance }}</td>
+        </tr>
+        <tr>
+            <td ><strong>Date d'embauche:</strong></td>
+            <td class="center-text">{{ conducteur.date_embauche }}</td>
         </tr>
         </tbody>
     </table>
