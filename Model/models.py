@@ -70,6 +70,11 @@ class Utilisateur(AbstractBaseUser):
         max_length=255,
         blank=False
     )
+    email = models.EmailField(
+        unique=True,
+        max_length=255,
+        blank=False
+    )
     nom = models.CharField(max_length=250, verbose_name='nom')
     prenom = models.CharField(max_length=250)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
