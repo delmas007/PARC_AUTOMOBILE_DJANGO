@@ -12,15 +12,15 @@ class ConducteurForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ConducteurForm, self).__init__(*args, **kwargs)
-        self.fields['nom'].required = True
-        self.fields['prenom'].required = True
-        self.fields['numero_telephone'].required = True
-        self.fields['numero_permis_conduire'].required = True
+        for field_name in self.fields:
+            if field_name != 'disponibilite':
+                self.fields[field_name].required = True
 
 
 class ConducteurSearchForm(forms.Form):
     q = forms.CharField(
         label='',
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Rechercher un conducteur: Nom, Prenom, Numero...', 'class': 'form-control'}),
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Rechercher un conducteur: Nom, Prenom, Numero...', 'class': 'form-control conducteur-search'}),
     )
