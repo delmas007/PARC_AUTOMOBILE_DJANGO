@@ -14,13 +14,13 @@ class Connexion(LoginView):
     form_class = ConnexionForm
 
     def get_success_url(self) -> str:
-        if self.request.user.roles.role == 'EMPLOYER':
+        if self.request.user.roles.role == 'ADMIN':
             return reverse('employer:reservation')
-        elif self.request.user.roles.role == 'ADMIN':
+        elif self.request.user.roles.role == 'GESTIONNAIRE':
             return reverse('admins:reservation_D')
-        elif self.request.user.roles.role == 'CLIENT':
+        elif self.request.user.roles.role == 'CONDUCTEUR':
             return reverse('Accueil')
-        elif self.request.user.roles.role == 'VENDEUR':
+        elif self.request.user.roles.role == 'CLIENT':
             return reverse('vendeur:ajouter_un_produit')
 
 
@@ -35,7 +35,7 @@ def inscription(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            client_role = Roles.objects.get(role=Roles.CLIENT)
+            client_role = Roles.objects.get(role=Roles.GESTIONNAIRE)
             user.roles = client_role
             # user.is_active = False
             # activateEmail(request, user, form.cleaned_data.get('email'))
