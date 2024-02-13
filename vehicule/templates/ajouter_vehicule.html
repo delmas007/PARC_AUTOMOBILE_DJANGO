@@ -28,87 +28,99 @@
          <div id="content-page" class="content-page">
             <div class="container-fluid">
                <div class="row d-flex justify-content-center">
-                  <div class="col-sm-12 col-lg-6  ">
+                  <div class="col-sm-12 col-lg-6">
                      <div class="iq-card">
-                        <div class="iq-card-header d-flex justify-content-between">
-                           <div class="iq-header-title">
-                              <h4 class="card-title">Formulaire d'ajout de vehicule</h4>
-                           </div>
-                        </div>
+                         <div class="card-header">
+                             <div class="iq-card-header d-flex justify-content-between">
+                               <div class="iq-header-title">
+                                  <h4 class="card-title">Formulaire d'ajout de véhicule</h4>
+                               </div>
+                            </div>
+                         </div>
                         <div class="iq-card-body">
                             <form class="form-horizontal" method="post" action="{% url 'vehicule:Ajouter_vehicule' %}" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <div class="row ">
-
-                                    <div class="form-group col-md-12">
-                                        <div class="row justify-content-evenly">
-                                            <div class="col-8" style="margin-top: 15px">
-                                                <label for="numero_immatriculation">Marque:</label>
-                                            </div>
-                                            <div class="col-4" >
+                                <div class="row">
+                                    <div class="col-12 col-md-12 col-lg-12 text-right">
+{#                                        <div class="row justify-content-evenly">#}
+{#                                            <div class="col-12 col-md-6 col-lg-6" s>#}
                                                 <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutMarque()">
                                                     <i class="ion-plus-circled"></i>Ajouter une marque
                                                 </button>
-                                            </div>
-                                        </div>
-                                        {{ form.marque }}
+{#                                            </div>#}
+{#                                        </div>#}
                                     </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="numero_immatriculation">Numero Immatriculation</label>
-                                        <input type="text" class="form-control" id="numero_immatriculation" placeholder="Numero Immatriculation" name="numero_immatriculation">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="carte_grise">Numero de la carte grise:</label>
-                                        <input type="text" class="form-control" id="carte_grise" placeholder="Numero de la carte grise" name="carte_grise">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="couleur de la voiture">Couleur de la voiture:</label>
-                                        <input type="text" class="form-control" id="couleur de la voiture" placeholder="Couleur de la voiture" name="couleur">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="date_mise_circulation">Date mise circulation:</label>
-                                        <input type="date" class="form-control" id="date_mise_circulation" placeholder="date mise circulation" name="date_mise_circulation">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="date_d_edition">Date d'edition:</label>
-                                        <input type="date" class="form-control" id="date_d_edition" placeholder="Date d'edition" name="date_d_edition">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="date_expiration_assurance">Date expiration assurance:</label>
-                                        <input type="date" class="form-control" id="date_expiration_assurance" placeholder="Date expiration assurance" name="date_expiration_assurance">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="date_videnge">Date videnge:</label>
-                                        <input type="date" class="form-control" id="date_videnge" placeholder="Date videnge" name="date_videnge">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="type_commercial">Type commercial:</label>
-                                        <input type="text" class="form-control" id="type_commercial" placeholder="Type commercial" name="type_commercial">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="carrosserie">carrosserie:</label>
-                                        <input type="text" class="form-control" id="carrosserie" placeholder="carrosserie" name="carrosserie">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="place_assises">Place assises:</label>
-                                        <input type="number" class="form-control" id="place_assises" placeholder="Place assises" name="place_assises">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="kilometrage">Kilometrage:</label>
-                                        <input type="number" class="form-control" id="kilometrage" placeholder="Kilometrage" name="kilometrage">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="energie">Energie:</label>
-                                        {{ form.energie }}
-                                    </div>
-
-                                    <div class="form-group col-md-12">
-                                        <label for="images">Images:</label>
-                                        <input type="file" class="custom-file-input" id="customFile" name="images" multiple>
-                                        <label class="custom-file-label" for="customFile">Choisir des images</label>
-                                    </div>
-
                                 </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-6">
+                                        <div class="col-md-12" style="margin-top: 15px">
+                                            <label for="marque" class="font-weight-bold">Marque :</label>
+                                            {{ form.marque }}
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="numero_immatriculation" class="font-weight-bold">Numero d'immatriculation :</label>
+                                            <input type="text" class="form-control" id="numero_immatriculation" placeholder="Numero Immatriculation" name="numero_immatriculation">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="carte_grise" class="font-weight-bold">Numero de la carte grise :</label>
+                                            <input type="text" class="form-control" id="carte_grise" placeholder="Numero de la carte grise" name="carte_grise">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="couleur de la voiture" class="font-weight-bold">Couleur de la voiture :</label>
+                                            <input type="text" class="form-control" id="couleur de la voiture" placeholder="Couleur de la voiture" name="couleur">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="date_mise_circulation" class="font-weight-bold">Date de mise circulation :</label>
+                                            <input type="date" class="form-control" id="date_mise_circulation" placeholder="date mise circulation" name="date_mise_circulation">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="date_d_edition" class="font-weight-bold">Date d'édition :</label>
+                                            <input type="date" class="form-control" id="date_d_edition" placeholder="Date d'edition" name="date_d_edition">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="date_expiration_assurance" class="font-weight-bold">Date d'expiration assurance :</label>
+                                            <input type="date" class="form-control" id="date_expiration_assurance" placeholder="Date expiration assurance" name="date_expiration_assurance">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-md-6 col-lg-6">
+                                        <div class="form-group col-md-12">
+                                            <label for="date_videnge" class="font-weight-bold">Date de videnge :</label>
+                                            <input type="date" class="form-control" id="date_videnge" placeholder="Date videnge" name="date_videnge">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="type_commercial" class="font-weight-bold">Type commercial :</label>
+                                            <input type="text" class="form-control" id="type_commercial" placeholder="Type commercial" name="type_commercial">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="carrosserie" class="font-weight-bold">Carrosserie :</label>
+                                            <input type="text" class="form-control" id="carrosserie" placeholder="carrosserie" name="carrosserie">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="place_assises" class="font-weight-bold">Place assises :</label>
+                                            <input type="number" class="form-control" id="place_assises" placeholder="Place assises" name="place_assises">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="kilometrage" class="font-weight-bold">Kilométrage :</label>
+                                            <input type="number" class="form-control" id="kilometrage" placeholder="Kilometrage" name="kilometrage">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="energie" class="font-weight-bold">Energie :</label>
+                                            {{ form.energie }}
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label for="images" class="font-weight-bold">Sélectionner des images :</label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="customFile" name="images" multiple>
+                                                <label class="custom-file-label" for="customFile">Choisir des images</label>
+                                            </div>
+                                            <small class="form-text text-muted">Vous pouvez sélectionner plusieurs images en même temps.</small>
+                                        </div>
+
+                                    </div>
+                                </div>
+
                                 <button type="submit" class="btn btn-primary" style="width: 100%">Ajouter</button>
                             </form>
                         </div>
@@ -125,7 +137,7 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;">Vehicul ajouter avec succes!</h5>
+                      <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;">Véhicule ajouter avec succès!!</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>
@@ -135,7 +147,7 @@
                   </div>
                   <div class="modal-footer text-center" style="display: flex; justify-content: center; align-items: center;">
                       <button type="button" class="zoom-on-hover btn btn-danger align-items-center" data-dismiss="modal" onclick="fermerModal()">Fermer</button>
-                      <a type="button" class="zoom-on-hover btn btn-success align-items-center text-white" href="{% url 'vehicule:liste_vehicules' %}">Voir tout les vehiculs</a>
+                      <a type="button" class="zoom-on-hover btn btn-success align-items-center text-white" href="{% url 'vehicule:liste_vehicules' %}">Voir tout les véhicules</a>
                   </div>
               </div>
           </div>
@@ -145,7 +157,7 @@
        <div class="modal-dialog modal-dialog-centered" role="document">
            <div class="modal-content">
                <div class="modal-header h4 text-center" style="text-align: center">
-                   Erreur lors de l'ajout du véhicule
+                   Erreur lors de l'ajout du véhicule!!!
                </div>
                <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
                    <div id="formErrors" class="text-danger h5">
@@ -173,8 +185,8 @@
                    <form method="post" id="marqueForm">
                        {% csrf_token %}
                        <div class="mb-3">
-                           <label for="marque" class="col-form-label">Marque:</label>
-                           <input type="text" class="form-control" id="marque" name="marque" required>
+{#                           <label for="marque" class="col-form-label">Marque:</label>#}
+                           <input type="text" class="form-control" id="marque" name="marque" required placeholder="Entrer le nom de la marque ">
                            <div id="marque-error" class="text-danger"></div>
                        </div>
 
@@ -187,12 +199,13 @@
            </div>
        </div>
    </div>
+
    <div class="modal fade" id="existModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
        <div class="modal-dialog">
            <div class="modal-content">
                <div class="modal-header">
                    <h1 class="modal-title fs-5 text-center " style="text-align: center; font-size: 30px; margin: auto  " id="exampleModalLabel">
-                       Erreur
+                       Erreur!!!
                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1080 1080" width="100" height="100" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; transform: translate3d(0px, 0px, 0px); content-visibility: visible;">
                            <defs><clipPath id="__lottie_element_699">
                                <rect width="1080" height="1080" x="0" y="0">
@@ -226,13 +239,12 @@
                    </h1>
                </div>
                <div class="modal-body text-danger" style="font-size: 30px">
-                   cette marque exite deja
-
+                   Cette marque existe déjà.
                </div>
-
            </div>
        </div>
    </div>
+
    <script>
        {% if success %}
            $(document).ready(function() {
@@ -246,6 +258,49 @@
            });
        {% endif %}
    </script>
+
+{#   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>#}
+{##}
+{#<script>#}
+{#    $(document).ready(function() {#}
+{#        // Intercepter l'événement de soumission du formulaire#}
+{#        $('form').submit(function(event) {#}
+{#            // Empêcher le comportement par défaut qui efface les champs#}
+{#            event.preventDefault();#}
+{##}
+{#            // Effectuer une requête AJAX pour envoyer le formulaire#}
+{#            $.ajax({#}
+{#                type: 'POST',#}
+{#                url: $(this).attr('action'),#}
+{#                data: new FormData(this),#}
+{#                contentType: false,#}
+{#                processData: false,#}
+{#                success: function(response) {#}
+{#                    // Vérifier la réponse du serveur#}
+{#                    if (response.success) {#}
+{#                        // Afficher la pop-up de succès si nécessaire#}
+{#                        $('#successModal').modal('show');#}
+{#                        // Autres actions en cas de succès#}
+{#                        console.log('Formulaire soumis avec succès!');#}
+{#                    } else {#}
+{#                        // Afficher la pop-up d'erreur si nécessaire#}
+{#                        $('#errorModal').modal('show');#}
+{#                        // Autres actions en cas d'erreur#}
+{#                        console.log('Erreur lors de la soumission du formulaire');#}
+{#                        console.log(response.errors);#}
+{#                    }#}
+{#                },#}
+{#                error: function(error) {#}
+{#                    // Gérer les erreurs de requête#}
+{#                    console.log('Erreur de requête AJAX');#}
+{#                    console.log(error);#}
+{#                }#}
+{#            });#}
+{#        });#}
+{#    });#}
+{#</script>#}
+
+
    <script>
        function ajoutMarque() {
            $('#ajoutMarque').modal('show');

@@ -32,7 +32,7 @@
                   <div class="iq-card">
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
-                           <h4 class="card-title">Liste des vehicules</h4>
+                           <h4 class="card-title">Liste des véhicules</h4>
                         </div>
                      </div>
                      <div class="iq-card-body">
@@ -43,7 +43,7 @@
                                        <div class="form-group mb-0">
                                            <form class="mr-3 position-relative" method="get" action="{% url 'vehicule:vehicul_search' %}">
                                                <div class="col-sm-10">
-                                                   <input type="text" class="form-control" id="numero" value="{{ request.GET.q }}" name="q" placeholder="Rechercher un vehicul: Marque, model, matricule...">
+                                                   <input type="text" class="form-control" id="numero" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Marque, modèle, ou matricule...">
                                                </div>
                                                <button type="submit" class="btn btn-primary">Rechercher</button>
                                            </form>
@@ -88,8 +88,9 @@
                                         </td>
                                      </tr>
                                 {% endfor %}
+                             {% else %}
                                  <tr>
-                                     <td colspan="10">Aucun service disponible</td>
+                                     <td colspan="10" class="text-center">Aucun véhicule disponible</td>
                                  </tr>
                              {% endif %}
                              </tbody>
@@ -97,19 +98,19 @@
                         </div>
                            <div class="row justify-content-between mt-3">
                               <div id="user-list-page-info" class="col-md-6">
-                                 <span>Showing 1 to 5 of 5 entries</span>
+                                 <span>Affichage de 1 à 5 sur 5 entrées</span>
                               </div>
                               <div class="col-md-6">
                                  <nav aria-label="Page navigation example">
                                     <ul class="pagination justify-content-end mb-0">
                                        <li class="page-item disabled">
-                                          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Précédent</a>
                                        </li>
                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
                                        <li class="page-item">
-                                          <a class="page-link" href="#">Next</a>
+                                          <a class="page-link" href="#">Suivant</a>
                                        </li>
                                     </ul>
                                  </nav>
@@ -157,7 +158,7 @@
                       </button>
                   </div>
                   <div class="modal-body">
-                      Êtes-vous sûr de vouloir supprimer ce véhicule ?
+                      Êtes-vous sûr de vouloir exporter les informations de ce véhicule ?
                   </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>

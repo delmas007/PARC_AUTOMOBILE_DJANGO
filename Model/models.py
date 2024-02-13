@@ -3,10 +3,7 @@ import uuid
 
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.utils import timezone
-
 from django.db import models
-from enum import Enum
-from django_enum import EnumField
 
 
 class MyUserManager(BaseUserManager):
@@ -16,6 +13,7 @@ class MyUserManager(BaseUserManager):
 
         user = self.model(
             username=username
+            # username = self.get_by_natural_key(username)
         )
         user.set_password(password)
         user.save()
@@ -54,15 +52,18 @@ class Conducteur(models.Model):
     numero_permis_conduire = models.CharField(max_length=20, unique=True, )
     date_embauche = models.DateField(blank=True, null=True)
     date_de_naissance = models.DateField(blank=True, null=True)
-    numero_telephone = models.CharField(max_length=15, )
-    adresse = models.TextField(blank=True, null=True)
+    numero_telephone = models.CharField(max_length=15, unique=True)
+    adresse = models.CharField(blank=True)
     disponibilite = models.BooleanField(default=True)
-    email = models.CharField(max_length=250, blank=True, null=True)
-    num_cni = models.CharField(max_length=250, )
+    email = models.CharField(max_length=250, blank=True)
+    num_cni = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.nom} {self.prenom} - {self.numero_permis_conduire}"
+
+    class Meta:
+        ordering = ["nom"]
 
 
 class Utilisateur(AbstractBaseUser):
@@ -91,7 +92,7 @@ class Marque(models.Model):
 
 
 class Vehicule(models.Model):
-    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     numero_immatriculation = models.CharField(max_length=250)
     couleur = models.CharField(max_length=250, blank=True, null=True)
@@ -104,6 +105,7 @@ class Vehicule(models.Model):
     date_expiration_assurance = models.DateField()
     date_videnge = models.DateField()
     kilometrage = models.IntegerField()
+    # prix_location
     energie = models.CharField(
         max_length=250,
         choices=[
@@ -217,7 +219,7 @@ class Entretien(models.Model):
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
     date_entretien = models.DateField()
     prix_entretient = models.IntegerField()
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True)
 
 
 class EtatArrive(models.Model):
