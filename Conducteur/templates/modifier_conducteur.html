@@ -48,74 +48,49 @@
                            <form method="post" enctype="multipart/form-data">
                                {% csrf_token %}
                                <div class="row ">
-                                   <div class="form-group col-md-6 {% if form.nom.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 ">
                                        <label for="nom">Nom</label>
-                                       <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom">
-                                       {% if form.nom.errors %}
-                                           <p class="help-block">{{ form.nom.errors.0 }}</p>
-                                       {% endif %}
+                                       <input type="text" class="form-control" id="nom" placeholder="Nom" name="nom" value="{{ conducteur.nom }}">
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.prenom.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 ">
                                        <label for="prenom">Prenom</label>
-                                       <input type="text" class="form-control" id="prenom" placeholder="Prenom" name="prenom">
-                                       {% if form.prenom.errors %}
-                                           <p class="help-block">{{ form.prenom.errors.0 }}</p>
-                                       {% endif %}
+                                       <input type="text" class="form-control" id="prenom" placeholder="Prenom" name="prenom" value="{{ conducteur.prenom }}">
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.adresse.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 ">
                                        <label for="adresse">Adresse</label>
-                                       <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="adresse">
-                                       {% if form.adresse.errors %}
-                                           <p class="help-block">{{ form.adresse.errors.0 }}</p>
-                                       {% endif %}
+                                       <input type="text" class="form-control" id="adresse" placeholder="Adresse" name="adresse" value="{{ conducteur.adresse }}">
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.numero_telephone.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 ">
                                        <label for="numero_telephone">Numero de telephone:</label>
-                                       <input type="number" class="form-control" id="numero_telephone" placeholder="Numero de telephone" name="numero_telephone">
-                                       {% if form.numero_telephone.errors %}
-                                           <p class="help-block">{{ form.numero_telephone.errors.0 }}</p>
-                                       {% endif %}
+                                       <input type="number" class="form-control" id="numero_telephone" placeholder="Numero de telephone" name="numero_telephone" value="{{ conducteur.numero_telephone }}">
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.date_de_naissance.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 ">
                                        <label for="date_de_naissance">Date de naissance:</label>
-                                       <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance">
-                                       {% if form.date_de_naissance.errors %}
-                                           <p class="help-block">{{ form.date_de_naissance.errors.0 }}</p>
-                                       {% endif %}
+                                       <input type="date" class="form-control" id="date_de_naissance" placeholder="date de naissance" name="date_de_naissance" value="{% if conducteur.date_de_naissance %}{{ conducteur.date_de_naissance|date:'Y-m-d' }}{% endif %}">
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.date_embauche.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 ">
                                        <label for="date_embauche">Date d'embauche:</label>
-                                       <input type="date" class="form-control" id="date_embauche" placeholder="date d'embauche" name="date_embauche">
-                                       {% if form.date_embauche.errors %}
-                                           <p class="help-block">{{ form.date_embauche.errors.0 }}</p>
-                                       {% endif %}
+                                       <input type="date" class="form-control" id="date_embauche" placeholder="date d'embauche" name="date_embauche" value="{% if conducteur.date_embauche %}{{ conducteur.date_embauche|date:'Y-m-d' }}{% endif %}">
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.numero_permis_conduire.errors %}has-error{% endif %}">
+
+                                   <div class="form-group col-md-6 ">
                                        <label for="numero_permis_conduire">Numero du permis de conduire:</label>
-                                       <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire">
-                                       {% if form.numero_permis_conduire.errors %}
-                                           <p class="help-block">{{ form.numero_permis_conduire.errors.0 }}</p>
-                                       {% endif %}
+                                       <input type="text" class="form-control" id="numero_permis_conduire" placeholder="Numero du permis de conduire" name="numero_permis_conduire" value="{{ conducteur.numero_permis_conduire }}">
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.email.errors %}has-error{% endif %}">
+                                   <div class="form-group col-md-6 ">
                                        <label for="email">Email:</label>
-                                       <input type="email" class="form-control" id="email" placeholder="email" name="email">
-                                       {% if form.email.errors %}
-                                           <p class="help-block">{{ form.email.errors.0 }}</p>
-                                       {% endif %}
+                                       <input type="email" class="form-control" id="email" placeholder="email" name="email" value="{{ conducteur.email }}">
                                    </div>
-                                   <div class="form-group col-md-6 {% if form.num_cni.errors %}has-error{% endif %}">
-                                       <label for="num_cni">numero cni:</label>
-                                       <input type="text" class="form-control" id="num_cni" placeholder="numero cni" name="num_cni">
-                                       {% if form.num_cni.errors %}
-                                           <p class="help-block">{{ form.num_cni.errors.0 }}</p>
-                                       {% endif %}
+                                   <div class="form-group col-md-6 ">
+                                       <label for="num_cni">Numero cni:</label>
+                                       <input type="text" class="form-control" id="num_cni" placeholder="numero cni" name="num_cni" value="{{ conducteur.num_cni }}">
                                    </div>
-                                   <div class="form-group col-md-12">
-                                       <label for="image">Images:</label>
-                                       <input type="file" class="custom-file-input" id="customFile" name="image" >
-                                       <label class="custom-file-label" for="customFile">Choisir des images</label>
+                                   <div class="form-group col-md-6">
+                                       <label for="image">Image:</label>
+                                       <input type="file" class="custom-file-input" id="customFile" name="image" value="{{ conducteur.image }}">
+                                       <label class="custom-file-label" for="customFile">Choisir une image</label>
                                    </div>
+
                                </div>
                                <button type="submit" class="btn btn-primary" style="width: 100%">Ajouter</button>
                            </form>
@@ -129,13 +104,9 @@
    </div>
       {% include 'footer.html' %}
       <script>
-          {% if messages %}
+          {% if form.errors %}
               document.addEventListener('DOMContentLoaded', function() {
-                  var successMessage = "{% for message in messages %}{{ message }}{% endfor %}";
-                  if (successMessage.trim() !== "") {
-                      // Utilisez Bootstrap modal pour afficher le message
                       $('#successModal').modal('show');
-                  }
               });
           {% endif %}
       </script>
