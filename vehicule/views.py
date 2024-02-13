@@ -13,29 +13,22 @@ from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm
 # Create your views here.
 
 def Ajouter_vehicule(request):
-    context = {}
-
     if request.method == 'POST':
         form = VehiculeForm(request.POST, request.FILES)
         if form.is_valid():
-            # Enregistrez d'abord le véhicule sans l'image
             vehicule = form.save(commit=False)
             vehicule.save()
-
-            # Traitez chaque fichier téléchargé et associez-le au véhicule
+            # Traitement des fichiers téléchargés
             for uploaded_file in request.FILES.getlist('images'):
                 photo = Photo.objects.create(vehicule=vehicule, images=uploaded_file)
-
-            messages.success(request, 'Véhicule ajouté avec succès !')
-            context['success'] = True
+            messages.success(request, 'Le véhicule a été ajouté avec succès.')
+            return redirect('vehicule:Ajouter_vehicule')
         else:
-            messages.error(request, 'Erreur de modification')
-            context['form_errors'] = form.errors
             print(form.errors)
+    else:
+        form = VehiculeForm()
 
-    form = VehiculeForm()
-    context['form'] = form
-    return render(request, 'ajouter_vehicule.html', context=context)
+    return render(request, 'ajouter_vehicule.html', {'form': form})
 
 
 def liste_vehicules(request):

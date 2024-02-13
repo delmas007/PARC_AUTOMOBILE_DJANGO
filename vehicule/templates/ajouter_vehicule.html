@@ -39,7 +39,7 @@
                          </div>
                         <div class="iq-card-body">
                             <form class="form-horizontal" method="post" action="{% url 'vehicule:Ajouter_vehicule' %}" enctype="multipart/form-data">
-                                {% csrf_token %}
+                            {% csrf_token %}
                                 <div class="row">
                                     <div class="col-12 col-md-12 col-lg-12 text-right">
 {#                                        <div class="row justify-content-evenly">#}
@@ -59,50 +59,50 @@
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="numero_immatriculation" class="font-weight-bold">Numero d'immatriculation :</label>
-                                            <input type="text" class="form-control" id="numero_immatriculation" placeholder="Numero Immatriculation" name="numero_immatriculation">
+                                            <input type="text" class="form-control" id="numero_immatriculation" placeholder="Numero Immatriculation" name="numero_immatriculation"  value="{% if form.numero_immatriculation.value %}{{ form.numero_immatriculation.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="carte_grise" class="font-weight-bold">Numero de la carte grise :</label>
-                                            <input type="text" class="form-control" id="carte_grise" placeholder="Numero de la carte grise" name="carte_grise">
+                                            <input type="text" class="form-control" id="carte_grise" placeholder="Numero de la carte grise" name="carte_grise" value="{% if form.carte_grise.value %}{{ form.carte_grise.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="couleur de la voiture" class="font-weight-bold">Couleur de la voiture :</label>
-                                            <input type="text" class="form-control" id="couleur de la voiture" placeholder="Couleur de la voiture" name="couleur">
+                                            <input type="text" class="form-control" id="couleur de la voiture" placeholder="Couleur de la voiture" name="couleur" value="{% if form.couleur.value %}{{ form.couleur.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="date_mise_circulation" class="font-weight-bold">Date de mise circulation :</label>
-                                            <input type="date" class="form-control" id="date_mise_circulation" placeholder="date mise circulation" name="date_mise_circulation">
+                                            <input type="date" class="form-control" id="date_mise_circulation" placeholder="date mise circulation" name="date_mise_circulation" value="{% if form.date_mise_circulation.value %}{{ form.date_mise_circulation.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="date_d_edition" class="font-weight-bold">Date d'édition :</label>
-                                            <input type="date" class="form-control" id="date_d_edition" placeholder="Date d'edition" name="date_d_edition">
+                                            <input type="date" class="form-control" id="date_d_edition" placeholder="Date d'edition" name="date_d_edition" value="{% if form.date_d_edition.value %}{{ form.date_d_edition.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="date_expiration_assurance" class="font-weight-bold">Date d'expiration assurance :</label>
-                                            <input type="date" class="form-control" id="date_expiration_assurance" placeholder="Date expiration assurance" name="date_expiration_assurance">
+                                            <input type="date" class="form-control" id="date_expiration_assurance" placeholder="Date expiration assurance" name="date_expiration_assurance" value="{% if form.date_expiration_assurance.value %}{{ form.date_expiration_assurance.value }}{% endif %}">
                                         </div>
                                     </div>
 
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="form-group col-md-12">
                                             <label for="date_videnge" class="font-weight-bold">Date de videnge :</label>
-                                            <input type="date" class="form-control" id="date_videnge" placeholder="Date videnge" name="date_videnge">
+                                            <input type="date" class="form-control" id="date_videnge" placeholder="Date videnge" name="date_videnge" value="{% if form.date_videnge.value %}{{ form.date_videnge.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="type_commercial" class="font-weight-bold">Type commercial :</label>
-                                            <input type="text" class="form-control" id="type_commercial" placeholder="Type commercial" name="type_commercial">
+                                            <input type="text" class="form-control" id="type_commercial" placeholder="Type commercial" name="type_commercial" value="{% if form.type_commercial.value %}{{ form.type_commercial.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="carrosserie" class="font-weight-bold">Carrosserie :</label>
-                                            <input type="text" class="form-control" id="carrosserie" placeholder="carrosserie" name="carrosserie">
+                                            <input type="text" class="form-control" id="carrosserie" placeholder="carrosserie" name="carrosserie" value="{% if form.carrosserie.value %}{{ form.carrosserie.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="place_assises" class="font-weight-bold">Place assises :</label>
-                                            <input type="number" class="form-control" id="place_assises" placeholder="Place assises" name="place_assises">
+                                            <input type="number" class="form-control" id="place_assises" placeholder="Place assises" name="place_assises" value="{% if form.carte_grise.value %}{{ form.place_assises.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="kilometrage" class="font-weight-bold">Kilométrage :</label>
-                                            <input type="number" class="form-control" id="kilometrage" placeholder="Kilometrage" name="kilometrage">
+                                            <input type="number" class="form-control" id="kilometrage" placeholder="Kilometrage" name="kilometrage" value="{% if form.kilometrage.value %}{{ form.kilometrage.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="energie" class="font-weight-bold">Energie :</label>
@@ -112,7 +112,7 @@
                                         <div class="form-group col-md-12">
                                             <label for="images" class="font-weight-bold">Sélectionner des images :</label>
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="customFile" name="images" multiple>
+                                                <input type="file" class="custom-file-input" id="customFile" required name="images" multiple value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
                                                 <label class="custom-file-label" for="customFile">Choisir des images</label>
                                             </div>
                                             <small class="form-text text-muted">Vous pouvez sélectionner plusieurs images en même temps.</small>
@@ -162,8 +162,8 @@
                <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
                    <div id="formErrors" class="text-danger h5">
                       <div class="text-center"> <img src="{% static 'images/error.gif' %}" alt="GIF animé" style="max-width: 30%; height: auto;text-align: center"><br></div>
-                       {% if form_errors %}
-                           {% for field, errors in form_errors.items %}
+                       {% if form.errors %}
+                           {% for field, errors in form.errors.items %}
                                <p><strong>{{ field|title }}:</strong> {{ errors.0 }}</p>
                            {% endfor %}
                        {% endif %}
@@ -246,13 +246,15 @@
    </div>
 
    <script>
-       {% if success %}
+       {% for messages in messages %}
+       {% if messages %}
            $(document).ready(function() {
                $('#successModal').modal('show');
            });
        {% endif %}
+       {% endfor %}
 
-       {% if form_errors %}
+       {% if form.errors %}
            $(document).ready(function() {
                $('#errorModal').modal('show');
            });
