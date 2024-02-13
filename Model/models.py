@@ -28,16 +28,16 @@ class MyUserManager(BaseUserManager):
 
 
 class Roles(models.Model):
-    ADMIN = 'admin'
-    GESTIONNAIRE = 'gestionnaire'
-    CONDUCTEUR = 'conducteur'
-    CLIENT = 'client'
+    ADMIN = 'ADMIN'
+    GESTIONNAIRE = 'GESTIONNAIRE'
+    CONDUCTEUR = 'CONDUCTEUR'
+    CLIENT = 'CLIENT'
 
     ROLE_CHOICES = [
-        (ADMIN, 'admin'),
-        (GESTIONNAIRE, 'gestionnaire'),
-        (CONDUCTEUR, 'conducteur'),
-        (CLIENT, 'client'),
+        (ADMIN, 'ADMIN'),
+        (GESTIONNAIRE, 'GESTIONNAIRE'),
+        (CONDUCTEUR, 'CONDUCTEUR'),
+        (CLIENT, 'CLIENT'),
 
     ]
     role = models.CharField(max_length=200, choices=ROLE_CHOICES)

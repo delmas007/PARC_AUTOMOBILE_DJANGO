@@ -16,18 +16,31 @@
                         <div class="sign-in-from">
                             <h1 class="mb-0">Sign Up</h1>
                             <p>Enter your email address and password to access admin panel.</p>
-                            <form class="mt-4">
+                            <form class="mt-4" method="POST">
+                                {% csrf_token %}
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Username</label>
-                                    <input type="text" class="form-control mb-0" id="exampleInputEmail1" name="username" placeholder="Your Full Name">
+                                    <label for="exampleInputEmail1">Nom d'utilisateur</label>
+                                    <input type="text" class="form-control mb-0" id="exampleInputEmail1" name="username" placeholder="Entrer votre nom d'utilisateur">
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputEmail2">Email address</label>
-                                    <input type="email" class="form-control mb-0" id="exampleInputEmail2" placeholder="Enter email">
+                                    <label for="exampleInputEmail1">Nom</label>
+                                    <input type="text" class="form-control mb-0" id="exampleInputEmail1" name="nom" placeholder="Entrer votre nom">
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputPassword1">Password</label>
-                                    <input type="password" class="form-control mb-0" id="exampleInputPassword1" placeholder="Password">
+                                    <label for="exampleInputEmail1">Prenom</label>
+                                    <input type="text" class="form-control mb-0" id="exampleInputEmail1" name="prenom" placeholder="Entrer votre prenom">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail2">Adresse email</label>
+                                    <input type="email" class="form-control mb-0" id="exampleInputEmail2" name="email" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Mot de passe</label>
+                                    <input type="password" class="form-control mb-0" id="exampleInputPassword1" name="password1" placeholder="Mot de passe">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Confirme mot de passe</label>
+                                    <input type="password" class="form-control mb-0" id="exampleInputPassword1" name="password2" placeholder="Confirmez votre mot de passe">
                                 </div>
                                 <div class="d-inline-block w-100">
                                     <div class="custom-control custom-checkbox d-inline-block mt-2 pt-1">
@@ -36,14 +49,15 @@
                                     </div>
                                     <button type="submit" class="btn btn-primary float-right">Sign Up</button>
                                 </div>
-                                <div class="sign-info">
-                                    <span class="dark-color d-inline-block line-height-2">Already Have Account ? <a href="#">Log In</a></span>
-                                    <ul class="iq-social-media">
-                                        <li><a href="#"><i class="ri-facebook-box-line"></i></a></li>
-                                        <li><a href="#"><i class="ri-twitter-line"></i></a></li>
-                                        <li><a href="#"><i class="ri-instagram-line"></i></a></li>
-                                    </ul>
-                                </div>
+                                {% if form.errors %}
+                                    {% for field, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            <div class="alert alert-dark mt-4" role="alert">
+                                                <strong>Erreur :</strong> {{ error }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
                             </form>
                         </div>
                     </div>
