@@ -28,24 +28,4 @@ class Deconnexion(LogoutView):
     pass
 
 
-@csrf_protect
-def inscription(request):
-    context = {}
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            client_role = Roles.objects.get(role=Roles.GESTIONNAIRE)
-            user.roles = client_role
-            # user.is_active = False
-            # activateEmail(request, user, form.cleaned_data.get('email'))
-            user.save()
-            return redirect('Model:connexion')
-        else:
 
-            context['form'] = form
-            return render(request, 'inscription.html', context=context)
-
-    form = UserRegistrationForm()
-    context['form'] = form
-    return render(request, 'inscription.html', context=context)
