@@ -111,6 +111,7 @@ def vehicule_pdf(request, pk):
 
     return response
 
+
 def ajouter_marque(request):
     if request.method == 'POST':
         form = marqueForm(request.POST)
@@ -127,6 +128,8 @@ def ajouter_marque(request):
         form = marqueForm()
     return render(request, 'ajouter_vehicule.html', {'form': form})
 
-def details_vehicule(request, pk):
-    vehicule = get_object_or_404(Vehicule, pk=pk)
-    return render(request, 'afficher_vehicule.html', {'vehiculet': vehicule})
+
+def details_vehicule(request, vehicule_id):
+    vehicule = get_object_or_404(Vehicule, id=vehicule_id)
+    image = Photo.objects.filter(vehicule=vehicule_id)
+    return render(request, 'vehicule_details.html', {'vehicule': vehicule, 'image': image})
