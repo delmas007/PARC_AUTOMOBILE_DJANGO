@@ -22,7 +22,7 @@
                   <div class="iq-card">
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
-                           <h4 class="card-title">Ajout d'un nouveau conducteur</h4>
+                           <h4 class="card-title">Mise a jour des informations de {{ conducteur.nom }} <img src="{{ conducteur.image.url }}" style=" max-width: 130px;  max-height: 130px; width: auto;  border-radius: 50%;"></h4>
                             <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true" style="top:0; bottom: 0">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -86,7 +86,6 @@
                                        <input type="text" class="form-control" id="num_cni" placeholder="numero cni" name="num_cni" value="{{ conducteur.num_cni }}">
                                    </div>
                                    <div class="form-group col-md-6">
-                                       <label for="image">Image:</label>
                                        <input type="file" class="custom-file-input" id="customFile" name="image" value="{{ conducteur.image }}">
                                        <label class="custom-file-label" for="customFile">Choisir une image</label>
                                    </div>

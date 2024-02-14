@@ -5,6 +5,6 @@ from Model.views import Connexion
 app_name = 'Model'
 
 urlpatterns = [
-    path('Connexion/', Connexion.as_view(), name='connexion'),
+    # path('Connexion/', Connexion.as_view(), name='connexion'),
 
 ]
