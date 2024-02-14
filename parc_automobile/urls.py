@@ -18,11 +18,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from Model.views import Connexion
 from parc_automobile import settings
 from parc_automobile.views import Accueil
 
 urlpatterns = [
-                  path('', Accueil, name='Accueil'),
+                  path('Accueil', Accueil, name='Accueil'),
+                  path('', Connexion.as_view(), name='Connexion'),
                   path('admins/', include('Admin.urls')),
                   path('authentification/', include('Model.urls')),
                   path('vehicule/', include('vehicule.urls')),
