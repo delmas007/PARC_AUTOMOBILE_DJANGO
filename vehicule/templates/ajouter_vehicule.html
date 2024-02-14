@@ -28,7 +28,7 @@
          <div id="content-page" class="content-page">
             <div class="container-fluid">
                <div class="row d-flex justify-content-center">
-                  <div class="col-sm-12 col-lg-6">
+                  <div class="col-sm-12 col-lg-9">
                      <div class="iq-card">
                          <div class="card-header">
                              <div class="iq-card-header d-flex justify-content-between">
@@ -40,17 +40,17 @@
                         <div class="iq-card-body">
                             <form class="form-horizontal" method="post" action="{% url 'vehicule:Ajouter_vehicule' %}" enctype="multipart/form-data">
                             {% csrf_token %}
-                                <div class="row">
-                                    <div class="col-12 col-md-12 col-lg-12 text-right">
+{#                                <div class="row">#}
+{#                                    <div class="col-12 col-md-12 col-lg-12 text-right">#}
 {#                                        <div class="row justify-content-evenly">#}
 {#                                            <div class="col-12 col-md-6 col-lg-6" s>#}
-                                                <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutMarque()">
-                                                    <i class="ion-plus-circled"></i>Ajouter une marque
-                                                </button>
+{#                                                <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutMarque()">#}
+{#                                                    <i class="ion-plus-circled"></i>Ajouter une marque#}
+{#                                                </button>#}
 {#                                            </div>#}
 {#                                        </div>#}
-                                    </div>
-                                </div>
+{#                                    </div>#}
+{#                                </div>#}
                                 <div class="row">
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="col-md-12" style="margin-top: 15px">
@@ -84,13 +84,14 @@
                                     </div>
 
                                     <div class="col-12 col-md-6 col-lg-6">
+                                        <div class="form-group col-md-12 text-right">
+                                            <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutMarque()">
+                                                <i class="ion-plus-circled"></i>Ajouter une marque
+                                            </button>
+                                        </div>
                                         <div class="form-group col-md-12">
                                             <label for="date_videnge" class="font-weight-bold">Date de videnge :</label>
                                             <input type="date" class="form-control" id="date_videnge" placeholder="Date videnge" name="date_videnge" value="{% if form.date_videnge.value %}{{ form.date_videnge.value }}{% endif %}">
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label for="type_commercial" class="font-weight-bold">Type commercial :</label>
-                                            <input type="text" class="form-control" id="type_commercial" placeholder="Type commercial" name="type_commercial" value="{% if form.type_commercial.value %}{{ form.type_commercial.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="carrosserie" class="font-weight-bold">Carrosserie :</label>
@@ -246,13 +247,14 @@
    </div>
 
    <script>
-       {% for messages in messages %}
        {% if messages %}
+       {% for messages in messages %}
            $(document).ready(function() {
                $('#successModal').modal('show');
            });
+           {% endfor %}
        {% endif %}
-       {% endfor %}
+
 
        {% if form.errors %}
            $(document).ready(function() {
@@ -261,46 +263,6 @@
        {% endif %}
    </script>
 
-{#   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>#}
-{##}
-{#<script>#}
-{#    $(document).ready(function() {#}
-{#        // Intercepter l'événement de soumission du formulaire#}
-{#        $('form').submit(function(event) {#}
-{#            // Empêcher le comportement par défaut qui efface les champs#}
-{#            event.preventDefault();#}
-{##}
-{#            // Effectuer une requête AJAX pour envoyer le formulaire#}
-{#            $.ajax({#}
-{#                type: 'POST',#}
-{#                url: $(this).attr('action'),#}
-{#                data: new FormData(this),#}
-{#                contentType: false,#}
-{#                processData: false,#}
-{#                success: function(response) {#}
-{#                    // Vérifier la réponse du serveur#}
-{#                    if (response.success) {#}
-{#                        // Afficher la pop-up de succès si nécessaire#}
-{#                        $('#successModal').modal('show');#}
-{#                        // Autres actions en cas de succès#}
-{#                        console.log('Formulaire soumis avec succès!');#}
-{#                    } else {#}
-{#                        // Afficher la pop-up d'erreur si nécessaire#}
-{#                        $('#errorModal').modal('show');#}
-{#                        // Autres actions en cas d'erreur#}
-{#                        console.log('Erreur lors de la soumission du formulaire');#}
-{#                        console.log(response.errors);#}
-{#                    }#}
-{#                },#}
-{#                error: function(error) {#}
-{#                    // Gérer les erreurs de requête#}
-{#                    console.log('Erreur de requête AJAX');#}
-{#                    console.log(error);#}
-{#                }#}
-{#            });#}
-{#        });#}
-{#    });#}
-{#</script>#}
 
 
    <script>

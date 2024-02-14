@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.template.loader import get_template
 from django.views.decorators.http import require_POST
 from xhtml2pdf import pisa
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Model.models import Vehicule, Photo, Marque
 from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm
 
@@ -32,7 +32,24 @@ def Ajouter_vehicule(request):
 
 
 def liste_vehicules(request):
-    vehicules = Vehicule.objects.all()
+    vehicules_list = Vehicule.objects.all().order_by('numero_immatriculation')
+
+    # Définir le nombre d'éléments par page
+    items_per_page = 5
+    paginator = Paginator(vehicules_list, items_per_page)
+
+    # Récupérer le numéro de page à partir des paramètres GET
+    page = request.GET.get('page')
+
+    try:
+        vehicules = paginator.page(page)
+    except PageNotAnInteger:
+        # Si la page n'est pas un entier, afficher la première page
+        vehicules = paginator.page(1)
+    except EmptyPage:
+        # Si la page est hors de portée (par exemple, 9999), afficher la dernière page
+        vehicules = paginator.page(paginator.num_pages)
+
     return render(request, 'afficher_vehicule.html', {'vehicules': vehicules})
 
 
@@ -43,12 +60,15 @@ def vehicul_search(request):
     if form.is_valid():
         query = form.cleaned_data.get('q')
         if query:
-            vehicules = vehicules.filter(
-                Q(marque__icontains=query) |
-                Q(numero_immatriculation__icontains=query)
-            )
+            vehicules = vehicules.filter(Q(marque__marque__icontains=query) |
+                                         Q(numero_immatriculation__icontains=query))
 
-    return render(request, 'afficher_vehicule.html', {'vehicules': vehicules, 'form': form})
+        context = {'vehicules': vehicules, 'form': form}
+        # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
+        if not vehicules.exists() and form.is_valid():
+            context['no_results'] = True
+
+    return render(request, 'afficher_vehicule.html', context)
 
 
 def supprimer_vehicule(request, pk):
@@ -70,17 +90,18 @@ def modifier_vehicule(request, pk):
             'date_mise_circulation': vehicule.date_mise_circulation,
             'date_d_edition': vehicule.date_d_edition,
         })
-    return render(request, 'modifier_vehicule.html', {'form': form})
+    return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule})
 
 
 def vehicule_pdf(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
+    image = Photo.objects.filter(vehicule=pk)
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="facture_rendez_vous_{vehicule.pk}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="{vehicule.marque}_info.pdf"'
 
     template = get_template('info_vehicule.html')
-    html = template.render({'vehicule': vehicule})
+    html = template.render({'vehicule': vehicule, 'image': image})
 
     # Create a PDF file
     pisa_status = pisa.CreatePDF(html, dest=response)
@@ -89,7 +110,6 @@ def vehicule_pdf(request, pk):
         return HttpResponse('Erreur lors de la génération du PDF', status=500)
 
     return response
-
 
 def ajouter_marque(request):
     if request.method == 'POST':
@@ -106,3 +126,7 @@ def ajouter_marque(request):
     else:
         form = marqueForm()
     return render(request, 'ajouter_vehicule.html', {'form': form})
+
+def details_vehicule(request, pk):
+    vehicule = get_object_or_404(Vehicule, pk=pk)
+    return render(request, 'afficher_vehicule.html', {'vehiculet': vehicule})

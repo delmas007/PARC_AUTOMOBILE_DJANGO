@@ -28,12 +28,6 @@
             background-color: #fff;
         }
 
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
         th {
             background-color: #6546d2;
             color: #fff;
@@ -47,9 +41,13 @@
             border-radius: 3px;
         }
 
-        .vehicule-image {
-            max-width: 10px;
-            height: auto;
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .center-text {
+            text-align: center;
         }
     </style>
 </head>
@@ -66,39 +64,44 @@
         <tbody>
         <tr>
             <td><strong>MARQUE:</strong></td>
-            <td>{{ vehicule.marque }}</td>
+            <td class="center-text">{{ vehicule.marque }}</td>
         </tr>
         <tr>
             <td><strong>MODÈLE:</strong></td>
-            <td>{{ vehicule.modele }}</td>
+            <td class="center-text">{{ vehicule.modele }}</td>
         </tr>
         <tr>
             <td><strong>COULEUR:</strong></td>
-            <td>{{ vehicule.couleur }}</td>
+            <td class="center-text">{{ vehicule.couleur }}</td>
         </tr>
         <tr>
             <td><strong>NUMÉRO D'IMMATRICULATION:</strong></td>
-            <td>{{ vehicule.numero_immatriculation }}</td>
+            <td class="center-text">{{ vehicule.numero_immatriculation }}</td>
         </tr>
         <tr>
             <td><strong>DATE DE MISE EN SERVICE:</strong></td>
-            <td>{{ vehicule.date_mise_en_service }}</td>
+            <td class="center-text">{{ vehicule.date_mise_en_service }}</td>
         </tr>
         <tr>
             <td><strong>TYPE DE CARBURANT:</strong></td>
-            <td>{{ vehicule.type_carburant }}</td>
+            <td class="center-text">{{ vehicule.type_carburant }}</td>
         </tr>
         <tr>
             <td><strong>KILOMÉTRAGE:</strong></td>
-            <td>{{ vehicule.kilometrage }}</td>
+            <td class="center-text">{{ vehicule.kilometrage }}</td>
         </tr>
         <tr>
             <td><strong>ANNÉE DE FABRICATION:</strong></td>
-            <td>{{ vehicule.annee_fabrication }}</td>
+            <td class="center-text">{{ vehicule.annee_fabrication }}</td>
         </tr>
         <tr>
+
+
             <td><strong>IMAGE:</strong></td>
-            <td><img src="{{ vehicule.image.path }}" alt="Vehicule Image" class="vehicule-image"></td>
+            {% for image in image %}
+
+            <td class="center-text"><img src="{{ image.images.path }}" alt="Vehicule Image" class="vehicule-image" style="max-width: 10%; height: auto"></td>
+            {% endfor %}
         </tr>
 
         </tbody>
