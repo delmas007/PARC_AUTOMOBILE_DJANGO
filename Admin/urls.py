@@ -2,7 +2,7 @@ from django.urls import path
 
 from Admin.views import inscription, employer_compte, active_emp, desactive_amp
 
-app_name = 'admin'
+app_name = 'admins'
 
 urlpatterns = [
     path('Ajout_gestionnaire/', inscription, name='Ajout_gestionnaire'),
