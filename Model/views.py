@@ -15,9 +15,9 @@ class Connexion(LoginView):
 
     def get_success_url(self) -> str:
         if self.request.user.roles.role == 'ADMIN':
-            return reverse('employer:reservation')
+            return reverse('admin:Compte_gestionnaire')
         elif self.request.user.roles.role == 'GESTIONNAIRE':
-            return reverse('admins:reservation_D')
+            return reverse('Accueil')
         elif self.request.user.roles.role == 'CONDUCTEUR':
             return reverse('Accueil')
         elif self.request.user.roles.role == 'CLIENT':
