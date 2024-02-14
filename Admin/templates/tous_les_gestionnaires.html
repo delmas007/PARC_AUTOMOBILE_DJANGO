@@ -58,8 +58,7 @@
                                            <th style="color: white">Prenom </th>
                                            <th style="color: white">Email</th>
                                            <th style="color: white">Status</th>
-                                           <th style="color: white">Activer compte</th>
-                                           <th style="color: white">Desactiver compte</th>
+                                           <th style="color: white">Activer/Desactiver</th>
                                        </tr>
 
                                        </thead>
@@ -70,29 +69,36 @@
                                                <td>{{ gestionnaire.nom}}</td>
                                                <td>{{ gestionnaire.prenom}}</td>
                                                <td>{{ gestionnaire.email}}</td>
-                                               <td>{% if gestionnaire.is_active == True %}<span class="badge dark-icon-light iq-bg-primary">Actif</span>{% else %}<span class="badge dark-icon-light iq-bg-danger">inactif</span>{% endif %}</td>
                                                <td>
+
+                                                   {% if gestionnaire.is_active == True %}<span class="badge dark-icon-light iq-bg-primary">Compte actif</span>{% else %}<span class="badge dark-icon-light iq-bg-danger">Compteinactif</span>{% endif %}</td>
+                                               <td>
+
                                                    <form method="post" action="{% url 'admin:active_emp' gestionnaire.id %}">
                                                        {% csrf_token %}
-                                                       <button type="submit" class="btn btn-primary" {% if gestionnaire.is_active == True %}disabled{% endif %}>Active</button>
+
+                                                       {% if gestionnaire.is_active == False %}
+                                                       <button type="submit"  class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline" style="border: 0px">
+                                                           <div class="custom-switch-inner">
+                                                               <input type="checkbox" class="custom-control-input bg-success" id="customSwitch-22" checked="" >
+                                                               <label class="custom-control-label" for="customSwitch-22" data-on-label="ON" data-off-label="OFF">
+                                                               </label>
+                                                       </div>
+                                                       </button>
+                                                       {% endif %}
                                                    </form>
-                                               </td>
-                                               <td>
                                                    <form method="post" action="{% url 'admin:desactive_amp' gestionnaire.id %}">
                                                        {% csrf_token %}
-                                                       <button type="submit" class="btn btn-success" {% if gestionnaire.is_active == False %}disabled{% endif %}>Desactive</button>
+                                                       {% if gestionnaire.is_active == True %}
+                                                           <button type="submit" class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline " style="border: 0px">
+                                                               <div class="custom-control custom-switch ">
+                                                                   <input type="checkbox" class="custom-control-input bg-danger" id="customSwitch1" style="background-color: red">
+                                                                   <label class="custom-control-label" for="customSwitch1" data-off-label="OFF"></label>
+                                                               </div>
+                                                           </button>
+                                                       {% endif %}
                                                    </form>
                                                </td>
-{#                                               <td>#}
-{##}
-{#                                                   <div class="flex align-items-center list-user-action">#}
-{#                                                       <a class="iq-bg-primary zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Telecharger les informations du conducteur " data-vehicle-id="{{ conducteur.id }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>#}
-{#                                                       <a class="iq-bg-success zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier les informtaions du conducteur" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>#}
-{#                                                       <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer le conducteur" href="#" onclick="confirmDeleteModal(this)" data-conducteur-id="{{ conducteur.id }}"><i class="ri-delete-bin-line"></i></a>#}
-{##}
-{##}
-{#                                                   </div>#}
-{#                                               </td>#}
                                            </tr>
                                            {% endfor %}
                                            </tbody>
