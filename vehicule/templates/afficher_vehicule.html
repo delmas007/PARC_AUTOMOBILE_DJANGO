@@ -32,22 +32,32 @@
                   <div class="iq-card">
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
-                           <h4 class="card-title">Liste des véhicules</h4>
+                           <h4 class="card-title">Liste des véhicules <i class="ri-roadster-line"></i> </h4>
                         </div>
                      </div>
                      <div class="iq-card-body">
                         <div class="table-responsive">
                            <div class="row justify-content-between">
-                              <div class="col-sm-12 col-md-6">
+                              <div class="col-sm-12 col-md-12">
                                  <div id="user_list_datatable_info" class="dataTables_filter">
-                                       <div class="form-group mb-0">
-                                           <form class="mr-3 position-relative" method="get" action="{% url 'vehicule:vehicul_search' %}">
-                                               <div class="col-sm-10">
-                                                   <input type="text" class="form-control" id="numero" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Marque, modèle, ou matricule...">
-                                               </div>
-                                               <button type="submit" class="btn btn-primary">Rechercher</button>
-                                           </form>
-                                       </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                           <div class="form-group mb-0">
+                                               <form class="mr-3 position-relative" method="get" action="{% url 'vehicule:vehicul_search' %}">
+                                                   <div class="col-sm-10">
+                                                       <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Marque, ou matricule...">
+                                                   </div>
+                                                   <button type="submit" class="btn btn-primary">Rechercher</button>
+                                               </form>
+                                           </div>
+                                        </div>
+                                        <div class="col-12 col-md-6 ms-0" style="margin-top: 0">
+                                            {% if no_results %}
+                                                <p>Aucun résultat trouvé pour la recherche "{{ request.GET.q }}".</p>
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
                                  </div>
                               </div>
                            </div>
@@ -55,14 +65,12 @@
                              <thead>
                                  <tr>
                                      <th>Marque</th>
-                                     <th>Modèle</th>
                                      <th>Couleur</th>
                                      <th>Numéro d'immatriculation</th>
                                      <th>Date de mise en service</th>
                                      <th>Type de carburant</th>
                                      <th>Kilométrage</th>
-                                     <th>Année de fabrication</th>
-                                     <th>Image</th>
+                                     <th>Date d'expiration asssurance</th>
                                      <th>Actions</th>
                                  </tr>
                              </thead>
@@ -70,20 +78,19 @@
                              {% if vehicules %}
                                 {% for vehicule in vehicules %}
                                      <tr>
-                                         <td>{{ vehicule.marque }}</td>
-                                         <td>{{ vehicule.modele }}</td>
-                                         <td>{{ vehicule.couleur }}</td>
+                                         <td>{{ vehicule.marque|capfirst }}</td>
+                                         <td>{{ vehicule.couleur|capfirst }}</td>
                                          <td>{{ vehicule.numero_immatriculation }}</td>
-                                         <td>{{ vehicule.date_mise_en_service }}</td>
-                                         <td>{{ vehicule.get_type_carburant_display }}</td>
+                                         <td>{{ vehicule.date_mise_circulation }}</td>
+                                         <td>{{ vehicule.energie|capfirst }}</td>
                                          <td>{{ vehicule.kilometrage }}</td>
-                                         <td>{{ vehicule.annee_fabrication }}</td>
-                                         <td> <img src="{{ vehicule.image.url }}" style="max-width: 100px"> </td>
+                                         <td>{{ vehicule.date_expiration_assurance }}</td>
                                         <td>
                                            <div class="flex align-items-center list-user-action">
                                                <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'vehicule:modifier_vehicule' pk=vehicule.pk %}"><i class="ri-pencil-line"></i></a>
                                                <a class="zoom-on-hover iq-bg-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Supprimer" data-vehicle-id="{{ vehicule.pk }}" href="#" onclick="confirmDelete(this)"><i class="ri-delete-bin-line"></i></a>
                                                <a class="zoom-on-hover iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Telecharger les informations du vehicule" data-vehicle-id="{{ vehicule.pk }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>
+                                               <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Prévisualiser" data-vehicle-id="{{ vehicule.pk }}" href="#" onclick="confirmPrevisual(this)"><i class="ri-eye-line"></i></a>
                                            </div>
                                         </td>
                                      </tr>
@@ -96,26 +103,45 @@
                              </tbody>
                            </table>
                         </div>
-                           <div class="row justify-content-between mt-3">
-                              <div id="user-list-page-info" class="col-md-6">
-                                 <span>Affichage de 1 à 5 sur 5 entrées</span>
-                              </div>
-                              <div class="col-md-6">
-                                 <nav aria-label="Page navigation example">
-                                    <ul class="pagination justify-content-end mb-0">
-                                       <li class="page-item disabled">
-                                          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Précédent</a>
-                                       </li>
-                                       <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                       <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                       <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                       <li class="page-item">
-                                          <a class="page-link" href="#">Suivant</a>
-                                       </li>
-                                    </ul>
-                                 </nav>
-                              </div>
-                           </div>
+                    <!-- Affichage de la pagination -->
+                    <div class="row justify-content-between mt-3">
+                        <div id="user-list-page-info" class="col-md-6">
+                            <span>Affichage de {{ vehicules.start_index }} à {{ vehicules.end_index }} sur {{ vehicules.paginator.count }} entrées</span>
+                        </div>
+                        <div class="col-md-6">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0">
+                                    {% if vehicules.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ vehicules.previous_page_number }}">Précédent</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">Précédent</span>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for num in vehicules.paginator.page_range %}
+                                        {% if num == vehicules.number %}
+                                            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                                        {% else %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if vehicules.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ vehicules.next_page_number }}">Suivant</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">Suivant</span>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
                      </div>
                   </div>
             </div>
@@ -168,6 +194,48 @@
           </div>
       </div>
 
+      <div class="modal fade" id="previsualisation" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabeld" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabeld">Toutes les informations concernant le véhicule</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Marque</th>
+                                    <th>Couleur</th>
+                                    <th>Numéro d'immatriculation</th>
+                                    <th>Date de mise en circulation</th>
+                                    <th>Énergie</th>
+                                    <th>Kilométrage</th>
+                                    <th>Date d'expiration de l'assurance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ vehicule.marque|capfirst }}</td>
+                                    <td>{{ vehicule.couleur|capfirst }}</td>
+                                    <td>{{ vehicule.numero_immatriculation }}</td>
+                                    <td>{{ vehicule.date_mise_circulation }}</td>
+                                    <td>{{ vehicule.energie|capfirst }}</td>
+                                    <td>{{ vehicule.kilometrage }}</td>
+                                    <td>{{ vehicule.date_expiration_assurance }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+      </div>
+
       <script>
           // Fonction pour afficher le modal de confirmation
           function confirmDelete(linkElement) {
@@ -208,10 +276,12 @@
 
               // Rediriger vers l'URL de suppression avec l'ID du véhicule
               window.location.href = "{% url 'vehicule:vehicule_pdf' 0 %}".replace(0, vehicleId);
-
               // Fermer le modal
-              $('#confirmDeleteModal').modal('hide');
+              $('#confirmDeleteModald').modal('hide');
           }
+
+        <!-- Fonction pour exécuter la prévisualisation -->
+
       </script>
 </body>
 {% endblock %}

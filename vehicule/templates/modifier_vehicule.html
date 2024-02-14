@@ -19,71 +19,146 @@
          <div id="content-page" class="content-page">
             <div class="container-fluid">
                <div class="row d-flex justify-content-center">
-                  <div class="col-sm-12 col-lg-6  ">
+                  <div class="col-sm-12 col-lg-10  ">
                      <div class="iq-card">
-                        <div class="iq-card-header d-flex justify-content-between">
-                           <div class="iq-header-title">
-                              <h4 class="card-title">Horizontal Form</h4>
-                           </div>
-                        </div>
+                         <div class="card-header">
+                            <div class="iq-card-header d-flex justify-content-between">
+                               <div class="iq-header-title">
+                                  <h4 class="card-title">Modifier les informations de {{ vehicule.marque }}--{{ vehicule.numero_immatriculation }}</h4>
+                               </div>
+                            </div>
+                         </div>
                         <div class="iq-card-body">
-                           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate, ex ac venenatis mollis, diam nibh finibus leo</p>
                            <form class="form-horizontal" method="post" enctype="multipart/form-data">
                                {% csrf_token %}
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Marque:</label>
-                                   <div class="col-sm-10">
-                                       {{ form.marque }}
+                               <div class="row">
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3  align-self-center mb-0" for="marque">Marque :</label>
+                                           <div class="col-sm-8">
+                                               {{ form.marque }}
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0 mr-4" for="numero_immatriculation">Numéro d'immatriculation :</label>
+                                           <div class="col-sm-8">
+                                               {{ form.numero_immatriculation }}
+                                           </div>
+                                       </div>
                                    </div>
                                </div>
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Modele:</label>
-                                   <div class="col-sm-10">
-                                       {{ form.modele }}
+
+                               <div class="row">
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="couleur">Couleur :</label>
+                                           <div class="col-sm-8">
+                                               {{ form.couleur }}
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="energie">Energie :</label>
+                                           <div class="col-sm-8">
+                                               {{ form.energie }}
+                                           </div>
+                                       </div>
                                    </div>
                                </div>
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Couleur:</label>
-                                   <div class="col-sm-10">
-                                       {{ form.couleur }}
+
+                               <div class="row">
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="kilometrage">Kilométrage :</label>
+                                           <div class="col-sm-8">
+                                               {{ form.kilometrage }}
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="date_d_edition">Date d'édition :</label>
+                                           <div class="col-sm-8">
+                                               <input type="date" class="form-control ml-3" id="exampleInputdate" value="2019-12-18" name="date_d_edition">
+{#                                               {{ form.date_d_edition }}#}
+                                           </div>
+                                       </div>
                                    </div>
                                </div>
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Numero d'immatriculation:</label>
-                                   <div class="col-sm-10">
-                                       {{ form.numero_immatriculation }}
+
+                               <div class="row">
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="carrosserie">Carrosserie :</label>
+                                           <div class="col-sm-8">
+                                               {{ form.carrosserie }}
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="date_videnge">Date de videnge :</label>
+                                           <div class="col-sm-8">
+                                               <input type="date" class="form-control" id="exampleInputdate" value="2019-12-18" name="date_videnge">
+{#                                               {{ form.date_videnge }}#}
+                                           </div>
+                                       </div>
                                    </div>
                                </div>
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Date mise en service:</label>
-                                   <div class="col-sm-10">
-                                       <input type="date" class="form-control" id="exampleInputdate" value="2019-12-18" name="date_mise_en_service">
-{#                                       {{ form.date_mise_en_service }}#}
+
+                               <div class="row">
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="carte_grise">Carte grise :</label>
+                                           <div class="col-sm-8">
+                                               {{ form.carte_grise }}
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                          <label class="control-label col-sm-3 align-self-center mb-0" for="date_mise_circulation">Date de mise en service :</label>
+                                           <div class="col-sm-8">
+                                               <input type="date" class="form-control ml-4" id="exampleInputdate" value="2019-12-18" name="date_mise_circulation">
+{#                                               {{ form.date_mise_circulation }}#}
+                                           </div>
+                                       </div>
                                    </div>
                                </div>
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">Annee fabrication:</label>
-                                   <div class="col-sm-10">
-                                       <input type="date" class="form-control" id="exampleInputdate" value="2019-12-18" name="annee_fabrication">
-{#                                       {{ form.annee_fabrication }}#}
+
+                               <div class="row">
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="place_assises">Place assises :</label>
+                                           <div class="col-sm-8">
+                                               {{ form.place_assises }}
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="date_expiration_assurance">Date d'expiration assurance :</label>
+                                           <div class="col-sm-8">
+                                               <input type="date" class="form-control" id="exampleInputdate" value="2019-12-18" name="date_expiration_assurance">
+{#                                               {{ form.date_expiration_assurance }}#}
+                                           </div>
+                                       </div>
                                    </div>
                                </div>
+
+
                                <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">type carburant:</label>
-                                   <div class="col-sm-10">
-                                       {{ form.type_carburant }}
-                                   </div>
-                               </div>
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="email">kilometrage:</label>
-                                   <div class="col-sm-10">
-                                       {{ form.kilometrage }}
-                                   </div>
-                               </div>
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-2 align-self-center mb-0" for="image">Image:</label>
-                                   <div class="col-sm-10">
-                                       {{ form.image }}
+                                   <div class="col-sm-10 text-center">
+                                        <div class="form-group col-md-12 text-center" style="margin-left: 100px">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="customFile" required name="images" multiple value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
+                                                <label class="custom-file-label" for="customFile">Choisir des images</label>
+                                            </div>
+                                            <small class="form-text text-muted">Vous pouvez sélectionner plusieurs images en même temps.</small>
+                                        </div>
                                    </div>
                                </div>
                                <div class="row">

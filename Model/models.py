@@ -104,7 +104,6 @@ class Vehicule(models.Model):
     carte_grise = models.CharField(max_length=250)
     date_mise_circulation = models.DateField(blank=True, null=True)
     date_d_edition = models.DateField(blank=True, null=True)
-    type_commercial = models.CharField(max_length=250, blank=True, null=True)
     carrosserie = models.CharField(max_length=250, blank=True, null=True)
     place_assises = models.IntegerField(blank=True, null=True)
     date_expiration_assurance = models.DateField()
@@ -126,6 +125,9 @@ class Vehicule(models.Model):
 
     def __str__(self):
         return f"{self.numero_immatriculation}"
+
+    class Meta:
+        ordering = ['numero_immatriculation']
 
 
 class Demande_prolongement(models.Model):

@@ -58,15 +58,44 @@ class VehiculeForm(forms.ModelForm):
             'id': "selectMarque",
             'required': True,
         })
-        self.fields['kilometrage'].required = True
         self.fields['date_d_edition'].required = True
-        self.fields['carte_grise'].required = True
         self.fields['date_expiration_assurance'].required = True
         self.fields['date_videnge'].required = True
-        self.fields['type_commercial'].required = True
+        # self.fields['type_commercial'].required = True
+        self.fields['date_mise_circulation'].required = True
         self.fields['energie'].widget.attrs.update({
             'class': "form-control",
             'id': "energie",
+            'required': True,
+        })
+        self.fields['place_assises'].widget.attrs.update({
+            'class': "form-control",
+            'id': "place_assises",
+            'required': True,
+        })
+        self.fields['carrosserie'].widget.attrs.update({
+            'class': "form-control",
+            'id': "carrosserie",
+            'required': True,
+        })
+        self.fields['numero_immatriculation'].widget.attrs.update({
+            'class': "form-control",
+            'id': "numero_immatriculation",
+            'required': True,
+        })
+        self.fields['kilometrage'].widget.attrs.update({
+            'class': "form-control",
+            'id': "kilometrage",
+            'required': True,
+        })
+        self.fields['carte_grise'].widget.attrs.update({
+            'class': "form-control",
+            'id': "carte_grise",
+            'required': True,
+        })
+        self.fields['couleur'].widget.attrs.update({
+            'class': "form-control",
+            'id': "couleur",
             'required': True,
         })
 
