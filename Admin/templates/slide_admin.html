@@ -1,0 +1,50 @@
+{% load static %}
+<div class="iq-sidebar">
+    <div class="iq-sidebar-logo d-flex justify-content-between">
+        <a href="index.html">
+            <div class="iq-light-logo">
+                <div class="iq-light-logo">
+                    <img src="images/logo.gif" class="img-fluid" alt="">
+                </div>
+                <div class="iq-dark-logo">
+                    <img src="images/logo-dark.gif" class="img-fluid" alt="">
+                </div>
+            </div>
+            <div class="iq-dark-logo">
+                <img src="images/logo-dark.gif" class="img-fluid" alt="">
+            </div>
+            <span>Vito</span>
+        </a>
+        <div class="iq-menu-bt-sidebar">
+            <div class="iq-menu-bt align-self-center">
+                <div class="wrapper-menu">
+                    <div class="main-circle"><i class="ri-arrow-left-s-line"></i></div>
+                    <div class="hover-circle"><i class="ri-arrow-right-s-line"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            {% url 'admin:Ajout_gestionnaire' as admin_Ajout_url %}
+            {% url 'admin:Compte_gestionnaire' as admin_Compte_gestionnaire_url %}
+
+    <div id="sidebar-scrollbar">
+        <nav class="iq-sidebar-menu">
+            <ul id="iq-sidebar-toggle" class="iq-menu">
+                <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Home</span></li>
+                <li >
+                    <a href="index.html" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></a>
+                </li>
+                <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Apps</span></li>
+                <li class="{% if request.path == admin_Ajout_url or request.path == admin_Compte_gestionnaire_url %}active{% endif %}">
+                    <a href="#vehicule" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="fa fa-car"></i><span>Gestionnaire</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="vehicule" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                        <li class="{% if request.path == admin_Ajout_url %}active{% endif %}" ><a href="{% url 'admin:Ajout_gestionnaire' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
+                        <li class="{% if request.path == admin_Compte_gestionnaire_url %}active{% endif %}"><a href="{% url 'admin:Compte_gestionnaire' %}"><i class="ri-file-edit-line"></i>List</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div class="p-3"></div>
+    </div>
+</div>
