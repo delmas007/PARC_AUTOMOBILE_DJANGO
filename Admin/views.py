@@ -30,18 +30,18 @@ def inscription(request):
     return render(request, 'ajouter_gestionnaire.html', context=context)
 
 
-@login_required
+# @login_required
 def employer_compte(request):
     # if not request.user.roles or request.user.roles.role != 'ADMIN':
     #     return redirect('vitrine:Acces_interdit')
 
     # Inclure à la fois les rôles "EMPLOYER" et "VENDEUR"
-    utilisateurs_employers = Utilisateur.objects.filter(roles__role__in=[Roles.EMPLOYER, Roles.VENDEUR])
+    utilisateurs_gestionnaire = Utilisateur.objects.filter(roles__role__in=[Roles.GESTIONNAIRE])
 
-    return render(request, 'employer_ac.html', {'employers': utilisateurs_employers})
+    return render(request, 'tous_les_gestionnaires.html', {'gestionnaires': utilisateurs_gestionnaire})
 
 
-@login_required
+# @login_required
 def active_emp(request, employer_id):
     # if not request.user.roles or request.user.roles.role != 'ADMIN':
     #     return redirect('vitrine:Acces_interdit')
@@ -49,10 +49,10 @@ def active_emp(request, employer_id):
     employer.is_active = True
     employer.save()
 
-    return redirect('admins:Compte_employer')
+    return redirect('admin:Compte_gestionnaire')
 
 
-@login_required
+# @login_required
 def desactive_amp(request, employer_id):
     # if not request.user.roles or request.user.roles.role != 'ADMIN':
     #     return redirect('vitrine:Acces_interdit')
@@ -60,4 +60,4 @@ def desactive_amp(request, employer_id):
     employer.is_active = False
     employer.save()
 
-    return redirect('admins:Compte_employer')
+    return redirect('admin:Compte_gestionnaire')

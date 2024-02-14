@@ -25,8 +25,8 @@
         </div>
     </div>
 
-            {% url 'Admin:Ajout' as admin_Ajout_url %}
-            {% url 'vehicule:liste_vehicules' as vehicule_liste_vehicules_url %}
+            {% url 'admin:Ajout_gestionnaire' as admin_Ajout_url %}
+            {% url 'admin:Compte_gestionnaire' as admin_Compte_gestionnaire_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -36,11 +36,11 @@
                     <a href="index.html" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></a>
                 </li>
                 <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Apps</span></li>
-                <li class="{% if request.path == admin_Ajout_url or request.path == vehicule_liste_vehicules_url %}active{% endif %}">
+                <li class="{% if request.path == admin_Ajout_url or request.path == admin_Compte_gestionnaire_url %}active{% endif %}">
                     <a href="#vehicule" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="fa fa-car"></i><span>Gestionnaire</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="vehicule" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == admin_Ajout_url %}active{% endif %}" ><a href="{% url 'Admin:Ajout' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
-                        <li class="{% if request.path == vehicule_liste_vehicules_url %}active{% endif %}"><a href="{% url 'vehicule:liste_vehicules' %}"><i class="ri-file-edit-line"></i>List</a></li>
+                        <li class="{% if request.path == admin_Ajout_url %}active{% endif %}" ><a href="{% url 'admin:Ajout_gestionnaire' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
+                        <li class="{% if request.path == admin_Compte_gestionnaire_url %}active{% endif %}"><a href="{% url 'admin:Compte_gestionnaire' %}"><i class="ri-file-edit-line"></i>List</a></li>
                     </ul>
                 </li>
             </ul>
