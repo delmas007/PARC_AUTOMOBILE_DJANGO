@@ -24,6 +24,7 @@
     <orderEntry type="library" name="pdfmake" level="application" />
     <orderEntry type="library" name="jquery-3.6.4" level="application" />
     <orderEntry type="library" name="html2pdf.js" level="application" />
+    <orderEntry type="library" name="handlebars" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

@@ -12,17 +12,23 @@ from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm
 
 # Create your views here.
 
+# Dans votre vue Django
+
 def Ajouter_vehicule(request):
     if request.method == 'POST':
         form = VehiculeForm(request.POST, request.FILES)
         if form.is_valid():
-            vehicule = form.save(commit=False)
-            vehicule.save()
-            # Traitement des fichiers téléchargés
-            for uploaded_file in request.FILES.getlist('images'):
-                photo = Photo.objects.create(vehicule=vehicule, images=uploaded_file)
-            messages.success(request, 'Le véhicule a été ajouté avec succès.')
-            return redirect('vehicule:Ajouter_vehicule')
+            images = request.FILES.getlist('images')
+            if len(images) <= 6:
+                vehicule = form.save(commit=False)
+                vehicule.save()
+                for uploaded_file in images:
+                    photo = Photo.objects.create(vehicule=vehicule, images=uploaded_file)
+
+                messages.success(request, 'Le véhicule a été ajouté avec succès.')
+                return redirect('vehicule:Ajouter_vehicule')
+            else:
+                form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
         else:
             print(form.errors)
     else:

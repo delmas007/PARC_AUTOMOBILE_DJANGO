@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="file://$PROJECT_DIR$" libraries="{html2pdf.js, jquery-3.6.4, jspdf, pdfmake}" />
+    <file url="file://$PROJECT_DIR$" libraries="{handlebars, html2pdf.js, jquery-3.6.4, jspdf, pdfmake}" />
   </component>
 </project>
