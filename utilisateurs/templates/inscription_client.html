@@ -23,7 +23,7 @@
                                 <div class="col-md-6 {% if form.nom.errors %}has-error{% endif %}">
                                     <label for="username">Nom</label>
                                     <input class="form-control"  type="text" id="username" placeholder=" Nom " name="nom" required value="{% if form.nom.value %}{{ form.nom.value }}{% endif %}">
-                                    <div class="invalid-feedback">Veuillez saisir votre nom.</div>
+                                    <div class="invalid-feedback">Veuillez saisir votre nomm.</div>
                                     {% if form.nom.errors %}
                                         <p class="help-block" style="color: #f85a3b">{{ form.nom.errors.0 }}</p>
                                     {% endif %}
