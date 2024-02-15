@@ -25,42 +25,42 @@
                                     <input class="form-control"  type="text" id="username" placeholder=" Nom " name="nom" required value="{% if form.nom.value %}{{ form.nom.value }}{% endif %}">
                                     <div class="invalid-feedback">Veuillez saisir votre nom.</div>
                                     {% if form.nom.errors %}
-                                        <p class="help-block">{{ form.nom.errors.0 }}</p>
+                                        <p class="help-block" style="color: #f85a3b">{{ form.nom.errors.0 }}</p>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-6 {% if form.prenom.errors %}has-error{% endif %}">
                                 <label for="username">Prenoms</label>
                                     <input class="form-control" type="text" id="username" placeholder="Prenoms" name="prenom" required value="{% if form.prenom.value %}{{ form.prenom.value }}{% endif %}">
                                     {% if form.prenom.errors %}
-                                        <p class="help-block">{{ form.prenom.errors.0 }}</p>
+                                        <p class="help-block"  style="color: #f85a3b">{{ form.prenom.errors.0 }}</p>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-6 {% if form.username.errors %}has-error{% endif %}">
                                     <label for="username">Username</label>
                                     <input class="form-control" type="text" id="username" name="username" placeholder="Nom d'Utilisateur" required value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
                                     {% if form.username.errors %}
-                                        <p class="help-block">{{ form.username.errors.0 }}</p>
+                                        <p class="help-block" style="color: #f85a3b">l'username existe deja</p>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-6 {% if form.email.errors %}has-error{% endif %}" >
-                                    <label for="email">E-mail</label>
+                                    <label for  ="email">E-mail</label>
                                     <input class="form-control" type="email" id="email" placeholder="E-mail" name="email" required value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
                                     {% if form.email.errors %}
-                                        <p class="help-block">{{ form.email.errors.0 }}</p>
+                                        <p class="help-block" style="color: #f85a3b">un utilisateur avec cet email existe deja</p>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-6 {% if form.password1.errors %}has-error{% endif %}">
                                     <label for="password">Mot de passe</label>
                                     <input class="form-control" type="password" id="password" placeholder="Mot de passe" name="password1" required value="{% if form.password1.value %}{{ form.password1.value }}{% endif %}">
                                     {% if form.password1.errors %}
-                                        <p class="help-block">{{ form.password1.errors.0 }}</p>
+                                        <p class="help-block" style="color: #f85a3b">{{ form.password1.errors.0 }}</p>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-6 {% if form.password2.errors %}has-error{% endif %}">
                                     <label>Repetez le mot de passe</label>
                                     <input class="form-control" type="password" id="password" placeholder="Mot de passe" name="password2" required value="{% if form.password2.value %}{{ form.password2.value }}{% endif %}">
                                     {% if form.password2.errors %}
-                                        <p class="help-block">{{ form.password2.errors.0 }}</p>
+                                        <p class="help-block" style="color: #f85a3b">{{ form.password2.errors.0 }}</p>
                                     {% endif %}
                                 </div >
                                 <button type="submit" class="btn" >S'inscrire</button>

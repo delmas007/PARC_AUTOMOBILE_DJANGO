@@ -1,7 +1,9 @@
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 
-from Model.forms import UserRegistrationForm
+from Model.forms import UserRegistrationForm, ConnexionForm
 from Model.models import Roles
 
 
@@ -32,3 +34,12 @@ def inscription_user(request):
     form = UserRegistrationForm()
     context['form'] = form
     return render(request, 'inscription_client.html', context=context)
+
+
+class Connexion_user(LoginView):
+    template_name = 'connexion_user.html'
+    form_class = ConnexionForm
+
+    def get_success_url(self) -> str:
+        if self.request.user.roles.role == 'CLIENT':
+            return reverse('utilisateur:Accueil_user')
