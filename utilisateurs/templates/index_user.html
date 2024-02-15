@@ -1,4 +1,6 @@
-
+{% extends 'header_user.html' %}
+{% load static %}
+{% block content%}
 
     <body>      
         <!-- Nav Bar Start -->
@@ -127,21 +129,21 @@
                     <div class="col-md-6">
                         <div class="header-slider normal-slider">
                             <div class="header-slider-item">
-                                <img src="img/slider-1.jpg" alt="Slider Image" />
+                                <img src="{% static "img/slider-1.jpg" %}" alt="Slider Image" />
                                 <div class="header-slider-caption">
                                     <p>Vous cherchez un véhicule ? Vous êtes au bon endroit.</p>
                                     <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Shop Now</a>
                                 </div>
                             </div>
                             <div class="header-slider-item">
-                                <img src="img/slider-2.jpg" alt="Slider Image" />
+                                <img src="{% static "img/slider-2.jpg" %}" alt="Slider Image" />
                                 <div class="header-slider-caption">
                                     <p>Vous cherchez un véhicule ? Vous êtes au bon endroit.</p>
                                     <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Faire une demande </a>
                                 </div>
                             </div>
                             <div class="header-slider-item">
-                                <img src="img/slider-3.jpg" alt="Slider Image" />
+                                <img src="{% static "img/slider-3.jpg" %}" alt="Slider Image" />
                                 <div class="header-slider-caption">
                                     <p>Vous cherchez un véhicule ? Vous êtes au bon endroit.</p>
                                     <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Faire une demande </a>
@@ -641,6 +643,6 @@
         <!-- Review End -->        
         
         <!-- Footer Start -->
-
+        {% include 'footer_user.html' %}
     </body>
-
+{% endblock %}
