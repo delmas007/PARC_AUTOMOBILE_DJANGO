@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informations du Conducteur</title>
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -20,6 +21,14 @@
         }
 
         table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .tableau {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
@@ -55,56 +64,53 @@
 
 <div class="container">
 
-    <table>
-        <thead>
-        <tr>
-            <th colspan="2">Informations du Vehicule</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><strong>MARQUE:</strong></td>
-            <td class="center-text">{{ vehicule.marque }}</td>
-        </tr>
-        <tr>
-            <td><strong>MODÈLE:</strong></td>
-            <td class="center-text">{{ vehicule.modele }}</td>
-        </tr>
-        <tr>
-            <td><strong>COULEUR:</strong></td>
-            <td class="center-text">{{ vehicule.couleur }}</td>
-        </tr>
-        <tr>
-            <td><strong>NUMÉRO D'IMMATRICULATION:</strong></td>
-            <td class="center-text">{{ vehicule.numero_immatriculation }}</td>
-        </tr>
-        <tr>
-            <td><strong>DATE DE MISE EN SERVICE:</strong></td>
-            <td class="center-text">{{ vehicule.date_mise_en_service }}</td>
-        </tr>
-        <tr>
-            <td><strong>TYPE DE CARBURANT:</strong></td>
-            <td class="center-text">{{ vehicule.type_carburant }}</td>
-        </tr>
-        <tr>
-            <td><strong>KILOMÉTRAGE:</strong></td>
-            <td class="center-text">{{ vehicule.kilometrage }}</td>
-        </tr>
-        <tr>
-            <td><strong>ANNÉE DE FABRICATION:</strong></td>
-            <td class="center-text">{{ vehicule.annee_fabrication }}</td>
-        </tr>
+    <div class="tableau">
+        <table>
+            <thead style="height: 100px; text-align: center; font-size: 20px">
+            <tr>
+                <th colspan="5">Informations du Vehicule</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>MARQUE:</strong></td>
+                <td class="center-text">{{ vehicule.marque }}</td>
+            </tr>
+            <tr>
+                <td><strong>NUMERO DE LA CARTE GRISE:</strong></td>
+                <td class="center-text">{{ vehicule.carte_grise }}</td>
+            </tr>
+            <tr>
+                <td><strong>COULEUR:</strong></td>
+                <td class="center-text">{{ vehicule.couleur }}</td>
+            </tr>
+            <tr>
+                <td><strong>NUMÉRO D'IMMATRICULATION:</strong></td>
+                <td class="center-text">{{ vehicule.numero_immatriculation }}</td>
+            </tr>
+            <tr>
+                <td><strong>DATE DE MISE EN SERVICE:</strong></td>
+                <td class="center-text">{{ vehicule.date_mise_circulation }}</td>
+            </tr>
+            <tr>
+                <td><strong>TYPE DE CARBURANT:</strong></td>
+                <td class="center-text">{{ vehicule.energie }}</td>
+            </tr>
+            <tr>
+                <td><strong>KILOMÉTRAGE:</strong></td>
+                <td class="center-text">{{ vehicule.kilometrage }} Km/h</td>
+            </tr>
+            <tr>
+                <td><strong>ANNÉE DE FABRICATION:</strong></td>
+                <td class="center-text">{{ vehicule.date_d_edition }}</td>
+            </tr>
+            </tbody>
+
+        </table>
         {% for image in image %}
-        <tr>
-
-            <td>
-                <img src="{{ image.images.path }}" alt="Vehicule Image" class="vehicule-image" style="max-width: 10%; height: auto">
-            </td>
-        </tr>
+            <img src="{{ image.images.url }}" alt="Vehicule Image" class="vehicule-image" style="max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
         {% endfor %}
-
-        </tbody>
-    </table>
+    </div>
 
 </div>
 
