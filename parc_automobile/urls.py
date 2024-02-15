@@ -26,6 +26,7 @@ urlpatterns = [
                   path('Accueil', Accueil, name='Accueil'),
                   path('', Connexion.as_view(), name='Connexion'),
                   path('admins/', include('Admin.urls')),
+                  path('user/', include('utilisateurs.urls')),
                   path('authentification/', include('Model.urls')),
                   path('vehicule/', include('vehicule.urls')),
                   path('deplacement/', include('deplacement.urls')),
