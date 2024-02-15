@@ -1,0 +1,132 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content%}
+    <body>
+    <!-- loader Start -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+            width: 80%;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        th {
+            background-color: #6546d2;
+            color: #fff;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .center-text {
+            text-align: center;
+        }
+    </style>
+    <div id="loading">
+        <div id="loading-center">
+        </div>
+    </div>
+    <!-- loader END -->
+    <!-- Wrapper Start -->
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        {% include 'slide.html' %}
+        <!-- TOP Nav Bar -->
+        {% include 'top_navbar.html' %}
+        <!-- TOP Nav Bar END -->
+        <!-- Page Content  -->
+        <div id="content-page" class="content-page">
+            <div class="container-fluid">
+                <div class="container">
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th colspan="2">Informations du Vehicule</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>MARQUE:</strong></td>
+                            <td class="center-text">{{ vehicule.marque }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MODÈLE:</strong></td>
+                            <td class="center-text">{{ vehicule.modele }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>COULEUR:</strong></td>
+                            <td class="center-text">{{ vehicule.couleur }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NUMÉRO D'IMMATRICULATION:</strong></td>
+                            <td class="center-text">{{ vehicule.numero_immatriculation }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DATE DE MISE EN SERVICE:</strong></td>
+                            <td class="center-text">{{ vehicule.date_mise_en_service }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TYPE DE CARBURANT:</strong></td>
+                            <td class="center-text">{{ vehicule.type_carburant }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>KILOMÉTRAGE:</strong></td>
+                            <td class="center-text">{{ vehicule.kilometrage }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ANNÉE DE FABRICATION:</strong></td>
+                            <td class="center-text">{{ vehicule.annee_fabrication }}</td>
+                        </tr>
+                        <tr>
+                            {% for image in image %}
+                                <tr>
+
+                                    <td>
+                                        <img src="{{ image.images.url }}" alt="Vehicule Image" class="vehicule-image" style="max-width: 10%; height: auto">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <a style="text-align: center; margin-left: 700px; margin-right: auto" class="zoom-on-hover iq-bg-primary align-items-center" data-toggle="tooltip" data-placement="top" title="" data-original-title="Telecharger les informations du vehicule" data-vehicle-id="{{ vehicule.pk }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill" style="font-size: 100px"></i></a>
+        </div>
+
+    </div>
+
+    <!-- Wrapper END -->
+    <!-- Footer -->
+    {% include 'footer.html' %}
+    </body>
+{% endblock %}
