@@ -94,15 +94,14 @@
             <td><strong>ANNÉE DE FABRICATION:</strong></td>
             <td class="center-text">{{ vehicule.annee_fabrication }}</td>
         </tr>
+        {% for image in image %}
         <tr>
 
-
-            <td><strong>IMAGE:</strong></td>
-            {% for image in image %}
-
-            <td class="center-text"><img src="{{ image.images.path }}" alt="Vehicule Image" class="vehicule-image" style="max-width: 10%; height: auto"></td>
-            {% endfor %}
+            <td>
+                <img src="{{ image.images.path }}" alt="Vehicule Image" class="vehicule-image" style="max-width: 10%; height: auto">
+            </td>
         </tr>
+        {% endfor %}
 
         </tbody>
     </table>
