@@ -2,9 +2,6 @@ from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.template.loader import get_template
-from django.views.decorators.http import require_POST
-from xhtml2pdf import pisa
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Model.models import Vehicule, Photo, Marque
 from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm
@@ -85,6 +82,7 @@ def supprimer_vehicule(request, pk):
 
 def modifier_vehicule(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
+    photos = Photo.objects.filter(vehicule=pk)
 
     if request.method == 'POST':
         form = VehiculeForm(request.POST, request.FILES, instance=vehicule)
@@ -96,26 +94,7 @@ def modifier_vehicule(request, pk):
             'date_mise_circulation': vehicule.date_mise_circulation,
             'date_d_edition': vehicule.date_d_edition,
         })
-    return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule})
-
-
-def vehicule_pdf(request, pk):
-    vehicule = get_object_or_404(Vehicule, pk=pk)
-    image = Photo.objects.filter(vehicule=pk)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{vehicule.marque}_info.pdf"'
-
-    template = get_template('info_vehicule.html')
-    html = template.render({'vehicule': vehicule, 'image': image})
-
-    # Create a PDF file
-    pisa_status = pisa.CreatePDF(html, dest=response)
-
-    if pisa_status.err:
-        return HttpResponse('Erreur lors de la génération du PDF', status=500)
-
-    return response
+    return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule, 'photos':photos})
 
 
 def ajouter_marque(request):

@@ -61,7 +61,6 @@ class VehiculeForm(forms.ModelForm):
         self.fields['date_d_edition'].required = True
         self.fields['date_expiration_assurance'].required = True
         self.fields['date_videnge'].required = True
-        # self.fields['type_commercial'].required = True
         self.fields['date_mise_circulation'].required = True
         self.fields['energie'].widget.attrs.update({
             'class': "form-control",
@@ -105,7 +104,7 @@ class VehiculSearchForm(forms.Form):
         label='',
         required=False,
         widget=forms.TextInput(
-            attrs={'placeholder': 'Rechercher un vehicul: Marque, model, matricule...', 'class': 'form-control'}),
+            attrs={'placeholder': 'Rechercher un véhicule : Marque, matricule...', 'class': 'form-control'}),
     )
 
 

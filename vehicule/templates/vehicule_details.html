@@ -89,43 +89,67 @@
 
                                 <div class="tableau" id="tableau" >
                                     <table style="left: auto; right: auto; padding: 20px">
-                                        <thead style="height: 100px; text-align: center; font-size: 20px">
+                                        <thead style="height: 100px; text-align: center; font-size: 30px">
                                         <tr>
-                                            <th colspan="5">Informations du Vehicule</th>
+                                            <th colspan="5">Informations du Véhicule {{ vehicule.marque }}-{{ vehicule.numero_immatriculation }} <i class="ri-roadster-line"></i></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td><strong>MARQUE:</strong></td>
+                                            <td><strong>MARQUE :</strong></td>
                                             <td class="center-text">{{ vehicule.marque }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>NUMERO DE LA CARTE GRISE:</strong></td>
+                                            <td><strong>NUMÉRO DE LA CARTE GRISE :</strong></td>
                                             <td class="center-text">{{ vehicule.carte_grise }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>COULEUR:</strong></td>
+                                            <td><strong>COULEUR :</strong></td>
                                             <td class="center-text">{{ vehicule.couleur }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>NUMÉRO D'IMMATRICULATION:</strong></td>
+                                            <td><strong>NUMÉRO D'IMMATRICULATION :</strong></td>
                                             <td class="center-text">{{ vehicule.numero_immatriculation }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>DATE DE MISE EN SERVICE:</strong></td>
+                                            <td><strong>DATE DE MISE EN SERVICE :</strong></td>
                                             <td class="center-text">{{ vehicule.date_mise_circulation }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>TYPE DE CARBURANT:</strong></td>
+                                            <td><strong>TYPE DE CARBURANT :</strong></td>
                                             <td class="center-text">{{ vehicule.energie }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>KILOMÉTRAGE:</strong></td>
+                                            <td><strong>KILOMÉTRAGE :</strong></td>
                                             <td class="center-text">{{ vehicule.kilometrage }} Km/h</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>ANNÉE DE FABRICATION:</strong></td>
+                                            <td><strong>ANNÉE DE FABRICATION :</strong></td>
                                             <td class="center-text">{{ vehicule.date_d_edition }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>DATE DE VIDENGE :</strong></td>
+                                            <td class="text-center">{{ vehicule.date_videnge }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>DATE D'EXPIRATION ASSURANCE :</strong></td>
+                                            <td class="text-center">{{ vehicule.date_expiration_assurance }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>PLACES ASSISE :</strong></td>
+                                            <td class="text-center">{{ vehicule.place_assises }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>CARROSSERIE :</strong></td>
+                                            <td class="text-center">{% if vehicule.carrosserie  %} {{ vehicule.carrosserie }} {% else %} AUCUN {% endif %}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>GESTIONNAIRE :</strong></td>
+                                            <td class="text-center">{% if vehicule.utilisateur  %} {{ vehicule.utilisateur }} {% else %} AUCUN {% endif %}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -154,7 +178,7 @@
             }
 
             var options = {
-                filename: 'myfile.pdf',
+                filename: '{{ vehicule.marque }}-{{ vehicule.numero_immatriculation }}.pdf',
                 html2canvas: { scale: 2 },
                 margin: 10,
                 image: { type: 'jpeg', quality: 0.98 },
