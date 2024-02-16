@@ -135,17 +135,15 @@
                      Les données seront exportés sous un fichier PDF
                 </div>
                 <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-                    <a href="" class="btn btn-success" onclick="generatePDF()">Exporter</a>
+                    <a href="" class="btn btn-success" >Annuler</a>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="generatePDF()"> Exporter</button>
                 </div>
             </div>
         </div>
     </div>
     {% include 'footer.html' %}
     <script>
-        function ouvrePopup() {
-            $('#popupDeleteModal').modal('show');
-        }
+
         function generatePDF() {
             var contentPage = document.getElementById('content-page1');
             var downloadButton = contentPage.querySelector('.bouton_telecharger');
@@ -166,6 +164,11 @@
             };
             html2pdf(contentCopy, options).outputPdf();
             downloadButton.style.display = 'block';
+        }
+    </script>
+    <script>
+        function ouvrePopup() {
+            $('#popupDeleteModal').modal('show');
         }
     </script>
 
