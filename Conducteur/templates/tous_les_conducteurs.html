@@ -87,7 +87,7 @@
                                                <td>
 
                                                    <div class="flex align-items-center list-user-action">
-                                                       <a class="iq-bg-primary zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Telecharger les informations du conducteur " data-vehicle-id="{{ conducteur.id }}" href="#" onclick="confirmDeleted(this)"><i class="ri-upload-2-fill"></i></a>
+                                                       <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'conducteur:details_conducteur' conducteur_id=conducteur.id %}" ><i class="ri-eye-line"></i></a>
                                                        <a class="iq-bg-success zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier les informtaions du conducteur" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
                                                        <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer le conducteur" href="#" onclick="confirmDeleteModal(this)" data-conducteur-id="{{ conducteur.id }}"><i class="ri-delete-bin-line"></i></a>
 
@@ -97,7 +97,6 @@
                                            </tr>
                                            {% endfor %}
                                            </tbody>
-                                           <!-- Modal de confirmation pour chaque conducteur -->
                                            <div class="modal fade" id="confirmDeleteModal{{ conducteur.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel{{ conducteur.id }}" aria-hidden="true">
                                                <div class="modal-dialog modal-dialog-centered" role="document">
                                                    <div class="modal-content">
@@ -114,9 +113,6 @@
                                                    </div>
                                                </div>
                                            </div>
-
-
-
                                    </table>
                                </div>
 
@@ -176,24 +172,6 @@
             </div>
         </div>
     </div>
-<div class="modal fade" id="confirmDeleteModald" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabeld" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="display: flex; justify-content: center; align-items: center;">
-                <h5 class="modal-title" id="confirmDeleteModalLabeld" style="display: flex; justify-content: center; align-items: center;"> Voulez-vous telecharger les informations de ce conducteurs</h5>
-
-            </div>
-            <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
-                Si vous appuyer sur 'oui' les informations concernant cet utilisateur seront telecharger dans un document PDF
-            </div>
-            <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
-                <button type="button" class="btn btn-danger" onclick="executeDeleted()">Oui</button>
-            </div>
-        </div>
-    </div>
-</div>
-
     <script>
         function confirmDeleteModal(linkElement) {
             var conducteurId = linkElement.getAttribute('data-conducteur-id');
@@ -206,42 +184,6 @@
             $('#confirmDeleteModal').modal('hide');
         }
     </script>
-
-<script>
-    $(document).ready(function () {
-        $('.download-info').on('click', function (e) {
-            e.preventDefault();
-            var conducteurId = $(this).data('conducteur-id');
-            window.location.href = "/conducteur/conducteur/" + conducteurId + "/";
-        });
-
-        $('#telechargerButton').on('click', function () {
-        });
-    }
-    );
-    function confirmDeleted(linkElement) {
-        var vehicleId = linkElement.getAttribute('data-vehicle-id');
-        // Afficher le modal
-        $('#confirmDeleteModald').modal('show');
-
-        // Enregistrer l'ID du véhicule dans un champ caché du modal
-        $('#confirmDeleteModald').data('vehicle-id', vehicleId);
-    }
-
-    // Fonction pour exécuter la suppression
-    function executeDeleted() {
-        // Récupérer l'ID du véhicule depuis le champ caché du modal
-        var vehicleId = $('#confirmDeleteModald').data('vehicle-id');
-
-        // Rediriger vers l'URL de suppression avec l'ID du véhicule
-        window.location.href = "{% url 'conducteur:conducteur_pdf' 0 %}".replace(0, vehicleId);
-
-        // Fermer le modal
-        $('#confirmDeleteModal').modal('hide');
-    }
-</script>
-<!-- ... -->
-
 </div>
 {% include 'footer.html' %}
 </body>
