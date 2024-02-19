@@ -40,23 +40,18 @@ def Ajouter_vehicule(request):
 def liste_vehicules(request):
     vehicules_list = Vehicule.objects.all().order_by('numero_immatriculation')
 
-    # Définir le nombre d'éléments par page
-    items_per_page = 5
-    paginator = Paginator(vehicules_list, items_per_page)
-
-    # Récupérer le numéro de page à partir des paramètres GET
-    page = request.GET.get('page')
-
+    paginator = Paginator(vehicules_list.order_by('date_mise_a_jour'), 2)
     try:
-        vehicules = paginator.page(page)
-    except PageNotAnInteger:
-        # Si la page n'est pas un entier, afficher la première page
-        vehicules = paginator.page(1)
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        vehicules_list = paginator.page(page)
     except EmptyPage:
-        # Si la page est hors de portée (par exemple, 9999), afficher la dernière page
-        vehicules = paginator.page(paginator.num_pages)
 
-    return render(request, 'afficher_vehicule.html', {'vehicules': vehicules})
+        vehicules_list = paginator.page(paginator.num_pages())
+
+
+    return render(request, 'afficher_vehicule.html', {'vehicules': vehicules_list})
 
 
 def vehicul_search(request):

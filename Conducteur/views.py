@@ -38,18 +38,15 @@ def ajouter_conducteur(request):
 def tous_les_conducteurs(request):
     conducteurs = Conducteur.objects.all().order_by('utilisateur__nom')
 
-    items_per_page = 5
-    paginator = Paginator(conducteurs, items_per_page)
-    page = request.GET.get('page')
-
+    paginator = Paginator(conducteurs.order_by('date_mise_a_jour'), 3)
     try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
         conducteurs = paginator.page(page)
-    except PageNotAnInteger:
-        # Si la page n'est pas un entier, afficher la première page
-        conducteurs = paginator.page(1)
     except EmptyPage:
-        # Si la page est hors de portée (par exemple, 9999), afficher la dernière page
-        conducteurs = paginator.page(paginator.num_pages)
+
+        conducteurs = paginator.page(paginator.num_pages())
 
     return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs})
 
