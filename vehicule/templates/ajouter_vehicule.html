@@ -111,10 +111,10 @@
                                         <div class="form-group col-md-12">
                                             <label for="images" class="font-weight-bold">Sélectionner des images :</label>
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="customFile" required name="images" multiple value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
+                                                <input type="file" class="custom-file-input" id="customFile" accept="image/6" required name="images" multiple value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
                                                 <label class="custom-file-label" for="customFile">Choisir des images</label>
                                             </div>
-                                            <small class="form-text text-muted">Vous pouvez sélectionner plusieurs images en même temps.</small>
+                                            <small class="form-text text-muted">Vous pouvez sélectionner 6 images maximum en même temps.</small>
                                         </div>
 
                                     </div>

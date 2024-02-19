@@ -128,9 +128,11 @@
    </div>
       {% include 'footer.html' %}
       <script>
+          {% if messages %}
           {% for messages  in messages %}
                       $('#successModal').modal('show');
           {% endfor %}
+          {% endif %}
       </script>
    </body>
 {% endblock %}

@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from Model.models import Conducteur
 from .forms import ConducteurForm, ConducteurSearchForm
@@ -25,7 +26,21 @@ def ajouter_conducteur(request):
 
 
 def tous_les_conducteurs(request):
-    conducteurs = Conducteur.objects.all()
+    conducteurs = Conducteur.objects.all().order_by('nom')
+
+    items_per_page = 5
+    paginator = Paginator(conducteurs, items_per_page)
+    page = request.GET.get('page')
+
+    try:
+        conducteurs = paginator.page(page)
+    except PageNotAnInteger:
+        # Si la page n'est pas un entier, afficher la première page
+        conducteurs = paginator.page(1)
+    except EmptyPage:
+        # Si la page est hors de portée (par exemple, 9999), afficher la dernière page
+        conducteurs = paginator.page(paginator.num_pages)
+
     return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs})
 
 
@@ -70,17 +85,6 @@ def conducteur_search(request):
     return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'search_form': form})
 
 
-def conducteur_pdf(request, pk):
-    conducteur = get_object_or_404(Conducteur, pk=pk)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="Conducteur_{conducteur.pk}.pdf"'
-
-    template = get_template('info_conducteur.html')
-    html = template.render({'conducteur': conducteur})
-    pisa_status = pisa.CreatePDF(html, dest=response)
-
-    if pisa_status.err:
-        return HttpResponse('Erreur lors de la génération du PDF', status=500)
-
-    return response
+def details_conducteur(request, conducteur_id):
+    conducteur = get_object_or_404(Conducteur, id=conducteur_id)
+    return render(request, 'conducteur_details.html', {'conducteur': conducteur})
