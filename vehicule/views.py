@@ -99,7 +99,7 @@ def modifier_vehicule(request, pk):
     else:
         form = VehiculeForm(instance=vehicule, initial={
             'date_mise_circulation': vehicule.date_mise_circulation,
-            'date_d_edition': vehicule.date_d_edition,
+
         })
 
     return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule, 'photos': photos})

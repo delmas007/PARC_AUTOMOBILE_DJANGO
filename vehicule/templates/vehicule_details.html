@@ -124,8 +124,8 @@
                                             <td class="center-text">{{ vehicule.kilometrage }} Km/h</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>ANNÉE DE FABRICATION :</strong></td>
-                                            <td class="center-text">{{ vehicule.date_d_edition }}</td>
+                                            <td><strong>Numero du VIN/Chassis :</strong></td>
+                                            <td class="center-text">{{ vehicule.numero_chassis }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>DATE DE VIDENGE :</strong></td>
@@ -153,10 +153,26 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <div class="imageContent">
+
+                                    <div class="imageContent"  style="align-items: center; text-align: center;">
+                                        <div style="margin-bottom: 25px">
+                                        <td>
+                                        <label style="display: block; text-align: center;">LA CARTE GRISE</label>
+                                            {% if vehicule.image_recto  %}
+                                            <img src="{{ vehicule.image_recto.url}}" alt="profile-img" class="vehicule-image" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                        {% endif  %}
+                                     {% if vehicule.image_verso  %}
+                                            <img src="{{ vehicule.image_verso.url}}" alt="profile-img" class="vehicule-image" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                        {% endif  %}
+                                     </td>
+                                        </div>
+                                     <div>  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE </label></div>
+
+
                                         {% for image in image %}
                                             <img src="{{ image.images.url }}" alt="Vehicule Image" class="vehicule-image" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
                                         {% endfor %}
+
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +190,7 @@
             var downloadButton = contentPage.querySelector('.bouton_telecharger');
             downloadButton.style.display = 'none';
             var imageContent = contentPage.querySelector('.imageContent');
-            imageContent.style.marginTop = '250px';
+            imageContent.style.marginTop = '20px';
 
             var contentCopy = contentPage.cloneNode(true);
             var downloadButtonCopy = contentCopy.querySelector('.bouton_telecharger');
@@ -188,7 +204,7 @@
                 images[i].style.height = 'auto';
                 images[i].style.display = 'inline-block';
                 images[i].style.marginLeft = '100px';
-                images[i].style.marginTop = '10px';
+                images[i].style.marginTop = '50px';
                 images[i].style.whiteSpace = 'nowrap';
 
                 if ((i + 1) % 3 === 0) {

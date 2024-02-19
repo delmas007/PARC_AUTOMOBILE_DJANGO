@@ -82,7 +82,7 @@
                                         <div class="form-group col-md-12">
                                             <label for="images" class="font-weight-bold">Sélectionner l'image verso de la carte grise :</label>
                                             <div class="form-control h-auto" style="border-radius: 10px">
-                                                <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image_verso"  value="{% if form.image_verso.value %}{{ form.image_verso.value }}{% endif %}">
+                                                <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image_verso"  value="{% if form.image_verso.value %}{{ form.image_verso.value }}{% endif %}">
                                             </div>
                                             {% if form.image.errors %}
                                                 <p class="help-block">Veillez joindre une image</p>
@@ -131,7 +131,7 @@
                                         </div><div class="form-group col-md-12">
                                             <label for="images" class="font-weight-bold">Sélectionner l'image recto de la carte grise :</label>
                                             <div class="form-control h-auto" style="border-radius: 10px">
-                                                <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image_recto"  value="{% if form.image_recto.value %}{{ form.image_recto.value }}{% endif %}">
+                                                <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image_recto"  value="{% if form.image_recto.value %}{{ form.image_recto.value }}{% endif %}">
                                             </div>
                                             {% if form.image.errors %}
                                                 <p class="help-block">Veillez joindre une image</p>

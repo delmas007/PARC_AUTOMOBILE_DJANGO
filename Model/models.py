@@ -64,7 +64,6 @@ class Conducteur(models.Model):
         ordering = ['date_mise_a_jour']
 
 
-
 class Utilisateur(AbstractBaseUser):
     mon_uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     username = models.CharField(
@@ -79,8 +78,8 @@ class Utilisateur(AbstractBaseUser):
     )
     nom = models.CharField(max_length=250, verbose_name='nom')
     prenom = models.CharField(max_length=250)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True,blank=True)
-    roles = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True,blank=True)
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True, blank=True)
+    roles = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -109,8 +108,8 @@ class Vehicule(models.Model):
     date_expiration_assurance = models.DateField()
     date_videnge = models.DateField()
     kilometrage = models.IntegerField()
-    image_recto = models.ImageField(upload_to='carteGrise/',  blank=False)
-    image_verso = models.ImageField(upload_to='carteGrise/',  blank=False)
+    image_recto = models.ImageField(upload_to='carteGrise/', blank=False)
+    image_verso = models.ImageField(upload_to='carteGrise/', blank=False)
     # prix_location
     energie = models.CharField(
         max_length=250,
