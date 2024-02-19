@@ -12,4 +12,10 @@ class ConnexionForm(AuthenticationForm):
 class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = Utilisateur
-        fields = 'username', 'email', 'nom', 'prenom',
+        fields = 'username', 'email', 'nom', 'prenom', 'conducteur'
+
+
+class UserRegistrationForme(UserCreationForm):
+    class Meta:
+        model = Utilisateur
+        fields = 'username', 'email', 'nom', 'prenom', 'conducteur', 'roles'

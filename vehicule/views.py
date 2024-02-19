@@ -35,6 +35,8 @@ def Ajouter_vehicule(request):
     return render(request, 'ajouter_vehicule.html', {'form': form})
 
 
+
+
 def liste_vehicules(request):
     vehicules_list = Vehicule.objects.all().order_by('numero_immatriculation')
 
