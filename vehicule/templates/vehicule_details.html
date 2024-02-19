@@ -173,8 +173,6 @@
             var contentPage = document.getElementById('content-page1');
             var downloadButton = contentPage.querySelector('.bouton_telecharger');
             downloadButton.style.display = 'none';
-
-            // Ajoutez un style marginTop ici pour ajuster l'espacement
             var imageContent = contentPage.querySelector('.imageContent');
             imageContent.style.marginTop = '250px';
 
@@ -188,7 +186,10 @@
             for (var i = 0; i < images.length; i++) {
                 images[i].style.maxWidth = '200px';
                 images[i].style.height = 'auto';
-                images[i].style.display = 'inline-block'; // Correction ici
+                images[i].style.display = 'inline-block';
+                images[i].style.marginLeft = '100px';
+                images[i].style.marginTop = '10px';
+                images[i].style.whiteSpace = 'nowrap';
 
                 if ((i + 1) % 3 === 0) {
                     images[i].style.marginRight = '0';
