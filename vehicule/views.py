@@ -87,14 +87,25 @@ def modifier_vehicule(request, pk):
     if request.method == 'POST':
         form = VehiculeForm(request.POST, request.FILES, instance=vehicule)
         if form.is_valid():
+            # Supprimez les anciennes images du véhicule
+            Photo.objects.filter(vehicule=vehicule).delete()
+
+            # Ajoutez les nouvelles images au véhicule
+            for image in request.FILES.getlist('images'):
+                Photo.objects.create(vehicule=vehicule, images=image)
+
+            # Enregistrez le formulaire du véhicule mis à jour
             form.save()
+
             return redirect('vehicule:liste_vehicules')
     else:
         form = VehiculeForm(instance=vehicule, initial={
             'date_mise_circulation': vehicule.date_mise_circulation,
             'date_d_edition': vehicule.date_d_edition,
         })
-    return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule, 'photos':photos})
+
+    return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule, 'photos': photos})
+
 
 
 def ajouter_marque(request):
