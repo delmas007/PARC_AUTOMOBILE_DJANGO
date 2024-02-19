@@ -72,12 +72,23 @@
                                             <input type="date" class="form-control" id="date_mise_circulation" placeholder="date mise circulation" name="date_mise_circulation" value="{% if form.date_mise_circulation.value %}{{ form.date_mise_circulation.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <label for="date_d_edition" class="font-weight-bold">Date d'édition :</label>
-                                            <input type="date" class="form-control" id="date_d_edition" placeholder="Date d'edition" name="date_d_edition" value="{% if form.date_d_edition.value %}{{ form.date_d_edition.value }}{% endif %}">
+                                            <label for="couleur de la voiture" class="font-weight-bold">Numero du VIN/Chassis :</label>
+                                            <input type="text" class="form-control" id="couleur de la voiture" placeholder="Numero du VIN/Chassis" name="numero_chassis" value="{% if form.numero_chassis.value %}{{ form.numero_chassis.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="date_expiration_assurance" class="font-weight-bold">Date d'expiration assurance :</label>
                                             <input type="date" class="form-control" id="date_expiration_assurance" placeholder="Date expiration assurance" name="date_expiration_assurance" value="{% if form.date_expiration_assurance.value %}{{ form.date_expiration_assurance.value }}{% endif %}">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="images" class="font-weight-bold">Sélectionner l'image verso de la carte grise :</label>
+                                            <div class="form-control h-auto" style="border-radius: 10px">
+                                                <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image_verso"  value="{% if form.image_verso.value %}{{ form.image_verso.value }}{% endif %}">
+                                            </div>
+                                            {% if form.image.errors %}
+                                                <p class="help-block">Veillez joindre une image</p>
+                                            {% endif %}
+                                            <div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -111,6 +122,16 @@
                                             <label for="images" class="font-weight-bold">Sélectionner des images :</label>
                                             <div class="form-control h-auto" style="border-radius: 10px">
                                                 <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
+                                            </div>
+                                            {% if form.image.errors %}
+                                                <p class="help-block">Veillez joindre une image</p>
+                                            {% endif %}
+                                            <div>
+                                            </div>
+                                        </div><div class="form-group col-md-12">
+                                            <label for="images" class="font-weight-bold">Sélectionner l'image recto de la carte grise :</label>
+                                            <div class="form-control h-auto" style="border-radius: 10px">
+                                                <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image_recto"  value="{% if form.image_recto.value %}{{ form.image_recto.value }}{% endif %}">
                                             </div>
                                             {% if form.image.errors %}
                                                 <p class="help-block">Veillez joindre une image</p>

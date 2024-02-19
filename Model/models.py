@@ -100,15 +100,17 @@ class Vehicule(models.Model):
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     numero_immatriculation = models.CharField(max_length=250)
+    numero_chassis = models.CharField(max_length=250)
     couleur = models.CharField(max_length=250, blank=True, null=True)
     carte_grise = models.CharField(max_length=250)
     date_mise_circulation = models.DateField(blank=True, null=True)
-    date_d_edition = models.DateField(blank=True, null=True)
     carrosserie = models.CharField(max_length=250, blank=True, null=True)
     place_assises = models.IntegerField(blank=True, null=True)
     date_expiration_assurance = models.DateField()
     date_videnge = models.DateField()
     kilometrage = models.IntegerField()
+    image_recto = models.ImageField(upload_to='carteGrise/',  blank=False)
+    image_verso = models.ImageField(upload_to='carteGrise/',  blank=False)
     # prix_location
     energie = models.CharField(
         max_length=250,
