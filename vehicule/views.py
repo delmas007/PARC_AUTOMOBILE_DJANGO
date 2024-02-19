@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -10,7 +11,6 @@ from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm
 # Create your views here.
 
 # Dans votre vue Django
-
 def Ajouter_vehicule(request):
     if request.method == 'POST':
         form = VehiculeForm(request.POST, request.FILES)
@@ -18,6 +18,7 @@ def Ajouter_vehicule(request):
             images = request.FILES.getlist('images')
             if len(images) <= 6:
                 vehicule = form.save(commit=False)
+                vehicule.utilisateur = request.user
                 vehicule.save()
                 for uploaded_file in images:
                     photo = Photo.objects.create(vehicule=vehicule, images=uploaded_file)

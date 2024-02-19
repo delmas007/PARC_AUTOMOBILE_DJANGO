@@ -18,10 +18,6 @@ class Connexion(LoginView):
             return reverse('admins:Compte_gestionnaire')
         elif self.request.user.roles.role == 'GESTIONNAIRE':
             return reverse('Accueil')
-        elif self.request.user.roles.role == 'CONDUCTEUR':
-            return reverse('Accueil')
-        elif self.request.user.roles.role == 'CLIENT':
-            return reverse('vendeur:ajouter_un_produit')
 
 
 class Deconnexion(LogoutView):
