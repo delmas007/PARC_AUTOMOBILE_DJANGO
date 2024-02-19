@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'vehicule',
     'Conducteur',
     'deplacement',
-    'Admin'
+    'Admin',
+    'utilisateurs'
 ]
 
 MIDDLEWARE = [
@@ -83,9 +84,9 @@ WSGI_APPLICATION = 'parc_automobile.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'parcs',
+        'NAME': 'parc',
         'USER': 'postgres',
-        'PASSWORD': 'ivan',
+        'PASSWORD': '09102079Darius',
         'HOST': 'localhost',
         'PORT': '5432',
     }

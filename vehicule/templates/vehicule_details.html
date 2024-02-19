@@ -88,7 +88,7 @@
                             <div class="content-to-export" id="content-to-export">
 
                                 <div class="tableau" id="tableau" >
-                                    <table style="left: auto; right: auto; padding: 20px">
+                                    <table class="table" id="table" style="left: auto; right: auto; padding: 20px">
                                         <thead style="height: 100px; text-align: center; font-size: 30px">
                                         <tr>
                                             <th colspan="5">Informations du Véhicule {{ vehicule.marque }}-{{ vehicule.numero_immatriculation }} <i class="ri-roadster-line"></i></th>
@@ -153,9 +153,11 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    {% for image in image %}
-                                        <img src="{{ image.images.url }}" alt="Vehicule Image" class="vehicule-image" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
-                                    {% endfor %}
+                                    <div class="imageContent">
+                                        {% for image in image %}
+                                            <img src="{{ image.images.url }}" alt="Vehicule Image" class="vehicule-image" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                             <button style="text-align: center; margin-left: 700px; margin-right: auto; border: 0; margin-top: 10px" class="bouton_telecharger " onclick="generatePDF()"><a class="zoom-on-hover iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Telecharger les informations du vehicule" ><i style="text-align: center; font-size: 50px" class="ri-upload-2-fill"></i></a></button>
@@ -171,17 +173,35 @@
             var contentPage = document.getElementById('content-page1');
             var downloadButton = contentPage.querySelector('.bouton_telecharger');
             downloadButton.style.display = 'none';
+
+            // Ajoutez un style marginTop ici pour ajuster l'espacement
+            var imageContent = contentPage.querySelector('.imageContent');
+            imageContent.style.marginTop = '250px';
+
             var contentCopy = contentPage.cloneNode(true);
             var downloadButtonCopy = contentCopy.querySelector('.bouton_telecharger');
             if (downloadButtonCopy) {
                 downloadButtonCopy.parentNode.removeChild(downloadButtonCopy);
             }
 
+            var images = contentCopy.querySelectorAll('.vehicule-image');
+            for (var i = 0; i < images.length; i++) {
+                images[i].style.maxWidth = '200px';
+                images[i].style.height = 'auto';
+                images[i].style.display = 'inline-block'; // Correction ici
+
+                if ((i + 1) % 3 === 0) {
+                    images[i].style.marginRight = '0';
+                } else {
+                    images[i].style.marginRight = '10px';
+                }
+            }
+
             var options = {
                 filename: '{{ vehicule.marque }}-{{ vehicule.numero_immatriculation }}.pdf',
                 html2canvas: { scale: 2 },
                 margin: 10,
-                image: { type: 'jpeg', quality: 0.98 },
+                image: { type: 'jpeg', quality: 0.98, margin: { top: 10, right: 10 } },
                 output: { quality: 1.0 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
@@ -189,5 +209,8 @@
             downloadButton.style.display = 'block';
         }
     </script>
+
+
+
     </body>
 {% endblock %}
