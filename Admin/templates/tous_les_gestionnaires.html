@@ -50,104 +50,96 @@
                                     </div>
                                 </div>
                                 {% if gestionnaires %}
-                               <div class="table-responsive">
-                                   <table id="user-list-table" class=" table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info" >
-                                       <thead >
-                                       <tr style="background-color: #8861d2; color:white">
-                                           <th style="color: white">Nom</th>
-                                           <th style="color: white">Prenom </th>
-                                           <th style="color: white">Email</th>
-                                           <th style="color: white">Status</th>
-                                           <th style="color: white">Desactiver</th>
-                                       </tr>
+                                    <div class="table-responsive">
+                                        <table id="user-list-table" class=" table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info" >
+                                            <thead >
+                                            <tr style="background-color: #8861d2; color:white">
+                                                <th style="color: white">Nom</th>
+                                                <th style="color: white">Prenom </th>
+                                                <th style="color: white">Email</th>
+                                                <th style="color: white">Status</th>
+                                                <th style="color: white">Activer/Desactiver</th>
+                                            </tr>
 
-                                       </thead>
+                                            </thead>
 
-                                           <tbody>
-                                           {% for gestionnaire in gestionnaires %}
-                                           <tr>
-                                               <td>{{ gestionnaire.nom}}</td>
-                                               <td>{{ gestionnaire.prenom}}</td>
-                                               <td>{{ gestionnaire.email}}</td>
-                                               <td >
+                                            <tbody>
+                                            {% for gestionnaire in gestionnaires %}
+                                                <tr>
+                                                    <td>{{ gestionnaire.nom}}</td>
+                                                    <td>{{ gestionnaire.prenom}}</td>
+                                                    <td>{{ gestionnaire.email}}</td>
+                                                    <td>
 
-                                                   {% if gestionnaire.is_active == True %}<span class="badge dark-icon-light iq-bg-success">Compte actif</span>{% else %}<span class="badge dark-icon-light iq-bg-danger">Compte inactif</span>{% endif %}</td>
-                                               <td>
-
-                                                   <form method="post" action="{% url 'admins:active_emp' gestionnaire.id %}">
-                                                       {% csrf_token %}
-
-                                                       {% if gestionnaire.is_active == False %}
-                                                       <button  type="submit"  class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline" style="border: 0px; background-color:transparent">
-                                                           <div class="custom-switch-inner" >
-                                                               <input type="checkbox" class="custom-control-input bg-success" id="customSwitch-22" checked="" >
-                                                               <label class="custom-control-label" for="customSwitch-22" data-on-label="ON" data-off-label="OFF">
-                                                               </label>
-                                                       </div>
-                                                       </button>
-
-                                                       {% endif %}
-                                                   </form>
-                                                   <form method="post" action="{% url 'admins:desactive_amp' gestionnaire.id %}">
-                                                       {% csrf_token %}
-                                                       {% if gestionnaire.is_active == True %}
-                                                           <button type="submit" class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline " style="border: 0px;background-color:transparent">
-                                                               <div class="custom-switch-inner ">
-                                                                   <input type="checkbox" class="custom-control-input bg-danger" id="customSwitch1" style="background-color: red">
-                                                                       <label class="custom-control-label" for="customSwitch1" data-off-label="OFF"></label>
-                                                               </div>
-                                                           </button>
-                                                       {% endif %}
-                                                   </form>
-                                               </td>
-                                           </tr>
-                                           {% endfor %}
-                                           </tbody>
-                                           <!-- Modal de confirmation pour chaque conducteur -->
-                                           <div class="modal fade" id="confirmDeleteModal{{ conducteur.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel{{ conducteur.id }}" aria-hidden="true">
-                                               <div class="modal-dialog modal-dialog-centered" role="document">
-                                                   <div class="modal-content">
-                                                       <div class="modal-header" style="display: flex; justify-content: center; align-items: center;">
-                                                           <h5 class="modal-title" id="confirmDeleteModalLabel{{ conducteur.id }}">Confirmation de la suppression</h5>
-                                                       </div>
-                                                       <div class="modal-body">
-                                                           Êtes-vous sûr de vouloir supprimer ce conducteur ?
-                                                       </div>
-                                                       <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
-                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                                           <a href="#" class="btn btn-danger" onclick="executeDelete('{{ conducteur.id }}')">Supprimer</a>
-                                                       </div>
-                                                   </div>
-                                               </div>
-                                           </div>
+                                                        {% if gestionnaire.is_active == True %}<span class="badge dark-icon-light iq-bg-primary">Compte actif</span>{% else %}<span class="badge dark-icon-light iq-bg-danger">Compte inactif</span>{% endif %}</td>
+                                                    <td>
+                                                        {% if gestionnaire.is_active == False %}
+                                                            <form id="activeForm-{{ gestionnaire.id }}" method="post" action="{% url 'admins:active_emp' gestionnaire.id %}">
+                                                                {% csrf_token %}
+                                                                <div class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline">
+                                                                    <input type="checkbox" class="custom-control-input bg-success" id="customSwitch-{{ gestionnaire.id }}" checked>
+                                                                    <label class="custom-control-label" for="customSwitch-{{ gestionnaire.id }}" data-on-label="ON" data-off-label="OFF" onclick="submitForm('activeForm-{{ gestionnaire.id }}')"></label>
+                                                                </div>
+                                                            </form>
+                                                        {% endif %}
+                                                        {% if gestionnaire.is_active == True %}
+                                                            <form id="desactiveForm-{{ gestionnaire.id }}" method="post" action="{% url 'admins:desactive_amp' gestionnaire.id %}">
+                                                                {% csrf_token %}
+                                                                <div class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline">
+                                                                    <input type="checkbox" class="custom-control-input bg-danger" id="customSwitch-{{ gestionnaire.id }}" onclick="submitForm('desactiveForm-{{ gestionnaire.id }}')">
+                                                                    <label class="custom-control-label" for="customSwitch-{{ gestionnaire.id }}" data-off-label="OFF"></label>
+                                                                </div>
+                                                            </form>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                            <!-- Modal de confirmation pour chaque conducteur -->
+                                            <div class="modal fade" id="confirmDeleteModal{{ conducteur.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel{{ conducteur.id }}" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="display: flex; justify-content: center; align-items: center;">
+                                                            <h5 class="modal-title" id="confirmDeleteModalLabel{{ conducteur.id }}">Confirmation de la suppression</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Êtes-vous sûr de vouloir supprimer ce conducteur ?
+                                                        </div>
+                                                        <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                                            <a href="#" class="btn btn-danger" onclick="executeDelete('{{ conducteur.id }}')">Supprimer</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
 
 
-                                   </table>
-                               </div>
+                                        </table>
+                                    </div>
 
-                            </div>
-                            <div class="row justify-content-between mt-3">
-                                <div id="user-list-page-info" class="col-md-6">
-                                    <span>Showing 1 to 5 of 5 entries</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <nav aria-label="Page navigation example">
-                                        <ul class="pagination justify-content-end mb-0">
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                            </li>
-                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">Next</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                            {% else %}
+                                    </div>
+                                    <div class="row justify-content-between mt-3">
+                                        <div id="user-list-page-info" class="col-md-6">
+                                            <span>Showing 1 to 5 of 5 entries</span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination justify-content-end mb-0">
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                                    </li>
+                                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="#">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                {% else %}
                                     <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
                                     <thead>
 
@@ -163,72 +155,11 @@
             </div>
         </div>
     </div>
-<div class="modal fade" id="confirmDeleteModald" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabeld" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="display: flex; justify-content: center; align-items: center;">
-                <h5 class="modal-title" id="confirmDeleteModalLabeld" style="display: flex; justify-content: center; align-items: center;"> Voulez-vous telecharger les informations de ce conducteurs</h5>
-
-            </div>
-            <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
-                Si vous appuyer sur 'oui' les informations concernant cet utilisateur seront telecharger dans un document PDF
-            </div>
-            <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
-                <button type="button" class="btn btn-danger" onclick="executeDeleted()">Oui</button>
-            </div>
-        </div>
-    </div>
-</div>
-
     <script>
-        function confirmDeleteModal(linkElement) {
-            var conducteurId = linkElement.getAttribute('data-conducteur-id');
-            $('#confirmDeleteModal').modal('show');
-            $('#confirmDeleteModal').data('conducteur-id', conducteurId);
-        }
-        function executeDelete() {
-            var conducteurId = $('#confirmDeleteModal').data('conducteur-id');
-            window.location.href = "{% url 'conducteur:supprimer_conducteur' 0 %}".replace(0, conducteurId);
-            $('#confirmDeleteModal').modal('hide');
+        function submitForm(formId) {
+            document.getElementById(formId).submit();
         }
     </script>
-
-<script>
-    $(document).ready(function () {
-        $('.download-info').on('click', function (e) {
-            e.preventDefault();
-            var conducteurId = $(this).data('conducteur-id');
-            window.location.href = "/conducteur/conducteur/" + conducteurId + "/";
-        });
-
-        $('#telechargerButton').on('click', function () {
-        });
-    }
-    );
-    function confirmDeleted(linkElement) {
-        var vehicleId = linkElement.getAttribute('data-vehicle-id');
-        // Afficher le modal
-        $('#confirmDeleteModald').modal('show');
-
-        // Enregistrer l'ID du véhicule dans un champ caché du modal
-        $('#confirmDeleteModald').data('vehicle-id', vehicleId);
-    }
-
-    // Fonction pour exécuter la suppression
-    function executeDeleted() {
-        // Récupérer l'ID du véhicule depuis le champ caché du modal
-        var vehicleId = $('#confirmDeleteModald').data('vehicle-id');
-
-        // Rediriger vers l'URL de suppression avec l'ID du véhicule
-        {#window.location.href = "{% url 'conducteur:conducteur_pdf' 0 %}".replace(0, vehicleId);#}
-
-        // Fermer le modal
-        $('#confirmDeleteModal').modal('hide');
-    }
-</script>
-<!-- ... -->
-
 </div>
 {% include 'footer.html' %}
 </body>
