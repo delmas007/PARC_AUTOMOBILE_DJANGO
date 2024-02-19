@@ -58,7 +58,7 @@
                                            <th style="color: white">Prenom </th>
                                            <th style="color: white">Email</th>
                                            <th style="color: white">Status</th>
-                                           <th style="color: white">Activer/Desactiver</th>
+                                           <th style="color: white">Desactiver</th>
                                        </tr>
 
                                        </thead>
@@ -69,31 +69,32 @@
                                                <td>{{ gestionnaire.nom}}</td>
                                                <td>{{ gestionnaire.prenom}}</td>
                                                <td>{{ gestionnaire.email}}</td>
-                                               <td>
+                                               <td >
 
-                                                   {% if gestionnaire.is_active == True %}<span class="badge dark-icon-light iq-bg-primary">Compte actif</span>{% else %}<span class="badge dark-icon-light iq-bg-danger">Compte inactif</span>{% endif %}</td>
+                                                   {% if gestionnaire.is_active == True %}<span class="badge dark-icon-light iq-bg-success">Compte actif</span>{% else %}<span class="badge dark-icon-light iq-bg-danger">Compte inactif</span>{% endif %}</td>
                                                <td>
 
                                                    <form method="post" action="{% url 'admins:active_emp' gestionnaire.id %}">
                                                        {% csrf_token %}
 
                                                        {% if gestionnaire.is_active == False %}
-                                                       <button type="submit"  class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline" style="border: 0px">
-                                                           <div class="custom-switch-inner">
+                                                       <button  type="submit"  class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline" style="border: 0px; background-color:transparent">
+                                                           <div class="custom-switch-inner" >
                                                                <input type="checkbox" class="custom-control-input bg-success" id="customSwitch-22" checked="" >
                                                                <label class="custom-control-label" for="customSwitch-22" data-on-label="ON" data-off-label="OFF">
                                                                </label>
                                                        </div>
                                                        </button>
+
                                                        {% endif %}
                                                    </form>
                                                    <form method="post" action="{% url 'admins:desactive_amp' gestionnaire.id %}">
                                                        {% csrf_token %}
                                                        {% if gestionnaire.is_active == True %}
-                                                           <button type="submit" class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline " style="border: 0px">
-                                                               <div class="custom-control custom-switch ">
+                                                           <button type="submit" class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline " style="border: 0px;background-color:transparent">
+                                                               <div class="custom-switch-inner ">
                                                                    <input type="checkbox" class="custom-control-input bg-danger" id="customSwitch1" style="background-color: red">
-                                                                   <label class="custom-control-label" for="customSwitch1" data-off-label="OFF"></label>
+                                                                       <label class="custom-control-label" for="customSwitch1" data-off-label="OFF"></label>
                                                                </div>
                                                            </button>
                                                        {% endif %}
