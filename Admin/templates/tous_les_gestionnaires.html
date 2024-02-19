@@ -71,10 +71,10 @@
                                                <td>{{ gestionnaire.email}}</td>
                                                <td>
 
-                                                   {% if gestionnaire.is_active == True %}<span class="badge dark-icon-light iq-bg-primary">Compte actif</span>{% else %}<span class="badge dark-icon-light iq-bg-danger">Compteinactif</span>{% endif %}</td>
+                                                   {% if gestionnaire.is_active == True %}<span class="badge dark-icon-light iq-bg-primary">Compte actif</span>{% else %}<span class="badge dark-icon-light iq-bg-danger">Compte inactif</span>{% endif %}</td>
                                                <td>
 
-                                                   <form method="post" action="{% url 'admin:active_emp' gestionnaire.id %}">
+                                                   <form method="post" action="{% url 'admins:active_emp' gestionnaire.id %}">
                                                        {% csrf_token %}
 
                                                        {% if gestionnaire.is_active == False %}
@@ -87,7 +87,7 @@
                                                        </button>
                                                        {% endif %}
                                                    </form>
-                                                   <form method="post" action="{% url 'admin:desactive_amp' gestionnaire.id %}">
+                                                   <form method="post" action="{% url 'admins:desactive_amp' gestionnaire.id %}">
                                                        {% csrf_token %}
                                                        {% if gestionnaire.is_active == True %}
                                                            <button type="submit" class="custom-control custom-switch custom-switch-text custom-switch-color custom-control-inline " style="border: 0px">
@@ -220,7 +220,7 @@
         var vehicleId = $('#confirmDeleteModald').data('vehicle-id');
 
         // Rediriger vers l'URL de suppression avec l'ID du véhicule
-        window.location.href = "{% url 'conducteur:conducteur_pdf' 0 %}".replace(0, vehicleId);
+        {#window.location.href = "{% url 'conducteur:conducteur_pdf' 0 %}".replace(0, vehicleId);#}
 
         // Fermer le modal
         $('#confirmDeleteModal').modal('hide');

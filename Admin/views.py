@@ -19,7 +19,7 @@ def inscription(request):
             # user.is_active = False
             # activateEmail(request, user, form.cleaned_data.get('email'))
             user.save()
-            return redirect('Model:connexion')
+            return redirect('admins:Compte_gestionnaire')
         else:
 
             context['form'] = form
@@ -49,7 +49,7 @@ def active_emp(request, employer_id):
     employer.is_active = True
     employer.save()
 
-    return redirect('admin:Compte_gestionnaire')
+    return redirect('admins:Compte_gestionnaire')
 
 
 # @login_required
@@ -60,4 +60,4 @@ def desactive_amp(request, employer_id):
     employer.is_active = False
     employer.save()
 
-    return redirect('admin:Compte_gestionnaire')
+    return redirect('admins:Compte_gestionnaire')

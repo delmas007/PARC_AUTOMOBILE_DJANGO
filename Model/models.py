@@ -128,10 +128,10 @@ class Vehicule(models.Model):
 
     class Meta:
         ordering = ['numero_immatriculation']
-    def save(self, *args, **kwargs):
-        request = kwargs.pop('request', None)  # Récupère l'objet request s'il existe
-        self.utilisateur = request.user if request else None  # Assigne l'utilisateur connecté ou None
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     request = kwargs.pop('request', None)  # Récupère l'objet request s'il existe
+    #     self.utilisateur = request.user if request else None  # Assigne l'utilisateur connecté ou None
+    #     super().save(*args, **kwargs)
 
 
 class Demande_prolongement(models.Model):
