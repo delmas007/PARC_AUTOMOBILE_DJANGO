@@ -47,23 +47,18 @@ class Roles(models.Model):
 
 
 class Conducteur(models.Model):
-    nom = models.CharField(max_length=250)
-    prenom = models.CharField(max_length=250, )
     numero_permis_conduire = models.CharField(max_length=20, unique=True, )
     date_embauche = models.DateField(blank=True, null=True)
     date_de_naissance = models.DateField(blank=True, null=True)
     numero_telephone = models.CharField(max_length=15, unique=True)
     adresse = models.CharField(blank=True)
     disponibilite = models.BooleanField(default=True)
-    email = models.CharField(max_length=250, blank=True)
     num_cni = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.nom} {self.prenom} - {self.numero_permis_conduire}"
+        return f"{self.utilisateur_set.nom} {self.utilisateur_set.prenom} - {self.numero_permis_conduire}"
 
-    class Meta:
-        ordering = ["nom"]
 
 
 class Utilisateur(AbstractBaseUser):
@@ -80,8 +75,8 @@ class Utilisateur(AbstractBaseUser):
     )
     nom = models.CharField(max_length=250, verbose_name='nom')
     prenom = models.CharField(max_length=250)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
-    roles = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True)
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True,blank=True)
+    roles = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True,blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -100,15 +95,17 @@ class Vehicule(models.Model):
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     numero_immatriculation = models.CharField(max_length=250)
+    numero_chassis = models.CharField(max_length=250)
     couleur = models.CharField(max_length=250, blank=True, null=True)
     carte_grise = models.CharField(max_length=250)
     date_mise_circulation = models.DateField(blank=True, null=True)
-    date_d_edition = models.DateField(blank=True, null=True)
     carrosserie = models.CharField(max_length=250, blank=True, null=True)
     place_assises = models.IntegerField(blank=True, null=True)
     date_expiration_assurance = models.DateField()
     date_videnge = models.DateField()
     kilometrage = models.IntegerField()
+    image_recto = models.ImageField(upload_to='carteGrise/',  blank=False)
+    image_verso = models.ImageField(upload_to='carteGrise/',  blank=False)
     # prix_location
     energie = models.CharField(
         max_length=250,

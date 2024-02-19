@@ -58,7 +58,8 @@ class VehiculeForm(forms.ModelForm):
             'id': "selectMarque",
             'required': True,
         })
-        self.fields['date_d_edition'].required = True
+        self.fields['image_recto'].required = True
+        self.fields['image_verso'].required = True
         self.fields['date_expiration_assurance'].required = True
         self.fields['date_videnge'].required = True
         self.fields['date_mise_circulation'].required = True
