@@ -43,3 +43,5 @@ class Connexion_user(LoginView):
     def get_success_url(self) -> str:
         if self.request.user.roles.role == 'CLIENT':
             return reverse('utilisateur:Accueil_user')
+        if self.request.user.roles.role == 'CONDUCTEUR':
+            return reverse('utilisateur:Accueil_user')
