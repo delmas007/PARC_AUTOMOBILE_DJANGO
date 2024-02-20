@@ -16,12 +16,12 @@ def ajouter_conducteur(request):
         conducteur_form = ConducteurForm(request.POST, request.FILES)
         utilisateur_form = UserRegistrationForme(request.POST)
         if conducteur_form.is_valid() and utilisateur_form.is_valid():
-            conducteur_instance = conducteur_form.save()  # Enregistrer le conducteur
+            conducteur_instance = conducteur_form.save()
             utilisateur_instance = utilisateur_form.save(commit=False)
             utilisateur_role = Roles.objects.get(role=Roles.CONDUCTEUR)
             utilisateur_instance.roles = utilisateur_role
-            utilisateur_instance.conducteur = conducteur_instance  # Associer le conducteur à l'utilisateur
-            utilisateur_instance.save()  # Enregistrer l'utilisateur
+            utilisateur_instance.conducteur = conducteur_instance
+            utilisateur_instance.save()
             messages.success(request, 'Le conducteur a été ajouté avec succès.')
             return redirect('conducteur:ajouter_conducteur')
         else:
@@ -37,7 +37,7 @@ def ajouter_conducteur(request):
 
 def tous_les_conducteurs(request):
     conducteurs = Conducteur.objects.all().order_by('utilisateur__nom')
-    utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True)
+    utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
 
     items_per_page = 5
     paginator = Paginator(conducteurs, items_per_page)
@@ -46,20 +46,17 @@ def tous_les_conducteurs(request):
     try:
         conducteurs = paginator.page(page)
     except PageNotAnInteger:
-        # Si la page n'est pas un entier, afficher la première page
         conducteurs = paginator.page(1)
     except EmptyPage:
-        # Si la page est hors de portée (par exemple, 9999), afficher la dernière page
         conducteurs = paginator.page(paginator.num_pages)
 
     return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'utilisateurs': utilisateurs})
 
 
 def supprimer_conducteur(request, conducteur_id):
-    conducteur = get_object_or_404(Conducteur, id=conducteur_id)
     utilisateurs = get_object_or_404(Utilisateur, conducteur=conducteur_id)
-    utilisateurs.delete()
-    conducteur.delete()
+    utilisateurs.is_active = False
+    utilisateurs.save()
     return redirect('conducteur:tous_les_conducteurs')
 
 
