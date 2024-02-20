@@ -18,7 +18,7 @@ def Ajouter_vehicule(request):
             images = request.FILES.getlist('images')
             if len(images) <= 6:
                 vehicule = form.save(commit=False)
-                vehicule.utilisateur = request.user
+                #vehicule.utilisateur = request.user
                 vehicule.save()
                 for uploaded_file in images:
                     photo = Photo.objects.create(vehicule=vehicule, images=uploaded_file)
@@ -40,7 +40,7 @@ def Ajouter_vehicule(request):
 def liste_vehicules(request):
     vehicules_list = Vehicule.objects.all().order_by('numero_immatriculation')
 
-    paginator = Paginator(vehicules_list.order_by('date_mise_a_jour'), 2)
+    paginator = Paginator(vehicules_list.order_by('date_mise_a_jour'), 5)
     try:
         page = request.GET.get("page")
         if not page:
@@ -49,7 +49,6 @@ def liste_vehicules(request):
     except EmptyPage:
 
         vehicules_list = paginator.page(paginator.num_pages())
-
 
     return render(request, 'afficher_vehicule.html', {'vehicules': vehicules_list})
 
