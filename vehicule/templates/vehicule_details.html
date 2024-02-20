@@ -159,10 +159,10 @@
                                         <td>
                                         <label style="display: block; text-align: center;">LA CARTE GRISE</label>
                                             {% if vehicule.image_recto  %}
-                                            <img src="{{ vehicule.image_recto.url}}" alt="profile-img" class="vehicule-image" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                                <img src="{{ vehicule.image_recto.url}}" alt="profile-img" class="vehicule-image" onclick="showImagePopup('{{ vehicule.image_recto.url}}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
                                         {% endif  %}
                                      {% if vehicule.image_verso  %}
-                                            <img src="{{ vehicule.image_verso.url}}" alt="profile-img" class="vehicule-image" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                         <img src="{{ vehicule.image_verso.url}}" alt="profile-img" class="vehicule-image" onclick="showImagePopup1('{{ vehicule.image_verso.url}}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
                                         {% endif  %}
                                      </td>
                                         </div>
@@ -170,7 +170,7 @@
 
 
                                         {% for image in image %}
-                                            <img src="{{ image.images.url }}" alt="Vehicule Image" class="vehicule-image" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                            <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
                                         {% endfor %}
 
                                     </div>
@@ -213,7 +213,6 @@
                     images[i].style.marginRight = '10px';
                 }
             }
-
             var options = {
                 filename: '{{ vehicule.marque }}-{{ vehicule.numero_immatriculation }}.pdf',
                 html2canvas: { scale: 2 },
@@ -227,7 +226,80 @@
         }
     </script>
 
+    <script>
+        function showImagePopup(imageUrl) {
+            var popupImage = document.createElement('img');
+            popupImage.src = imageUrl;
+            var popupContainer = document.createElement('div');
+            popupContainer.appendChild(popupImage);
+            popupContainer.style.position = 'fixed';
+            popupContainer.style.top = '50%';
+            popupContainer.style.left = '50%';
+            popupContainer.style.transform = 'translate(-50%, -50%)';
+            popupContainer.style.backgroundColor = 'white';
+            popupContainer.style.padding = '2050px';
+            popupContainer.style.background="transparent";
+            popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+            popupContainer.style.zIndex = '9999';
+            document.body.appendChild(popupContainer);
 
+            popupContainer.addEventListener('click', function (event) {
+                if (event.target === popupContainer) {
+                    document.body.removeChild(popupContainer);
+                }
+            });
+        }
+    </script>
+    <script>
+        function showImagePopup1(imageUrl) {
+            var popupImage = document.createElement('img');
+            popupImage.src = imageUrl;
+            var popupContainer = document.createElement('div');
+            popupContainer.appendChild(popupImage);
+            popupContainer.style.position = 'fixed';
+            popupContainer.style.top = '50%';
+            popupContainer.style.left = '50%';
+            popupContainer.style.transform = 'translate(-50%, -50%)';
+            popupContainer.style.backgroundColor = 'white';
+            popupContainer.style.padding = '2050px';
+            popupContainer.style.background="transparent";
+            popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+            popupContainer.style.zIndex = '9999';
+            document.body.appendChild(popupContainer);
 
+            popupContainer.addEventListener('click', function (event) {
+                if (event.target === popupContainer) {
+                    document.body.removeChild(popupContainer);
+                }
+            });
+        }
+    </script>
+    <script>
+        function showImagePopup2(imageUrl) {
+            var popupImage = document.createElement('img');
+            popupImage.src = imageUrl;
+            popupImage.style.maxWidth = '80%';
+            var popupContainer = document.createElement('div');
+            popupContainer.appendChild(popupImage);
+            popupContainer.style.position = 'fixed';
+            popupContainer.style.top = '50%';
+            popupContainer.style.width = '90%';
+            popupContainer.style.height = 'auto';
+            popupContainer.style.left = '50%';
+            popupContainer.style.transform = 'translate(-50%, -50%)';
+            popupContainer.style.background="transparent";
+            popupContainer.style.padding = '70px';
+            popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+            popupContainer.style.zIndex = '9999';
+            document.body.appendChild(popupContainer);
+
+            popupContainer.addEventListener('click', function (event) {
+                if (event.target === popupContainer) {
+                    document.body.removeChild(popupContainer);
+                }
+            });
+        }
+
+    </script>
     </body>
 {% endblock %}
