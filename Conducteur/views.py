@@ -57,6 +57,8 @@ def tous_les_conducteurs(request):
 
 def supprimer_conducteur(request, conducteur_id):
     conducteur = get_object_or_404(Conducteur, id=conducteur_id)
+    utilisateurs = get_object_or_404(Utilisateur, conducteur=conducteur_id)
+    utilisateurs.delete()
     conducteur.delete()
     return redirect('conducteur:tous_les_conducteurs')
 
