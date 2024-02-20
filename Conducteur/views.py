@@ -37,6 +37,7 @@ def ajouter_conducteur(request):
 
 def tous_les_conducteurs(request):
     conducteurs = Conducteur.objects.all().order_by('utilisateur__nom')
+    utilisateurs = Utilisateur.objects.all()
 
     items_per_page = 5
     paginator = Paginator(conducteurs, items_per_page)
@@ -51,7 +52,7 @@ def tous_les_conducteurs(request):
         # Si la page est hors de portée (par exemple, 9999), afficher la dernière page
         conducteurs = paginator.page(paginator.num_pages)
 
-    return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs})
+    return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'utilisateurs': utilisateurs})
 
 
 def supprimer_conducteur(request, conducteur_id):
@@ -80,7 +81,8 @@ def modifier_conducteur(request, conducteur_id):
             'date_de_naissance': conducteur.date_de_naissance,
             'date_embauche': conducteur.date_embauche,
         })
-    return render(request, 'modifier_conducteur.html', {'form': form, 'conducteur': conducteur, 'utilisateur': utilisateur})
+    return render(request, 'modifier_conducteur.html',
+                  {'form': form, 'conducteur': conducteur, 'utilisateur': utilisateur})
 
 
 def conducteur_search(request):
