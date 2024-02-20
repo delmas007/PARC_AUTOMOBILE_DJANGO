@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from Model.models import Deplacement
@@ -20,6 +21,16 @@ def enregistrer_deplacement(request):
 
 def liste_deplacement(request):
     deplacement = Deplacement.objects.filter(depart=False, arrivee=False)
+
+    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        deplacement = paginator.page(page)
+    except EmptyPage:
+
+        deplacement = paginator.page(paginator.num_pages())
     return render(request, 'afficher_deplacement.html', {'deplacements': deplacement})
 
 
@@ -33,6 +44,15 @@ def depart(request, pk):
 
 def liste_deplacement_en_cours(request):
     deplacement = Deplacement.objects.filter(depart=True, arrivee=False)
+    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        deplacement = paginator.page(page)
+    except EmptyPage:
+
+        deplacement = paginator.page(paginator.num_pages())
     return render(request, 'afficher_deplacement_en_cours.html', {'deplacements': deplacement})
 
 
@@ -47,4 +67,14 @@ def arrivee(request, pk):
 def liste_deplacement_arrive(request):
     today = datetime.now()
     deplacement = Deplacement.objects.filter(depart=True, arrivee=True, date_arrivee__date=today)
+
+    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        deplacement = paginator.page(page)
+    except EmptyPage:
+
+        deplacement = paginator.page(paginator.num_pages())
     return render(request, 'afficher_deplacement_arrive.html', {'deplacements': deplacement})

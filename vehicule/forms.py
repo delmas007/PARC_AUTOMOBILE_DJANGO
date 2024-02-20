@@ -98,6 +98,11 @@ class VehiculeForm(forms.ModelForm):
             'id': "couleur",
             'required': True,
         })
+        self.fields['numero_chassis'].widget.attrs.update({
+            'class': "form-control",
+            'id': "numero_chassis",
+            'required': True,
+        })
 
 
 class VehiculSearchForm(forms.Form):

@@ -47,6 +47,7 @@ class Roles(models.Model):
 
 
 class Conducteur(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     numero_permis_conduire = models.CharField(max_length=20, unique=True, )
     date_embauche = models.DateField(blank=True, null=True)
     date_de_naissance = models.DateField(blank=True, null=True)
@@ -59,6 +60,8 @@ class Conducteur(models.Model):
     def __str__(self):
         return f"{self.utilisateur_set.nom} {self.utilisateur_set.prenom} - {self.numero_permis_conduire}"
 
+    class Meta:
+        ordering = ['date_mise_a_jour']
 
 
 class Utilisateur(AbstractBaseUser):
@@ -75,8 +78,8 @@ class Utilisateur(AbstractBaseUser):
     )
     nom = models.CharField(max_length=250, verbose_name='nom')
     prenom = models.CharField(max_length=250)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True,blank=True)
-    roles = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True,blank=True)
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True, blank=True)
+    roles = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -92,6 +95,7 @@ class Marque(models.Model):
 
 
 class Vehicule(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     numero_immatriculation = models.CharField(max_length=250)
@@ -104,8 +108,8 @@ class Vehicule(models.Model):
     date_expiration_assurance = models.DateField()
     date_videnge = models.DateField()
     kilometrage = models.IntegerField()
-    image_recto = models.ImageField(upload_to='carteGrise/',  blank=False)
-    image_verso = models.ImageField(upload_to='carteGrise/',  blank=False)
+    image_recto = models.ImageField(upload_to='carteGrise/', blank=False)
+    image_verso = models.ImageField(upload_to='carteGrise/', blank=False)
     # prix_location
     energie = models.CharField(
         max_length=250,
@@ -124,7 +128,7 @@ class Vehicule(models.Model):
         return f"{self.numero_immatriculation}"
 
     class Meta:
-        ordering = ['numero_immatriculation']
+        ordering = ['date_mise_a_jour']
     # def save(self, *args, **kwargs):
     #     request = kwargs.pop('request', None)  # Récupère l'objet request s'il existe
     #     self.utilisateur = request.user if request else None  # Assigne l'utilisateur connecté ou None
@@ -144,6 +148,7 @@ class Demande_prolongement(models.Model):
 
 
 class Deplacement(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
@@ -172,6 +177,9 @@ class Deplacement(models.Model):
     def __str__(self):
         return f"{self.vehicule} - {self.conducteur.nom}"
 
+    class Meta:
+        ordering = ['date_mise_a_jour']
+
 
 class Demande_location(models.Model):
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
@@ -183,6 +191,7 @@ class Demande_location(models.Model):
 
 
 class Location(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
     demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL, null=True)
     demande_location = models.ForeignKey(Demande_location, on_delete=models.SET_NULL, null=True)
@@ -200,6 +209,9 @@ class Location(models.Model):
         ],
         default='en cours'
     )
+
+    class Meta:
+        ordering = ['date_mise_a_jour']
 
 
 class Carburant(models.Model):

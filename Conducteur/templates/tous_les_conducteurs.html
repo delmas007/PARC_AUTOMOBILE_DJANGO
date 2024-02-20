@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {% if conducteurs %}
+                                {% if utilisateurs %}
                                <div class="table-responsive">
                                    <table id="user-list-table" class=" table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info" >
                                        <thead >
@@ -71,10 +71,10 @@
                                        </thead>
 
                                            <tbody>
-                                           {% for conducteur in conducteurs %}
+                                           {% for utilisateur in utilisateurs %}
                                            <tr>
-                                               <td> {% if conducteur.image  %}
-                                                   <img src="{{ conducteur.image.url}}" alt="profile-img" class="avatar-130 img-fluid conducteur-image">
+                                               <td> {% if utilisateur.conducteur.image  %}
+                                                   <img src="{{ utilisateur.conducteur.image.url}}" alt="profile-img" class="avatar-130 img-fluid conducteur-image">
                                                    {% else  %}
                                                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -82,20 +82,20 @@
                                                    </svg>
                                                    {% endif  %}
                                                </td>
-                                               <td>{{ conducteur.nom}}</td>
-                                               <td>{{ conducteur.prenom}}</td>
-                                               <td>{{ conducteur.numero_telephone}}</td>
-                                               <td>{{ conducteur.adresse}}</td>
-                                               <td>{{ conducteur.date_de_naissance}}</td>
-                                               <td>{{ conducteur.date_embauche}}</td>
-                                               <td>{{ conducteur.numero_permis_conduire}}</td>
+                                               <td>{{ utilisateur.nom}}</td>
+                                               <td>{{ utilisateur.prenom}}</td>
+                                               <td>{{ utilisateur.conducteur.numero_telephone}}</td>
+                                               <td>{{ utilisateur.conducteur.adresse}}</td>
+                                               <td>{{ utilisateur.conducteur.date_de_naissance}}</td>
+                                               <td>{{ utilisateur.conducteur.date_embauche}}</td>
+                                               <td>{{ utilisateur.conducteur.numero_permis_conduire}}</td>
                                                <td><span class="badge dark-icon-light iq-bg-primary">Active</span></td>
                                                <td>
 
                                                    <div class="flex align-items-center list-user-action">
-                                                       <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'conducteur:details_conducteur' conducteur_id=conducteur.id %}" ><i class="ri-eye-line"></i></a>
-                                                       <a class="iq-bg-success zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier les informtaions du conducteur" href="{% url 'conducteur:modifier_conducteur' conducteur.id %}"><i class="ri-pencil-line"></i></a>
-                                                       <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer le conducteur" href="#" onclick="confirmDeleteModal(this)" data-conducteur-id="{{ conducteur.id }}"><i class="ri-delete-bin-line"></i></a>
+                                                       <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'conducteur:details_conducteur' conducteur_id=utilisateur.conducteur.id %}" ><i class="ri-eye-line"></i></a>
+                                                       <a class="iq-bg-success zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier les informtaions du conducteur" href="{% url 'conducteur:modifier_conducteur' utilisateur.conducteur.pk %}"><i class="ri-pencil-line"></i></a>
+                                                       <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="Supprimer le conducteur" href="#" onclick="confirmDeleteModal(this)" data-conducteur-id="{{ utilisateur.conducteur.pk }}"><i class="ri-delete-bin-line"></i></a>
 
 
                                                    </div>
@@ -103,18 +103,18 @@
                                            </tr>
                                            {% endfor %}
                                            </tbody>
-                                           <div class="modal fade" id="confirmDeleteModal{{ conducteur.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel{{ conducteur.id }}" aria-hidden="true">
+                                           <div class="modal fade" id="confirmDeleteModal{{ utilisateurs.conducteur.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel{{ utilisateurs.conducteur.id }}" aria-hidden="true">
                                                <div class="modal-dialog modal-dialog-centered" role="document">
                                                    <div class="modal-content">
                                                        <div class="modal-header" style="display: flex; justify-content: center; align-items: center;">
-                                                           <h5 class="modal-title" id="confirmDeleteModalLabel{{ conducteur.id }}">Confirmation de la suppression</h5>
+                                                           <h5 class="modal-title" id="confirmDeleteModalLabel{{ utilisateurs.conducteur.id }}">Confirmation de la suppression</h5>
                                                        </div>
                                                        <div class="modal-body">
                                                            Êtes-vous sûr de vouloir supprimer ce conducteur ?
                                                        </div>
                                                        <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                                           <a href="#" class="btn btn-danger" onclick="executeDelete('{{ conducteur.id }}')">Supprimer</a>
+                                                           <a href="#" class="btn btn-danger" onclick="executeDelete('{{ utilisateurs.conducteur.id }}')">Supprimer</a>
                                                        </div>
                                                    </div>
                                                </div>
