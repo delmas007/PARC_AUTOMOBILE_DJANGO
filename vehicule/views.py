@@ -93,8 +93,6 @@ def modifier_vehicule(request, pk):
             if request.FILES.getlist('images'):
                 # Supprimez les anciennes images du véhicule
                 Photo.objects.filter(vehicule=vehicule).delete()
-
-            if request.FILES.getlist('images'):
                 # Ajoutez les nouvelles images au véhicule
                 for image in request.FILES.getlist('images'):
                     Photo.objects.create(vehicule=vehicule, images=image)
