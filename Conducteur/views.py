@@ -37,7 +37,7 @@ def ajouter_conducteur(request):
 
 def tous_les_conducteurs(request):
     conducteurs = Conducteur.objects.all().order_by('utilisateur__nom')
-    utilisateurs = Utilisateur.objects.all()
+    utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True)
 
     items_per_page = 5
     paginator = Paginator(conducteurs, items_per_page)
