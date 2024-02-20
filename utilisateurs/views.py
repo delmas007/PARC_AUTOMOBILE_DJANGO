@@ -25,7 +25,7 @@ def inscription_user(request):
             # user.is_active = False
             # activateEmail(request, user, form.cleaned_data.get('email'))
             user.save()
-            return redirect('Model:connexion')
+            return redirect('utilisateur:Accueil_user')
         else:
 
             context['form'] = form

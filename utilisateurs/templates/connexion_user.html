@@ -4,69 +4,139 @@
 
 <body>
 <!-- Nav Bar Start -->
-
 {% include 'nav-bar.html' %}
         <!-- Bottom Bar End --> 
-        
-        
+
+
         <!-- Breadcrumb End -->
-        
+
         <!-- Login Start -->
-        <div class="login">
+{#    <div class="container">#}
+{#        <div class="row">#}
+{#            <div class="col-lg-10 mx-auto col-12 " style="background-color: #FFFFFF; border-radius: 20% 20% / 20% 20%; height: 600px; margin-top: 200px;">#}
+{#                <h1 class="hero-title text-center mb-5" style="padding-top: 20px ">Connexion</h1>#}
+{##}
+{#                <div class="row d-flex justify-content-center align-items-center">#}
+{#                    <div class="col-lg-8 col-11 mx-auto">#}
+{#                        <form role="form" method="post" class="shadow-form">#}
+{#                    {% csrf_token %}#}
+{#                            <div class="form-floating mb-4 p-0"  >#}
+{#                               <input class="form-control " style="border-radius: 10px;height: 50px;margin-bottom: 50px" type="text" placeholder="Username" name="username" required>#}
+{##}
+{#                            </div>#}
+{#                            <div class="form-floating p-0">#}
+{#                            <input class="form-control" style="border-radius: 10px;height: 50px;margin-bottom: 50px" type="password" placeholder="Password" name="password" required>#}
+{##}
+{#                            </div>#}
+{#                            {% if form.errors %}#}
+{#                            {% for field, errors in form.errors.items %}#}
+{#                                {% for error in errors %}#}
+{#                                    <div class="alert alert-dark mt-4" role="alert">#}
+{#                                        <strong>Erreur :</strong> {{ error }}#}
+{#                                    </div>#}
+{#                                 {% endfor %}#}
+{#                            {% endfor %}#}
+{#                            {% endif %}#}
+{##}
+{#                        <button type="submit" class="btn custom-btn form-control mt-4 mb-4" style="margin-left: -1px;border-radius: 30px;">Se connecter</button>#}
+{#                        <div style="margin-top: 20px;">#}
+{#                        <p class="text-center mb-3" >Avez-vous oublié votre mot de passe ? <a href="#">Réinitialisez-le maintenant</a></p>#}
+{##}
+{#                        <p class="text-center mb-3">Vous n’avez pas de compte ?  <a href="#">Inscrivez-vous</a></p>#}
+{#                        </div>#}
+{#                         </form>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+<!-- Section: Design Block -->
+<section class="text-center">
+  <!-- Background image -->
+
+  <div class="p-5 bg-image">
+     <div class="brand " >
             <div class="container-fluid">
-                <form  method="post">
-                    {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6">  
-                          <div class="login-form">
-                              <div class="row">
-                                  <div class="col-md-12">
-                                      <label>Username</label>
-                                      <input class="form-control" type="text" placeholder="Username" name="username" required>
-                                  </div>
-
-                                  <div class="col-md-6"></div>
-                                  <div class="col-md-12">
-                                      <label>Password</label>
-                                      <input class="form-control" type="password" placeholder="Password" name="password" required>
-                                  </div>
-                                  <div class="col-md-6"></div>
-
-                                  <div class="col-md-12">
-                                      <button class="btn">Se Connecter</button>
-                                  </div>
-                                  {% if form.errors %}
-                                      {% for field, errors in form.errors.items %}
-                                          {% for error in errors %}
-                                              <div class="alert alert-danger mt-4" role="alert">
-                                                  <strong>{{ field }} :</strong> {{ error }}
-                                              </div>
-                                          {% endfor %}
-                                      {% endfor %}
-                                  {% endif %}
-                              </div>
-                          </div>
-
-                      </div>
-
-                            
-                        </div>
-                        <div class="col-md-3"></div>
-                        <div class=" col-md-3 login-link1 ">
-                          <p>Vous avez pas de compte ? <a href="register.html">Inscrivez-vous</a></p>
-                      </div>
-                        
-                    </div>
-                    
+                <div class="brand-slider">
+                    <div class="brand-item"><img src="{% static "img/brand-1.png"%}" alt=""></div>
+                    <div class="brand-item"><img src="{% static "img/brand-2.png"%}" alt=""></div>
+                    <div class="brand-item"><img src="{% static "img/brand-3.png"%}" alt=""></div>
+                    <div class="brand-item"><img src="{% static "img/brand-4.png"%}" alt=""></div>
+                    <div class="brand-item"><img src="{% static "img/brand-5.png"%}" alt=""></div>
+                    <div class="brand-item"><img src="{% static "img/brand-6.png"%}" alt=""></div>
                 </div>
-            </form>
             </div>
-        <!-- Login End -->
-        
-        <!-- Footer Start -->
+        </div>
+  </div>
 
-        <!-- Footer End -->
+  <!-- Background image -->
+<div class="row" >
+<div class="col-md-2"></div>
+  <div class="card mx-4 mx-md-5 shadow-5-strong col-md-8" style="
+
+        backdrop-filter: blur(30px);
+        background-color: transparent;
+        border-radius: 20px 20px 20px 20px;
+
+        ">
+
+      <div class="card-body py-5 ">
+
+      <div class="row d-flex justify-content-center">
+          <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <h2 class="fw-bold mb-5">CONNEXION</h2>
+          <form role="form" method="post" class="shadow-form">
+            <!-- 2 column grid layout with text inputs for the first and last names -->
+
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+               <input class="form-control " style="border-radius: 10px;height: 50px;margin-bottom: 50px" type="text" placeholder="Username" name="username" required>
+
+
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+             <input class="form-control" style="border-radius: 10px;height: 50px;margin-bottom: 50px" type="password" placeholder="Password" name="password" required>
+
+
+            </div>
+
+
+
+
+
+           {% if form.errors %}
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <div class="alert alert-dark mt-4" role="alert">
+                                        <strong>Erreur :</strong> {{ error }}
+                                    </div>
+                                 {% endfor %}
+                            {% endfor %}
+                            {% endif %}
+
+                        <button type="submit" class="btn custom-btn form-control mt-4 mb-4" style="margin-left: -1px;border-radius: 30px;font-size: 20px;height: 50px">Se connecter</button>
+                        <div style="margin-top: 20px;">
+                        <p class="text-center mb-3" >Avez-vous oublié votre mot de passe ? <a href="#">Réinitialisez-le maintenant</a></p>
+
+                        <p class="text-center mb-3">Vous n’avez pas de compte ?  <a href="{%  url 'utilisateur:Inscription_user' %}">Inscrivez-vous</a></p>
+                        </div>
+
+          </form>
+        </div>
+      <div class="col-md-4"></div>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- Section: Design Block -->
 
 {% include 'footer_user.html' %}
 </body>
