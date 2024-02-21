@@ -156,17 +156,8 @@ class Deplacement(models.Model):
     date_depart = models.DateTimeField()
     niveau_carburant = models.IntegerField()
     duree_deplacement = models.CharField(max_length=250, )
-    depart = models.BooleanField(default=False)
-    arrivee = models.BooleanField(default=False)
     kilometrage_depart = models.IntegerField()
-    statut = models.CharField(
-        max_length=50,
-        choices=[
-            ('en cours', 'En cours...'),
-            ('arrivée', 'Arrivée')
-        ],
-        default='en cours'
-    )
+
 
     def save(self, *args, **kwargs):
         if self.depart and not self.date_depart:
