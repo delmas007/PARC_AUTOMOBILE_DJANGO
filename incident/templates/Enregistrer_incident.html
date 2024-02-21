@@ -1,0 +1,104 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content%}
+   <body>
+      <div id="loading">
+         <div id="loading-center">
+         </div>
+      </div>
+      <div class="wrapper">
+          {% include 'slide.html' %}
+          {% include 'top_navbar.html' %}
+   <div id="content-page" class="content-page">
+      <div class="container-fluid">
+         <div class="row d-flex justify-content-center">
+            <div class="col-lg-5">
+                  <div class="iq-card">
+                     <div class="iq-card-header d-flex justify-content-between">
+                        <div class="iq-header-title">
+                           <h4 class="card-title" style="font-size: 32px;">Ajout d'un incident</h4>
+                            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true" style="top:0; bottom: 0">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;">Conducteur ajouter avec succes!</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
+                                            <img src="{% static 'images/Success.gif' %}" alt="GIF animé" style="max-width: 30%; height: auto;">
+                                        </div>
+                                        <div class="modal-footer text-center" style="display: flex; justify-content: center; align-items: center;">
+                                            <button type="button" class="btn btn-secondary align-items-center" data-dismiss="modal">Fermer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                     <div class="iq-card-body">
+                        <div class="new-user-info">
+                           <form method="post" action="{% url 'incident:enregistrer_incident' %}" enctype="multipart/form-data">
+                               {% csrf_token %}
+                               <div class="row ">
+
+                                   <div class="form-group col-md-10 {% if utilisateur_form.prenom.errors %}has-error{% endif %}">
+                                       <label for="prenom" style="font-size: 18px">Marque & matricule du véhicule</label>
+                                    <select class="form-control" id="vehicule" placeholder="Nom & matricule du coducteur" name="vehicule" value="{% if conducteur_form.adresse.value %}{{ conducteur_form.adresse.value }}{% endif %}">
+                                                {% for vehicule in vehicules %}
+                                                    <option value="{{ vehicule.id }}">{{ vehicule.marque}}-{{ vehicule.numero_immatriculation }}</option>
+                                                {% endfor %}
+                                    </select>
+
+                                   </div>
+
+                                  <div class="form-group col-md-10">
+
+                                   </div>
+
+                                   <div class="form-group col-md-10 {% if conducteur_form.email.errors %}has-error{% endif %}" style="margin-top: 33px">
+                                       <div class="form-control h-auto" style="border-radius: 10px">
+                                       <label for="prenom" style="color: #d97c7c" , style="font-size: 18px">Selectionner les photos du véhicule</label>
+                                           <input placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image"  value="{% if conducteur_form.image.value %}{{ conducteur_form.image.value }}{% endif %}">
+                                       </div>
+                                       {% if conducteur_form.image.errors %}
+                                           <p class="help-block">Veillez joindre une image</p>
+                                       {% endif %}
+                                   <div>
+                                   </div>
+                                   </div>
+
+                                <div class="form-group col-md-6 ">
+                                   </div>
+
+                                <div class="form-group col-md-10 ">
+                                       <label for="adresse" style="font-size: 18px">Description de l'incident</label>
+                                       <textarea class="form-control" id="description" placeholder="Veuillez founir la description de l'incident" name="adresse" value="">
+
+                                       </textarea>
+
+                                   </div>
+                               </div>
+
+
+                               <button type="submit" class="btn btn-primary" style="width: 100%">Enregistrer</button>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+      {% include 'footer.html' %}
+      <script>
+          {% if messages %}
+          {% for messages  in messages %}
+                      $('#successModal').modal('show');
+          {% endfor %}
+          {% endif %}
+      </script>
+   </body>
+{% endblock %}

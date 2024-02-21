@@ -235,7 +235,7 @@ Card
 .iq-card-transparent { background: transparent;  -webkit-border-radius: 8px; -moz-border-radius: 5px; border-radius: 5px; margin-bottom: 30px; }
 .iq-card-body { padding: 20px; }
 .iq-card .iq-card-header { padding: 20px 20px 0px; min-height: 60px; -ms-flex-align: center !important; align-items: center !important; }
-.iq-card .iq-card-header .iq-header-title { display: inline-block; align-self: center !important; }
+.iq-card .iq-card-header .iq-header-title { display: inline-block; align-self: center; align-content: center !important; }
 .iq-card .iq-card-header .iq-header-title .card-title { margin-bottom: 0; }
 .iq-card-header-toolbar .nav-item a { color: var(--iq-dark); padding: 4px 12px; font-size: 14px; font-family: 'Nunito', sans-serif; }
 .iq-card-header-toolbar .dropdown-toggle i { font-size: 22px; line-height: normal; color: var(--iq-dark); }

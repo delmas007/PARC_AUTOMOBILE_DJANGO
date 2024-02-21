@@ -33,6 +33,9 @@
             {% url 'deplacement:liste_deplacement' as deplacement_liste_deplacement_url %}
             {% url 'deplacement:liste_deplacement_en_cours' as deplacement_liste_deplacement_en_cours_url %}
             {% url 'deplacement:liste_deplacement_arrive' as deplacement_liste_deplacement_arrive_url %}
+            {% url 'incident:enregistrer_incident' as enregistrer_incident_url %}
+            {% url 'incident:liste_incidents_externe' as liste_incident_externe_url %}
+            {% url 'incident:liste_incidents_interne' as liste_incident_interne_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -65,6 +68,17 @@
                         <li class="{% if request.path == deplacement_liste_deplacement_arrive_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_arrive' %}"><i class="ri-file-edit-line"></i>Arrivé</a></li>
                     </ul>
                 </li>
+
+             <li class="{% if request.path == enregistrer_incident_url or request.path == liste_incident_externe_url   or request.path == liste_incident_interne_url  %}active{% endif %}">
+                    <a href="#incidents" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="fa fa-paper-plane"></i><span>Incidents</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="incidents" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                    <ul id="incidents" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                        <li class="{% if request.path == enregistrer_incident_url %}active{% endif %}" ><a href="{% url 'incident:enregistrer_incident' %}"><i class="ri-profile-line"></i>Enregistrer</a></li>
+                        <li class="{% if request.path == liste_incident_interne_url %}active{% endif %}" ><a href="{% url 'incident:liste_incidents_interne' %}"><i class="ri-file-edit-line"></i>Liste incidents interne </a></li>
+                        <li class="{% if request.path == liste_incident_externe_url %}active{% endif %}" ><a href="{% url 'incident:liste_incidents_externe' %}"><i class="ri-file-edit-line"></i>Liste incidents externe</a></li>
+                    </ul>
+                </li>
+
             </ul>
         </nav>
         <div class="p-3"></div>
