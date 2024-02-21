@@ -10,7 +10,9 @@ def enregistrer_deplacement(request):
     if request.method == 'POST':
         form = DeplacementForm(request.POST)
         if form.is_valid():
-            form.save()
+            gestionnaire = form.save(commit=False)
+            gestionnaire.utilisateur = request.user
+            gestionnaire.save()
             messages.success(request, 'Vehicule ajouté avec succès !')
             return redirect('deplacement:enregistrer_deplacement')
     else:
