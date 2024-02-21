@@ -14,7 +14,7 @@
         </strong>
     </div>
 </div>
-<div class="nav"style="height: 100px;">
+<div class="nav" >
     <div class="container-fluid">
         <nav class="navbar navbar-expand-md bg-dark navbar-dark">
             <a href="#" class="navbar-brand">MENU</a>
@@ -22,10 +22,11 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse"style="height: 100px;">
                 <div class="navbar-nav mr-auto">
                     <a href="index.html" class="nav-item nav-link active" style="font-size: 20px">Accueil</a>
                     <a href="product-list.html" class="nav-item nav-link" style="font-size: 20px">Véhicules</a>
+                    <a href="{% url 'utilisateur:compte'%}" class="nav-item nav-link" style="font-size: 20px">Compte</a>
                     <!-- <a href="product-detail.html" class="nav-item nav-link">Détail du Véhicule</a> -->
                     <!--<a href="cart.html" class="nav-item nav-link">Cart</a> -->
                     <!--  <a href="checkout.html" class="nav-item nav-link">Demande</a> -->
@@ -40,7 +41,7 @@
                 </div>
                 <div class="navbar-nav ml-auto">
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Compte d'utilisateur</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="font-size: 20px">Compte d'utilisateur</a>
                         <div class="dropdown-menu">
                             <a href="{% url 'utilisateur:connexion_user'%}" class="dropdown-item">Se connecter </a>
                             <a href="{% url 'utilisateur:Inscription_user'%}" class="dropdown-item">S'inscrire</a>
