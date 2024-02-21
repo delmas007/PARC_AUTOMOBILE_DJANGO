@@ -58,7 +58,8 @@ class Conducteur(models.Model):
     image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.utilisateur_set.nom} {self.utilisateur_set.prenom} - {self.numero_permis_conduire}"
+        return f"{self.utilisateur.nom} {self.utilisateur.prenom} "
+
 
     class Meta:
         ordering = ['date_mise_a_jour']
@@ -78,13 +79,16 @@ class Utilisateur(AbstractBaseUser):
     )
     nom = models.CharField(max_length=250, verbose_name='nom')
     prenom = models.CharField(max_length=250)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True, blank=True)
+    conducteur = models.OneToOneField(Conducteur, on_delete=models.SET_NULL, null=True, blank=True)
     roles = models.ForeignKey(Roles, on_delete=models.SET_NULL, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     USERNAME_FIELD = 'username'
     objects = MyUserManager()
+
+    def __str__(self):
+        return f"{self.nom} {self.prenom}"
 
 
 class Marque(models.Model):
@@ -149,30 +153,15 @@ class Demande_prolongement(models.Model):
 
 class Deplacement(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
-    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
-    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL, null=True)
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True,null=True)
+    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL,blank=True, null=True,)
     date_depart = models.DateTimeField()
     niveau_carburant = models.IntegerField()
     duree_deplacement = models.CharField(max_length=250, )
-    depart = models.BooleanField(default=False)
-    arrivee = models.BooleanField(default=False)
     kilometrage_depart = models.IntegerField()
-    statut = models.CharField(
-        max_length=50,
-        choices=[
-            ('en cours', 'En cours...'),
-            ('arrivée', 'Arrivée')
-        ],
-        default='en cours'
-    )
 
-    def save(self, *args, **kwargs):
-        if self.depart and not self.date_depart:
-            self.date_depart = timezone.now()
-
-        super(Deplacement, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.vehicule} - {self.conducteur.nom}"

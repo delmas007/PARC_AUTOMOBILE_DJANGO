@@ -37,18 +37,29 @@
                         <div class="iq-card-body">
                             <div class="table-responsive">
                                 <div class="row justify-content-between">
-                                    <div class="col-sm-12 col-md-6">
+                                    <div class="col-sm-12 col-md-12">
                                         <div id="user_list_datatable_info" class="dataTables_filter">
                                             <a href="{% url 'admins:gestionnaire_inactifs' %}" type="button" class="btn mb-3 btn-danger rounded-pill">
-                                                Afficher les gestionnaires inactifs
+                                                Afficher les gestionnaires inactif
                                             </a>
-                                            <form class="mr-3 position-relative" method="get" action="">
-                                                <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="numero"  placeholder="Rechercher un conducteur: Nom, Prenom, Numero...">
+                                            <div class="row">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group mb-0">
+                                                        <form class="mr-3 position-relative" method="get" action="{% url 'admins:gestionnaire_a_search' %}">
+                                                            <div class="col-sm-10">
+                                                                <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Marque, ou matricule...">
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary">Rechercher</button>
+                                                        </form>
+                                                    </div>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary">Rechercher</button>
-                                            </form>
+                                                <div class="col-12 col-md-6 ms-0" style="margin-top: 0">
+                                                    {% if no_results %}
+                                                        <p>Aucun résultat trouvé pour la recherche "{{ request.GET.q }}".</p>
+                                                    {% endif %}
+                                                </div>
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -80,13 +91,13 @@
                                                         <form method="post" action="{% url 'admins:active_emp' gestionnaire.id %}">
                                                             {% csrf_token %}
                                                             {% if not gestionnaire.is_active %}
-                                                                <button type="submit" class="btn mb-3 btn-success rounded-pill">Activer</button>
+                                                                <button type="submit" class="btn  btn-success rounded-pill">Activer</button>
                                                             {% endif %}
                                                         </form>
-                                                        <form method="post" action="{% url 'admins:desactive_amp' gestionnaire.id %}">
+                                                        <form method="post"  action="{% url 'admins:desactive_amp' gestionnaire.id %}">
                                                             {% csrf_token %}
                                                             {% if gestionnaire.is_active %}
-                                                                <button type="submit" class="btn mb-3 btn-danger rounded-pill">Desactiver</button>
+                                                                <button type="submit" class="btn  btn-danger rounded-pill">Desactiver</button>
                                                             {% endif %}
                                                         </form>
                                                     </td>
@@ -98,22 +109,33 @@
                         </div>
                     </div>
                         {% endif %}
-                        {% if not gestionnaires and not gestionnaires2 %}
+                        {% if not gestionnaires %}
                             <div class="iq-card-body">
                                 <div class="table-responsive">
                                     <div class="row justify-content-between">
-                                        <div class="col-sm-12 col-md-6">
+                                        <div class="col-sm-12 col-md-12">
                                             <div id="user_list_datatable_info" class="dataTables_filter">
                                                 <a href="{% url 'admins:gestionnaire_inactifs' %}" type="button" class="btn mb-3 btn-danger rounded-pill">
                                                     Afficher les gestionnaires inactifs
                                                 </a>
-                                                <form class="mr-3 position-relative" method="get" action="">
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="numero"  placeholder="Rechercher un conducteur: Nom, Prenom, Numero...">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="form-group mb-0">
+                                                            <form class="mr-3 position-relative" method="get" action="{% url 'admins:gestionnaire_a_search' %}">
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Marque, ou matricule...">
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary">Rechercher</button>
+                                                            </form>
+                                                        </div>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Rechercher</button>
-                                                </form>
+                                                    <div class="col-12 col-md-6 ms-0" style="margin-top: 0">
+                                                        {% if no_results %}
+                                                            <p>Aucun résultat trouvé pour la recherche "{{ request.GET.q }}".</p>
+                                                        {% endif %}
+                                                    </div>
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -130,78 +152,13 @@
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <td>
-                                                    Accun gestionnaire
+                                                <td colspan="5">
+                                                    Aucun gestionnaire actif
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                        {% if gestionnaires2 %}
-                            <div class="iq-card-body">
-                                <div class="table-responsive">
-                                    <div class="row justify-content-between">
-                                        <div class="col-sm-12 col-md-6">
-                                            <div id="user_list_datatable_info" class="dataTables_filter">
-                                                <a href="{% url 'admins:Compte_gestionnaire' %}" type="button" class="btn mb-3 btn-success rounded-pill ">
-                                                    Afficher les gestionnaires activer
-                                                </a>
-                                                <form class="mr-3 position-relative" method="get" action="">
-                                                    <div class="col-sm-10">
-                                                        <input t ype="text" class="form-control" id="numero"  placeholder="Rechercher un conducteur: Nom, Prenom, Numero...">
-                                                    </div>
-                                                    <button  type="submit" class="btn btn-primary">Rechercher</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table  id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
-                                            <thead>
-                                            <tr style="background-color: #8861d2; color:white" >
-                                                <th style="color: white">Nom</th>
-                                                <th style="color: white">Prenom</th>
-                                                <th style="color: white"> Email</th>
-                                                <th style="color: white">Status</th>
-                                                <th style="color: white">Activer/Desactiver</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for gestionnaire in gestionnaires2 %}
-                                                <tr>
-                                                    <td>{{ gestionnaire.nom }}</td>
-                                                    <td>{{ gestionnaire.prenom }}</td>
-                                                    <td>{{ gestionnaire.email }}</td>
-                                                    <td>
-                                                        {% if gestionnaire.is_active %}
-                                                            <span class="badge dark-icon-light iq-bg-success">Compte actif</span>
-                                                        {% else %}
-                                                            <span class="badge dark-icon-light iq-bg-danger">Compte inactif</span>
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>
-                                                        <form method="post" action="{% url 'admins:active_emp' gestionnaire.id %}">
-                                                            {% csrf_token %}
-                                                            {% if not gestionnaire.is_active %}
-                                                                <button type="submit" class="btn mb-3 btn-success rounded-pill">Activer</button>
-                                                            {% endif %}
-                                                        </form>
-                                                        <form method="post" action="{% url 'admins:desactive_amp' gestionnaire.id %}">
-                                                            {% csrf_token %}
-                                                            {% if gestionnaire.is_active %}
-                                                                <button type="submit" class="btn mb-3 btn-danger rounded-pill">Desactiver</button>
-                                                            {% endif %}
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    </table>
                                 </div>
                             </div>
                         {% endif %}

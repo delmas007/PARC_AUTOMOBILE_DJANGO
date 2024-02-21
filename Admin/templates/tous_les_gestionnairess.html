@@ -1,0 +1,171 @@
+{% extends 'header_admin.html' %}
+{% load static %}
+{% block content%}
+<body>
+<style>
+    .zoom-on-hover {
+        transition: transform 0.3s ease-in-out;
+    }
+    .zoom-on-hover:hover {
+        transform: scale(2);
+    }
+    .conducteur-image {
+        max-width: 130px;
+        max-height: 130px;
+        width: auto;
+        height: auto;
+        border-radius: 50%;
+    }
+</style>
+<div id="loading">
+    <div id="loading-center">
+    </div>
+</div>
+<div class="wrapper">
+    {% include 'slide_admin.html' %}
+    <div id="content-page" class="content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">Tous les gestionnaire  {% if gestionnaires %} Actifs{% else %}{% endif %} {% if gestionnaires2 %} Inactifs{% endif %}</h4>
+                            </div>
+                        </div>
+                        {% if not gestionnaires2  %}
+                            <div class="iq-card-body">
+                                <div class="table-responsive">
+                                    <div class="row justify-content-between">
+                                        <div class="col-sm-12 col-md-12">
+                                            <div id="user_list_datatable_info" class="dataTables_filter">
+                                                <a href="{% url 'admins:Compte_gestionnaire' %}" type="button" class="btn mb-3 btn-success rounded-pill">
+                                                    Afficher les gestionnaires actifs
+                                                </a>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="form-group mb-0">
+                                                            <form class="mr-3 position-relative" method="get" action="{% url 'admins:gestionnaire_a_search' %}">
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Marque, ou matricule...">
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary">Rechercher</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6 ms-0" style="margin-top: 0">
+                                                        {% if no_results %}
+                                                            <p>Aucun résultat trouvé pour la recherche "{{ request.GET.q }}".</p>
+                                                        {% endif %}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
+                                            <thead>
+                                            <tr style="background-color: #8861d2; color:white">
+                                                <th style="color: white">Nom</th>
+                                                <th style="color: white">Prenom</th>
+                                                <th style="color: white">Email</th>
+                                                <th style="color: white">Status</th>
+                                                <th style="color: white">Activer/Desactiver</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td colspan="5">
+                                                    Aucun gestionnaire inactif
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if gestionnaires2 %}
+                            <div class="iq-card-body">
+                                <div class="table-responsive">
+                                    <div class="row justify-content-between">
+                                        <div class="col-sm-12 col-md-12">
+                                            <div id="user_list_datatable_info" class="dataTables_filter">
+                                                <a href="{% url 'admins:Compte_gestionnaire' %}" type="button" class="btn mb-3 btn-success rounded-pill">
+                                                    Afficher les gestionnaires actifs
+                                                </a>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="form-group mb-0">
+                                                            <form class="mr-3 position-relative" method="get" action="{% url 'admins:gestionnaire_a_search' %}">
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Marque, ou matricule...">
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary">Rechercher</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6 ms-0" style="margin-top: 0">
+                                                        {% if no_results %}
+                                                            <p>Aucun résultat trouvé pour la recherche "{{ request.GET.q }}".</p>
+                                                        {% endif %}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table  id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
+                                            <thead>
+                                            <tr style="background-color: #8861d2; color:white" >
+                                                <th style="color: white">Nom</th>
+                                                <th style="color: white">Prenom</th>
+                                                <th style="color: white"> Email</th>
+                                                <th style="color: white">Status</th>
+                                                <th style="color: white">Activer/Desactiver</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for gestionnaire in gestionnaires2 %}
+                                                <tr>
+                                                    <td>{{ gestionnaire.nom }}</td>
+                                                    <td>{{ gestionnaire.prenom }}</td>
+                                                    <td>{{ gestionnaire.email }}</td>
+                                                    <td>
+                                                        {% if gestionnaire.is_active %}
+                                                            <span class="badge dark-icon-light iq-bg-success">Compte actif</span>
+                                                        {% else %}
+                                                            <span class="badge dark-icon-light iq-bg-danger">Compte inactif</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <form method="post" action="{% url 'admins:active_emp' gestionnaire.id %}">
+                                                            {% csrf_token %}
+                                                            {% if not gestionnaire.is_active %}
+                                                                <button type="submit" class="btn  btn-success rounded-pill">Activer</button>
+                                                            {% endif %}
+                                                        </form>
+                                                        <form method="post" action="{% url 'admins:desactive_amp' gestionnaire.id %}">
+                                                            {% csrf_token %}
+                                                            {% if gestionnaire.is_active %}
+                                                                <button type="submit" class="btn  btn-danger rounded-pill">Desactiver</button>
+                                                            {% endif %}
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+
+</body>
+{% endblock %}
