@@ -4,8 +4,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from Model.models import Vehicule, Photo, Marque
-from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm, VehiculeModifierForm
+from Model.models import Vehicule, Photo, Marque, Model
+from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm, VehiculeModifierForm, typeForm
 
 
 # Create your views here.
@@ -116,6 +116,21 @@ def ajouter_marque(request):
             return JsonResponse({'errors': errors}, status=400)
     else:
         form = marqueForm()
+    return render(request, 'ajouter_vehicule.html', {'form': form})
+def ajouter_type(request):
+    if request.method == 'POST':
+        form = typeForm(request.POST)
+        if form.is_valid():
+            type = form.cleaned_data['type_commercial']
+            if Model.objects.filter(type=type).exists():
+                return JsonResponse({'error': 'Ce type commercial existe déjà.'}, status=400)
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            errors = dict(form.errors.items())
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        form = typeForm()
     return render(request, 'ajouter_vehicule.html', {'form': form})
 
 

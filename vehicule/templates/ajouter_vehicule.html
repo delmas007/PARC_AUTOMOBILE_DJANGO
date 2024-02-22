@@ -92,6 +92,9 @@
 
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="form-group col-md-12 text-right">
+                                            <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutType()" style="margin-right: 5px">
+                                                <i class="ion-plus-circled"></i>Ajouter un type commercial
+                                            </button>
                                             <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutMarque()">
                                                 <i class="ion-plus-circled"></i>Ajouter une marque
                                             </button>
@@ -222,6 +225,32 @@
            </div>
        </div>
    </div>
+   <div class="modal fade" id="ajouterType" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un type commercial</h1>
+               </div>
+               <div class="modal-body">
+                   <form method="post" id="marqueForm">
+                       {% csrf_token %}
+                       <div class="mb-3">
+{#                           <label for="marque" class="col-form-label">Marque:</label>#}
+                           <input type="text" class="form-control" id="marque" name="marque" required placeholder="Entrer le nom de la marque ">
+                           <div id="marque-error" class="text-danger"></div>
+                       </div>
+
+                       <div class="modal-footer">
+                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="fermerModal()">Annuler</button>
+                           <button type="button" class="btn btn-primary" onclick="ajoutType()">Ajouter</button>
+                       </div>
+                   </form>
+               </div>
+           </div>
+       </div>
+   </div>
+
+
    <div class="modal fade" id="existImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
        <div class="modal-dialog">
            <div class="modal-content">
@@ -296,6 +325,21 @@
        {% endif %}
    </script>
    <script>
+       function ajoutType() {
+           $('#ajouterType').modal('show');
+       }
+       function fermerModal() {
+
+           // Fermer le modal
+           $('#ajouterType').modal('hide');
+       }
+       {% if form.errors %}
+           function existModal() {
+               $('#existModal').modal('show');
+           }
+       {% endif %}
+   </script>
+   <script>
        function ajouterMarque() {
            $.ajax({
                type: 'POST',
@@ -304,6 +348,30 @@
                success: function(response) {
                    if (response.success) {
                        $('#ajoutMarque').modal('hide');
+                       location.reload(true);
+                   } else if (response.error) {
+                       $('#existModal').modal('show');
+                   } else if (response.errors) {
+                       for (var field in response.errors) {
+                           $('#' + field + '-error').text(response.errors[field]);
+                       }
+                   }
+               },
+               error: function(response) {
+                   $('#existModal').modal('show');
+               }
+           });
+       }
+   </script>
+   <script>
+       function ajouterType() {
+           $.ajax({
+               type: 'POST',
+               url: '{% url "vehicule:ajouter_type" %}',
+               data: $('#typeForm').serialize(),
+               success: function(response) {
+                   if (response.success) {
+                       $('#ajoutType').modal('hide');
                        location.reload(true);
                    } else if (response.error) {
                        $('#existModal').modal('show');
