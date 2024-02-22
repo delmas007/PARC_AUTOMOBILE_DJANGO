@@ -213,16 +213,16 @@
                         <div class="col-lg-3">
                             <div class="product-item">
                                 <div class="product-title">
-                                    <a href="product-detail.html">{{ item.vehicule.marque }}</a>
+                                    <a href="detail.html">{{ item.vehicule.marque }}</a>
                                 </div>
                                 <div class="product-image">
-                                    <a href="product-detail.html">
+                                    <a href="{% url 'utilisateur:Vehicule_details' item.vehicule.id %}">
                                         <img src="{{ item.latest_photo.images.url }}" alt="Photo de la voiture">
                                     </a>
                                     <div class="product-action">
                                         <a href="#"><i class="fa fa-cart-plus"></i></a>
                                         <a href="#"><i class="fa fa-heart"></i></a>
-                                        <a href="product-detail.html"><i class="fa fa-eye"></i></a>
+                                        <a href="{% url 'utilisateur:Vehicule_details' item.vehicule.id %}"><i class="fa fa-eye"></i></a>
                                     </div>
                                 </div>
                                 <div class="product-price">

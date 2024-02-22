@@ -1,7 +1,7 @@
 from random import sample
 
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
@@ -23,16 +23,15 @@ def Accueil_user(request):
     context = {
         'vehicules': vehicules
     }
-    # if tous_les_vehicule:
-    #     if len(tous_les_vehicule) >= 3:
-    #         vehicule_aleatoires = sample(list(tous_les_vehicule), 3)
-    #     else:
-    #         vehicule_aleatoires = tous_les_vehicule
-    # else:
-    #     vehicule_aleatoires = tous_les_vehicule
-    #
-    # context = {'vehicules': vehicule_aleatoires}
     return render(request, 'index_user.html', context)
+
+
+def vehicule_details(request, vehicule_id):
+    # photo = get_object_or_404(Photo, pk=vehicule_id)
+    photo = Photo.objects.filter(vehicule_id=vehicule_id)
+
+    context = {'photos': photo}
+    return render(request, 'detail.html', context)
 
 
 def Compte(request):
@@ -54,6 +53,7 @@ def Compte(request):
         conducteur_form = ConducteurClientForm()
 
     return render(request, 'compte.html', {'conducteur_form': conducteur_form})
+
 
 @csrf_protect
 def inscription_user(request):
