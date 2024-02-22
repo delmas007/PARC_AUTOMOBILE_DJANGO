@@ -15,7 +15,6 @@ from utilisateurs.forms import ConducteurClientForm
 def Accueil_user(request):
     print("azerty")
     tous_les_vehicule = Vehicule.objects.all()
-    # tous_les_photo = Photo.objects.all()
     vehicules = []
     for vehicule in tous_les_vehicule:
         latest_photo = Photo.objects.filter(vehicule=vehicule).order_by('-id').first()
@@ -25,6 +24,16 @@ def Accueil_user(request):
     }
     return render(request, 'index_user.html', context)
 
+def list_vehicule(request):
+    tous_les_vehicule = Vehicule.objects.all()
+    vehicules = []
+    for vehicule in tous_les_vehicule:
+        latest_photo = Photo.objects.filter(vehicule=vehicule).order_by('-id').first()
+        vehicules.append({'vehicule': vehicule, 'latest_photo': latest_photo})
+    context = {
+        'vehicules': vehicules
+    }
+    return render(request, 'vehicule_list.html', context)
 
 def vehicule_details(request, vehicule_id):
     # photo = get_object_or_404(Photo, pk=vehicule_id)

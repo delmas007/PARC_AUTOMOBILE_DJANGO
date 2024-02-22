@@ -25,7 +25,7 @@
             <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse"style="height: 100px;">
                 <div class="navbar-nav mr-auto">
                     <a href="index.html" class="nav-item nav-link active" style="font-size: 20px">Accueil</a>
-                    <a href="product-list.html" class="nav-item nav-link" style="font-size: 20px">Véhicules</a>
+                    <a href="{% url 'utilisateur:list_vehicule'%}" class="nav-item nav-link" style="font-size: 20px">Véhicules</a>
                     <a href="{% url 'utilisateur:compte'%}" class="nav-item nav-link" style="font-size: 20px">Compte</a>
                     <!-- <a href="product-detail.html" class="nav-item nav-link">Détail du Véhicule</a> -->
                     <!--<a href="cart.html" class="nav-item nav-link">Cart</a> -->
