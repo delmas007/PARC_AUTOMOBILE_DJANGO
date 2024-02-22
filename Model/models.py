@@ -56,7 +56,7 @@ class Conducteur(models.Model):
     disponibilite = models.BooleanField(default=True)
     num_cni = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
-    is_apt=models.BooleanField(default=True)
+
     def __str__(self):
         return f"{self.utilisateur.nom} {self.utilisateur.prenom} "
 

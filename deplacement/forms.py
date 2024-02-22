@@ -30,7 +30,7 @@ class DeplacementForm(forms.ModelForm):
             'id': "selectVehicule2",
             'required': True,
         })
-        self.fields['conducteur'].queryset =Conducteur.objects.exclude(is_apt=False)
+        self.fields['conducteur'].queryset =Conducteur.objects.exclude(disponibilite=False)
 
 
 
