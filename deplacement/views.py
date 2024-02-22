@@ -51,7 +51,7 @@ def enregistrer_deplacement(request):
 
 
 def liste_deplacement(request):
-    deplacement = Deplacement.objects.filter(depart=False, arrivee=False)
+    deplacement = Deplacement.objects.filter()
 
     paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
     try:
