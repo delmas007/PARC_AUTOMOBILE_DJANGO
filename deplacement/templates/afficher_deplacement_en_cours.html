@@ -33,31 +33,27 @@
                                  <tr>
                                      <th>Conducteur</th>
                                      <th>Marque</th>
-                                     <th>Modèle</th>
                                      <th>Numéro d'immatriculation</th>
-                                     <th>Lieu de départ</th>
-                                     <th>Lieu d'arriver</th>
-                                     <th>Status</th>
-                                     <th>Détail</th>
-                                     <th>confirmer depart</th>
+                                     <th>Durée</th>
+                                     <th>Kilométrage</th>
+                                     <th>Date de départ</th>
+                                      <th>         </th>
+
+
                                  </tr>
                              </thead>
                              <tbody>
                              {% if deplacements %}
                                 {% for deplacement in deplacements %}
                                      <tr>
-                                         <td>{{ deplacement.conducteur.nom }} {{ deplacement.conducteur.prenom }}</td>
+                                         <td>{{ deplacement.utilisateur }}</td>
                                          <td>{{ deplacement.vehicule.marque }}</td>
-                                         <td>{{ deplacement.vehicule.modele }}</td>
                                          <td>{{ deplacement.vehicule.numero_immatriculation }}</td>
-                                         <td>{{ deplacement.lieu_depart }}</td>
-                                         <td>{{ deplacement.lieu_arrivee }}</td>
-                                         <td ><div class="badge badge-pill iq-bg-secondary">{{ deplacement.statut }}</div></td>
-                                         <td>{{ deplacement.details }}</td>
-                                         <td>
-                                                 <button type="submit" class="btn btn-secondary btn-sm" data-vehicle-id="{{ deplacement.pk }}" onclick="confirmDelete(this)">  <i class="fa fa-car"></i>
-                                                 Arrivée</button>
-                                         </td>
+                                         <td>{{ deplacement.duree_deplacement }}</td>
+                                         <td>{{ deplacement.kilometrage_depart }}</td>
+                                         <td>{{ deplacement.date_depart }}</td>
+
+
                                      </tr>
                                 {% endfor %}
                                  <tr>

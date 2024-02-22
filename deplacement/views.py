@@ -2,10 +2,10 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
-from Model.models import Deplacement, Vehicule, Conducteur, Photo
+from Model.models import Deplacement, Vehicule, Conducteur, Photo, EtatArrive
 from deplacement.forms import DeplacementForm
-
-
+from datetime import date
+from django.db.models import Q
 
 def enregistrer_deplacement(request):
     if request.method == 'POST':
@@ -51,7 +51,8 @@ def enregistrer_deplacement(request):
 
 
 def liste_deplacement(request):
-    deplacement = Deplacement.objects.filter(depart=False, arrivee=False)
+    aujourd_hui = date.today()
+    deplacement = Deplacement.objects.filter(Q(date_depart__gt=aujourd_hui))
 
     paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
     try:
@@ -74,7 +75,11 @@ def depart(request, pk):
 
 
 def liste_deplacement_en_cours(request):
-    deplacement = Deplacement.objects.filter(depart=True, arrivee=False)
+    # Obtenez la date d'aujourd'hui
+    aujourd_hui = date.today()
+    deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+    deplacement = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(Q(id__in=deplacements_etat_arrive_ids))
+
     paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
     try:
         page = request.GET.get("page")
