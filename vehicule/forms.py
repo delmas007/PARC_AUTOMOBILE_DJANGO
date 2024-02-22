@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ClearableFileInput
 from django.forms.widgets import Input
 
-from Model.models import Vehicule, Marque
+from Model.models import Vehicule, Marque, Model
 
 
 class XYZ_DateInput(forms.DateInput):
@@ -109,6 +109,7 @@ class VehiculeModifierForm(forms.ModelForm):
     class Meta:
         model = Vehicule
         exclude = ['disponibilite', 'marque', 'type_commercial']
+
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
     energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
 
@@ -173,4 +174,10 @@ class VehiculSearchForm(forms.Form):
 class marqueForm(forms.ModelForm):
     class Meta:
         model = Marque
+        fields = '__all__'
+
+
+class typeForm(forms.ModelForm):
+    class Meta:
+        model = Model
         fields = '__all__'
