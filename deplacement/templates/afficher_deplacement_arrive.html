@@ -30,29 +30,23 @@
                         <div class="table-responsive">
                            <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
                              <thead>
-                                 <tr>
+                                <tr style="background-color: #6546d2; color: #ffffff">
                                      <th>Conducteur</th>
-                                     <th>Marque</th>
-                                     <th>Modèle</th>
-                                     <th>Numéro d'immatriculation</th>
-                                     <th>Lieu de départ</th>
-                                     <th>Lieu d'arriver</th>
-                                     <th>Status</th>
-                                     <th>Détail</th>
+                                     <th>Vehicule</th>
+                                     <th>Date de départ</th>
+                                     <th>Kilometrage</th>
+                                     <th>Niveau de carburant</th>
                                  </tr>
                              </thead>
                              <tbody>
-                             {% if deplacements %}
-                                {% for deplacement in deplacements %}
+                             {% if etatarrives %}
+                                {% for etatarrive in etatarrives %}
                                      <tr>
-                                         <td>{{ deplacement.conducteur.nom }} {{ deplacement.conducteur.prenom }}</td>
-                                         <td>{{ deplacement.vehicule.marque }}</td>
-                                         <td>{{ deplacement.vehicule.modele }}</td>
-                                         <td>{{ deplacement.vehicule.numero_immatriculation }}</td>
-                                         <td>{{ deplacement.lieu_depart }}</td>
-                                         <td>{{ deplacement.lieu_arrivee }}</td>
-                                         <td ><div class="badge badge-pill iq-bg-success">{{ deplacement.statut }}</div></td>
-                                         <td>{{ deplacement.details }}</td>
+                                         <td>{{ etatarrive.deplacement.utilisateur }}</td>
+                                         <td>{{ etatarrive.deplacement.vehicule }}</td>
+                                         <td>{{ etatarrive.date_arrive }}</td>
+                                         <td>{{ etatarrive.kilometrage_arrive }} Km/h</td>
+                                         <td>{{ etatarrive.niveau_carburant_a }} Litres</td>
                                          </tr>
                                 {% endfor %}
                                  <tr>

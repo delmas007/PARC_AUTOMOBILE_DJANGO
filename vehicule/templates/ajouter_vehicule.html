@@ -80,15 +80,13 @@
                                             <input type="date" class="form-control" id="date_expiration_assurance" placeholder="Date expiration assurance" name="date_expiration_assurance" value="{% if form.date_expiration_assurance.value %}{{ form.date_expiration_assurance.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <label for="images" class="font-weight-bold">Sélectionner l'image verso de la carte grise :</label>
+                                            <label for="images" class="font-weight-bold">Sélectionner l'image recto de la carte grise :</label>
                                             <div class="form-control h-auto" style="border-radius: 10px">
-                                                <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="" name="image_verso"  value="{% if form.image_verso.value %}{{ form.image_verso.value }}{% endif %}">
+                                                <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="" name="image_recto"  value="{% if form.image_recto.value %}{{ form.image_recto.value }}{% endif %}">
                                             </div>
                                             {% if form.image.errors %}
                                                 <p class="help-block">Veillez joindre une image</p>
                                             {% endif %}
-                                            <div>
-                                            </div>
                                         </div>
                                     </div>
 
@@ -115,23 +113,17 @@
                                             <input type="number" class="form-control" id="kilometrage" placeholder="Kilometrage" name="kilometrage" value="{% if form.kilometrage.value %}{{ form.kilometrage.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
+                                            <label for="type_commercial" class="font-weight-bold">Type commercial :</label>
+                                            <input type="text" class="form-control" id="type_commercial" placeholder="type commercial" name="type_commercial" value="{% if form.type_commercial.value %}{{ form.type_commercial.value }}{% endif %}">
+                                        </div>
+                                        <div class="form-group col-md-12">
                                             <label for="energie" class="font-weight-bold">Energie :</label>
                                             {{ form.energie }}
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <label for="images" class="font-weight-bold">Sélectionner des images :</label>
+                                            <label for="images" class="font-weight-bold">Sélectionner l'image verso de la carte grise :</label>
                                             <div class="form-control h-auto" style="border-radius: 10px">
-                                                <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
-                                            </div>
-                                            {% if form.image.errors %}
-                                                <p class="help-block">Veillez joindre une image</p>
-                                            {% endif %}
-                                            <div>
-                                            </div>
-                                        </div><div class="form-group col-md-12">
-                                            <label for="images" class="font-weight-bold">Sélectionner l'image recto de la carte grise :</label>
-                                            <div class="form-control h-auto" style="border-radius: 10px">
-                                                <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="" name="image_recto"  value="{% if form.image_recto.value %}{{ form.image_recto.value }}{% endif %}">
+                                                <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="" name="image_verso"  value="{% if form.image_verso.value %}{{ form.image_verso.value }}{% endif %}">
                                             </div>
                                             {% if form.image.errors %}
                                                 <p class="help-block">Veillez joindre une image</p>
@@ -139,6 +131,16 @@
                                             <div>
                                             </div>
                                         </div>
+                                        </div>
+
+                                    <div class="form-group col-md-12">
+                                        <label for="images" class="font-weight-bold">Sélectionner des images :</label>
+                                        <div class="form-control h-auto" style="border-radius: 10px">
+                                            <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
+                                        </div>
+                                        {% if form.image.errors %}
+                                            <p class="help-block">Veillez joindre une image</p>
+                                        {% endif %}
 
                                     </div>
                                 </div>

@@ -124,6 +124,10 @@
                                             <td class="center-text">{{ vehicule.kilometrage }} Km/h</td>
                                         </tr>
                                         <tr>
+                                            <td><strong>TYPE COMMERCIAL :</strong></td>
+                                            <td class="center-text">{{ vehicule.type_commercial }} Km/h</td>
+                                        </tr>
+                                        <tr>
                                             <td><strong>Numero du VIN/Chassis :</strong></td>
                                             <td class="center-text">{{ vehicule.numero_chassis }}</td>
                                         </tr>
@@ -190,7 +194,7 @@
             var downloadButton = contentPage.querySelector('.bouton_telecharger');
             downloadButton.style.display = 'none';
             var imageContent = contentPage.querySelector('.imageContent');
-            imageContent.style.marginTop = '20px';
+            imageContent.style.marginTop = '200px';
 
             var contentCopy = contentPage.cloneNode(true);
             var downloadButtonCopy = contentCopy.querySelector('.bouton_telecharger');
