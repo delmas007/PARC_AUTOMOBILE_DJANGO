@@ -57,7 +57,7 @@ def Compte(request):
             else:
                 print(conducteur_form.errors)
         else:
-            return redirect('login')  # Rediriger vers la page de connexion si l'utilisateur n'est pas authentifié
+            return redirect('utilisateur:connexion_user')
     else:
         conducteur_form = ConducteurClientForm()
 
