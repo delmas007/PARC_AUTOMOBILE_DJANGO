@@ -97,6 +97,12 @@ class Marque(models.Model):
     def __str__(self):
         return self.marque
 
+class Model(models.Model):
+    type_commercial = models.CharField(max_length=250)
+    marque = models.ForeignKey(Marque, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.type_commercial
 
 class Vehicule(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
