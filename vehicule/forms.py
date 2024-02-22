@@ -105,6 +105,62 @@ class VehiculeForm(forms.ModelForm):
         })
 
 
+class VehiculeModifierForm(forms.ModelForm):
+    class Meta:
+        model = Vehicule
+        exclude = ['disponibilite', 'marque', 'type_commercial']
+    images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+    energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(VehiculeModifierForm, self).__init__(*args, **kwargs)
+        self.fields['image_recto'].required = True
+        self.fields['image_verso'].required = True
+        self.fields['date_expiration_assurance'].required = True
+        self.fields['date_videnge'].required = True
+        self.fields['date_mise_circulation'].required = True
+        self.fields['energie'].widget.attrs.update({
+            'class': "form-control",
+            'id': "energie",
+            'required': True,
+        })
+        self.fields['place_assises'].widget.attrs.update({
+            'class': "form-control",
+            'id': "place_assises",
+            'required': True,
+        })
+        self.fields['carrosserie'].widget.attrs.update({
+            'class': "form-control",
+            'id': "carrosserie",
+            'required': True,
+        })
+        self.fields['numero_immatriculation'].widget.attrs.update({
+            'class': "form-control",
+            'id': "numero_immatriculation",
+            'required': True,
+        })
+        self.fields['kilometrage'].widget.attrs.update({
+            'class': "form-control",
+            'id': "kilometrage",
+            'required': True,
+        })
+        self.fields['carte_grise'].widget.attrs.update({
+            'class': "form-control",
+            'id': "carte_grise",
+            'required': True,
+        })
+        self.fields['couleur'].widget.attrs.update({
+            'class': "form-control",
+            'id': "couleur",
+            'required': True,
+        })
+        self.fields['numero_chassis'].widget.attrs.update({
+            'class': "form-control",
+            'id': "numero_chassis",
+            'required': True,
+        })
+
+
 class VehiculSearchForm(forms.Form):
     q = forms.CharField(
         label='',

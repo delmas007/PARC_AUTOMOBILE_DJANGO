@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Model.models import Vehicule, Photo, Marque
-from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm
+from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm, VehiculeModifierForm
 
 
 # Create your views here.
@@ -33,8 +33,6 @@ def Ajouter_vehicule(request):
         form = VehiculeForm()
 
     return render(request, 'ajouter_vehicule.html', {'form': form})
-
-
 
 
 def liste_vehicules(request):
@@ -82,7 +80,7 @@ def modifier_vehicule(request, pk):
     photos = Photo.objects.filter(vehicule=pk)
 
     if request.method == 'POST':
-        form = VehiculeForm(request.POST, request.FILES, instance=vehicule)
+        form = VehiculeModifierForm(request.POST, request.FILES, instance=vehicule)
         if form.is_valid():
             if request.FILES.getlist('images'):
                 # Supprimez les anciennes images du véhicule
@@ -102,7 +100,6 @@ def modifier_vehicule(request, pk):
         })
 
     return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule, 'photos': photos})
-
 
 
 def ajouter_marque(request):

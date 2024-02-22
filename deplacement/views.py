@@ -29,7 +29,7 @@ def enregistrer_deplacement(request):
 
             #Mettez à jour l'aptitude du conducteur à avoir un véhicule
             if conducteur:
-                conducteur.is_apt=False
+                conducteur.disponibilite=False
                 conducteur.save()
 
 
@@ -105,7 +105,7 @@ def liste_deplacement_arrive(request):
     aujourd_hui = date.today()
 
     # Utilisez filter() avec la différence de dates dans la requête
-    deplacement = Deplacement.objects.filter(date_depart__gte=aujourd_hui - timedelta(days=7)).exclude(date_depart__gt=aujourd_hui)
+    etatarrive = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(date_arrive__gt=aujourd_hui)
 
     paginator = Paginator(etatarrive.order_by('date_mise_a_jour'), 3)
     try:

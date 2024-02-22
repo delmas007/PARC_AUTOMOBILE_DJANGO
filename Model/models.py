@@ -131,7 +131,7 @@ class Vehicule(models.Model):
     disponibilite = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.numero_immatriculation}"
+        return f" {self.marque} {self.type_commercial} {self.numero_immatriculation} "
 
     class Meta:
         ordering = ['date_mise_a_jour']

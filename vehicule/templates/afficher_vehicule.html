@@ -70,6 +70,7 @@
                                      <th>Date de mise en service</th>
                                      <th>Type de carburant</th>
                                      <th>Kilométrage</th>
+                                     <th>Type commercial</th>
                                      <th>Date d'expiration asssurance</th>
                                      <th>Actions</th>
                                  </tr>
@@ -84,6 +85,7 @@
                                          <td>{{ vehicule.date_mise_circulation }}</td>
                                          <td>{{ vehicule.energie|capfirst }}</td>
                                          <td>{{ vehicule.kilometrage }}</td>
+                                         <td>{{ vehicule.type_commercial }}</td>
                                          <td>{{ vehicule.date_expiration_assurance }}</td>
                                         <td>
                                            <div class="flex align-items-center list-user-action">
