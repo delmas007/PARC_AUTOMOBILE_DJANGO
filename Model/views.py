@@ -21,7 +21,8 @@ class Connexion(LoginView):
 
 
 class Deconnexion(LogoutView):
-    pass
+    def get_success_url(self):
+        return reverse('utilisateur:Accueil_user')
 
 
 

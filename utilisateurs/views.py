@@ -1,17 +1,38 @@
+from random import sample
+
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from Model.forms import UserRegistrationForm, ConnexionForm
-from Model.models import Roles, Utilisateur
+from Model.models import Roles, Utilisateur, Vehicule, Photo
 from utilisateurs.forms import ConducteurClientForm
 
 
 # Create your views here.
 
 def Accueil_user(request):
-    return render(request, 'index_user.html')
+    print("azerty")
+    tous_les_vehicule = Vehicule.objects.all()
+    # tous_les_photo = Photo.objects.all()
+    vehicules = []
+    for vehicule in tous_les_vehicule:
+        latest_photo = Photo.objects.filter(vehicule=vehicule).order_by('-id').first()
+        vehicules.append({'vehicule': vehicule, 'latest_photo': latest_photo})
+    context = {
+        'vehicules': vehicules
+    }
+    # if tous_les_vehicule:
+    #     if len(tous_les_vehicule) >= 3:
+    #         vehicule_aleatoires = sample(list(tous_les_vehicule), 3)
+    #     else:
+    #         vehicule_aleatoires = tous_les_vehicule
+    # else:
+    #     vehicule_aleatoires = tous_les_vehicule
+    #
+    # context = {'vehicules': vehicule_aleatoires}
+    return render(request, 'index_user.html', context)
 
 
 def Compte(request):
@@ -66,3 +87,17 @@ class Connexion_user(LoginView):
             return reverse('utilisateur:Accueil_user')
         if self.request.user.roles.role == 'CONDUCTEUR':
             return reverse('utilisateur:Accueil_user')
+
+# def Accueil_user(request):
+#     tous_les_vehicule = Vehicule.objects.all()
+#
+#     if tous_les_vehicule:
+#         if len(tous_les_vehicule) >= 3:
+#             vehicule_aleatoires = sample(list(tous_les_vehicule), 3)
+#         else:
+#             vehicule_aleatoires = tous_les_vehicule
+#     else:
+#         vehicule_aleatoires = tous_les_vehicule
+#
+#     context = {'vehicules': vehicule_aleatoires}
+#     return render(request, 'index_user.html', context)

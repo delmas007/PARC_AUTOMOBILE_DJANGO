@@ -40,13 +40,17 @@
                     </div>
                 </div>
                 <div class="navbar-nav ml-auto">
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="font-size: 20px">Compte d'utilisateur</a>
-                        <div class="dropdown-menu">
-                            <a href="{% url 'utilisateur:connexion_user'%}" class="dropdown-item">Se connecter </a>
-                            <a href="{% url 'utilisateur:Inscription_user'%}" class="dropdown-item">S'inscrire</a>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'Model:Deconnexion'%}" class="nav-item nav-link" style="font-size: 20px"><i class="fa fa-sign-out-alt"></i>Déconnexion</a>
+                    {% else %}
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="font-size: 20px">Utilisateur</a>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'utilisateur:connexion_user'%}" class="dropdown-item">Se connecter </a>
+                                <a href="{% url 'utilisateur:Inscription_user'%}" class="dropdown-item">S'inscrire</a>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>
@@ -68,6 +72,7 @@
             <div class="col-md-6">
 
             </div>
+            {% if request.user.is_authenticated %}
             <div class="col-md-3">
                 <div class="user">
                     <a href="wishlist.html" class="btn wishlist">
@@ -80,6 +85,7 @@
                     </a>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
