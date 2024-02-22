@@ -103,6 +103,7 @@ class Vehicule(models.Model):
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     numero_immatriculation = models.CharField(max_length=250, unique=True)
+    type_commercial = models.CharField(max_length=250)
     numero_chassis = models.CharField(max_length=250)
     couleur = models.CharField(max_length=250, blank=True, null=True)
     carte_grise = models.CharField(max_length=250)
@@ -141,6 +142,7 @@ class Vehicule(models.Model):
 
 
 class Demande_prolongement(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     duree = models.CharField(max_length=250, )
     motif = models.CharField(max_length=250, )
@@ -172,6 +174,7 @@ class Deplacement(models.Model):
 
 
 class Demande_location(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     date = models.DateField()
     en_cours = models.BooleanField(default=True)
@@ -205,6 +208,7 @@ class Location(models.Model):
 
 
 class Carburant(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
 
@@ -225,6 +229,7 @@ class Carburant(models.Model):
 
 
 class Entretien(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
     date_entretien = models.DateField()
@@ -233,6 +238,7 @@ class Entretien(models.Model):
 
 
 class EtatArrive(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True,
                                     related_name='deplacement_etat')
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='utilisateur_etat')
@@ -248,6 +254,7 @@ class EtatArrive(models.Model):
 
 
 class Incident(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     description_incident = models.TextField()

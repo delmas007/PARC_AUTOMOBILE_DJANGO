@@ -30,13 +30,13 @@
                         <div class="table-responsive">
                            <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
                              <thead>
-                                 <tr>
+                                <tr style="background-color: #6546d2; color: #ffffff">
                                      <th>Conducteur</th>
-                                     <th>Marque</th>
-                                     <th>Numéro d'immatriculation</th>
-                                     <th>Durée</th>
-                                     <th>Kilométrage</th>
+                                     <th>Vehicule</th>
                                      <th>Date de départ</th>
+                                     <th>Duree</th>
+                                     <th>Kilometrage</th>
+                                     <th>Niveau de carburant</th>
                                       <th>         </th>
 
 
@@ -47,13 +47,12 @@
                                 {% for deplacement in deplacements %}
                                      <tr>
                                          <td>{{ deplacement.utilisateur }}</td>
-                                         <td>{{ deplacement.vehicule.marque }}</td>
-                                         <td>{{ deplacement.vehicule.numero_immatriculation }}</td>
-                                         <td>{{ deplacement.duree_deplacement }}</td>
-                                         <td>{{ deplacement.kilometrage_depart }}</td>
+                                         <td>{{ deplacement.vehicule }}</td>
                                          <td>{{ deplacement.date_depart }}</td>
-
-
+                                         <td>{{ deplacement.duree_deplacement }}</td>
+                                         <td>{{ deplacement.kilometrage_depart }} Km/h</td>
+                                         <td>{{ deplacement.niveau_caburant }} Litres</td>
+                                         <td>  </td>
                                      </tr>
                                 {% endfor %}
                                  <tr>
