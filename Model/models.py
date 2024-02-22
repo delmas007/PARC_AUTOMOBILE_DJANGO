@@ -56,7 +56,7 @@ class Conducteur(models.Model):
     disponibilite = models.BooleanField(default=True)
     num_cni = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
-
+    is_apt=models.BooleanField(default=True)
     def __str__(self):
         return f"{self.utilisateur.nom} {self.utilisateur.prenom} "
 
@@ -127,6 +127,7 @@ class Vehicule(models.Model):
             ('hydrogene', 'Hydrogène'),
         ]
     )
+    disponibilite = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.numero_immatriculation}"
@@ -157,7 +158,7 @@ class Deplacement(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True,null=True)
     demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL,blank=True, null=True,)
-    date_depart = models.DateTimeField()
+    date_depart = models.DateTimeField(blank=True, null=True)
     niveau_carburant = models.IntegerField()
     duree_deplacement = models.CharField(max_length=250, )
     kilometrage_depart = models.IntegerField()

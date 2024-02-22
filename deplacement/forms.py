@@ -1,10 +1,19 @@
 from django import forms
 
-from Model.models import Deplacement
-from Model.models import Utilisateur
-from Model.models import Vehicule
-from Model.models import EtatArrive
+from Model.models import Deplacement, Vehicule, Utilisateur, Conducteur
 from django.db.models import Q
+from django.forms import ClearableFileInput
+from django.forms.widgets import Input
+
+
+
+class MultipleFileInput(Input):
+    template_name = 'ajouter_vehicule.html'
+
+    def get_context(self, name, value, attrs):
+            context = super().get_context(name, value, attrs)
+            context['widget']['value'] = value
+            return context
 
 class DeplacementForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -14,21 +23,22 @@ class DeplacementForm(forms.ModelForm):
             'id': "selectVehicule",
             'required': True,
         })
-
+        self.fields['vehicule'].queryset = Vehicule.objects.exclude(disponibilite=False)
 
         self.fields['conducteur'].widget.attrs.update({
             'class': "form-control",
             'id': "selectVehicule2",
             'required': True,
         })
+        self.fields['conducteur'].queryset =Conducteur.objects.exclude(is_apt=False)
 
 
-        # self.fields['conducteur'].queryset = Utilisateur.objects.exclude(conducteur_id__isnull=True)
-        # Filtrer les utilisateurs avec conducteur_id non nul
-
-        # self.fields['utilisateur'].queryset =self.fields['utilisateur'].queryset.exclude(conducteur_id__isnull=True)
 
 
     class Meta:
-        model = Deplacement
-        exclude = ['demande_prolongement_id']
+     model = Deplacement
+     exclude = ['demande_prolongement_id']
+
+    images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+
+

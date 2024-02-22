@@ -18,7 +18,7 @@ def Ajouter_vehicule(request):
             images = request.FILES.getlist('images')
             if len(images) <= 6:
                 vehicule = form.save(commit=False)
-                #vehicule.utilisateur = request.user
+                vehicule.utilisateur = request.user
                 vehicule.save()
                 for uploaded_file in images:
                     photo = Photo.objects.create(vehicule=vehicule, images=uploaded_file)

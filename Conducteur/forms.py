@@ -8,7 +8,7 @@ from Model.models import Conducteur
 class ConducteurForm(forms.ModelForm):
     class Meta:
         model = Conducteur
-        fields = '__all__'
+        exclude = ['is_apt']
 
     def __init__(self, *args, **kwargs):
         super(ConducteurForm, self).__init__(*args, **kwargs)

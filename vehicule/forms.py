@@ -45,7 +45,7 @@ class MultipleFileInput(Input):
 class VehiculeForm(forms.ModelForm):
     class Meta:
         model = Vehicule
-        fields = '__all__'
+        exclude = ['disponibilite']
 
     marque = forms.ModelChoiceField(queryset=Marque.objects.all(), required=True)
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)

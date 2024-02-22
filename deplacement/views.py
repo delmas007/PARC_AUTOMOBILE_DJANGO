@@ -2,18 +2,47 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
-from Model.models import Deplacement
+from Model.models import Deplacement, Vehicule, Conducteur, Photo
 from deplacement.forms import DeplacementForm
+
 
 
 def enregistrer_deplacement(request):
     if request.method == 'POST':
         form = DeplacementForm(request.POST)
         if form.is_valid():
-            gestionnaire = form.save(commit=False)
-            gestionnaire.utilisateur = request.user
-            gestionnaire.save()
-            messages.success(request, 'Vehicule ajouté avec succès !')
+
+            deplacement = form.save(commit=False)
+            deplacement.utilisateur = request.user
+
+            # Obtenez l'instance du véhicule associé à ce déplacement (hypothétique)
+            vehicule = deplacement.vehicule
+
+            # Obtenez l'instance du conducteur associé à ce déplacement (hypothétique)
+            conducteur= deplacement.conducteur
+
+            # Mettez à jour la disponibilité du véhicule
+            if vehicule:
+                vehicule.disponibilite = False
+                vehicule.save()
+
+            #Mettez à jour l'aptitude du conducteur à avoir un véhicule
+            if conducteur:
+                conducteur.is_apt=False
+                conducteur.save()
+
+
+            deplacement.save()
+            images = request.FILES.getlist('images')
+            if len(images) <= 6:
+                for uploaded_file in images:
+                    photo = Photo.objects.create(deplacement=deplacement, images=uploaded_file)
+            else:
+                form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
+
+
+
+            messages.success(request, 'Déplacement enregistré avec succès !')
             return redirect('deplacement:enregistrer_deplacement')
     else:
         form = DeplacementForm()
