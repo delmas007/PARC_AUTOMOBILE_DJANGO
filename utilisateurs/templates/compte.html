@@ -26,33 +26,46 @@
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
                                 <h4>Information supplementaire</h4>
-                                <form>
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input class="form-control" type="text" placeholder="First Name" name="numero_permis_conduire">
+                                            <input class="form-control" type="text" placeholder="Numero permis de conduire" name="numero_permis_conduire" value="{% if request.user.conducteur %}{{ request.user.conducteur.numero_permis_conduire }}{% endif %}" {% if request.user.conducteur %}disabled{% endif %}>
+                                        </div>
+                                        {% if request.user.conducteur.date_de_naissance %}
+                                            <div class="col-md-6">
+                                                <input class="form-control" type="text" placeholder="Date de naissance" name="date_de_naissance" value="{% if request.user.conducteur %}{{ request.user.conducteur.date_de_naissance }}{% endif %}" {% if request.user.conducteur %}disabled{% endif %}>
+                                            </div>
+                                        {% else %}
+                                            <div class="col-md-6">
+                                                <input class="form-control" type="date" placeholder="Date de naissance" name="date_de_naissance" >
+                                            </div>
+                                        {% endif %}
+                                        <div class="col-md-6">
+                                            <input class="form-control" type="number" placeholder="Numero de telephone" name="numero_telephone" value="{% if request.user.conducteur %}{{ request.user.conducteur.numero_telephone }}{% endif %}" {% if request.user.conducteur %}disabled{% endif %}>
                                         </div>
                                         <div class="col-md-6">
-                                            <input class="form-control" type="text" placeholder="Last Name" name="date_embauche">
+                                            <input class="form-control" type="text" placeholder="Address" name="adresse" value="{% if request.user.conducteur %}{{ request.user.conducteur.adresse }}{% endif %}" {% if request.user.conducteur %}disabled{% endif %}>
                                         </div>
                                         <div class="col-md-6">
-                                            <input class="form-control" type="text" placeholder="Mobile" name="date_de_naissance">
+                                            <input class="form-control" type="text" placeholder="Numero cni" name="num_cni" value="{% if request.user.conducteur %}{{ request.user.conducteur.num_cni }}{% endif %}" {% if request.user.conducteur %}disabled{% endif %}>
                                         </div>
                                         <div class="col-md-6">
-                                            <input class="form-control" type="text" placeholder="Email" name="numero_telephone">
+                                            <div class="form-control h-auto" style="border-radius: 10px">
+                                                <input placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image"  {% if request.user.conducteur %}disabled{% endif %}>
+                                            </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <input class="form-control" type="text" placeholder="Address" name="adresse">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <input class="form-control" type="text" placeholder="Address" name="num_cni">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <input class="form-control" type="text" placeholder="Address" name="num_cni">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button class="btn">Update Account</button>
-                                            <br><br>
-                                        </div>
+                                        {% if request.user.conducteur %}
+                                            <div class="col-md-12" style="color: #4B2DB9">
+                                                <p>Pour des raisons de sécurité, veuillez contacter notre service client pour toute modification d'informations. Nous nous excusons pour le désagrément causé.</p>
+                                            </div>
+
+                                        {% else %}
+                                            <div class="col-md-12">
+                                                <button class="btn">Enregistrer</button>
+                                                <br><br>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </form>
                             </div>
@@ -123,42 +136,42 @@
                             </div>
                             <div class="tab-pane fade" id="account-tab" role="tabpanel" aria-labelledby="account-nav">
                                 <h4>Account Details</h4>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input class="form-control" type="text" placeholder="First Name">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input class="form-control" type="text" placeholder="Last Name">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input class="form-control" type="text" placeholder="Mobile">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input class="form-control" type="text" placeholder="Email">
-                                    </div>
-                                    <div class="col-md-12">
-                                        <input class="form-control" type="text" placeholder="Address">
-                                    </div>
-                                    <div class="col-md-12">
-                                        <button class="btn">Update Account</button>
-                                        <br><br>
-                                    </div>
-                                </div>
+{#                                <div class="row">#}
+{#                                    <div class="col-md-6">#}
+{#                                        <input class="form-control" type="text" placeholder="First Name">#}
+{#                                    </div>#}
+{#                                    <div class="col-md-6">#}
+{#                                        <input class="form-control" type="text" placeholder="Last Name">#}
+{#                                    </div>#}
+{#                                    <div class="col-md-6">#}
+{#                                        <input class="form-control" type="text" placeholder="Mobile">#}
+{#                                    </div>#}
+{#                                    <div class="col-md-6">#}
+{#                                        <input class="form-control" type="text" placeholder="Email">#}
+{#                                    </div>#}
+{#                                    <div class="col-md-12">#}
+{#                                        <input class="form-control" type="text" placeholder="Address">#}
+{#                                    </div>#}
+{#                                    <div class="col-md-12">#}
+{#                                        <button class="btn">Update Account</button>#}
+{#                                        <br><br>#}
+{#                                    </div>#}
+{#                                </div>#}
                                 <h4>Password change</h4>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input class="form-control" type="password" placeholder="Current Password">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input class="form-control" type="text" placeholder="New Password">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input class="form-control" type="text" placeholder="Confirm Password">
-                                    </div>
-                                    <div class="col-md-12">
-                                        <button class="btn">Save Changes</button>
-                                    </div>
-                                </div>
+{#                                <div class="row">#}
+{#                                    <div class="col-md-12">#}
+{#                                        <input class="form-control" type="password" placeholder="Current Password">#}
+{#                                    </div>#}
+{#                                    <div class="col-md-6">#}
+{#                                        <input class="form-control" type="text" placeholder="New Password">#}
+{#                                    </div>#}
+{#                                    <div class="col-md-6">#}
+{#                                        <input class="form-control" type="text" placeholder="Confirm Password">#}
+{#                                    </div>#}
+{#                                    <div class="col-md-12">#}
+{#                                        <button class="btn">Save Changes</button>#}
+{#                                    </div>#}
+{#                                </div>#}
                             </div>
                         </div>
                     </div>
