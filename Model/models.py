@@ -97,19 +97,19 @@ class Marque(models.Model):
     def __str__(self):
         return self.marque
 
-class Model(models.Model):
-    type_commercial = models.CharField(max_length=250)
+class Type_Commerciale (models.Model):
+    modele = models.CharField(max_length=250)
     marque = models.ForeignKey(Marque, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return self.type_commercial
+        return self.modele
 
 class Vehicule(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     numero_immatriculation = models.CharField(max_length=250, unique=True)
-    type_commercial = models.CharField(max_length=250)
+    type_commercial = models.ForeignKey(Type_Commerciale, on_delete=models.CASCADE)
     numero_chassis = models.CharField(max_length=250)
     couleur = models.CharField(max_length=250, blank=True, null=True)
     carte_grise = models.CharField(max_length=250)

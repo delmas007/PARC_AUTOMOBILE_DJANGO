@@ -4,8 +4,10 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from Model.models import Vehicule, Photo, Marque, Model
+from Model.models import Vehicule, Photo, Marque, Type_Commerciale
 from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm, VehiculeModifierForm, typeForm
+from django.views.decorators.http import require_GET
+from django.core.serializers import serialize
 
 
 # Create your views here.
@@ -121,8 +123,8 @@ def ajouter_type(request):
     if request.method == 'POST':
         form = typeForm(request.POST)
         if form.is_valid():
-            type = form.cleaned_data['type_commercial']
-            if Model.objects.filter(type=type).exists():
+            modele = form.cleaned_data['modele']
+            if Type_Commerciale.objects.filter(modele=modele).exists():
                 return JsonResponse({'error': 'Ce type commercial existe déjà.'}, status=400)
             form.save()
             return JsonResponse({'success': True})
@@ -138,3 +140,12 @@ def details_vehicule(request, vehicule_id):
     vehicule = get_object_or_404(Vehicule, id=vehicule_id)
     image = Photo.objects.filter(vehicule=vehicule_id)
     return render(request, 'vehicule_details.html', {'vehicule': vehicule, 'image': image})
+
+
+
+@require_GET
+def get_modeles(request):
+    marque_id = request.GET.get('marque_id')
+    modeles = Type_Commerciale.objects.filter(marque_id=marque_id)
+    serialized_modeles = serialize('json', modeles)
+    return JsonResponse({'modeles': serialized_modeles})
