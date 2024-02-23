@@ -21,4 +21,24 @@ class IncidentFormGestionnaire(forms.ModelForm):
         }
 
 
+class IncidentSearchForm(forms.Form):
+    q = forms.CharField(
+        label='',
+        required=False,
+        #     widget=forms.TextInput(
+        #         attrs={'placeholder': 'Rechercher un incident : Marque, matricule...', 'class': 'form-control'}),
+    )
 
+
+class IncidentModifierForm(forms.ModelForm):
+    class Meta:
+        model = Incident
+        exclude = ['vehicule']
+
+    def __init__(self, *args, **kwargs):
+        super(IncidentModifierForm, self).__init__(*args, **kwargs)
+        self.fields['description_incident'].widget.attrs.update({
+            'class': "form-control",
+            'id': "description_incident",
+            'required': True,
+        })
