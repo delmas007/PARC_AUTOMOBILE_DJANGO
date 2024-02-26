@@ -132,7 +132,7 @@ def modifier_deplacement(request, pk):
             return redirect('deplacement:liste_deplacement')
     else:
 
-        form = DeplacementForm(instance=deplacement, initial={
+        form = deplacementModifierForm(instance=deplacement, initial={
             'vehicule': deplacement.vehicule,
             'conducteur': deplacement.conducteur,
             'date_depart': deplacement.date_depart,

@@ -115,10 +115,13 @@ def ajouter_marque(request):
             return JsonResponse({'success': True})
         else:
             errors = dict(form.errors.items())
+            print(form.errors)
             return JsonResponse({'errors': errors}, status=400)
     else:
         form = marqueForm()
     return render(request, 'ajouter_vehicule.html', {'form': form})
+
+
 def ajouter_type(request):
     if request.method == 'POST':
         form = typeForm(request.POST)
@@ -130,6 +133,7 @@ def ajouter_type(request):
             return JsonResponse({'success': True})
         else:
             errors = dict(form.errors.items())
+            print(form.errors)
             return JsonResponse({'errors': errors}, status=400)
     else:
         form = typeForm()
@@ -140,7 +144,6 @@ def details_vehicule(request, vehicule_id):
     vehicule = get_object_or_404(Vehicule, id=vehicule_id)
     image = Photo.objects.filter(vehicule=vehicule_id)
     return render(request, 'vehicule_details.html', {'vehicule': vehicule, 'image': image})
-
 
 
 @require_GET

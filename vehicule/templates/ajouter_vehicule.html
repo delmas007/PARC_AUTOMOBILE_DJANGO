@@ -230,7 +230,7 @@
        <div class="modal-dialog">
            <div class="modal-content">
                <div class="modal-header">
-                   <h1 class="modal-title fs-5" id="exampleModalLabel1">Ajouter un type commercial</h1>
+                   <h2 class="modal-title fs-5" id="exampleModalLabel1">Ajouter un type commercial</h2>
                </div>
                <div class="modal-body">
                    <form method="post" id="typeForm">
@@ -300,6 +300,33 @@
            </div>
        </div>
    </div>
+   <div class="modal fade" id="errorMarque" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-body text-danger" style="font-size: 20px">
+                   Cette marque existe deja
+               </div>
+           </div>
+       </div>
+   </div>
+   <div class="modal fade" id="errorType" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-body text-danger" style="font-size: 20px">
+                   {{ form.errors }}
+               </div>
+           </div>
+       </div>
+   </div>
+   <div class="modal fade" id="errorMarque" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-body text-danger" style="font-size: 20px">
+                   {{ form.errors }}
+               </div>
+           </div>
+       </div>
+   </div>
    <script>
        {% if messages %}
        {% for messages in messages %}
@@ -363,7 +390,9 @@
                    }
                },
                error: function(response) {
-                   $('#existModal').modal('show');
+                   var errorMessage = JSON.parse(response.responseText).error;
+                   $('#errorMarque .modal-body').text(errorMessage);
+                   $('#errorMarque').modal('show');
                }
            });
        }
@@ -387,11 +416,16 @@
                    }
                },
                error: function(response) {
-                   $('#existModal').modal('show');
+                   var errorMessage = JSON.parse(response.responseText).error;
+                   $('#errorType .modal-body').text(errorMessage);
+                   $('#errorType').modal('show');
                }
            });
        }
+
    </script>
+
+
    <script>
        document.addEventListener('DOMContentLoaded', function () {
            var fileInput = document.getElementById('customFile');
@@ -405,9 +439,6 @@
            });
        });
    </script>
-
-
-
 <script>
 
    $(document).ready(function() {
