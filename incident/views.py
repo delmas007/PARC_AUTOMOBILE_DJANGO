@@ -109,7 +109,7 @@ def modifier_incident_interne(request, pk):
                 for image in request.FILES.getlist('images'):
                     Photo.objects.create(incident=incident, images=image)
             form.save()
-        return redirect('incident:liste_incidents_interne')
+            return redirect('incident:liste_incidents_interne')
     else:
         form = IncidentModifierForm(instance=incident)
     return render(request, 'modifier_incident_interne.html', {'form': form, 'incident': incident, 'photos': photos})
