@@ -3,8 +3,8 @@ from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from Model.models import Deplacement, Vehicule, Conducteur, Photo, EtatArrive
-from deplacement.forms import DeplacementForm
-from datetime import date,timedelta
+from deplacement.forms import DeplacementForm, deplacementModifierForm
+from datetime import date, timedelta
 from django.db.models import Q
 
 
@@ -20,18 +20,17 @@ def enregistrer_deplacement(request):
             vehicule = deplacement.vehicule
 
             # Obtenez l'instance du conducteur associé à ce déplacement (hypothétique)
-            conducteur= deplacement.conducteur
+            conducteur = deplacement.conducteur
 
             # Mettez à jour la disponibilité du véhicule
             if vehicule:
                 vehicule.disponibilite = False
                 vehicule.save()
 
-            #Mettez à jour l'aptitude du conducteur à avoir un véhicule
+            # Mettez à jour l'aptitude du conducteur à avoir un véhicule
             if conducteur:
-                conducteur.disponibilite=False
+                conducteur.disponibilite = False
                 conducteur.save()
-
 
             deplacement.save()
             images = request.FILES.getlist('images')
@@ -40,8 +39,6 @@ def enregistrer_deplacement(request):
                     photo = Photo.objects.create(deplacement=deplacement, images=uploaded_file)
             else:
                 form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
-
-
 
             messages.success(request, 'Déplacement enregistré avec succès !')
             return redirect('deplacement:enregistrer_deplacement')
@@ -76,10 +73,10 @@ def depart(request, pk):
 
 
 def liste_deplacement_en_cours(request):
-    # Obtenez la date d'aujourd'hui
     aujourd_hui = date.today()
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
-    deplacement = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(Q(id__in=deplacements_etat_arrive_ids))
+    deplacement = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
+        Q(id__in=deplacements_etat_arrive_ids))
 
     paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
     try:
@@ -105,7 +102,8 @@ def liste_deplacement_arrive(request):
     aujourd_hui = date.today()
 
     # Utilisez filter() avec la différence de dates dans la requête
-    etatarrive = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(date_arrive__gt=aujourd_hui)
+    etatarrive = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
+        date_arrive__gt=aujourd_hui)
 
     paginator = Paginator(etatarrive.order_by('date_mise_a_jour'), 3)
     try:
@@ -117,3 +115,39 @@ def liste_deplacement_arrive(request):
 
         etatarrive = paginator.page(paginator.num_pages())
     return render(request, 'afficher_deplacement_arrive.html', {'etatarrives': etatarrive})
+
+
+def modifier_deplacement(request, pk):
+    deplacement = get_object_or_404(Deplacement, pk=pk)
+    photos = Photo.objects.filter(deplacement=pk)
+    if request.method == 'POST':
+        form = deplacementModifierForm(request.POST, request.FILES, instance=deplacement)
+        if form.is_valid():
+            if request.FILES.getlist('images'):
+                Photo.objects.filter(deplacement=deplacement).delete()
+                for image in request.FILES.getlist('images'):
+                    Photo.objects.create(deplacement=deplacement, images=image)
+            form.save()
+
+            return redirect('deplacement:liste_deplacement')
+    else:
+
+        form = DeplacementForm(instance=deplacement, initial={
+            'vehicule': deplacement.vehicule,
+            'conducteur': deplacement.conducteur,
+            'date_depart': deplacement.date_depart,
+            'duree_deplacement': deplacement.duree_deplacement,
+            'niveau_carburant': deplacement.niveau_carburant,
+            'kilometrage_depart': deplacement.kilometrage_depart,
+        })
+
+    return render(request, 'modifier_deplacement.html', {'form': form, 'deplacement': deplacement, 'photos': photos})
+
+
+def details_deplacement(request, deplacement_id):
+    deplacement = get_object_or_404(Deplacement, id=deplacement_id)
+    image = Photo.objects.filter(deplacement=deplacement_id)
+    return render(request, 'deplacement_details.html', {'deplacement': deplacement, 'image': image})
+
+
+

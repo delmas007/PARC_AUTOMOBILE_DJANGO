@@ -52,9 +52,10 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="col-md-12" style="margin-top: 15px">
-                                            <label for="marque" class="font-weight-bold">Marque :</label>
+                                            <label for="marque" class="font-weight-bold" >Marque :</label>
                                             {{ form.marque }}
                                         </div>
+
                                         <div class="form-group col-md-12">
                                             <label for="numero_immatriculation" class="font-weight-bold">Numero d'immatriculation :</label>
                                             <input type="text" class="form-control" id="numero_immatriculation" placeholder="Numero Immatriculation" name="numero_immatriculation"  value="{% if form.numero_immatriculation.value %}{{ form.numero_immatriculation.value }}{% endif %}">
@@ -73,7 +74,7 @@
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="couleur de la voiture" class="font-weight-bold">Numero du VIN/Chassis :</label>
-                                            <input type="text" class="form-control" id="couleur de la voiture" placeholder="Numero du VIN/Chassis" name="numero_chassis" value="{% if form.numero_chassis.value %}{{ form.numero_chassis.value }}{% endif %}">
+                                            <input type="text" class="form-control" id="numero_du_vin/chassis" placeholder="Numero du VIN/Chassis" name="numero_chassis" value="{% if form.numero_chassis.value %}{{ form.numero_chassis.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="date_expiration_assurance" class="font-weight-bold">Date d'expiration assurance :</label>
@@ -92,6 +93,9 @@
 
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="form-group col-md-12 text-right">
+                                            <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutType()" style="margin-right: 5px">
+                                                <i class="ion-plus-circled"></i>Ajouter un type commercial
+                                            </button>
                                             <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutMarque()">
                                                 <i class="ion-plus-circled"></i>Ajouter une marque
                                             </button>
@@ -113,8 +117,8 @@
                                             <input type="number" class="form-control" id="kilometrage" placeholder="Kilometrage" name="kilometrage" value="{% if form.kilometrage.value %}{{ form.kilometrage.value }}{% endif %}">
                                         </div>
                                         <div class="form-group col-md-12">
-                                            <label for="type_commercial" class="font-weight-bold">Type commercial :</label>
-                                            <input type="text" class="form-control" id="type_commercial" placeholder="type commercial" name="type_commercial" value="{% if form.type_commercial.value %}{{ form.type_commercial.value }}{% endif %}">
+                                             <label for="type_commercial" class="col-form-label">Type commercial:</label>
+                                                 {{ form.type_commercial }}
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="energie" class="font-weight-bold">Energie :</label>
@@ -222,6 +226,36 @@
            </div>
        </div>
    </div>
+   <div class="modal fade" id="ajouterType" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h1 class="modal-title fs-5" id="exampleModalLabel1">Ajouter un type commercial</h1>
+               </div>
+               <div class="modal-body">
+                   <form method="post" id="typeForm">
+                       {% csrf_token %}
+                         <div class="mb-3">
+{#                           <label for="marque" class="col-form-label">Marque:</label>#}
+                          {{ form.marque }}
+                       </div>
+                       <div class="mb-3">
+{#                           <label for="marque" class="col-form-label">type commerciale:</label>#}
+                           <input type="text" class="form-control" id="typecommercial" name="modele" required placeholder="Entrer le nom du type commerciale ">
+                           <div id="type-error" class="text-danger"></div>
+                       </div>
+
+                       <div class="modal-footer">
+                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="fermerModal1()">Annuler</button>
+                           <button type="button" class="btn btn-primary" onclick="ajouterType()">Ajouter</button>
+                       </div>
+                   </form>
+               </div>
+           </div>
+       </div>
+   </div>
+
+
    <div class="modal fade" id="existImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
        <div class="modal-dialog">
            <div class="modal-content">
@@ -296,6 +330,21 @@
        {% endif %}
    </script>
    <script>
+       function ajoutType() {
+           $('#ajouterType').modal('show');
+       }
+       function fermerModal1() {
+
+           // Fermer le modal
+           $('#ajouterType').modal('hide');
+       }
+       {% if form.errors %}
+           function existModal() {
+               $('#existModal').modal('show');
+           }
+       {% endif %}
+   </script>
+   <script>
        function ajouterMarque() {
            $.ajax({
                type: 'POST',
@@ -304,6 +353,30 @@
                success: function(response) {
                    if (response.success) {
                        $('#ajoutMarque').modal('hide');
+                       location.reload(true);
+                   } else if (response.error) {
+                       $('#existModal').modal('show');
+                   } else if (response.errors) {
+                       for (var field in response.errors) {
+                           $('#' + field + '-error').text(response.errors[field]);
+                       }
+                   }
+               },
+               error: function(response) {
+                   $('#existModal').modal('show');
+               }
+           });
+       }
+   </script>
+   <script>
+       function ajouterType() {
+           $.ajax({
+               type: 'POST',
+               url: '{% url "vehicule:ajouter_type" %}',
+               data: $('#typeForm').serialize(),
+               success: function(response) {
+                   if (response.success) {
+                       $('#ajoutType').modal('hide');
                        location.reload(true);
                    } else if (response.error) {
                        $('#existModal').modal('show');
@@ -332,6 +405,49 @@
            });
        });
    </script>
+
+
+
+<script>
+
+   $(document).ready(function() {
+    $('#selectMarque').change(function() {
+        var selectedMarqueId = $(this).val();
+        // Vérifie si l'identifiant de la marque est une chaîne non vide
+        if (selectedMarqueId !== '') {
+            // Convertit l'identifiant de la marque en un entier
+            selectedMarqueId = parseInt(selectedMarqueId);
+            // Vérifie si la conversion a réussi et que l'identifiant est un nombre valide
+            if (!isNaN(selectedMarqueId)) {
+                $.ajax({
+            url: '{% url "vehicule:get_modeles" %}', // URL de la vue Django qui renverra les modèles filtrés
+                    method: 'GET',
+                    data: {
+                        marque_id: selectedMarqueId
+                    },
+                    success: function(response) {
+                        var modeles = JSON.parse(response.modeles);
+                        $('#selectModel').empty(); // Efface les options actuelles
+                        $.each(modeles, function(index, modele) {
+                            $('#selectModel').append('<option value="' + modele.pk + '">' + modele.fields.modele + '</option>');
+                        });
+                    },
+                    error: function(xhr, errmsg, err) {
+                        console.log(errmsg);
+                    }
+                });
+            } else {
+                console.log("L'identifiant de la marque n'est pas un nombre valide.");
+            }
+        }
+    });
+});
+
+</script>
+
+
+
+
 
    </body>
 {% endblock %}

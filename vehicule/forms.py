@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ClearableFileInput
 from django.forms.widgets import Input
 
-from Model.models import Vehicule, Marque
+from Model.models import Vehicule, Marque, Type_Commerciale
 
 
 class XYZ_DateInput(forms.DateInput):
@@ -47,9 +47,12 @@ class VehiculeForm(forms.ModelForm):
         model = Vehicule
         exclude = ['disponibilite']
 
+
     marque = forms.ModelChoiceField(queryset=Marque.objects.all(), required=True)
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
     energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
+    type_commercial = forms.ModelChoiceField(queryset=Type_Commerciale.objects.all(), required=True)
+
 
     def __init__(self, *args, **kwargs):
         super(VehiculeForm, self).__init__(*args, **kwargs)
@@ -58,6 +61,13 @@ class VehiculeForm(forms.ModelForm):
             'id': "selectMarque",
             'required': True,
         })
+
+        self.fields['type_commercial'].widget.attrs.update({
+            'class': "form-control",
+            'id': "selectModel",
+            'required': True,
+        })
+
         self.fields['image_recto'].required = True
         self.fields['image_verso'].required = True
         self.fields['date_expiration_assurance'].required = True
@@ -109,6 +119,7 @@ class VehiculeModifierForm(forms.ModelForm):
     class Meta:
         model = Vehicule
         exclude = ['disponibilite', 'marque', 'type_commercial']
+
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
     energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
 
@@ -174,3 +185,24 @@ class marqueForm(forms.ModelForm):
     class Meta:
         model = Marque
         fields = '__all__'
+
+
+class typeForm(forms.ModelForm):
+    class Meta:
+        model = Type_Commerciale
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(typeForm, self).__init__(*args, **kwargs)
+        self.fields['marque'].widget.attrs.update({
+            'class': "form-control",
+            'id': "selectMarque",
+            'required': True,
+        })
+        self.fields['modele'].widget.attrs.update({
+            'class': "form-control",
+            'id': "typecommercial",
+            'required': True,
+        })
+
+

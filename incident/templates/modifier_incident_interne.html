@@ -23,22 +23,16 @@
                      <div class="iq-card">
                         <div class="iq-card-header d-flex justify-content-between">
                            <div class="iq-header-title">
-                              <h3 class="card-title"> Enregistrer un incident <i class="ri-alert-line"></i></h3>
+                              <h3 class="card-title"> Modifier les informations sur l'incident du véhicule {{ incident.vehicule.marque }}--{{ incident.vehicule.numero_immatriculation }} <i class="ri-alert-line"></i></h3>
                            </div>
                         </div>
                         <div class="iq-card-body">
-                           <form class="form-horizontal" method="post" action="{% url 'incident:enregistrer_incident' %}" enctype="multipart/form-data">
+                           <form class="form-horizontal" method="post" action="{% url 'incident:modifier_incident_interne' incident.pk %}" enctype="multipart/form-data">
                                {% csrf_token %}
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-4 align-self-center mb-0" for="email" style="font-weight: bold">Selectionner le véhicule concerné :</label>
-                                   <div class="col-sm-10 col-md-6" style="margin-left: 110px">
-                                     {{ form.vehicule }}
-                                   </div>
-                               </div>
                                 <div class="form-group row" style="margin-top: 33px">
                                         <label for="images" class="control-label col-sm-5 col-md-6 align-self-center mb-0" style="font-weight: bold">Sélectionner les images de l'incident du véhicule :</label>
                                        <div class="form-control h-auto col-sm-7 col-md-6" style="border-radius: 10px;">
-                                           <input placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}" multiple required>
+                                           <input placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}" multiple >
                                        </div>
                                         {% if form.image.errors %}
                                             <p class="help-block">Veuillez joindre une image</p>
@@ -46,13 +40,22 @@
                                 </div>
 
                                <div class="form-group row">
-                                   <label class="control-label col-sm-4 align-self-center mb-0" for="description" style="font-weight: bold">Description de l'incident :</label>
-                                   <textarea rows="4" cols="75" placeholder="Veuillez founir la description de l'incident" class="form-control" name="description_incident" id="description_incident"> </textarea>
-
+                                   <label class="control-label col-sm-4 align-self-center mb-0" for="description_incident" style="font-weight: bold">Description de l'incident :</label>
+                                    <div class="col-sm-8">
+                                       {{ form.description_incident }}
+                                   </div>
+{#                                   <textarea rows="4" cols="75" placeholder="Veuillez founir la description de l'incident" class="form-control" name="description_incident" id="description_incident"> </textarea>#}
                                </div>
+                                <!-- Afficher les images existantes -->
+                           <div class="row">
+                               {% for photo in photos %}
+                                   <div class="col-md-6">
+                                        <img src="{{ photo.images.url }}" alt="Existing Image" class="img-thumbnail">
+                                   </div>
+                                {% endfor %}
+                           </div>
 
-
-                                    <button type="submit" class="btn btn-primary" style="width: 100%">Enregistrer</button>
+                               <button type="submit" class="btn btn-primary" style="width: 100%">Modifier</button>
 
                                {% if form.errors %}
                                    {% for field, errors in form.errors.items %}
@@ -148,11 +151,7 @@
               });
           {% endif %}
       </script>
-      <script>
-          $(document).ready(function() {
-              $('#selectVehicule').select2();
-          });
-      </script>
+
       <script>
        document.addEventListener('DOMContentLoaded', function () {
            var fileInput = document.getElementById('customFile');
@@ -166,5 +165,6 @@
            });
        });
    </script>
+
    </body>
 {% endblock %}

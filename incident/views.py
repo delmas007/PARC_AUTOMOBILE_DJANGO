@@ -1,25 +1,32 @@
-from django.shortcuts import render, redirect
-
-from Model.models import Vehicule, Conducteur, Utilisateur
-from incident.forms import IncidentForm
+from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage
+from Model.models import Vehicule, Incident, Utilisateur, Photo
+from incident.forms import IncidentFormGestionnaire, IncidentSearchForm, IncidentModifierForm
 from django.contrib import messages
+
 
 # Create your views here.
 
 
 def enregistrer_incident(request):
-
-    vehicules = Vehicule.objects.all()
-    utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
-
     if request.method == 'POST':
-        form = IncidentForm(request.POST)
+        form = IncidentFormGestionnaire(request.POST, request.FILES)
         if form.is_valid():
-            incident = form.save()
-            messages.success(request, 'L\'incident a été enregistré avec succès.')
-            return redirect('incident:enregistrer_incident')
+            images = request.FILES.getlist('images')
+            if len(images) <= 6:
+                incident = form.save(commit=False)
+                incident.utilisateurs = request.user
+                incident.save()
+                for uploaded_file in images:
+                    photo = Photo.objects.create(incident=incident, images=uploaded_file)
+
+                messages.success(request, 'L\'incident a été ajouté avec succès.')
+                return redirect('incident:enregistrer_incident')
+            else:
+                form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
     else:
-        form = IncidentForm()
+        form = IncidentFormGestionnaire()
 
     return render(request, 'Enregistrer_incident.html', locals())
 
@@ -29,5 +36,80 @@ def liste_incidents_externe(request):
 
 
 def liste_incidents_interne(request):
-    return render(request, 'Liste_incidents_interne.html')
+    incidents_list = Incident.objects.all().order_by('vehicule__incident')
+    incidents = {}
+    for item_incident in incidents_list:
+        latest_photo = get_latest_photo(item_incident)
+        incidents[item_incident.id] = {'incident': item_incident, 'latest_photo': latest_photo}
 
+    paginator = Paginator(incidents_list.order_by('date_mise_a_jour'), 3)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        incidents_list = paginator.page(page)
+    except EmptyPage:
+
+        incidents_list = paginator.page(paginator.num_pages())
+    return render(request, 'Liste_incidents_interne.html', {'incidents': incidents.values(),
+                                                            'incidents_list': incidents_list})
+
+
+def get_latest_photo(incident):
+    return Photo.objects.filter(incident=incident).order_by('-id').first()
+
+
+def incidents_search(request):
+    form = IncidentSearchForm(request.GET)
+    incidents_list = Incident.objects.all()
+    incidents = {}
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            incidents_list = incidents_list.filter(Q(vehicule__numero_immatriculation__icontains=query) |
+                                                   Q(description_incident__icontains=query) |
+                                                   Q(vehicule__marque__marque__icontains=query))
+    for incident in incidents_list:
+        latest_photo = get_latest_photo(incident)
+        incidents[incident.id] = {'incident': incident, 'latest_photo': latest_photo}
+
+    paginator = Paginator(incidents_list.order_by('date_mise_a_jour'), 3)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        incidents_list = paginator.page(page)
+    except EmptyPage:
+
+        incidents_list = paginator.page(paginator.num_pages())
+
+    context = {'incidents': incidents.values(), 'form': form, 'incidents_list': incidents_list}
+    # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
+    if not incidents and form.is_valid():
+        context['no_results'] = True
+    return render(request, 'Liste_incidents_interne.html', context)
+
+
+def incident_interne_detail(request, pk):
+    incident = get_object_or_404(Incident, id=pk)
+    image = Photo.objects.filter(incident=incident)
+    return render(request, 'incident_interne_details.html', {'incident': incident, 'image': image})
+
+
+def modifier_incident_interne(request, pk):
+    incident = get_object_or_404(Incident, pk=pk)
+    photos = Photo.objects.filter(incident=incident)
+
+    if request.method == 'POST':
+        form = IncidentModifierForm(request.POST, request.FILES, instance=incident)
+        if form.is_valid():
+            form.instance.utilisateurs = request.user
+            if request.FILES.getlist('images'):
+                for image in request.FILES.getlist('images'):
+                    Photo.objects.create(incident=incident, images=image)
+            form.save()
+        return redirect('incident:liste_incidents_interne')
+    else:
+        form = IncidentModifierForm(instance=incident)
+    return render(request, 'modifier_incident_interne.html', {'form': form, 'incident': incident, 'photos': photos})

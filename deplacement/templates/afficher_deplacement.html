@@ -37,6 +37,7 @@
                                      <th>Duree</th>
                                      <th>Kilometrage</th>
                                      <th>Niveau de carburant</th>
+                                     <th>Action</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -49,6 +50,12 @@
                                          <td>{{ deplacement.duree_deplacement }}</td>
                                          <td>{{ deplacement.kilometrage_depart }} Km/h</td>
                                          <td>{{ deplacement.niveau_carburant }} Litres</td>
+                                     <td>
+                                         <div class="flex align-items-center list-user-action">
+                                             <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier le deplacement" href="{% url 'deplacement:modifier_deplacement' pk=deplacement.pk %}"><i class="ri-pencil-line"></i></a>
+                                             <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" data-original-title=" Voir le deplacement" href="{% url 'deplacement:details_deplacement' deplacement_id=deplacement.id %}" ><i class="ri-eye-line"></i></a>
+                                         </div>
+                                     </td>
                                      </tr>
                                 {% endfor %}
                                  <tr>
