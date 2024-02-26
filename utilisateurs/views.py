@@ -24,6 +24,7 @@ def Accueil_user(request):
     }
     return render(request, 'index_user.html', context)
 
+
 def list_vehicule(request):
     tous_les_vehicule = Vehicule.objects.all()
     vehicules = []
@@ -35,11 +36,13 @@ def list_vehicule(request):
     }
     return render(request, 'vehicule_list.html', context)
 
+
 def vehicule_details(request, vehicule_id):
     # photo = get_object_or_404(Photo, pk=vehicule_id)
     photo = Photo.objects.filter(vehicule_id=vehicule_id)
+    vehicule = get_object_or_404(Vehicule, pk=vehicule_id)
 
-    context = {'photos': photo}
+    context = {'photos': photo, 'vehicule': vehicule}
     return render(request, 'detail.html', context)
 
 
@@ -95,18 +98,8 @@ class Connexion_user(LoginView):
         if self.request.user.roles.role == 'CLIENT':
             return reverse('utilisateur:Accueil_user')
         if self.request.user.roles.role == 'CONDUCTEUR':
-            return reverse('utilisateur:Accueil_user')
+            return reverse('utilisateur:Acceuil_conducteur')
 
-# def Accueil_user(request):
-#     tous_les_vehicule = Vehicule.objects.all()
-#
-#     if tous_les_vehicule:
-#         if len(tous_les_vehicule) >= 3:
-#             vehicule_aleatoires = sample(list(tous_les_vehicule), 3)
-#         else:
-#             vehicule_aleatoires = tous_les_vehicule
-#     else:
-#         vehicule_aleatoires = tous_les_vehicule
-#
-#     context = {'vehicules': vehicule_aleatoires}
-#     return render(request, 'index_user.html', context)
+
+def Acceuil_conducteur(request):
+    return render(request, 'compte_conducteur.html')

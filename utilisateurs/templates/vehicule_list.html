@@ -6,8 +6,15 @@
 <!-- Nav Bar Start -->
 
 {% include 'nav-bar.html' %}
-        
-        <!-- Product List Start -->
+<style>
+    .product-image img {
+        width: 200px;
+        height: 300px;
+        object-fit: cover; /* Pour conserver le ratio de l'image */
+    }
+</style>
+
+<!-- Product List Start -->
         <div class="product-view">
             <div class="container-fluid">
                 <div class="row">
