@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import Paginator, EmptyPage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Model.models import Vehicule, Incident, Utilisateur, Photo
 from incident.forms import IncidentFormGestionnaire, IncidentSearchForm, IncidentModifierForm
 from django.contrib import messages
@@ -42,17 +42,17 @@ def liste_incidents_interne(request):
         latest_photo = get_latest_photo(item_incident)
         incidents[item_incident.id] = {'incident': item_incident, 'latest_photo': latest_photo}
 
-    paginator = Paginator(incidents_list.order_by('date_mise_a_jour'), 3)
-    try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
-        incidents_list = paginator.page(page)
-    except EmptyPage:
+    paginator = Paginator(list(incidents.values()), 3)
 
-        incidents_list = paginator.page(paginator.num_pages())
-    return render(request, 'Liste_incidents_interne.html', {'incidents': incidents.values(),
-                                                            'incidents_list': incidents_list})
+    page = request.GET.get('page')
+    try:
+        incidents_page = paginator.page(page)
+    except PageNotAnInteger:
+        incidents_page = paginator.page(1)
+    except EmptyPage:
+        incidents_page = paginator.page(paginator.num_pages)
+
+    return render(request, 'Liste_incidents_interne.html', {'incidents': incidents_page, 'paginator': paginator})
 
 
 def get_latest_photo(incident):

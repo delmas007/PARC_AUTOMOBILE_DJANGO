@@ -60,7 +60,6 @@ class Conducteur(models.Model):
     def __str__(self):
         return f"{self.utilisateur.nom} {self.utilisateur.prenom} "
 
-
     class Meta:
         ordering = ['date_mise_a_jour']
 
@@ -97,12 +96,14 @@ class Marque(models.Model):
     def __str__(self):
         return self.marque
 
-class Type_Commerciale (models.Model):
+
+class Type_Commerciale(models.Model):
     modele = models.CharField(max_length=250)
     marque = models.ForeignKey(Marque, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.modele
+
 
 class Vehicule(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
@@ -164,13 +165,12 @@ class Deplacement(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True,null=True)
-    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL,blank=True, null=True,)
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True, null=True)
+    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL, blank=True, null=True, )
     date_depart = models.DateField(blank=True, null=True)
     niveau_carburant = models.IntegerField()
     duree_deplacement = models.CharField(max_length=250, )
     kilometrage_depart = models.IntegerField()
-
 
     def __str__(self):
         return f"{self.vehicule} - {self.conducteur.nom}"
@@ -264,7 +264,8 @@ class Incident(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     description_incident = models.TextField()
-    utilisateurs = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='gestionnaire', blank=True)
+    utilisateurs = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='gestionnaire',
+                                     blank=True)
 
 
 class Photo(models.Model):

@@ -51,7 +51,7 @@ class VehiculeForm(forms.ModelForm):
     marque = forms.ModelChoiceField(queryset=Marque.objects.all(), required=True)
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
     energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
-    type_commercial = forms.ModelChoiceField(queryset=Type_Commerciale.objects.none(), required=True)
+    type_commercial = forms.ModelChoiceField(queryset=Type_Commerciale.objects.all(), required=True)
 
 
     def __init__(self, *args, **kwargs):
