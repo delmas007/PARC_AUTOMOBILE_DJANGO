@@ -46,17 +46,14 @@ class deplacementModifierForm(forms.ModelForm):
         self.fields['vehicule'].widget.attrs.update({
             'class': "form-control",
             'id': "selectVehicule",
-            'required': False,
+            'required': True,
         })
-        self.fields['vehicule'].queryset = Vehicule.objects.filter(disponibilite=True)
 
         self.fields['conducteur'].widget.attrs.update({
             'class': "form-control",
             'id': "selectConducteur",
-            'required': False,
+            'required': True,
         })
-
-        self.fields['conducteur'].queryset = Conducteur.objects.filter(disponibilite=True)
 
 
     class Meta:
