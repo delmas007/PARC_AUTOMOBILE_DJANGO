@@ -32,7 +32,7 @@ class DeplacementForm(forms.ModelForm):
             'required': True,
         })
         self.fields['conducteur'].queryset = Conducteur.objects.exclude(disponibilite=False)
-
+        
     class Meta:
         model = Deplacement
         exclude = ['demande_prolongement_id']

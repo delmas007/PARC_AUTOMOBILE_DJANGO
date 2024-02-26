@@ -166,7 +166,7 @@ class Deplacement(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True,null=True)
     demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL,blank=True, null=True,)
-    date_depart = models.DateTimeField(blank=True, null=True)
+    date_depart = models.DateField(blank=True, null=True)
     niveau_carburant = models.IntegerField()
     duree_deplacement = models.CharField(max_length=250, )
     kilometrage_depart = models.IntegerField()
