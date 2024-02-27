@@ -1,11 +1,18 @@
 {% extends 'header_user.html' %}
 {% load static %}
 {% block content%}
-
+    <style>
+        .product-image img {
+            width: 200px;
+            height: 300px;
+            object-fit: cover; /* Pour conserver le ratio de l'image */
+        }
+    </style>
     <body>      
         <!-- Nav Bar Start -->
 
         {% include 'nav-bar.html' %}
+
         
         <!-- Main Slider Start -->
         <div class="header">
@@ -199,8 +206,8 @@
                 </div>
             </div>
         </div>
-        <!-- Category End-->             
-        
+        <!-- Category End-->
+
         <!-- Featured Product Start -->
         <div class="featured-product product">
             <div class="container-fluid">
