@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from Model.forms import UserRegistrationForm, ConnexionForm
 from Model.models import Roles, Utilisateur, Vehicule, Photo
-from utilisateurs.forms import ConducteurClientForm
+from utilisateurs.forms import ConducteurClientForm, PasswordResetForme
 from utilisateurs.tokens import account_activation_token
 from django.utils.html import strip_tags
 
@@ -154,3 +154,47 @@ class Connexion_user(LoginView):
 
 def Acceuil_conducteur(request):
     return render(request, 'compte_conducteur.html')
+
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        form = PasswordResetForme(request.POST)
+        if form.is_valid():
+            user_email = form.cleaned_data['email']
+            associated_user = get_user_model().objects.filter(Q(email=user_email)).first()
+            if associated_user:
+                subject = "Password Reset request"
+                message = render_to_string("reinitialisation.html", {
+                    'user': associated_user,
+                    'domain': get_current_site(request).domain,
+                    'uid': urlsafe_base64_encode(force_bytes(associated_user.mon_uuid)),
+                    'token': account_activation_token.make_token(associated_user),
+                    "protocol": 'https' if request.is_secure() else 'http'
+                })
+                plain_message = strip_tags(message)
+                email = EmailMultiAlternatives(subject=subject, body=plain_message, to=[associated_user.email])
+                email.attach_alternative(message, "text/html")
+                email.send()
+                if email.send():
+                    messages.success(request,
+                                     """
+                                     <h4>Réinitialisation du mot de passe envoyée</h4><hr>
+                                     <p>
+                                         Nous vous avons envoyé les instructions par e-mail pour définir votre mot de passe. Si un compte existe avec l’e-mail que vous avez entré,
+                                          vous devriez les recevoir sous peu. <br>Si vous ne recevez pas le courriel, veuillez vous assurer d’avoir saisi l’adresse e-mail avec 
+                                          laquelle vous vous êtes inscrit(e) et vérifiez votre dossier spam.
+                                     </p>
+                                     """
+                                     )
+                else:
+                    messages.error(request, "Problème d’envoi de l’e-mail de réinitialisation du mot de passe, "
+                                            "<b>PROBLÈME SERVEUR</b>")
+
+            return redirect('Model:connexion')
+
+    form = PasswordResetForme()
+    return render(
+        request=request,
+        template_name="email.html",
+        context={"form": form}
+    )
