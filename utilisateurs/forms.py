@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 
 from Model.models import Conducteur, Utilisateur
 from django import forms
@@ -16,3 +16,9 @@ class PasswordResetForme(PasswordResetForm):
     class Meta:
         model = Utilisateur
         fields = 'email'
+
+
+class ChangerMotDePasse(SetPasswordForm):
+    class Meta:
+        model = Utilisateur
+        fields = ['new_password1', 'new_password2']

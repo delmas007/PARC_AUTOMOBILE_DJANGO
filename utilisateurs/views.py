@@ -1,4 +1,6 @@
 from random import sample
+
+from django.db.models import Q
 from django.templatetags.static import static
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView
@@ -13,7 +15,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from Model.forms import UserRegistrationForm, ConnexionForm
 from Model.models import Roles, Utilisateur, Vehicule, Photo
-from utilisateurs.forms import ConducteurClientForm, PasswordResetForme
+from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse
 from utilisateurs.tokens import account_activation_token
 from django.utils.html import strip_tags
 
@@ -198,3 +200,32 @@ def password_reset_request(request):
         template_name="email.html",
         context={"form": form}
     )
+
+
+def passwordResetConfirm(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(mon_uuid=uid)
+    except:
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        if request.method == 'POST':
+            form = ChangerMotDePasse(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Votre mot de passe a été défini. Vous pouvez continuer et <b>vous "
+                                          "connecter </b> maintenant.")
+                return redirect('Model:connexion')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+
+        form = ChangerMotDePasse(user)
+        return render(request, 'password.html', {'form': form})
+    else:
+        messages.error(request, "Le lien a expiré")
+
+    messages.error(request, 'Quelque chose a mal tourné, rediriger vers la page d’accueil')
+    return redirect("Accueil")
