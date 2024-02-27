@@ -74,17 +74,17 @@ def incidents_search(request):
         latest_photo = get_latest_photo(incident)
         incidents[incident.id] = {'incident': incident, 'latest_photo': latest_photo}
 
-    paginator = Paginator(incidents_list.order_by('date_mise_a_jour'), 3)
+    paginator = Paginator(list(incidents.values()), 3)
+
+    page = request.GET.get('page')
     try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
-        incidents_list = paginator.page(page)
+        incidents_page = paginator.page(page)
+    except PageNotAnInteger:
+        incidents_page = paginator.page(1)
     except EmptyPage:
+        incidents_page = paginator.page(paginator.num_pages)
 
-        incidents_list = paginator.page(paginator.num_pages())
-
-    context = {'incidents': incidents.values(), 'form': form, 'incidents_list': incidents_list}
+    context = {'incidents': incidents_page, 'form': form, 'paginator': paginator}
     # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
     if not incidents and form.is_valid():
         context['no_results'] = True
