@@ -1,7 +1,7 @@
 from django import forms
 
 import deplacement
-from Model.models import Deplacement, Vehicule, Utilisateur, Conducteur
+from Model.models import Deplacement, Vehicule, Utilisateur, Conducteur, EtatArrive
 from django.db.models import Q
 from django.forms import ClearableFileInput
 from django.forms.widgets import Input
@@ -29,7 +29,8 @@ class DeplacementForm(forms.ModelForm):
             vehicule_actuel = instance.vehicule
             conducteur_actuel = instance.conducteur
             self.fields['vehicule'].queryset = Vehicule.objects.filter(Q(disponibilite=True) | Q(pk=vehicule_actuel.pk))
-            self.fields['conducteur'].queryset = Conducteur.objects.filter(Q(disponibilite=True) | Q(pk=conducteur_actuel.pk))
+            self.fields['conducteur'].queryset = Conducteur.objects.filter(
+                Q(disponibilite=True) | Q(pk=conducteur_actuel.pk))
         else:
             # Si aucune instance n'existe (ajout), afficher tous les véhicules/conducteurs disponibles
             self.fields['vehicule'].queryset = Vehicule.objects.filter(disponibilite=True)
@@ -50,7 +51,6 @@ class DeplacementForm(forms.ModelForm):
         })
 
         # Exclure les conducteurs non disponibles
-
 
     class Meta:
         model = Deplacement
@@ -74,9 +74,20 @@ class deplacementModifierForm(forms.ModelForm):
             'required': True,
         })
 
-
     class Meta:
         model = Deplacement
         exclude = ['demande_prolongement_id', 'utilisateur']
 
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+
+
+class EtatArriveForm(forms.ModelForm):
+    deplacement_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = EtatArrive
+        fields = ['deplacement_id', 'kilometrage_arrive', 'niveau_carburant_a']
+        images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

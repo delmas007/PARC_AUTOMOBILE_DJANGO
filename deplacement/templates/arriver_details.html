@@ -91,46 +91,59 @@
                                     <table class="table" id="table" style="left: auto; right: auto; padding: 20px">
                                         <thead style="height: 100px; text-align: center; font-size: 25px">
                                         <tr>
-                                            <th colspan="6">Informations du deplacement -<span style="font-size: 20px"></span> <i class="ri-roadster-line"></i></th>
+                                            <th colspan="3">Informations du déplacement <i class="ri-roadster-line"></i></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
                                             <td><strong>VEHICULE :</strong></td>
-                                            <td class="center-text">{{ deplacement.vehicule }}</td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.vehicule }}</td>
+                                            <td></td>
                                         </tr>
                                         <tr>
                                             <td><strong>CONDUCTEUR :</strong></td>
-                                            <td class="center-text">{{  deplacement.conducteur }}</td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.conducteur }}</td>
+                                            <td></td>
                                         </tr>
                                         <tr>
-                                            <td><strong>DATE DE DEPART :</strong></td>
-                                            <td class="center-text">{{ deplacement.date_depart }}</td>
+                                            <td><strong></strong></td>
+                                            <td class="center-text"><strong>DEPART</strong></td>
+                                            <td class="center-text"><strong>ARRIVE</strong></td>
                                         </tr>
                                         <tr>
-                                            <td><strong>DUREE DE DEPLACEMENT :</strong></td>
-                                            <td class="center-text">{{ deplacement.duree_deplacement }}</td>
+                                            <td><strong>DATE :</strong></td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.date_depart }}</td>
+                                            <td class="center-text">{{ etat_arrive.date_arrive }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>KILOMETRAGE DE DEPART :</strong></td>
-                                            <td class="center-text">{{ deplacement.kilometrage_depart }} Km/h</td>
+                                            <td><strong>KILOMETRAGE:</strong></td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.kilometrage_depart }} Km/h</td>
+                                            <td class="center-text">{{ etat_arrive.kilometrage_arrive }} Km/h</td>
                                         </tr>
                                         <tr>
                                             <td><strong>NIVEAU DE CARBURANT :</strong></td>
-                                            <td class="center-text">{{ deplacement.niveau_carburant }} Litres</td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.niveau_carburant }} Litres</td>
+                                            <td class="center-text">{{ etat_arrive.niveau_carburant_a }} Litres</td>
                                         </tr>
                                         </tbody>
                                     </table>
                                     <div class="imageContent"  style="align-items: center; text-align: center;">
                                         <div>  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE AU DEPART</label></div>
+                                        {% for image in images %}
+                                            <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                        {% endfor %}
+
+                                    </div>
+                                    <div class="imageContent"  style="align-items: center; text-align: center;">
+                                        <div>  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE A L'ARRIVEE</label></div>
                                         {% for image in image %}
                                             <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
                                         {% endfor %}
 
                                     </div>
+
                                 </div>
                             </div>
-                            <a style="text-align: center; font-size: 50px; margin-left: 50%; margin-right: auto" class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier le deplacement" href="{% url 'deplacement:modifier_deplacement' pk=deplacement.pk %}"><i style="font-size: 60px" class="ri-edit-2-fill"></i></a>
                         </div>
 
                     </div>

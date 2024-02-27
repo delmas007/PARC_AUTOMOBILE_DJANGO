@@ -53,12 +53,12 @@
                                          <td>{{ deplacement.kilometrage_depart }} Km/h</td>
                                          <td>{{ deplacement.niveau_carburant }} Litres</td>
                                          <td>
-                                             <a type="button" class="btn mb-3 btn-info">
+                                             <button type="button" class="btn mb-3 btn-info terminer-btn" data-toggle="modal" data-target="#exampleModalScrollable" data-deplacement-id="{{ deplacement.id }}">
                                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="height: 30px">
                                                      <path d="M32 0C49.7 0 64 14.3 64 32V48l69-17.2c38.1-9.5 78.3-5.1 113.5 12.5c46.3 23.2 100.8 23.2 147.1 0l9.6-4.8C423.8 28.1 448 43.1 448 66.1V345.8c0 13.3-8.3 25.3-20.8 30l-34.7 13c-46.2 17.3-97.6 14.6-141.7-7.4c-37.9-19-81.3-23.7-122.5-13.4L64 384v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V400 334 64 32C0 14.3 14.3 0 32 0zM64 187.1l64-13.9v65.5L64 252.6V318l48.8-12.2c5.1-1.3 10.1-2.4 15.2-3.3V238.7l38.9-8.4c8.3-1.8 16.7-2.5 25.1-2.1l0-64c13.6 .4 27.2 2.6 40.4 6.4l23.6 6.9v66.7l-41.7-12.3c-7.3-2.1-14.8-3.4-22.3-3.8v71.4c21.8 1.9 43.3 6.7 64 14.4V244.2l22.7 6.7c13.5 4 27.3 6.4 41.3 7.4V194c-7.8-.8-15.6-2.3-23.2-4.5l-40.8-12v-62c-13-3.8-25.8-8.8-38.2-15c-8.2-4.1-16.9-7-25.8-8.8v72.4c-13-.4-26 .8-38.7 3.6L128 173.2V98L64 114v73.1zM320 335.7c16.8 1.5 33.9-.7 50-6.8l14-5.2V251.9l-7.9 1.8c-18.4 4.3-37.3 5.7-56.1 4.5v77.4zm64-149.4V115.4c-20.9 6.1-42.4 9.1-64 9.1V194c13.9 1.4 28 .5 41.7-2.6l22.3-5.2z"></path>
                                                  </svg>
                                                  Terminer
-                                             </a>
+                                             </button>
                                          </td>
                                      </tr>
                                 {% endfor %}
@@ -120,27 +120,64 @@
               </div>
           </div>
       </div>
+
+      <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalScrollableTitle">Etat arrivé</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="iq-card-body">
+                      <form class="form-horizontal" id="DeplacementArriverForm" method="post" enctype="multipart/form-data" action="{% url 'deplacement:enregistrer_etatArriver' %}">
+                          {% csrf_token %}
+                          <input type="hidden" id="deplacement_id" name="deplacement_id">
+                          <div class="form-group row">
+                              <label class="control-label col-sm-2 align-self-center mb-0" for="niveau_carburant_a">Niveau de carburant:</label>
+                              <div class="col-sm-10">
+                                  <input type="number" class="form-control" id="niveau_carburant_a" name="niveau_carburant_a">
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                              <label class="control-label col-sm-2 align-self-center mb-0" for="kilometrage_arrive">Kilometrage:</label>
+                              <div class="col-sm-10">
+                                  <input type="number" class="form-control" id="kilometrage_arrive" name="kilometrage_arrive">
+                              </div>
+                          </div>
+                          <div class="form-group col-md-12">
+                              <label for="images" class="font-weight-bold">Sélectionner des images :</label>
+                              <div class="form-control h-auto" style="border-radius: 10px">
+                                  <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
+                              </div>
+                              {% if form.image.errors %}
+                                  <p class="help-block">Veillez joindre une image</p>
+                              {% endif %}
+
+                          </div>
+                          <div class="form-group">
+                              <button type="submit" class="btn btn-primary" onclick="fermerModal()">Enregistrer</button>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fermerModal()">Fermer</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
       <script>
-          // Fonction pour afficher le modal de confirmation
-          function confirmDelete(linkElement) {
-              var vehicleId = linkElement.getAttribute('data-vehicle-id');
-              // Afficher le modal
-              $('#confirmDeleteModal').modal('show');
+          $(document).ready(function() {
+              $('.terminer-btn').on('click', function() {
+                  var deplacementId = $(this).data('deplacement-id');
+                  $('#deplacement_id').val(deplacementId);
+              });
+          });
 
-              // Enregistrer l'ID du véhicule dans un champ caché du modal
-              $('#confirmDeleteModal').data('vehicle-id', vehicleId);
-          }
-
-          // Fonction pour exécuter la suppression
-          function executeDelete() {
-              // Récupérer l'ID du véhicule depuis le champ caché du modal
-              var vehicleId = $('#confirmDeleteModal').data('vehicle-id');
-
-              // Rediriger vers l'URL de suppression avec l'ID du véhicule
-              window.location.href = "{% url 'deplacement:arrivee' 0 %}".replace(0, vehicleId);
-
-              // Fermer le modal
-              $('#confirmDeleteModal').modal('hide');
+          function fermerModal() {
+              $('#exampleModalScrollable').modal('hide');
           }
       </script>
 </body>

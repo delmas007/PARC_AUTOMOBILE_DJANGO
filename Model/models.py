@@ -251,7 +251,7 @@ class EtatArrive(models.Model):
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, blank=True, null=True)
     kilometrage_arrive = models.IntegerField()
     niveau_carburant_a = models.IntegerField()
-    date_arrive = models.DateField()
+    date_arrive = models.DateField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if self.date_arrive:

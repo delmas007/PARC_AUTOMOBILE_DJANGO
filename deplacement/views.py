@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
-from Model.models import Deplacement, Vehicule, Conducteur, Photo, EtatArrive
-from deplacement.forms import DeplacementForm, deplacementModifierForm
+from Model.models import Deplacement, Photo, EtatArrive
+from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm
 from datetime import date, timedelta
 from django.db.models import Q
 
@@ -100,8 +100,6 @@ def arrivee(request, pk):
 
 def liste_deplacement_arrive(request):
     aujourd_hui = date.today()
-
-    # Utilisez filter() avec la différence de dates dans la requête
     etatarrive = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
         date_arrive__gt=aujourd_hui)
 
@@ -150,4 +148,48 @@ def details_deplacement(request, deplacement_id):
     return render(request, 'deplacement_details.html', {'deplacement': deplacement, 'image': image})
 
 
+def enregistrer_etatArriver(request):
+    if request.method == 'POST':
+        form = EtatArriveForm(request.POST)
+        if form.is_valid():
+            etat_arrive = form.save(commit=False)
+            etat_arrive.utilisateur = request.user
 
+            deplacement_id = form.cleaned_data['deplacement_id']
+            deplacement = Deplacement.objects.get(id=deplacement_id)
+            etat_arrive.deplacement = deplacement
+
+            vehicule = etat_arrive.deplacement.vehicule
+            conducteur = etat_arrive.deplacement.conducteur
+
+            if vehicule:
+                vehicule.disponibilite = True
+                vehicule.save()
+            if conducteur:
+                conducteur.disponibilite = True
+                conducteur.save()
+            etat_arrive.save()
+            images = request.FILES.getlist('images')
+            if len(images) <= 6:
+                for uploaded_file in images:
+                    photo = Photo.objects.create(etat_arrive=etat_arrive, images=uploaded_file)
+            else:
+                form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
+            messages.success(request, 'Déplacement enregistré avec succès !')
+            return redirect('deplacement:liste_deplacement_en_cours')
+        else:
+            print(form.errors)
+    else:
+        form = EtatArriveForm()
+
+    context = {'form': form}
+    return render(request, 'afficher_deplacement_en_cours.html', context)
+
+
+def details_arriver(request, etatarrive_id):
+    etat_arrive = get_object_or_404(EtatArrive, id=etatarrive_id)
+    deplacement_id = etat_arrive.deplacement.id
+    deplacement = get_object_or_404(Deplacement, id=deplacement_id)
+    image = Photo.objects.filter(etat_arrive=etatarrive_id)
+    images = Photo.objects.filter(deplacement=deplacement_id)
+    return render(request, 'arriver_details.html', {'etat_arrive': etat_arrive, 'deplacement': deplacement, 'image': image, 'images': images})
