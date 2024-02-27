@@ -16,7 +16,7 @@ def enregistrer_incident(request):
             images = request.FILES.getlist('images')
             if len(images) <= 6:
                 incident = form.save(commit=False)
-                incident.utilisateurs = request.user
+                #incident.utilisateurs = request.user
                 incident.save()
                 for uploaded_file in images:
                     photo = Photo.objects.create(incident=incident, images=uploaded_file)
