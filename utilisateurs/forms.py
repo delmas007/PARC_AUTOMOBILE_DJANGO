@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 
-from Model.models import Conducteur, Utilisateur
+from Model.models import Conducteur, Utilisateur, Demande_prolongement
 from django import forms
 
 
@@ -22,3 +22,7 @@ class ChangerMotDePasse(SetPasswordForm):
     class Meta:
         model = Utilisateur
         fields = ['new_password1', 'new_password2']
+class DemandeProlongementForm (forms.ModelForm):
+    class Meta:
+        model = Demande_prolongement
+        fields = '__all__'

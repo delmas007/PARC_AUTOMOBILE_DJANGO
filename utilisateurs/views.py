@@ -1,6 +1,8 @@
 from random import sample
 
-from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q, Subquery
 from django.templatetags.static import static
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView
@@ -14,7 +16,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from Model.forms import UserRegistrationForm, ConnexionForm
-from Model.models import Roles, Utilisateur, Vehicule, Photo
+from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement
 from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse
 from utilisateurs.tokens import account_activation_token
 from django.utils.html import strip_tags
@@ -151,11 +153,11 @@ class Connexion_user(LoginView):
         if self.request.user.roles.role == 'CLIENT':
             return reverse('utilisateur:Accueil_user')
         if self.request.user.roles.role == 'CONDUCTEUR':
-            return reverse('utilisateur:Acceuil_conducteur')
+            return reverse('utilisateur:liste_mission')
 
 
 def Acceuil_conducteur(request):
-    return render(request, 'compte_conducteur.html')
+    return render(request, 'ut')
 
 
 def password_reset_request(request):
@@ -229,3 +231,29 @@ def passwordResetConfirm(request, uidb64, token):
 
     messages.error(request, 'Quelque chose a mal tourné, rediriger vers la page d’accueil')
     return redirect("Accueil")
+
+
+@login_required
+def liste_mission(request):
+    # Récupérer l'utilisateur actuellement connecté
+    utilisateur_actif = request.user
+
+    # Récupérer l'ID du conducteur actif à partir de l'utilisateur actif
+    conducteur_actif_id = utilisateur_actif.conducteur_id
+
+    # Récupérer une sous-requête avec les IDs des déplacements ayant un état d'arrivée
+    deplacements_arrives_ids = EtatArrive.objects.values('deplacement_id')
+
+    # Exclure les déplacements avec leurs IDs dans la sous-requête
+    mission_list = Deplacement.objects.exclude(id__in=Subquery(deplacements_arrives_ids)).filter(conducteur_id=conducteur_actif_id)
+
+    paginator = Paginator(mission_list.order_by('date_mise_a_jour'), 5)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        mission_list = paginator.page(page)
+    except EmptyPage:
+        mission_list = paginator.page(paginator.num_pages())
+
+    return render(request, 'compte_conducteur.html', {'mission': mission_list})

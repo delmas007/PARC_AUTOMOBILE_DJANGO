@@ -1,5 +1,5 @@
 from utilisateurs.views import Accueil_user, inscription_user, Connexion_user, Compte, vehicule_details, list_vehicule, \
-    Acceuil_conducteur, activate, password_reset_request
+    Acceuil_conducteur, activate, password_reset_request, passwordResetConfirm, liste_mission
 from django.urls import path
 
 app_name = 'utilisateur'
@@ -15,4 +15,6 @@ urlpatterns = [
     path('activate/<uidb64>/<token>', activate, name='activate'),
     path("password_reset", password_reset_request, name="password_reset"),
     path('reset/<uidb64>/<token>', passwordResetConfirm, name='réinitialisation'),
+    path('liste_mission/', liste_mission, name='liste_mission'),
+
 ]
