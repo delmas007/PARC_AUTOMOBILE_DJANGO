@@ -22,7 +22,7 @@ class Connexion(LoginView):
 
 class Deconnexion(LogoutView):
     def get_success_url(self):
-        return reverse('utilisateur:Accueil_user')
+        return reverse('utilisateur:connexion_user')
 
 
 

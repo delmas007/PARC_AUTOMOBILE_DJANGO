@@ -12,7 +12,6 @@
             font-size: 16px;
 
         }
-
         .container {
             margin-top: 50px;
             width: 80%;
@@ -95,63 +94,7 @@
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td><strong>MARQUE :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.marque }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>NUMÉRO DE LA CARTE GRISE :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.carte_grise }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>COULEUR :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.couleur }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>NUMÉRO D'IMMATRICULATION :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.numero_immatriculation }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>DATE DE MISE EN SERVICE :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.date_mise_circulation }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>TYPE DE CARBURANT :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.energie }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>KILOMÉTRAGE :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.kilometrage }} Km/h</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>TYPE COMMERCIAL :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.type_commercial }} Km/h</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Numero du VIN/Chassis :</strong></td>
-                                            <td class="center-text">{{ incident.vehicule.numero_chassis }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>DATE DE VIDENGE :</strong></td>
-                                            <td class="text-center">{{ incident.vehicule.date_videnge }}</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><strong>DATE D'EXPIRATION ASSURANCE :</strong></td>
-                                            <td class="text-center">{{ incident.vehicule.date_expiration_assurance }}</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><strong>PLACES ASSISE :</strong></td>
-                                            <td class="text-center">{{ incident.vehicule.place_assises }}</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><strong>CARROSSERIE :</strong></td>
-                                            <td class="text-center">{% if incident.vehicule.carrosserie  %} {{ incident.vehicule.carrosserie }} {% else %} AUCUN {% endif %}</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><strong>GESTIONNAIRE :</strong></td>
+                                            <td><strong>GESTIONNAIRE:</strong></td>
                                             <td class="text-center">{% if incident.vehicule.utilisateur  %} {{ incident.vehicule.utilisateur }} {% else %} AUCUN {% endif %}</td>
                                         </tr>
 
@@ -161,21 +104,8 @@
                                         </tr>
                                         </tbody>
                                     </table>
-
                                     <div class="imageContent"  style="align-items: center; text-align: center;">
-                                        <div style="margin-bottom: 25px">
-                                        <td>
-                                        <label style="display: block; text-align: center;">LA CARTE GRISE</label>
-                                            {% if incident.vehicule.image_recto  %}
-                                                <img src="{{ incident.vehicule.image_recto.url}}" alt="profile-img" class="vehicule-image" onclick="showImagePopup('{{ incident.vehicule.image_recto.url}}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
-                                        {% endif  %}
-                                     {% if incident.vehicule.image_verso  %}
-                                         <img src="{{ incident.vehicule.image_verso.url}}" alt="profile-img" class="vehicule-image" onclick="showImagePopup1('{{ incident.vehicule.image_verso.url}}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
-                                        {% endif  %}
-                                     </td>
-                                        </div>
                                      <div>  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DES INCIDENTS SUR VEHICULE </label></div>
-
 
                                         {% for image in image %}
                                             <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">

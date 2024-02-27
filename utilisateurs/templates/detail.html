@@ -6,6 +6,20 @@
 <!-- Nav Bar Start -->
 
 {% include 'nav-bar.html' %}
+<style>
+    .product-slider-single img{
+        width: 250px; /* Changer la taille en fonction de vos besoins */
+        height: 300px; /* Changer la taille en fonction de vos besoins */
+        object-fit: cover; /* Pour conserver le ratio de l'image */
+    }
+    .product-slider-single-nav img {
+        width: 80px; /* Changer la taille en fonction de vos besoins */
+        height: 70px; /* Changer la taille en fonction de vos besoins */
+        object-fit: cover; /* Pour conserver le ratio de l'image */
+    }
+
+</style>
+
         
         <!-- Product Detail Start -->
         <div class="product-detail">
@@ -29,7 +43,7 @@
                                 </div>
                                 <div class="col-md-7">
                                     <div class="product-content">
-                                        <div class="title"><h2>Product Name</h2></div>
+                                        <div class="title"><h2>{{ vehicule.type_commercial.marque }} {{ vehicule.type_commercial.modele }}</h2></div>
                                         <div class="ratting">
                                             <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>
@@ -91,10 +105,12 @@
 
                                 <div class="tab-content">
                                     <div id="description" class="container tab-pane active">
-                                        <h4>Product description</h4>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In condimentum quam ac mi viverra dictum. In efficitur ipsum diam, at dignissim lorem tempor in. Vivamus tempor hendrerit finibus. Nulla tristique viverra nisl, sit amet bibendum ante suscipit non. Praesent in faucibus tellus, sed gravida lacus. Vivamus eu diam eros. Aliquam et sapien eget arcu rhoncus scelerisque. Suspendisse sit amet neque neque. Praesent suscipit et magna eu iaculis. Donec arcu libero, commodo ac est a, malesuada finibus dolor. Aenean in ex eu velit semper fermentum. In leo dui, aliquet sit amet eleifend sit amet, varius in turpis. Maecenas fermentum ut ligula at consectetur. Nullam et tortor leo. 
-                                        </p>
+                                        <h4>Description voiture</h4>
+                                        <ul>
+                                            <li>couleur = {{ vehicule.couleur }}</li>
+                                            <li>carrosserie = {{ vehicule.carrosserie }}</li>
+                                            <li>place assises ={{ vehicule.place_assises }}</li>
+                                        </ul>
                                     </div>
                                     <div id="specification" class="container tab-pane fade">
                                         <h4>Product specification</h4>
