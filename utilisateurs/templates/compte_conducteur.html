@@ -116,8 +116,13 @@
                                                 <tr>
                                                     <td>{{ prolong.duree }}</td>
                                                     <td>{{ prolong.motif }}</td>
-                                                    <td>
-                                                        <span class="btn mb-3 btn-danger" style="background-color: #0cd2e3; color: white; border: 0">En cours... </span>
+                                                    <td>{% if prolong.accepter %}
+                                                        <span class="btn mb-3 " style="background-color: #28a745; color: white; border: 0">Acceptée</span>
+                                                        {% elif prolong.refuser %}
+                                                        <span class="btn mb-3 " style="background-color: #dc3545; color: white; border: 0">Demande refusée </span>
+                                                        {% else %}
+                                                        <span class="btn mb-3" style="background-color: #0cd2e3; color: white; border: 0">En cours... </span>
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                             {% endfor %}
