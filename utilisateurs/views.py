@@ -247,7 +247,7 @@ def liste_mission(request):
     # Exclure les déplacements avec leurs IDs dans la sous-requête
     mission_list = Deplacement.objects.exclude(id__in=Subquery(deplacements_arrives_ids)).filter(conducteur_id=conducteur_actif_id)
 
-    paginator = Paginator(mission_list.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(mission_list.order_by('date_depart'), 5)
     try:
         page = request.GET.get("page")
         if not page:

@@ -131,13 +131,13 @@
                           <div class="form-group row">
                               <label class="control-label col-sm-2 align-self-center mb-0" for="niveau_carburant_a">Niveau de carburant:</label>
                               <div class="col-sm-10">
-                                  <input type="number" class="form-control" id="niveau_carburant_a" name="niveau_carburant_a">
+                                  <input type="number" min="1" class="form-control" id="niveau_carburant_a" name="niveau_carburant_a">
                               </div>
                           </div>
                           <div class="form-group row">
                               <label class="control-label col-sm-2 align-self-center mb-0" for="kilometrage_arrive">Kilometrage:</label>
                               <div class="col-sm-10">
-                                  <input type="number" class="form-control" id="kilometrage_arrive" name="kilometrage_arrive">
+                                  <input type="number" min="0" class="form-control" id="kilometrage_arrive" name="kilometrage_arrive">
                               </div>
                           </div>
                           <div class="form-group col-md-12">
@@ -150,14 +150,13 @@
                               {% endif %}
 
                           </div>
-                          <div class="form-group">
-                              <button type="submit" class="btn btn-primary" onclick="fermerModal()">Enregistrer</button>
-                          </div>
-                      </form>
-                  </div>
-                  <div class="modal-footer">
+                           <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary" onclick="fermerModal()">Enregistrer</button>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fermerModal()">Fermer</button>
                   </div>
+                      </form>
+                  </div>
+
               </div>
           </div>
       </div>

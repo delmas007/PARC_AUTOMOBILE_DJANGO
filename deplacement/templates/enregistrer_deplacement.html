@@ -46,7 +46,7 @@
                                <div class="form-group row">
                                    <label class="control-label col-sm-2 align-self-center mb-0" for="email">Date de depart:</label>
                                    <div class="col-sm-10">
-                                       <input type="date" class="form-control" id="exampleInputdate"  name="date_depart">
+                                       <input type="date" class="form-control" id="exampleInputdate"  name="date_depart" >
                                    </div>
                                </div>
                                <div class="form-group row">
@@ -58,13 +58,13 @@
                                <div class="form-group row">
                                    <label class="control-label col-sm-2 align-self-center mb-0" for="email">Niveau de carburant:</label>
                                    <div class="col-sm-10">
-                                       <input type="number" class="form-control" id="exampleInputdate"  name="niveau_carburant">
+                                       <input type="number" min="1" class="form-control" id="exampleInputdate"  name="niveau_carburant">
                                    </div>
                                </div>
                                <div class="form-group row">
                                    <label class="control-label col-sm-2 align-self-center mb-0" for="email">Kilométrage:</label>
                                    <div class="col-sm-10">
-                                       <input type="number" class="form-control" id="exampleInputdate"  name="kilometrage_depart">
+                                       <input type="number" min="0" class="form-control" id="exampleInputdate"  name="kilometrage_depart">
                                    </div>
                                </div>
                            <div class="form-group row">
@@ -197,5 +197,17 @@
               });
           });
       </script>
+   <script>
+    // Récupérer la date actuelle
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January est 0 !
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+
+    // Affecter la date actuelle comme date minimale
+    document.getElementById("exampleInputdate").min = today;
+</script>
    </body>
 {% endblock %}
