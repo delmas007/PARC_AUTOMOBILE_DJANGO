@@ -142,23 +142,6 @@ class Vehicule(models.Model):
 
     class Meta:
         ordering = ['date_mise_a_jour']
-    # def save(self, *args, **kwargs):
-    #     request = kwargs.pop('request', None)  # Récupère l'objet request s'il existe
-    #     self.utilisateur = request.user if request else None  # Assigne l'utilisateur connecté ou None
-    #     super().save(*args, **kwargs)
-
-
-class Demande_prolongement(models.Model):
-    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
-    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
-    duree = models.CharField(max_length=250, )
-    motif = models.CharField(max_length=250, )
-    en_cours = models.BooleanField(default=True)
-    accepter = models.BooleanField(default=False)
-    refuser = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.conducteur.nom} {self.conducteur.prenom}"
 
 
 class Deplacement(models.Model):
@@ -166,7 +149,6 @@ class Deplacement(models.Model):
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True, null=True)
-    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL, blank=True, null=True, )
     date_depart = models.DateField(blank=True, null=True)
     niveau_carburant = models.IntegerField()
     duree_deplacement = models.CharField(max_length=250, )
@@ -192,7 +174,6 @@ class Demande_location(models.Model):
 class Location(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
-    demande_prolongement = models.ForeignKey(Demande_prolongement, on_delete=models.SET_NULL, null=True)
     demande_location = models.ForeignKey(Demande_location, on_delete=models.SET_NULL, null=True)
     date_depart = models.DateTimeField()
     niveau_carburant = models.IntegerField()
@@ -211,6 +192,21 @@ class Location(models.Model):
 
     class Meta:
         ordering = ['date_mise_a_jour']
+
+
+class Demande_prolongement(models.Model):
+    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
+    conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
+    duree = models.CharField(max_length=250, )
+    motif = models.CharField(max_length=250, )
+    en_cours = models.BooleanField(default=True)
+    accepter = models.BooleanField(default=False)
+    refuser = models.BooleanField(default=False)
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True, )
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"{self.conducteur.nom} {self.conducteur.prenom}"
 
 
 class Carburant(models.Model):

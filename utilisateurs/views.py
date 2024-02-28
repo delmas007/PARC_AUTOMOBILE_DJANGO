@@ -1,3 +1,4 @@
+from datetime import date
 from random import sample
 
 from django.contrib.auth.decorators import login_required
@@ -235,6 +236,8 @@ def passwordResetConfirm(request, uidb64, token):
 
 @login_required
 def liste_mission(request):
+    prolongementd=Demande_prolongement.objects.all()
+    date_aujourdui=date.today()
     # Récupérer l'utilisateur actuellement connecté
     utilisateur_actif = request.user
 
@@ -257,7 +260,7 @@ def liste_mission(request):
     except EmptyPage:
         mission_list = paginator.page(paginator.num_pages())
 
-    return render(request, 'compte_conducteur.html', {'mission': mission_list})
+    return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui,'prolongement':prolongementd})
 
 
 def prolongement(request):
@@ -270,7 +273,11 @@ def prolongement(request):
                 utilisateur_actif = request.user
                 conducteur_actif_id = utilisateur_actif.conducteur_id
                 demande_prolongement.conducteur_id = conducteur_actif_id
+                deplacement_id = form.cleaned_data['deplacement_id']
+                deplacement = Deplacement.objects.get(id=deplacement_id)
+                demande_prolongement.deplacement = deplacement
                 demande_prolongement.save()
+
                 for uploaded_file in images:
                     photo = Photo.objects.create(demande_prolongement=demande_prolongement, images=uploaded_file)
 

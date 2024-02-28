@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
-from Model.models import Deplacement, Photo, EtatArrive
+from Model.models import Deplacement, Photo, EtatArrive, Demande_prolongement
 from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm
 from datetime import date, timedelta
 from django.db.models import Q

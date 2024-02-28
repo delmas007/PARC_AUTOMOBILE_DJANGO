@@ -35,7 +35,9 @@ class MultipleFileInput(Input):
 
 
 class DemandeProlongementForm(forms.ModelForm):
+    deplacement_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = Demande_prolongement
-        fields = ['motif', 'duree']
+        fields = ['motif', 'duree', 'deplacement']
         images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
