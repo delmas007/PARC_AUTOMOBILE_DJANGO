@@ -39,7 +39,7 @@ def tous_les_conducteurs(request):
     conducteurs = Conducteur.objects.all().order_by('date_mise_a_jour')
     utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
 
-    paginator = Paginator(utilisateurs, 4)
+    paginator = Paginator(utilisateurs, 3)
     try:
         page = request.GET.get("page")
         if not page:

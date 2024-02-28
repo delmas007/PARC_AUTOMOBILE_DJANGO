@@ -23,7 +23,7 @@
                   <div class="iq-card">
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
-                           <h4 class="card-title">Liste des tous les deplacements</h4>
+                           <h4 class="card-title">Liste de tous les déplacements</h4>
                         </div>
                      </div>
                      <div class="iq-card-body">
@@ -58,33 +58,53 @@
                                      </td>
                                      </tr>
                                 {% endfor %}
-                                 <tr>
-                                     <td colspan="10">Aucun service disponible</td>
-                                 </tr>
+{#                                 <tr>#}
+{#                                     <td colspan="10">Aucun service disponible</td>#}
+{#                                 </tr>#}
                              {% endif %}
                              </tbody>
                            </table>
                         </div>
-                           <div class="row justify-content-between mt-3">
-                              <div id="user-list-page-info" class="col-md-6">
-                                 <span>Showing 1 to 5 of 5 entries</span>
-                              </div>
-                              <div class="col-md-6">
-                                 <nav aria-label="Page navigation example">
+                        <!-- Affichage de la pagination -->
+                             <div class="row justify-content-between mt-3">
+                            <div id="user-list-page-info" class="col-md-6">
+                                <span>Affichage de {{ deplacements.start_index }} à {{ deplacements.end_index }} sur {{ deplacements.paginator.count }} entrées</span>
+                            </div>
+                            <div class="col-md-6">
+                                <nav aria-label="Page navigation example">
                                     <ul class="pagination justify-content-end mb-0">
-                                       <li class="page-item disabled">
-                                          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                       </li>
-                                       <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                       <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                       <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                       <li class="page-item">
-                                          <a class="page-link" href="#">Next</a>
-                                       </li>
+                                        {% if deplacements.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ deplacements.previous_page_number }}">Précédent</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Précédent</span>
+                                            </li>
+                                        {% endif %}
+
+                                        {% for num in deplacements.paginator.page_range %}
+                                            {% if num == deplacements.number %}
+                                                <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if deplacements.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ deplacements.next_page_number }}">Suivant</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Suivant</span>
+                                            </li>
+                                        {% endif %}
                                     </ul>
-                                 </nav>
-                              </div>
-                           </div>
+                                </nav>
+                            </div>
+                        </div>
+
                      </div>
                   </div>
             </div>

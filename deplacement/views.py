@@ -14,7 +14,7 @@ def enregistrer_deplacement(request):
         if form.is_valid():
 
             deplacement = form.save(commit=False)
-            deplacement.utilisateur = request.user
+            # deplacement.utilisateur = request.user
 
             # Obtenez l'instance du véhicule associé à ce déplacement (hypothétique)
             vehicule = deplacement.vehicule
@@ -52,7 +52,7 @@ def liste_deplacement(request):
     aujourd_hui = date.today()
     deplacement = Deplacement.objects.filter(Q(date_depart__gt=aujourd_hui))
 
-    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
+    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 4)
     try:
         page = request.GET.get("page")
         if not page:
@@ -78,7 +78,7 @@ def liste_deplacement_en_cours(request):
     deplacement = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
 
-    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 3)
+    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
     try:
         page = request.GET.get("page")
         if not page:
@@ -103,7 +103,7 @@ def liste_deplacement_arrive(request):
     etatarrive = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
         date_arrive__gt=aujourd_hui)
 
-    paginator = Paginator(etatarrive.order_by('date_mise_a_jour'), 3)
+    paginator = Paginator(etatarrive.order_by('date_mise_a_jour'), 5)
     try:
         page = request.GET.get("page")
         if not page:

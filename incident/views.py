@@ -1,3 +1,5 @@
+from datetime import timedelta, date
+
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -36,7 +38,13 @@ def liste_incidents_externe(request):
 
 
 def liste_incidents_interne(request):
-    incidents_list = Incident.objects.all().order_by('vehicule__incident')
+    aujourd_hui = date.today()
+
+    # Calculer la date d'une semaine avant la date actuelle
+    une_semaine_avant = aujourd_hui - timedelta(days=7)
+
+    # Filtrer les incidents pour obtenir ceux qui ont été mis à jour au cours de la semaine précédente
+    incidents_list = Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant)
     incidents = {}
     for item_incident in incidents_list:
         latest_photo = get_latest_photo(item_incident)

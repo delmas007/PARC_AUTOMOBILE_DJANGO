@@ -75,7 +75,7 @@
                                            {% for utilisateur in utilisateurs %}
                                            <tr>
                                                <td> {% if utilisateur.conducteur.image  %}
-                                                   <img src="{{ utilisateur.conducteur.image.url}}" alt="profile-img" class="avatar-130 img-fluid conducteur-image">
+                                                   <img src="{{ utilisateur.conducteur.image.url}}" alt="profile-img" class="avatar-130 img-fluid conducteur-image"style="width: 80%;height: 80px">
                                                    {% else  %}
                                                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
