@@ -80,6 +80,7 @@
                                             <label for="date_expiration_assurance" class="font-weight-bold">Date d'expiration assurance :</label>
                                             <input type="date" class="form-control" id="date_expiration_assurance" placeholder="Date expiration assurance" name="date_expiration_assurance" value="{% if form.date_expiration_assurance.value %}{{ form.date_expiration_assurance.value }}{% endif %}">
                                         </div>
+
                                         <div class="form-group col-md-12">
                                             <label for="images" class="font-weight-bold">Sélectionner l'image recto de la carte grise :</label>
                                             <div class="form-control h-auto" style="border-radius: 10px">
@@ -475,6 +476,30 @@
 });
 
 </script>
+   <script>
+       // Get today's date
+       var today = new Date();
+       var dd = String(today.getDate()).padStart(2, '0');
+       var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+       var yyyy = today.getFullYear();
+
+       today = yyyy + '-' + mm + '-' + dd;
+
+       // Set the minimum date for date_expiration_assurance input
+       document.getElementById("date_expiration_assurance").min = today;
+   </script>
+   <script>
+       // Get today's date
+       var today = new Date();
+       var dd = String(today.getDate()).padStart(2, '0');
+       var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+       var yyyy = today.getFullYear();
+
+       today = yyyy + '-' + mm + '-' + dd;
+
+       // Set the minimum date for date_expiration_assurance input
+       document.getElementById("date_videnge").min = today;
+   </script>
 
 
 
