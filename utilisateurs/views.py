@@ -1,7 +1,7 @@
 from random import sample
 
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, Subquery
 from django.templatetags.static import static
 from django.contrib.auth import get_user_model
@@ -16,8 +16,8 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from Model.forms import UserRegistrationForm, ConnexionForm
-from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement
-from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse
+from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement
+from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse, DemandeProlongementForm
 from utilisateurs.tokens import account_activation_token
 from django.utils.html import strip_tags
 
@@ -245,9 +245,10 @@ def liste_mission(request):
     deplacements_arrives_ids = EtatArrive.objects.values('deplacement_id')
 
     # Exclure les déplacements avec leurs IDs dans la sous-requête
-    mission_list = Deplacement.objects.exclude(id__in=Subquery(deplacements_arrives_ids)).filter(conducteur_id=conducteur_actif_id)
+    mission_list = Deplacement.objects.exclude(id__in=Subquery(deplacements_arrives_ids)).filter(
+        conducteur_id=conducteur_actif_id)
 
-    paginator = Paginator(mission_list.order_by('date_depart'), 5)
+    paginator = Paginator(mission_list.order_by('date_depart'), 3)
     try:
         page = request.GET.get("page")
         if not page:
@@ -257,3 +258,47 @@ def liste_mission(request):
         mission_list = paginator.page(paginator.num_pages())
 
     return render(request, 'compte_conducteur.html', {'mission': mission_list})
+
+
+def prolongement(request):
+    if request.method == 'POST':
+        form = DemandeProlongementForm(request.POST, request.FILES)
+        if form.is_valid():
+            images = request.FILES.getlist('images')
+            if len(images) <= 6:
+                demande_prolongement = form.save(commit=False)
+                utilisateur_actif = request.user
+                conducteur_actif_id = utilisateur_actif.conducteur_id
+                demande_prolongement.conducteur_id = conducteur_actif_id
+                demande_prolongement.save()
+                for uploaded_file in images:
+                    photo = Photo.objects.create(demande_prolongement=demande_prolongement, images=uploaded_file)
+
+                messages.success(request, 'Le véhicule a été ajouté avec succès.')
+                return redirect('utilisateur:liste_mission')
+            else:
+                form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
+        else:
+            print(form.errors)
+    else:
+        form = DemandeProlongementForm()
+    return render(request, 'compte_conducteur.html', {'form': form})
+
+
+@login_required
+def liste_demandes(request):
+    utilisateur_actif = request.user
+    conducteur_actif = utilisateur_actif.conducteur_id
+    demande_list = Demande_prolongement.objects.filter(conducteur_id=conducteur_actif)
+    paginator = Paginator(demande_list.order_by('date_mise_a_jour'), 3)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        demande_list = paginator.page(page)
+    except EmptyPage:
+        demande_list = paginator.page(paginator.num_pages())
+
+        print(demande_list)
+
+    return render(request, 'compte_conducteur.html', {'demande': demande_list})

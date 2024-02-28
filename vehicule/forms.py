@@ -47,12 +47,10 @@ class VehiculeForm(forms.ModelForm):
         model = Vehicule
         exclude = ['disponibilite']
 
-
     marque = forms.ModelChoiceField(queryset=Marque.objects.all(), required=True)
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
     energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
     type_commercial = forms.ModelChoiceField(queryset=Type_Commerciale.objects.all(), required=True)
-
 
     def __init__(self, *args, **kwargs):
         super(VehiculeForm, self).__init__(*args, **kwargs)
@@ -204,5 +202,3 @@ class typeForm(forms.ModelForm):
             'id': "typecommercial",
             'required': True,
         })
-
-
