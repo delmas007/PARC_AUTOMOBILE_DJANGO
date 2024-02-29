@@ -1,14 +1,40 @@
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
-from Model.models import Deplacement, Photo, EtatArrive, Demande_prolongement
+
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
+
+from Model.models import Deplacement, Photo, EtatArrive, Demande_prolongement, Conducteur, Vehicule
 from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm
 from datetime import date, timedelta
-from django.db.models import Q
+from django.db.models import Q, Exists, OuterRef
 
 
 def enregistrer_deplacement(request):
+    conducteurs = Conducteur.objects.all()
+    vehicules = Vehicule.objects.all()
+    date_aujourdhui = date.today()
+    etatarrives=EtatArrive.objects.all()
+    for conducteur in conducteurs:
+        deplacements = Deplacement.objects.filter(conducteur=conducteur)
+        for deplacement in deplacements:
+            if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(deplacement=deplacement).exists():
+
+
+                conducteur.disponibilite = False
+                conducteur.save()
+    for vehicule in vehicules:
+        deplacements = Deplacement.objects.filter(vehicule=vehicule)
+        for deplacement in deplacements:
+            if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(deplacement=deplacement).exists():
+
+
+                vehicule.disponibilite = False
+                vehicule.save()
+
     if request.method == 'POST':
         form = DeplacementForm(request.POST)
         if form.is_valid():
@@ -22,15 +48,7 @@ def enregistrer_deplacement(request):
             # Obtenez l'instance du conducteur associé à ce déplacement (hypothétique)
             conducteur = deplacement.conducteur
 
-            # Mettez à jour la disponibilité du véhicule
-            if vehicule:
-                vehicule.disponibilite = False
-                vehicule.save()
 
-            # Mettez à jour l'aptitude du conducteur à avoir un véhicule
-            if conducteur:
-                conducteur.disponibilite = False
-                conducteur.save()
 
             deplacement.save()
             images = request.FILES.getlist('images')
@@ -193,3 +211,29 @@ def details_arriver(request, etatarrive_id):
     image = Photo.objects.filter(etat_arrive=etatarrive_id)
     images = Photo.objects.filter(deplacement=deplacement_id)
     return render(request, 'arriver_details.html', {'etat_arrive': etat_arrive, 'deplacement': deplacement, 'image': image, 'images': images})
+
+
+@require_GET
+def get_deplacements_data(request):
+    conducteur_id = request.GET.get('conducteur_id')
+    # Vérifier si l'identifiant du conducteur est fourni
+    if conducteur_id is not None:
+        # Filtrer les déplacements pour ceux ayant l'ID du conducteur spécifié
+        deplacements = Deplacement.objects.filter(conducteur_id=conducteur_id).annotate(
+            has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
+        ).filter(has_etat_arrive=False)
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for deplacement in deplacements]
+        return JsonResponse({'deplacements': data})
+    else:
+        return JsonResponse({'error': 'Identifiant du conducteur non spécifié'}, status=400)
+
+
+@require_GET
+def get_deplacements_data2(request):
+    vehicule_id = request.GET.get('vehicule_id')
+    if vehicule_id is not None:
+        deplacements = Deplacement.objects.filter(vehicule_id=vehicule_id)
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for deplacement in deplacements]
+        return JsonResponse({'deplacements': data})
+    else:
+        return JsonResponse({'error': 'Identifiant du véhicule non spécifié'}, status=400)
