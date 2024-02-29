@@ -69,7 +69,7 @@
                                     <table style="left: auto; right: auto; padding: 20px">
                                         <thead style="height: 100px; text-align: center; font-size: 30px">
                                         <tr>
-                                            <th colspan="5">Informations du conducteur {{ utilisateur.nom }} {{ utilisateur.prenom}} <img src="{{ conducteur.image.url}}" alt="profile-img" class="avatar-130 img-fluid conducteur-image"></th>
+                                            <th colspan="5">Informations du conducteur {{ utilisateur.nom }} {{ utilisateur.prenom}} {% if conducteur.image%} <img src="{{ conducteur.image.url}}" alt="profile-img" class="avatar-130 img-fluid conducteur-image"> {% endif %}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
