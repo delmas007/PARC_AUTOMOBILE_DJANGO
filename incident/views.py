@@ -1,5 +1,6 @@
 from datetime import timedelta, date
 
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -10,7 +11,7 @@ from django.contrib import messages
 
 # Create your views here.
 
-
+@login_required(login_url='Connexion')
 def enregistrer_incident(request):
     if request.method == 'POST':
         form = IncidentFormGestionnaire(request.POST, request.FILES)
@@ -18,7 +19,7 @@ def enregistrer_incident(request):
             images = request.FILES.getlist('images')
             if len(images) <= 6:
                 incident = form.save(commit=False)
-                #incident.utilisateurs = request.user
+                incident.utilisateurs = request.user
                 incident.save()
                 for uploaded_file in images:
                     photo = Photo.objects.create(incident=incident, images=uploaded_file)
@@ -33,10 +34,12 @@ def enregistrer_incident(request):
     return render(request, 'Enregistrer_incident.html', locals())
 
 
+@login_required(login_url='Connexion')
 def liste_incidents_externe(request):
     return render(request, 'Liste_incidents_externe.html')
 
 
+@login_required(login_url='Connexion')
 def liste_incidents_interne(request):
     aujourd_hui = date.today()
 
@@ -63,10 +66,12 @@ def liste_incidents_interne(request):
     return render(request, 'Liste_incidents_interne.html', {'incidents': incidents_page, 'paginator': paginator})
 
 
+@login_required(login_url='Connexion')
 def get_latest_photo(incident):
     return Photo.objects.filter(incident=incident).order_by('-id').first()
 
 
+@login_required(login_url='Connexion')
 def incidents_search(request):
     form = IncidentSearchForm(request.GET)
     incidents_list = Incident.objects.all()
@@ -99,12 +104,14 @@ def incidents_search(request):
     return render(request, 'Liste_incidents_interne.html', context)
 
 
+@login_required(login_url='Connexion')
 def incident_interne_detail(request, pk):
     incident = get_object_or_404(Incident, id=pk)
     image = Photo.objects.filter(incident=incident)
     return render(request, 'incident_interne_details.html', {'incident': incident, 'image': image})
 
 
+@login_required(login_url='Connexion')
 def modifier_incident_interne(request, pk):
     incident = get_object_or_404(Incident, pk=pk)
     photos = Photo.objects.filter(incident=incident)
