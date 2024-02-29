@@ -5,6 +5,22 @@ from django import forms
 
 
 class ConnexionForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(ConnexionForm, self).__init__(*args, **kwargs)
+
+        self.fields['username'].error_messages = {
+            'required': "Veuillez saisir un Nom d'utilisateur valide !!"
+        }
+        self.fields['password'].error_messages = {
+            'required': "Veuillez saisir un mot de passe valide !!"
+        }
+        self.error_messages = {
+            "invalid_login":
+                "Veuillez S'il vous plait saisir vos informations correctes que lorsque vous avez créé votre compte."
+                " Notez que vous devez respecter les majuscules ou les minuscules !!"            ,
+            "inactive": "Ce compte est inactif veuillez contacter votre administrateur."
+        }
+
     class Meta:
         model = Utilisateur
         fields = 'username', 'password'

@@ -25,4 +25,6 @@ class Deconnexion(LogoutView):
         return reverse('utilisateur:connexion_user')
 
 
-
+class Deconnexion2(LogoutView):
+    def get_success_url(self):
+        return reverse('Connexion')
