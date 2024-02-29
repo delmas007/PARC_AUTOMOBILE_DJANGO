@@ -1,7 +1,7 @@
 {% load static %}
 <div class="iq-sidebar">
     <div class="iq-sidebar-logo d-flex justify-content-between">
-        <a href="index.html">
+        <a href="{% url 'Accueil' %}">
             <div class="iq-light-logo">
                 <div class="iq-light-logo">
                     <img src="images/logo.gif" class="img-fluid" alt="">
@@ -42,7 +42,7 @@
             <ul id="iq-sidebar-toggle" class="iq-menu">
                 <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Home</span></li>
                 <li >
-                    <a href="index.html" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></a>
+                    <a href="{% url 'Accueil' %}" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></a>
                 </li>
                 <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Apps</span></li>
                 <li class="{% if request.path == vehicule_Ajouter_vehicule_url or request.path == vehicule_liste_vehicules_url %}active{% endif %}">
@@ -70,7 +70,7 @@
                 </li>
 
              <li class="{% if request.path == enregistrer_incident_url or request.path == liste_incident_externe_url   or request.path == liste_incident_interne_url  %}active{% endif %}">
-                    <a href="#incidents" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-alert-line"></i><span>Incidents</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <a href="#incidents" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-alert-line" style="font-size: 27px"></i><span>Incidents</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="incidents" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == enregistrer_incident_url %}active{% endif %}" ><a href="{% url 'incident:enregistrer_incident' %}"><i class="ri-profile-line"></i>Enregistrer</a></li>
                         <li class="{% if request.path == liste_incident_interne_url %}active{% endif %}" ><a href="{% url 'incident:liste_incidents_interne' %}"><i class="ri-file-edit-line"></i>Liste incidents interne </a></li>
