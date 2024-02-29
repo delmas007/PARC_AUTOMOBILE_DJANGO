@@ -48,7 +48,7 @@
                                          <td>{{ deplacement.kilometrage_depart }} Km/h</td>
                                          <td>{{ deplacement.niveau_carburant }} Litres</td>
                                        <td>
-                                    {% if deplacement.date_depart >= date_aujourdui %}
+                                    {% if deplacement.date_depart <= date_aujourdui %}
                                        {% for prolo in prolongement %}
 
                                             {% if deplacement.id != prolo.deplacement_id %}
