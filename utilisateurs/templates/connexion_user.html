@@ -189,9 +189,10 @@ p {
                     <i class="fab fa-instagram"></i>
                   </div>
                   <p class="alt-text">Créer un compte</p>
-                  <form action="#">
-                    <input type="text" placeholder="Username">
-                    <input type="password" placeholder="Password">
+                  <form method="post">
+                      {% csrf_token %}
+                    <input type="text" placeholder="Username" name="username">
+                    <input type="password" placeholder="Password" name="password">
                     <a href="#" id="forgotpw">Mot de passe oublié? </a><br/>
                     <button>Se connecter</button>
                   </form>
