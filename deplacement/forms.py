@@ -56,7 +56,7 @@ class DeplacementForm(forms.ModelForm):
         model = Deplacement
         exclude = ['demande_prolongement_id']
 
-    images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+    images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=True)
 
 
 class deplacementModifierForm(forms.ModelForm):

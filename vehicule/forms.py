@@ -48,7 +48,7 @@ class VehiculeForm(forms.ModelForm):
         exclude = ['disponibilite']
 
     marque = forms.ModelChoiceField(queryset=Marque.objects.all(), required=True)
-    images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+    images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=True)
     energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
     type_commercial = forms.ModelChoiceField(queryset=Type_Commerciale.objects.all(), required=True)
 
