@@ -93,11 +93,11 @@ def depart(request, pk):
 
 def liste_deplacement_en_cours(request):
     aujourd_hui = date.today()
-    prolongement =Demande_prolongement.objects.all()
+    prolongements = Demande_prolongement.objects.filter(en_cours=True)
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
-    deplacement = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
+    deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
-    deplacement_ids = deplacement.values_list('id', flat=True)
+    deplacement_ids = deplacements.values_list('id', flat=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
     prolongement_arrive =  Demande_prolongement.objects.filter(refuser=True)
     prolongement_accepte =  Demande_prolongement.objects.filter(accepter=True)
@@ -107,7 +107,7 @@ def liste_deplacement_en_cours(request):
     prolongement_arrive_ids=prolongement_arrive.values_list('deplacement_id', flat=True)
     prolongement_accepte_ids=prolongement_accepte.values_list('deplacement_id', flat=True)
 
-    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(deplacements.order_by('date_mise_a_jour'), 5)
     try:
         page = request.GET.get("page")
         if not page:
@@ -117,7 +117,7 @@ def liste_deplacement_en_cours(request):
 
         deplacement = paginator.page(paginator.num_pages())
     return render(request, 'afficher_deplacement_en_cours.html',
-                  {'deplacements': deplacement,'prolongement_encours': prolongement_encours_ids, 'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids})
+                  {'deplacements': deplacement,'prolongement_encours': prolongement_encours_ids, 'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids, 'prolongements': prolongements,})
 
 
 def arrivee(request, pk):
@@ -227,31 +227,12 @@ def details_arriver(request, etatarrive_id):
                   {'etat_arrive': etat_arrive, 'deplacement': deplacement, 'image': image, 'images': images})
 
 
-@require_GET
-def get_deplacements_data(request):
-    conducteur_id = request.GET.get('conducteur_id')
-    # Vérifier si l'identifiant du conducteur est fourni
-    if conducteur_id is not None:
-        # Filtrer les déplacements pour ceux ayant l'ID du conducteur spécifié
-        deplacements = Deplacement.objects.filter(conducteur_id=conducteur_id).annotate(
-            has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
-        ).filter(has_etat_arrive=False)
-        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for deplacement in deplacements]
-        return JsonResponse({'deplacements': data})
-    else:
-        return JsonResponse({'error': 'Identifiant du conducteur non spécifié'}, status=400)
-
-
-@require_GET
-def get_deplacements_data2(request):
-    vehicule_id = request.GET.get('vehicule_id')
-    if vehicule_id is not None:
-        deplacements = Deplacement.objects.filter(vehicule_id=vehicule_id).annotate(
-            has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
-        ).filter(has_etat_arrive=False)
-        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for deplacement in deplacements]
-        return JsonResponse({'deplacements': data})
-    else:
-        return JsonResponse({'error': 'Identifiant du véhicule non spécifié'}, status=400)
+def get_prolongement_info(request, prolongement_id):
+    prolongement = Demande_prolongement.objects.get(id=prolongement_id)
+    data = {
+        'motif': prolongement.motif,
+        'duree': prolongement.duree,
+    }
+    return JsonResponse(data)
 
 

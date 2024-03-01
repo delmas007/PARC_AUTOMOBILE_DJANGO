@@ -54,13 +54,14 @@
                                          <td>{{ deplacement.kilometrage_depart }} Km/h</td>
                                          <td>{{ deplacement.niveau_carburant }} Litres</td>
                                          <td>
-                                                     {% if deplacement.id in  prolongement_encours and deplacement.id  not in  prolongement_arrive and deplacement.id  not in  prolongement_accepte %}
+                                             {% if deplacement.id in prolongement_encours and deplacement.id not in prolongement_arrive and deplacement.id not in prolongement_accepte %}
+                                             <button type="button" class="btn mb-3 btn-info terminer-btn2 prolongement-btn" data-target="#prolongementModal" data-toggle="modal" data-prolongement-id="{{ deplacement.id }}">
+                                                 <i class="ri-shuffle-fill"></i>
+                                                 Prolongement demandé
+                                             </button>
 
-                                                         <button type="button" class="btn mb-3 btn-info terminer-btn2" data-toggle="modal" data-target="#exampleModalScrollable2" data-deplacement-id="{{ deplacement.id }}" {% if prolongement %}data-prolongement-id="{{ prolongement.id }}"{% endif %}>
-                                                             <i class="ri-shuffle-fill"></i>
-                                                             Prolongement demandé
-                                                         </button>
-                                                     {% elif deplacement.id not in  prolongement_encours and deplacement.id  not in  prolongement_arrive or deplacement.id  not in  prolongement_accepte %}
+
+                                             {% elif deplacement.id not in  prolongement_encours and deplacement.id  not in  prolongement_arrive or deplacement.id  not in  prolongement_accepte %}
                                                          <button type="button" class="btn mb-3 btn-success terminer-btn2" data-toggle="modal" data-target="#exampleModalScrollable" data-deplacement-id="{{ deplacement.id }}" {% if prolongement %}data-prolongement-id="{{ prolongement.id }}"{% endif %}>
                                                              <i class="ri-flag-2-fill"></i>
                                                              Terminer
@@ -184,6 +185,28 @@
       </div>
 
 
+      <div class="modal fade" id="prolongementModal" tabindex="-1" role="dialog" aria-labelledby="prolongementModalTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="prolongementModalTitle">Information du prolongement</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      {% for prolongement in prolongements %}
+
+                      <p><strong>Motif:</strong> {{prolongement.motif}}</p>
+                      <p><strong>Durée:</strong>{{prolongement.duree}} </p>
+                      {% endfor %}
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+
       <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
       <script>
           $(document).ready(function() {
@@ -196,6 +219,16 @@
           function fermerModal() {
               $('#exampleModalScrollable').modal('hide');
           }
+      </script>
+      <script>
+          $(document).ready(function () {
+              $('.prolongement-btn').on('click', function () {
+                  var prolongementId = $(this).data('prolongement-id');
+                  // Utilisez prolongementId comme nécessaire pour afficher les informations dans le modal
+                  // Par exemple, vous pouvez mettre à jour le contenu du modal avec jQuery
+                  $('#prolongementModal').modal('show');
+              });
+          });
       </script>
 
 
