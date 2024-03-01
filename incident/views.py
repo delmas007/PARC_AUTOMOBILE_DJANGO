@@ -1,5 +1,4 @@
 from datetime import timedelta, date
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
@@ -66,7 +65,6 @@ def liste_incidents_interne(request):
     return render(request, 'Liste_incidents_interne.html', {'incidents': incidents_page, 'paginator': paginator})
 
 
-@login_required(login_url='Connexion')
 def get_latest_photo(incident):
     return Photo.objects.filter(incident=incident).order_by('-id').first()
 
@@ -128,3 +126,7 @@ def modifier_incident_interne(request, pk):
     else:
         form = IncidentModifierForm(instance=incident)
     return render(request, 'modifier_incident_interne.html', {'form': form, 'incident': incident, 'photos': photos})
+
+
+def handler_404(request, exception):
+    return render(request, '404.html')
