@@ -40,4 +40,4 @@ class DemandeProlongementForm(forms.ModelForm):
     class Meta:
         model = Demande_prolongement
         fields = ['motif', 'duree', 'deplacement']
-        images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+        images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=True)

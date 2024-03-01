@@ -20,4 +20,5 @@ urlpatterns = [
     path('get_deplacements_data/', get_deplacements_data, name='get_deplacements_data'),
     path('get_deplacements_data2/', get_deplacements_data2, name='get_deplacements_data2'),
 
+
 ]

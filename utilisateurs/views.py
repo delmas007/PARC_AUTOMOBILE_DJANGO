@@ -236,7 +236,9 @@ def passwordResetConfirm(request, uidb64, token):
 
 @login_required
 def liste_mission(request):
-    prolongementd=Demande_prolongement.objects.all()
+    prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
+    prolongement_accepter = Demande_prolongement.objects.filter(accepter=True)
+    prolongement_refuse = Demande_prolongement.objects.filter(refuser=True)
     date_aujourdui=date.today()
     # Récupérer l'utilisateur actuellement connecté
     utilisateur_actif = request.user
@@ -244,6 +246,10 @@ def liste_mission(request):
     # Récupérer l'ID du conducteur actif à partir de l'utilisateur actif
     conducteur_actif_id = utilisateur_actif.conducteur_id
 
+    # Récuperation des id de de demande de prolongement dans une liste
+    prolongement_encours_ids = prolongement_encours.values_list('deplacement_id', flat=True)
+    prolongement_accepter_ids = prolongement_accepter.values_list('deplacement_id', flat=True)
+    prolongement_refuse_ids = prolongement_refuse.values_list('deplacement_id', flat=True)
     # Récupérer une sous-requête avec les IDs des déplacements ayant un état d'arrivée
     deplacements_arrives_ids = EtatArrive.objects.values('deplacement_id')
 
@@ -260,7 +266,7 @@ def liste_mission(request):
     except EmptyPage:
         mission_list = paginator.page(paginator.num_pages())
 
-    return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui,'prolongement':prolongementd})
+    return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui, 'prolongement_encours' : prolongement_encours_ids, 'prolongement_accepter': prolongement_accepter_ids,'prolongement_refuse': prolongement_refuse_ids, })
 
 
 def prolongement(request):
@@ -281,10 +287,8 @@ def prolongement(request):
                 for uploaded_file in images:
                     photo = Photo.objects.create(demande_prolongement=demande_prolongement, images=uploaded_file)
 
-                messages.success(request, 'Le véhicule a été ajouté avec succès.')
-                return redirect('utilisateur:liste_mission')
-            else:
-                form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
+                messages.success(request, 'Le prolongement a été ajouté avec succès.')
+            return redirect('utilisateur:liste_mission')
         else:
             print(form.errors)
     else:
