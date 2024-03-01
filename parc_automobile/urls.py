@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-
+from django.conf.urls import handler404
 from Model.views import Connexion
 from parc_automobile import settings
 from parc_automobile.views import Accueil
@@ -34,3 +34,5 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('Conducteur/', include('Conducteur.urls'), name='Conducteur'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = "incident.views.handler_404"

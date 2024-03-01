@@ -16,8 +16,8 @@ class ConnexionForm(AuthenticationForm):
         }
         self.error_messages = {
             "invalid_login":
-                "Veuillez S'il vous plait saisir vos informations correctes que lorsque vous avez créé votre compte."
-                " Notez que vous devez respecter les majuscules ou les minuscules !!"            ,
+                "Veuillez saisir les mêmes informations que lors de la création de votre compte. "
+                "Vous devez respecter les majuscules ou les minuscules !!",
             "inactive": "Ce compte est inactif veuillez contacter votre administrateur."
         }
 
