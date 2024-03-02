@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 
@@ -93,7 +93,7 @@ def depart(request, pk):
 
 def liste_deplacement_en_cours(request):
     aujourd_hui = date.today()
-    prolongements = Demande_prolongement.objects.filter(en_cours=True)
+    prolongement = Demande_prolongement.objects.all()
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
     deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
@@ -101,6 +101,7 @@ def liste_deplacement_en_cours(request):
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
     prolongement_arrive =  Demande_prolongement.objects.filter(refuser=True)
     prolongement_accepte =  Demande_prolongement.objects.filter(accepter=True)
+
 
     #recuperer liste des id de demandes de prolongement
     prolongement_encours_ids=prolongement_encours.values_list('deplacement_id', flat=True)
@@ -117,7 +118,7 @@ def liste_deplacement_en_cours(request):
 
         deplacement = paginator.page(paginator.num_pages())
     return render(request, 'afficher_deplacement_en_cours.html',
-                  {'deplacements': deplacement,'prolongement_encours': prolongement_encours_ids, 'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids, 'prolongements': prolongements,})
+                  {'deplacements': deplacement, 'prolongement_encours': prolongement_encours_ids, 'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids, 'prolongements': prolongement})
 
 
 def arrivee(request, pk):
@@ -226,13 +227,59 @@ def details_arriver(request, etatarrive_id):
     return render(request, 'arriver_details.html',
                   {'etat_arrive': etat_arrive, 'deplacement': deplacement, 'image': image, 'images': images})
 
+@require_GET
+def get_deplacements_data(request):
+    conducteur_id = request.GET.get('conducteur_id')
+    # Vérifier si l'identifiant du conducteur est fourni
+    if conducteur_id is not None:
+        # Filtrer les déplacements pour ceux ayant l'ID du conducteur spécifié
+        deplacements = Deplacement.objects.filter(conducteur_id=conducteur_id).annotate(
+            has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
+        ).filter(has_etat_arrive=False)
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for deplacement in deplacements]
+        return JsonResponse({'deplacements': data})
+    else:
+        return JsonResponse({'error': 'Identifiant du conducteur non spécifié'}, status=400)
 
-def get_prolongement_info(request, prolongement_id):
-    prolongement = Demande_prolongement.objects.get(id=prolongement_id)
-    data = {
-        'motif': prolongement.motif,
-        'duree': prolongement.duree,
-    }
-    return JsonResponse(data)
+
+
+def get_deplacements_data2(request):
+    vehicule_id = request.GET.get('vehicule_id')
+    if vehicule_id is not None:
+        deplacements = Deplacement.objects.filter(vehicule_id=vehicule_id)
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for deplacement in deplacements]
+        return JsonResponse({'deplacements': data})
+    else:
+        return JsonResponse({'error': 'Identifiant du véhicule non spécifié'}, status=400)
+
+
+def get_info_prolongement(request):
+    if request.method == 'GET':
+        id_deplacement = request.GET.get('id_deplacement')
+        try:
+            demande_prolongement = Demande_prolongement.objects.get(deplacement_id=id_deplacement)
+            motif_prolongement = demande_prolongement.motif
+            duree_prolongement = demande_prolongement.duree  # Supposons que "duree" est un champ de votre modèle Demande_prolongement
+            return JsonResponse({'motif': motif_prolongement, 'duree': duree_prolongement})
+        except Demande_prolongement.DoesNotExist:
+            return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'}, status=404)
+    else:
+        return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
+
+def get_photos_demande_prolongement(request):
+    if request.method == 'GET':
+        id_deplacement = request.GET.get('id_deplacement')
+        if id_deplacement is not None:
+            try:
+                demande_prolongement = Demande_prolongement.objects.get(deplacement_id=id_deplacement)
+                photos = Photo.objects.filter(demande_prolongement=demande_prolongement)
+                photo_urls = [photo.images.url for photo in photos]  # Supposons que "images" est le champ contenant les images
+                return JsonResponse({'photos': photo_urls})
+            except Demande_prolongement.DoesNotExist:
+                return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'}, status=404)
+        else:
+            return JsonResponse({'error': 'L\'ID de déplacement est requis dans la requête.'}, status=400)
+    else:
+        return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
 
 
