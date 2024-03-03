@@ -226,10 +226,17 @@
             </div>
             <div class="modal-footer">
 
-                <button id="accepterButton" type="submit" class="btn btn-success mr-auto" data-prolongement-id="{{ deplacement.id }}">  ACCEPTER</button>
+<!--                <button id="accepterButton" type="submit" class="btn btn-success mr-auto" data-prolongement-id="{{ deplacement.id }}">  ACCEPTER</button>-->
 
-                <button id="refuserButton" type="button" class="btn btn-danger" data-prolongement-id="{{ deplacement.id }}">REFUSER</button>
-
+<!--                <button id="refuserButton" type="button" class="btn btn-danger" data-prolongement-id="{{ deplacement.id }}">REFUSER</button>-->
+                <form method="post" action="{% url 'deplacement:Accepter' deplacement.id %}">
+                    {% csrf_token %}
+                    <button type="submit" id="accepterButton" class="btn btn-success mr-auto" >ACCEPTER</button>
+                </form>
+                <form method="post" action="{% url 'deplacement:Refuser' deplacement.id %}">
+                    {% csrf_token %}
+                    <button id="refuserButton" type="submit" class="btn btn-danger" >REFUSER</button>
+                </form>
 
 
             </div>

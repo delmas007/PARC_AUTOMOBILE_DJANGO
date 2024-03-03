@@ -2,7 +2,8 @@ from django.urls import path
 
 from deplacement.views import enregistrer_deplacement, depart, liste_deplacement, liste_deplacement_en_cours, arrivee, \
     liste_deplacement_arrive, modifier_deplacement, details_deplacement, enregistrer_etatArriver, details_arriver, \
-    get_deplacements_data, get_deplacements_data2, get_info_prolongement, get_photos_demande_prolongement
+    get_deplacements_data, get_deplacements_data2, get_info_prolongement, get_photos_demande_prolongement, Accepter, \
+    Refuser
 
 app_name = 'deplacement'
 
@@ -21,5 +22,7 @@ urlpatterns = [
     path('get_photos_demande_prolongement/', get_photos_demande_prolongement, name='get_photos_demande_prolongement'),
     path('get_deplacements_data/', get_deplacements_data, name='get_deplacements_data'),
     path('get_deplacements_data2/', get_deplacements_data2, name='get_deplacements_data2'),
+    path('Accepter/<int:deplacement_id>/', Accepter, name='Accepter'),
+    path('Desactive_employer/<int:deplacement_id>/', Refuser, name='desactive_amp'),
 
 ]

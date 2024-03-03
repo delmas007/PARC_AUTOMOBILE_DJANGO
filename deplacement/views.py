@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
-
+from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
@@ -18,21 +18,17 @@ def enregistrer_deplacement(request):
     conducteurs = Conducteur.objects.all()
     vehicules = Vehicule.objects.all()
     date_aujourdhui = date.today()
-    etatarrives=EtatArrive.objects.all()
+    etatarrives = EtatArrive.objects.all()
     for conducteur in conducteurs:
         deplacements = Deplacement.objects.filter(conducteur=conducteur)
         for deplacement in deplacements:
             if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(deplacement=deplacement).exists():
-
-
                 conducteur.disponibilite = False
                 conducteur.save()
     for vehicule in vehicules:
         deplacements = Deplacement.objects.filter(vehicule=vehicule)
         for deplacement in deplacements:
             if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(deplacement=deplacement).exists():
-
-
                 vehicule.disponibilite = False
                 vehicule.save()
 
@@ -48,8 +44,6 @@ def enregistrer_deplacement(request):
 
             # Obtenez l'instance du conducteur associé à ce déplacement (hypothétique)
             conducteur = deplacement.conducteur
-
-
 
             deplacement.save()
             images = request.FILES.getlist('images')
@@ -99,14 +93,13 @@ def liste_deplacement_en_cours(request):
         Q(id__in=deplacements_etat_arrive_ids))
     deplacement_ids = deplacements.values_list('id', flat=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
-    prolongement_arrive =  Demande_prolongement.objects.filter(refuser=True)
-    prolongement_accepte =  Demande_prolongement.objects.filter(accepter=True)
+    prolongement_arrive = Demande_prolongement.objects.filter(refuser=True)
+    prolongement_accepte = Demande_prolongement.objects.filter(accepter=True)
 
-
-    #recuperer liste des id de demandes de prolongement
-    prolongement_encours_ids=prolongement_encours.values_list('deplacement_id', flat=True)
-    prolongement_arrive_ids=prolongement_arrive.values_list('deplacement_id', flat=True)
-    prolongement_accepte_ids=prolongement_accepte.values_list('deplacement_id', flat=True)
+    # recuperer liste des id de demandes de prolongement
+    prolongement_encours_ids = prolongement_encours.values_list('deplacement_id', flat=True)
+    prolongement_arrive_ids = prolongement_arrive.values_list('deplacement_id', flat=True)
+    prolongement_accepte_ids = prolongement_accepte.values_list('deplacement_id', flat=True)
 
     paginator = Paginator(deplacements.order_by('date_mise_a_jour'), 5)
     try:
@@ -118,7 +111,9 @@ def liste_deplacement_en_cours(request):
 
         deplacement = paginator.page(paginator.num_pages())
     return render(request, 'afficher_deplacement_en_cours.html',
-                  {'deplacements': deplacement, 'prolongement_encours': prolongement_encours_ids, 'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids, 'prolongements': prolongement})
+                  {'deplacements': deplacement, 'prolongement_encours': prolongement_encours_ids,
+                   'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids,
+                   'prolongements': prolongement})
 
 
 def arrivee(request, pk):
@@ -218,6 +213,24 @@ def enregistrer_etatArriver(request):
     return render(request, 'afficher_deplacement_en_cours.html', context)
 
 
+@login_required
+def Accepter(request, deplacement_id):
+    employer = get_object_or_404(Utilisateur, id=employer_id)
+    employer.is_active = True
+    employer.save()
+
+    return redirect('admins:Compte_employer')
+
+
+@login_required
+def Refuser(request, employer_id):
+    employer = get_object_or_404(Utilisateur, id=employer_id)
+    employer.is_active = False
+    employer.save()
+
+    return redirect('admins:Compte_employer')
+
+
 def details_arriver(request, etatarrive_id):
     etat_arrive = get_object_or_404(EtatArrive, id=etatarrive_id)
     deplacement_id = etat_arrive.deplacement.id
@@ -226,6 +239,7 @@ def details_arriver(request, etatarrive_id):
     images = Photo.objects.filter(deplacement=deplacement_id)
     return render(request, 'arriver_details.html',
                   {'etat_arrive': etat_arrive, 'deplacement': deplacement, 'image': image, 'images': images})
+
 
 @require_GET
 def get_deplacements_data(request):
@@ -236,18 +250,19 @@ def get_deplacements_data(request):
         deplacements = Deplacement.objects.filter(conducteur_id=conducteur_id).annotate(
             has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
         ).filter(has_etat_arrive=False)
-        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for deplacement in deplacements]
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for
+                deplacement in deplacements]
         return JsonResponse({'deplacements': data})
     else:
         return JsonResponse({'error': 'Identifiant du conducteur non spécifié'}, status=400)
-
 
 
 def get_deplacements_data2(request):
     vehicule_id = request.GET.get('vehicule_id')
     if vehicule_id is not None:
         deplacements = Deplacement.objects.filter(vehicule_id=vehicule_id)
-        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for deplacement in deplacements]
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for
+                deplacement in deplacements]
         return JsonResponse({'deplacements': data})
     else:
         return JsonResponse({'error': 'Identifiant du véhicule non spécifié'}, status=400)
@@ -262,9 +277,11 @@ def get_info_prolongement(request):
             duree_prolongement = demande_prolongement.duree  # Supposons que "duree" est un champ de votre modèle Demande_prolongement
             return JsonResponse({'motif': motif_prolongement, 'duree': duree_prolongement})
         except Demande_prolongement.DoesNotExist:
-            return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'}, status=404)
+            return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'},
+                                status=404)
     else:
         return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
+
 
 def get_photos_demande_prolongement(request):
     if request.method == 'GET':
@@ -273,13 +290,13 @@ def get_photos_demande_prolongement(request):
             try:
                 demande_prolongement = Demande_prolongement.objects.get(deplacement_id=id_deplacement)
                 photos = Photo.objects.filter(demande_prolongement=demande_prolongement)
-                photo_urls = [photo.images.url for photo in photos]  # Supposons que "images" est le champ contenant les images
+                photo_urls = [photo.images.url for photo in
+                              photos]  # Supposons que "images" est le champ contenant les images
                 return JsonResponse({'photos': photo_urls})
             except Demande_prolongement.DoesNotExist:
-                return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'}, status=404)
+                return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'},
+                                    status=404)
         else:
             return JsonResponse({'error': 'L\'ID de déplacement est requis dans la requête.'}, status=400)
     else:
         return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
-
-
