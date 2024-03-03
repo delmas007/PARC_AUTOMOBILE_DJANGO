@@ -189,13 +189,26 @@ p {
                     <i class="fab fa-instagram"></i>
                   </div>
                   <p class="alt-text">Créer un compte</p>
-                  <form method="post">
+                    <form method="post" name="connexion">
                       {% csrf_token %}
-                    <input type="text" placeholder="Username" name="username">
-                    <input type="password" placeholder="Password" name="password">
+                    <input type="text" placeholder="Username" name="username" id="connexion">
+                    <input type="hidden" placeholder="Username" name="connexion" >
+                    <input type="password" placeholder="Password" name="password" id="password">
                     <a href="#" id="forgotpw">Mot de passe oublié? </a><br/>
                     <button>Se connecter</button>
                   </form>
+<!--                    {% if form.errors %}-->
+<!--                        {% for field, errors in form.errors.items %}-->
+<!--                            {% for error in errors %}-->
+<!--                            <div class="alert alert-danger mt-4" role="alert">-->
+<!--                                <div class="iq-alert-icon">-->
+<!--                                    <i class="ri-information-line"></i>-->
+<!--                                </div>-->
+<!--                                <div class="iq-alert-text"><b>{{ error }}</b></div>-->
+<!--                            </div>-->
+<!--                            {% endfor %}-->
+<!--                    {% endfor %}-->
+<!--                    {% endif %}-->
                 </div>
               </div>
 
@@ -213,19 +226,35 @@ p {
                     <i class="fab fa-instagram"></i>
                   </div>
                   <p class="alt-text">ou utilisez votre email pour vous inscrire </p>
-                  <form action="#">
-                    <input type="text" placeholder="Username">
-                    <input type="email" placeholder="Email">
-                    <input type="password" placeholder="Password"><input type="text" placeholder="Username">
-                    <input type="email" placeholder="Email">
-                    <input type="password" placeholder="Password">
-                    <a href="#" id="forgotpw">Mot de passe oublié?</a><br/>
+                    <form method="post" name="inscription">
+                      {% csrf_token %}
+                    <input type="text" placeholder="Username" name="username">
+                    <input type="hidden" placeholder="Username" name="inscription">
+                    <input type="text" placeholder="Nom" name="nom">
+                    <input type="text" placeholder="Prenom" name="prenom"><input type="email" placeholder="Email" name="email">
+                    <input type="password" placeholder="Mot de passe" name="password1">
+                    <input type="password" placeholder="Confirmez votre mot de passe" name="password2">
+                    <a href="#" id="forgotp">Mot de passe oublié?</a><br/>
                     <button>S'INSCRIRE</button>
                   </form>
+
+
                 </div>
               </div>
         </div>
               </div>
+    {% if form.errors %}
+        {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+            <div class="alert alert-danger mt-4" role="alert">
+                <div class="iq-alert-icon">
+                    <i class="ri-information-line"></i>
+                </div>
+                <div class="iq-alert-text"><b>{{ field }} : {{ error }}</b></div>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
 </div>
 </section>
 

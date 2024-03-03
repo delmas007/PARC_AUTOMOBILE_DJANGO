@@ -1,6 +1,6 @@
 from datetime import date
 from random import sample
-
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, Subquery
@@ -127,34 +127,59 @@ def activateEmail(request, user, to_email):
 def inscription_user(request):
     context = {}
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            client_role = Roles.objects.get(role=Roles.CLIENT)
-            user.roles = client_role
-            user.is_active = False
-            activateEmail(request, user, form.cleaned_data.get('email'))
-            user.save()
-            return redirect('utilisateur:connexion_user')
-        else:
+        if 'inscription' in request.POST:
+            form = UserRegistrationForm(request.POST)
+            if form.is_valid():
+                user = form.save(commit=False)
+                client_role = Roles.objects.get(role=Roles.CLIENT)
+                user.roles = client_role
+                # user.is_active = False
+                # activateEmail(request, user, form.cleaned_data.get('email'))
+                user.save()
+                return redirect('utilisateur:connexion_user')
+            else:
 
-            context['form'] = form
-            return render(request, 'inscription_client.html', context=context)
+                context['forms'] = form
+                return render(request, 'connexion_user.html', context=context)
 
     form = UserRegistrationForm()
     context['form'] = form
-    return render(request, 'inscription_client.html', context=context)
+    return render(request, 'connexion_user.html', context=context)
 
 
-class Connexion_user(LoginView):
-    template_name = 'connexion_user.html'
-    form_class = ConnexionForm
+# class Connexion_user(LoginView):
+#     template_name = 'connexion_user.html'
+#     form_class = ConnexionForm
+#
+#     def get_success_url(self) -> str:
+#         if self.request.user.roles.role == 'CLIENT':
+#             return reverse('utilisateur:Accueil_user')
+#         if self.request.user.roles.role == 'CONDUCTEUR':
+#             return reverse('utilisateur:liste_mission')
 
-    def get_success_url(self) -> str:
-        if self.request.user.roles.role == 'CLIENT':
-            return reverse('utilisateur:Accueil_user')
-        if self.request.user.roles.role == 'CONDUCTEUR':
-            return reverse('utilisateur:liste_mission')
+def Connexion_user(request):
+    if request.method == 'POST':
+        if 'connexion' in request.POST:
+            form = ConnexionForm(request, data=request.POST)
+            if form.is_valid():
+                username = form.cleaned_data.get('username')
+                password = form.cleaned_data.get('password')
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    role = user.roles.role
+                    if role == 'CLIENT':
+                        return redirect('utilisateur:Accueil_utilisateur')
+                    elif role == 'CONDUCTEUR':
+                        return redirect('utilisateur:liste_mission')
+            else:
+                return render(request, 'connexion_user.html', {'form': form})
+        else:
+            return inscription_user(request)
+
+    else:
+        form = ConnexionForm()
+        return render(request, 'connexion_user.html', {'form': form})
 
 
 def Acceuil_conducteur(request):
@@ -239,7 +264,7 @@ def liste_mission(request):
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
     prolongement_accepter = Demande_prolongement.objects.filter(accepter=True)
     prolongement_refuse = Demande_prolongement.objects.filter(refuser=True)
-    date_aujourdui=date.today()
+    date_aujourdui = date.today()
     # Récupérer l'utilisateur actuellement connecté
     utilisateur_actif = request.user
 
@@ -266,7 +291,10 @@ def liste_mission(request):
     except EmptyPage:
         mission_list = paginator.page(paginator.num_pages())
 
-    return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui, 'prolongement_encours' : prolongement_encours_ids, 'prolongement_accepter': prolongement_accepter_ids,'prolongement_refuse': prolongement_refuse_ids, })
+    return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui,
+                                                      'prolongement_encours': prolongement_encours_ids,
+                                                      'prolongement_accepter': prolongement_accepter_ids,
+                                                      'prolongement_refuse': prolongement_refuse_ids, })
 
 
 def prolongement(request):
