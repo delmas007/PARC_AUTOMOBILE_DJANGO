@@ -151,7 +151,7 @@ class Deplacement(models.Model):
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True, null=True)
     date_depart = models.DateField(blank=True, null=True)
     niveau_carburant = models.IntegerField()
-    duree_deplacement = models.CharField(max_length=250, )
+    duree_deplacement = models.IntegerField()
     kilometrage_depart = models.IntegerField()
 
     def __str__(self):
@@ -197,7 +197,7 @@ class Location(models.Model):
 class Demande_prolongement(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
-    duree = models.CharField(max_length=250, )
+    duree = models.IntegerField()
     motif = models.CharField(max_length=250, )
     en_cours = models.BooleanField(default=True)
     accepter = models.BooleanField(default=False)
