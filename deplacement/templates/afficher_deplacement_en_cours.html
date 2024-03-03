@@ -63,42 +63,72 @@
                                      <th>Duree</th>
                                      <th>Kilometrage</th>
                                      <th>Niveau de carburant</th>
-                                      <th>         Action</th>
-
-
+                                      <th>Action</th>
                                  </tr>
                              </thead>
                              <tbody>
 
                              {% if deplacements %}
-                                {% for deplacement in deplacements %}
-                                     <tr>
-                                         <td>{{ deplacement.conducteur }}</td>
-                                         <td>{{ deplacement.vehicule }}</td>
-                                         <td>{{ deplacement.date_depart }}</td>
-                                         <td>{{ deplacement.duree_deplacement }}</td>
-                                         <td>{{ deplacement.kilometrage_depart }} Km/h</td>
-                                         <td>{{ deplacement.niveau_carburant }} Litres</td>
-                                         <td>
-                                             {% if deplacement.id in prolongement_encours and deplacement.id not in prolongement_arrive and deplacement.id not in prolongement_accepte %}
-                                             <button type="button" class="btn mb-3 btn-info terminer-btn2 prolongement-btn"  data-target="#prolongementModal" data-toggle="modal" data-deplacement-id="{{ deplacement.id }}">
-                                                 <i class="ri-shuffle-fill"></i>
-                                                 Prolongement demandé
-                                             </button>
-                                             {% elif deplacement.id not in  prolongement_encours and deplacement.id  not in  prolongement_arrive or deplacement.id  not in  prolongement_accepte %}
-                                                         <button type="button" class="btn mb-3 btn-success terminer-btn2" data-toggle="modal" data-target="#exampleModalScrollable" data-deplacement-id="{{ deplacement.id }}" {% if prolongement %}data-prolongement-id="{{ prolongement.id }}"{% endif %}>
-                                                             <i class="ri-flag-2-fill"></i>
-                                                             Terminer
-                                                         </button>
-
-                                                     {% endif %}
-                                         </td>
-                                     </tr>
-                                {% endfor %}
-                                 {% else %}
+                              {% for deplacement in deplacements %}
+                                 <tr>
+                                     <td>{{ deplacement.conducteur }}</td>
+                                     <td>{{ deplacement.vehicule }}</td>
+                                     <td>{{ deplacement.date_depart }}</td>
+                                     <td>{{ deplacement.duree_deplacement }}</td>
+                                     <td>{{ deplacement.kilometrage_depart }} Km/h</td>
+                                     <td>{{ deplacement.niveau_carburant }} Litres</td>
+                                     <td>
+                                        {% if deplacement.id in prolongement_encours and deplacement.id not in prolongement_arrive and deplacement.id not in prolongement_accepte %}
+                                            <!-- Bouton prolongement avec attribut data-deplacement-id -->
+                                            <button type="button" class="btn mb-3 btn-info terminer-btn2 prolongement-btn" data-target="#prolongementModal{{ deplacement.id }}" data-toggle="modal" data-deplacement-id="{{ deplacement.id }}">
+                                                <i class="ri-shuffle-fill"></i>
+                                                Prolongement demandé
+                                            </button>
+                                          {% elif deplacement.id not in  prolongement_encours and deplacement.id  not in  prolongement_arrive or deplacement.id  not in  prolongement_accepte %}
+                                            <button type="button" class="btn mb-3 btn-success terminer-btn2" data-toggle="modal" data-target="#exampleModalScrollable" data-deplacement-id="{{ deplacement.id }}" {% if prolongement %}data-prolongement-id="{{ prolongement.id }}"{% endif %}>
+                                                <i class="ri-flag-2-fill"></i>
+                                                Terminer
+                                            </button>
+                                          {% endif %}
+                                     </td>
+                                  </tr>
+                                        <!-- Pop up pour la demade -->
+                                  <div class="modal fade" id="prolongementModal{{ deplacement.id }}" tabindex="-1" role="dialog" aria-labelledby="prolongementModalTitle{{ deplacement.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-scrollable modal-custom" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="prolongementModalTitle{{ deplacement.id }}">Informations sur le prolongement</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        {% for prolongement in prolongements %}
+                                                            {% if prolongement.deplacement_id == deplacement.id %}
+                                                                <p><strong>Motif :</strong> {{ prolongement.motif }}</p>
+                                                                <p><strong>Durée :</strong> {{ prolongement.duree }} </p>
+                                                                <div id="photo-container"></div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form action="{% url 'deplacement:accept_prolongement' prolongement.id %}" method="post">
+                                                          {% csrf_token %}
+                                                          <button id="accepterButton"  type="submit" class="btn btn-success mr-auto">ACCEPTER</button>
+                                                         </form>
+                                                        <form action="{% url 'deplacement:refuse_prolongement' prolongement.id %}" method="post">
+                                                                 {% csrf_token %}
+                                                         <button id="refuserButton" type="submit" class="btn btn-danger">REFUSER</button>
+                                                                 {% endif %}
+                                                             {% endfor %}
+                                                        </form>
+                                                     </div>
+                                                </div>
+                                     </div>
+                                  </div>
+                              {% endfor %}
+                             {% else %}
                                <tr>
                                     <td colspan="10">Aucun service disponible</td>
-                            </tr>
+                               </tr>
                              {% endif %}
                              </tbody>
                            </table>
@@ -190,7 +220,7 @@
                           <div class="form-group col-md-12">
                               <label for="customFile" class="font-weight-bold">Sélectionner des images :</label>
                               <div class="form-control h-auto" style="border-radius: 10px">
-                                  <input  multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
+                                  <input  multiple required placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
                               </div>
                               {% if form.image.errors %}
                                   <p class="help-block">Veillez joindre une image</p>
@@ -199,7 +229,7 @@
 
                           </div>
                            <div class="modal-footer">
-                      <button type="submit" class="btn btn-primary" onclick="fermerModal()">Enregistrer</button>
+                      <button type="submit" class="btn btn-primary" >Enregistrer</button>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fermerModal()">Fermer</button>
                   </div>
                       </form>
@@ -208,34 +238,6 @@
               </div>
           </div>
       </div>
-
-    <!--Pop up pour accepter/refuser une demande de prolongement -->
-    <div class="modal fade" id="prolongementModal" tabindex="-1" role="dialog" aria-labelledby="prolongementModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-custom modal-dialog"  role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="prolongementModalTitle">Information du prolongement</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-               <strong id="motifParagraph">Motif: </strong> <br>
-               <strong id="dureeParagraph">Durée: </strong>
-                <div id="photo-container"></div>
-            </div>
-            <div class="modal-footer">
-
-                <button id="accepterButton" type="submit" class="btn btn-success mr-auto" data-prolongement-id="{{ deplacement.id }}">  ACCEPTER</button>
-
-                <button id="refuserButton" type="button" class="btn btn-danger" data-prolongement-id="{{ deplacement.id }}">REFUSER</button>
-
-
-
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -265,34 +267,7 @@
       </script>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var prolongementButtons = document.querySelectorAll('.prolongement-btn');
 
-    prolongementButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            var deplacementId = button.getAttribute('data-deplacement-id');
-
-            // Envoi de la demande AJAX pour récupérer le motif et la durée du prolongement
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    if (xhr.status == 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        var motifProlongement = response.motif;
-                        var dureeProlongement = response.duree;
-                        // Mettre à jour le contenu des paragraphes avec l'ID "motifParagraph" et "dureeParagraph"
-                        document.getElementById('motifParagraph').textContent = "Motif: " + motifProlongement;
-                        document.getElementById('dureeParagraph').textContent = "Durée: " + dureeProlongement;
-                    } else {
-                        console.error("Erreur lors de la récupération du motif et de la durée du prolongement : " + xhr.status);
-                    }
-                }
-            };
-            xhr.open("GET", "{% url 'deplacement:get_info_prolongement' %}?id_deplacement=" + deplacementId, true);
-            xhr.send();
-        });
-    });
-});
 
 document.addEventListener('DOMContentLoaded', function() {
     var prolongementButtons = document.querySelectorAll('.prolongement-btn');
@@ -309,7 +284,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         var response = JSON.parse(xhr.responseText);
                         var photoUrls = response.photos;
                         // Mettre à jour le contenu du modal avec les photos récupérées
-                        var photoContainer = document.getElementById('photo-container');
+                        var modalId = button.getAttribute('data-target');
+                        var modal = document.querySelector(modalId);
+                        var photoContainer = modal.querySelector('#photo-container');
                         photoContainer.innerHTML = ""; // Effacer le contenu précédent
                         photoUrls.forEach(function(photoUrl) {
                             var img = document.createElement('img');
@@ -327,6 +304,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
 
     </script>
 

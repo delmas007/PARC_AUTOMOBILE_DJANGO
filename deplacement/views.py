@@ -12,7 +12,7 @@ from Model.models import Deplacement, Photo, EtatArrive, Demande_prolongement, C
 from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm
 from datetime import date, timedelta
 from django.db.models import Q, Exists, OuterRef
-
+import json
 
 def enregistrer_deplacement(request):
     conducteurs = Conducteur.objects.all()
@@ -94,19 +94,21 @@ def depart(request, pk):
 def liste_deplacement_en_cours(request):
     aujourd_hui = date.today()
     prolongement = Demande_prolongement.objects.all()
+
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
     deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
     deplacement_ids = deplacements.values_list('id', flat=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
-    prolongement_arrive =  Demande_prolongement.objects.filter(refuser=True)
-    prolongement_accepte =  Demande_prolongement.objects.filter(accepter=True)
-
+    prolongement_arrive = Demande_prolongement.objects.filter(refuser=True)
+    prolongement_accepte = Demande_prolongement.objects.filter(accepter=True)
 
     #recuperer liste des id de demandes de prolongement
     prolongement_encours_ids=prolongement_encours.values_list('deplacement_id', flat=True)
     prolongement_arrive_ids=prolongement_arrive.values_list('deplacement_id', flat=True)
     prolongement_accepte_ids=prolongement_accepte.values_list('deplacement_id', flat=True)
+
+
 
     paginator = Paginator(deplacements.order_by('date_mise_a_jour'), 5)
     try:
@@ -119,6 +121,7 @@ def liste_deplacement_en_cours(request):
         deplacement = paginator.page(paginator.num_pages())
     return render(request, 'afficher_deplacement_en_cours.html',
                   {'deplacements': deplacement, 'prolongement_encours': prolongement_encours_ids, 'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids, 'prolongements': prolongement})
+
 
 
 def arrivee(request, pk):
@@ -253,19 +256,19 @@ def get_deplacements_data2(request):
         return JsonResponse({'error': 'Identifiant du véhicule non spécifié'}, status=400)
 
 
-def get_info_prolongement(request):
-    if request.method == 'GET':
-        id_deplacement = request.GET.get('id_deplacement')
-        try:
-            demande_prolongement = Demande_prolongement.objects.get(deplacement_id=id_deplacement)
-            motif_prolongement = demande_prolongement.motif
-            duree_prolongement = demande_prolongement.duree  # Supposons que "duree" est un champ de votre modèle Demande_prolongement
-            return JsonResponse({'motif': motif_prolongement, 'duree': duree_prolongement})
-        except Demande_prolongement.DoesNotExist:
-            return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'}, status=404)
-    else:
-        return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
-
+#def get_info_prolongement(request):
+ #   if request.method == 'GET':
+  #      id_deplacement = request.GET.get('id_deplacement')
+   #     try:
+    #        demande_prolongement = Demande_prolongement.objects.get(deplacement_id=id_deplacement)
+     #       motif_prolongement = demande_prolongement.motif
+      #      duree_prolongement = demande_prolongement.duree
+       #     prolongement_id = demande_prolongement.id  # Récupérer l'ID de la demande de prolongement
+        #    return JsonResponse({'id': prolongement_id, 'motif': motif_prolongement, 'duree': duree_prolongement})
+       # except Demande_prolongement.DoesNotExist:
+        #    return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'}, status=404)
+   # else:
+    #    return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
 def get_photos_demande_prolongement(request):
     if request.method == 'GET':
         id_deplacement = request.GET.get('id_deplacement')
@@ -273,7 +276,7 @@ def get_photos_demande_prolongement(request):
             try:
                 demande_prolongement = Demande_prolongement.objects.get(deplacement_id=id_deplacement)
                 photos = Photo.objects.filter(demande_prolongement=demande_prolongement)
-                photo_urls = [photo.images.url for photo in photos]  # Supposons que "images" est le champ contenant les images
+                photo_urls = [photo.images.url for photo in photos]
                 return JsonResponse({'photos': photo_urls})
             except Demande_prolongement.DoesNotExist:
                 return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'}, status=404)
@@ -283,3 +286,26 @@ def get_photos_demande_prolongement(request):
         return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
 
 
+def accept_prolongement(request, prolongement_id):
+    prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
+
+    # Modifier les champs de la demande de prolongement
+    prolongement.en_cours = False
+    prolongement.refuser = False
+    prolongement.accepter = True
+    prolongement.save()
+
+
+    return redirect('deplacement:liste_deplacement_en_cours')
+
+def refuse_prolongement(request, prolongement_id):
+    prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
+
+    # Modifier les champs de la demande de prolongement
+    prolongement.en_cours = False
+    prolongement.refuser = True
+    prolongement.accepter = False
+    prolongement.save()
+
+
+    return redirect('deplacement:liste_deplacement_en_cours')
