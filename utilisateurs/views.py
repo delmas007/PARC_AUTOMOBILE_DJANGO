@@ -261,6 +261,7 @@ def passwordResetConfirm(request, uidb64, token):
 
 @login_required
 def liste_mission(request):
+    prolongement = Demande_prolongement.objects.filter(accepter=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
     prolongement_accepter = Demande_prolongement.objects.filter(accepter=True)
     prolongement_refuse = Demande_prolongement.objects.filter(refuser=True)
@@ -294,7 +295,8 @@ def liste_mission(request):
     return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui,
                                                       'prolongement_encours': prolongement_encours_ids,
                                                       'prolongement_accepter': prolongement_accepter_ids,
-                                                      'prolongement_refuse': prolongement_refuse_ids, })
+                                                      'prolongement_refuse': prolongement_refuse_ids,
+                                                      'prolongement': prolongement, })
 
 
 def prolongement(request):

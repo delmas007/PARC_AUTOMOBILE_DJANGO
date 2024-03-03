@@ -49,10 +49,16 @@
                              <tbody>
                              {% if mission %}
                                 {% for deplacement in mission %}
+                                {% for prolongements in prolongement %}
                                      <tr>
                                          <td>{{ deplacement.vehicule }}</td>
                                          <td>{{ deplacement.date_depart }}</td>
+                                         {% if prolongements.deplacement.id == deplacement.id %}
+                                         <td>{{ deplacement.duree_deplacement|add:prolongements.duree }}</td>
+
+                                         {% else %}
                                          <td>{{ deplacement.duree_deplacement }}</td>
+                                         {% endif %}
                                          <td>{{ deplacement.kilometrage_depart }} Km/h</td>
                                          <td>{{ deplacement.niveau_carburant }} Litres</td>
                                        <td>
@@ -87,6 +93,7 @@
 
                                          </td>
                                      </tr>
+                                {% endfor %}
                                 {% endfor %}
                                 {% else %}
                                  <tr>
