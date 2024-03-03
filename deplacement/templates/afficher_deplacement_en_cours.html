@@ -220,9 +220,8 @@
                 </button>
             </div>
             <div class="modal-body">
-              <!-- <strong id="idParagraph"></strong> <br>-->
-               <strong id="motifParagraph"></strong> <br>
-               <strong id="dureeParagraph"> </strong>
+               <strong id="motifParagraph">Motif: </strong> <br>
+               <strong id="dureeParagraph">Durée: </strong>
                 <div id="photo-container"></div>
             </div>
             <div class="modal-footer">
@@ -279,11 +278,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (xhr.readyState == XMLHttpRequest.DONE) {
                     if (xhr.status == 200) {
                         var response = JSON.parse(xhr.responseText);
-                        var idProlongement = response.id;
                         var motifProlongement = response.motif;
                         var dureeProlongement = response.duree;
                         // Mettre à jour le contenu des paragraphes avec l'ID "motifParagraph" et "dureeParagraph"
-                        document.getElementById('idParagraph').textContent = "id: " + idProlongement;
                         document.getElementById('motifParagraph').textContent = "Motif: " + motifProlongement;
                         document.getElementById('dureeParagraph').textContent = "Durée: " + dureeProlongement;
                     } else {
