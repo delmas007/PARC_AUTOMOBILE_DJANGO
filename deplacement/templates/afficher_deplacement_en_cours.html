@@ -195,7 +195,7 @@
                               {% if form.image.errors %}
                                   <p class="help-block">Veillez joindre une image</p>
                               {% endif %}
-                              
+
 
                           </div>
                            <div class="modal-footer">
@@ -220,8 +220,9 @@
                 </button>
             </div>
             <div class="modal-body">
-               <strong id="motifParagraph">Motif: </strong> <br>
-               <strong id="dureeParagraph">Durée: </strong>
+              <!-- <strong id="idParagraph"></strong> <br>-->
+               <strong id="motifParagraph"></strong> <br>
+               <strong id="dureeParagraph"> </strong>
                 <div id="photo-container"></div>
             </div>
             <div class="modal-footer">
@@ -278,37 +279,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (xhr.readyState == XMLHttpRequest.DONE) {
                     if (xhr.status == 200) {
                         var response = JSON.parse(xhr.responseText);
+                        var idProlongement = response.id;
                         var motifProlongement = response.motif;
                         var dureeProlongement = response.duree;
                         // Mettre à jour le contenu des paragraphes avec l'ID "motifParagraph" et "dureeParagraph"
-                        document.getElementById('motifParagraph').textContent = "Motif: " + motifProlongement;
-                        document.getElementById('dureeParagraph').textContent = "Durée: " + dureeProlongement;
-                    } else {
-                        console.error("Erreur lors de la récupération du motif et de la durée du prolongement : " + xhr.status);
-                    }
-                }
-            };
-            xhr.open("GET", "{% url 'deplacement:get_info_prolongement' %}?id_deplacement=" + deplacementId, true);
-            xhr.send();
-        });
-    });
-});
-document.addEventListener('DOMContentLoaded', function() {
-    var prolongementButtons = document.querySelectorAll('.');
-
-    prolongementButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            var deplacementId = button.getAttribute('data-deplacement-id');
-
-            // Envoi de la demande AJAX pour récupérer le motif et la durée du prolongement
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    if (xhr.status == 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        var motifProlongement = response.motif;
-                        var dureeProlongement = response.duree;
-                        // Mettre à jour le contenu des paragraphes avec l'ID "motifParagraph" et "dureeParagraph"
+                        document.getElementById('idParagraph').textContent = "id: " + idProlongement;
                         document.getElementById('motifParagraph').textContent = "Motif: " + motifProlongement;
                         document.getElementById('dureeParagraph').textContent = "Durée: " + dureeProlongement;
                     } else {
