@@ -330,7 +330,6 @@ def prolongement(request):
 def liste_demandes(request):
     utilisateur_actif = request.user
     conducteur_actif = utilisateur_actif.conducteur_id
-    demande_list_ids=Demande_prolongement.objects.values_list('deplacement_id', flat=True)
     arrive_list_ids=EtatArrive.objects.values_list('deplacement_id', flat=True)
     demande_list = Demande_prolongement.objects.filter(conducteur_id=conducteur_actif).exclude(deplacement__in=arrive_list_ids)
     paginator = Paginator(demande_list.order_by('date_mise_a_jour'), 3)
