@@ -3,47 +3,32 @@
 {% block content%}
    <body>
    <style>
-       /* Custom modal size */
-.modal-custom {
-    max-width: 90%; /* Adjust as needed */
-}
-.modal-dialog.modal-custom .modal-content {
-    width: 100%; /* Ensure full width */
-
-}
-       .modal-photo {
-    max-width: 500px; /* Ajustez la largeur maximale selon vos besoins */
-    min-width: 500px; /* Ajustez la largeur maximale selon vos besoins */
-    max-height: 300px; /* Ajustez la hauteur maximale selon vos besoins */
-    min-height: 300px; /* Ajustez la hauteur maximale selon vos besoins */
-    margin-left: 50px /* Ajustez l'espace entre entre les photos selon vos besoins */;
-    margin-bottom: 50px /* Ajustez l'espace entre entre les photos selon vos besoins */;
-}
-#photo-container{
-
-    max-height: 300px; /* Définir la hauteur maximale selon vos besoins */
-    overflow-y: auto; /* Activer la barre de défilement verticale si nécessaire */
-}
-#motifParagraph,
-#dureeParagraph{
-}
-
-
+        .modal-custom {
+            max-width: 90%;
+        }
+        .modal-dialog.modal-custom .modal-content {
+            width: 100%;
+        }
+        .modal-photo {
+            max-width: 500px;
+            min-width: 500px;
+            max-height: 300px;
+            min-height: 300px;
+            margin-left: 50px ;
+            margin-bottom: 50px ;
+        }
+        #photo-container{
+            max-height: 300px;
+            overflow-y: auto;
+        }
    </style>
-      <!-- loader Start -->
       <div id="loading">
          <div id="loading-center">
          </div>
       </div>
-      <!-- loader END -->
-      <!-- Wrapper Start -->
       <div class="wrapper">
-      <!-- Sidebar  -->
           {% include 'slide.html' %}
-      <!-- TOP Nav Bar -->
           {% include 'top_navbar.html' %}
-      <!-- TOP Nav Bar END -->
-      <!-- Page Content  -->
    <div id="content-page" class="content-page">
       <div class="container-fluid">
          <div class="row">
@@ -69,7 +54,6 @@
                                  </tr>
                              </thead>
                              <tbody>
-
                              {% if deplacements %}
                               {% for deplacement in deplacements %}
                                  <tr>
@@ -81,7 +65,6 @@
                                      <td>{{ deplacement.niveau_carburant }} Litres</td>
                                      <td>
                                         {% if deplacement.id in prolongement_encours and deplacement.id not in prolongement_arrive and deplacement.id not in prolongement_accepte %}
-                                            <!-- Bouton prolongement avec attribut data-deplacement-id -->
                                             <button type="button" class="btn mb-3 btn-info terminer-btn2 prolongement-btn" data-target="#prolongementModal{{ deplacement.id }}" data-toggle="modal" data-deplacement-id="{{ deplacement.id }}">
                                                 <i class="ri-shuffle-fill"></i>
                                                 Prolongement demandé
@@ -94,22 +77,21 @@
                                           {% endif %}
                                      </td>
                                   </tr>
-                                        <!-- Pop up pour la demade -->
                                   <div class="modal fade" id="prolongementModal{{ deplacement.id }}" tabindex="-1" role="dialog" aria-labelledby="prolongementModalTitle{{ deplacement.id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-scrollable modal-custom" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
                                                         <h5 class="modal-title" id="prolongementModalTitle{{ deplacement.id }}">Informations sur le prolongement</h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        {% for prolongement in prolongements %}
-                                                            {% if prolongement.deplacement_id == deplacement.id %}
-                                                                <p><strong>Motif :</strong> {{ prolongement.motif }}</p>
-                                                                <p><strong>Durée :</strong> {{ prolongement.duree }} </p>
-                                                                <div id="photo-container"></div>
+                                            <div class="modal-body">
+                                                {% for prolongement in prolongements %}
+                                                    {% if prolongement.deplacement_id == deplacement.id %}
+                                                        <p><strong>Motif :</strong> {{ prolongement.motif }}</p>
+                                                        <p><strong>Durée :</strong> {{ prolongement.duree }} </p>
+                                                        <div id="photo-container"></div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <form action="{% url 'deplacement:accept_prolongement' prolongement.id %}" method="post">
@@ -119,13 +101,13 @@
                                                         <form action="{% url 'deplacement:refuse_prolongement' prolongement.id %}" method="post">
                                                                  {% csrf_token %}
                                                          <button id="refuserButton" type="submit" class="btn btn-danger">REFUSER</button>
-                                                                 {% endif %}
-                                                             {% endfor %}
-                                                        </form>
-                                                     </div>
+                                                    {% endif %}
+                                                </form>
                                                 </div>
+                                                {% endfor %}
+                                            </div>
+                                         </div>
                                      </div>
-                                  </div>
                               {% endfor %}
                              {% else %}
                                <tr>
@@ -246,7 +228,7 @@
               </div>
           </div>
       </div>
-   <div class="modal fade" id="existImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="existImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
        <div class="modal-dialog">
            <div class="modal-content">
                <div class="modal-header">
@@ -290,9 +272,6 @@
            </div>
        </div>
    </div>
-
-
-
    <script>
           $(document).ready(function() {
               $('.terminer-btn2').on('click', function() {
@@ -300,65 +279,51 @@
                   $('#deplacement_id').val(deplacementId);
               });
           });
-
           function fermerModal() {
               $('#exampleModalScrollable').modal('hide');
           }
    </script>
-
- <!-- Scripts pour recuperer les elements de la demande de prolongement-->
    <script>
           $(document).ready(function () {
               $('.prolongement-btn').on('click', function () {
                   var prolongementId = $(this).data('prolongement-id');
-                  // Utilisez prolongementId comme nécessaire pour afficher les informations dans le modal
-                  // Par exemple, vous pouvez mettre à jour le contenu du modal avec jQuery
                   $('#prolongementModal').modal('show');
               });
           });
       </script>
-
-    <script>
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    var prolongementButtons = document.querySelectorAll('.prolongement-btn');
-
-    prolongementButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            var deplacementId = button.getAttribute('data-deplacement-id');
-
-            // Envoi de la demande AJAX pour récupérer les photos associées à la demande de prolongement
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    if (xhr.status == 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        var photoUrls = response.photos;
-                        // Mettre à jour le contenu du modal avec les photos récupérées
-                        var modalId = button.getAttribute('data-target');
-                        var modal = document.querySelector(modalId);
-                        var photoContainer = modal.querySelector('#photo-container');
-                        photoContainer.innerHTML = ""; // Effacer le contenu précédent
-                        photoUrls.forEach(function(photoUrl) {
-                            var img = document.createElement('img');
-                            img.src = photoUrl;
-                            img.classList.add('modal-photo');
-                            photoContainer.appendChild(img);
-                        });
-                    } else {
-                        console.error("Erreur lors de la récupération des photos associées à la demande de prolongement : " + xhr.status);
-                    }
-                }
-            };
-            xhr.open("GET", "{% url 'deplacement:get_photos_demande_prolongement' %}?id_deplacement=" + deplacementId, true);
-            xhr.send();
+   <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var prolongementButtons = document.querySelectorAll('.prolongement-btn');
+            prolongementButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var deplacementId = button.getAttribute('data-deplacement-id');
+                    var xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState == XMLHttpRequest.DONE) {
+                            if (xhr.status == 200) {
+                                var response = JSON.parse(xhr.responseText);
+                                var photoUrls = response.photos;
+                                // Mettre à jour le contenu du modal avec les photos récupérées
+                                var modalId = button.getAttribute('data-target');
+                                var modal = document.querySelector(modalId);
+                                var photoContainer = modal.querySelector('#photo-container');
+                                photoContainer.innerHTML = ""; // Effacer le contenu précédent
+                                photoUrls.forEach(function(photoUrl) {
+                                    var img = document.createElement('img');
+                                    img.src = photoUrl;
+                                    img.classList.add('modal-photo');
+                                    photoContainer.appendChild(img);
+                                });
+                            } else {
+                                console.error("Erreur lors de la récupération des photos associées à la demande de prolongement : " + xhr.status);
+                            }
+                        }
+                    };
+                    xhr.open("GET", "{% url 'deplacement:get_photos_demande_prolongement' %}?id_deplacement=" + deplacementId, true);
+                    xhr.send();
+                });
+            });
         });
-    });
-});
-
-
-
     </script>
    <script>
        document.addEventListener('DOMContentLoaded', function () {
@@ -373,7 +338,67 @@ document.addEventListener('DOMContentLoaded', function() {
            });
        });
    </script>
+   <script>
+       document.addEventListener('DOMContentLoaded', function () {
+           var prolongementButtons = document.querySelectorAll('.prolongement-btn');
+           prolongementButtons.forEach(function (button) {
+               button.addEventListener('click', function () {
+                   var deplacementId = button.getAttribute('data-deplacement-id');
+                   var xhr = new XMLHttpRequest();
+                   xhr.onreadystatechange = function () {
+                       if (xhr.readyState == XMLHttpRequest.DONE) {
+                           if (xhr.status == 200) {
+                               var response = JSON.parse(xhr.responseText);
+                               var photoUrls = response.photos;
+                               // Mettre à jour le contenu du modal avec les photos récupérées
+                               var modalId = button.getAttribute('data-target');
+                               var modal = document.querySelector(modalId);
+                               var photoContainer = modal.querySelector('#photo-container');
+                               photoContainer.innerHTML = ""; // Effacer le contenu précédent
+                               photoUrls.forEach(function (photoUrl) {
+                                   var img = document.createElement('img');
+                                   img.src = photoUrl;
+                                   img.classList.add('modal-photo');
+                                   // Ajouter un gestionnaire d'événements pour afficher la taille réelle au clic
+                                   img.addEventListener('click', function () {
+                                       showImagePopup(photoUrl);
+                                   });
+                                   photoContainer.appendChild(img);
+                               });
+                           } else {
+                               console.error("Erreur lors de la récupération des photos associées à la demande de prolongement : " + xhr.status);
+                           }
+                       }
+                   };
+                   xhr.open("GET", "{% url 'deplacement:get_photos_demande_prolongement' %}?id_deplacement=" + deplacementId, true);
+                   xhr.send();
+               });
+           });
+           function showImagePopup(imageUrl) {
+               var popupImage = document.createElement('img');
+               popupImage.src = imageUrl;
+               popupImage.style.marginLeft = '500px';
+               var popupContainer = document.createElement('div');
+               popupContainer.appendChild(popupImage);
+               popupContainer.style.position = 'fixed';
+               popupContainer.style.width = '2000px';
+               popupContainer.style.height = '800px';
+               popupContainer.style.top = '50%';
+               popupContainer.style.left = '50%';
+               popupContainer.style.transform = 'translate(-50%, -50%)';
+               popupContainer.style.backgroundColor = 'transparent';
+               popupContainer.style.padding = '60px';
+               popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+               popupContainer.style.zIndex = '9999';
+               document.body.appendChild(popupContainer);
 
-
+               popupContainer.addEventListener('click', function (event) {
+                   if (event.target === popupContainer) {
+                       document.body.removeChild(popupContainer);
+                   }
+               });
+           }
+       });
+   </script>
    </body>
 {% endblock %}
