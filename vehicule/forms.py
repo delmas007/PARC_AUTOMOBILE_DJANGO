@@ -189,16 +189,3 @@ class typeForm(forms.ModelForm):
     class Meta:
         model = Type_Commerciale
         fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(typeForm, self).__init__(*args, **kwargs)
-        self.fields['marque'].widget.attrs.update({
-            'class': "form-control",
-            'id': "selectMarques",
-            'required': True,
-        })
-        self.fields['modele'].widget.attrs.update({
-            'class': "form-control",
-            'id': "typecommercial",
-            'required': True,
-        })

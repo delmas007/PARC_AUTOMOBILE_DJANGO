@@ -33,8 +33,8 @@ def Ajouter_vehicule(request):
             print(form.errors)
     else:
         form = VehiculeForm()
-
-    return render(request, 'ajouter_vehicule.html', {'form': form})
+    marques = Marque.objects.all()
+    return render(request, 'ajouter_vehicule.html', {'form': form, 'marques': marques})
 
 
 def liste_vehicules(request):
@@ -127,14 +127,16 @@ def ajouter_type(request):
     if request.method == 'POST':
         form = typeForm(request.POST)
         if form.is_valid():
+            marque_id = request.POST.get('marque_id')
+
+
             modele = form.cleaned_data['modele']
-            if Type_Commerciale.objects.filter(modele=modele).exists():
+            if Type_Commerciale.objects.filter(modele=modele, marque_id=marque_id).exists():
                 return JsonResponse({'error': 'Ce type commercial existe déjà.'}, status=400)
             form.save()
             return JsonResponse({'success': True})
         else:
             errors = dict(form.errors.items())
-            print(form.errors)
             return JsonResponse({'errors': errors}, status=400)
     else:
         form = typeForm()

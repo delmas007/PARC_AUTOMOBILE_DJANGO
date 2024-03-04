@@ -243,13 +243,18 @@ def get_deplacements_data(request):
 
 def get_deplacements_data2(request):
     vehicule_id = request.GET.get('vehicule_id')
+    # Vérifier si l'identifiant du conducteur est fourni
     if vehicule_id is not None:
-        deplacements = Deplacement.objects.filter(vehicule_id=vehicule_id)
-        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement,'vehciule_deplacement': deplacement.vehicule.marque} for
-                deplacement in deplacements]
+        # Filtrer les déplacements pour ceux ayant l'ID du conducteur spécifié
+        deplacements = Deplacement.objects.filter(vehicule_id=vehicule_id).annotate(
+            has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
+        ).filter(has_etat_arrive=False)
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement}
+                for deplacement in deplacements]
         return JsonResponse({'deplacements': data})
     else:
-        return JsonResponse({'error': 'Identifiant du véhicule non spécifié'}, status=400)
+        return JsonResponse({'error': 'Identifiant du conducteur non spécifié'}, status=400)
+
 
 
 # def get_info_prolongement(request):
