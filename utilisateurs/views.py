@@ -133,8 +133,8 @@ def inscription_user(request):
                 user = form.save(commit=False)
                 client_role = Roles.objects.get(role=Roles.CLIENT)
                 user.roles = client_role
-                # user.is_active = False
-                # activateEmail(request, user, form.cleaned_data.get('email'))
+                user.is_active = False
+                activateEmail(request, user, form.cleaned_data.get('email'))
                 user.save()
                 return redirect('utilisateur:connexion_user')
             else:
