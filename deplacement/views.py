@@ -234,8 +234,8 @@ def get_deplacements_data(request):
         deplacements = Deplacement.objects.filter(conducteur_id=conducteur_id).annotate(
             has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
         ).filter(has_etat_arrive=False)
-        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for
-                deplacement in deplacements]
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement}
+                for deplacement in deplacements]
         return JsonResponse({'deplacements': data})
     else:
         return JsonResponse({'error': 'Identifiant du conducteur non spécifié'}, status=400)
@@ -245,7 +245,7 @@ def get_deplacements_data2(request):
     vehicule_id = request.GET.get('vehicule_id')
     if vehicule_id is not None:
         deplacements = Deplacement.objects.filter(vehicule_id=vehicule_id)
-        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement} for
+        data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement,'vehciule_deplacement': deplacement.vehicule.marque} for
                 deplacement in deplacements]
         return JsonResponse({'deplacements': data})
     else:

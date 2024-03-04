@@ -38,17 +38,7 @@
                         <div class="iq-card-body">
                             <form class="form-horizontal" method="post" action="{% url 'vehicule:Ajouter_vehicule' %}" enctype="multipart/form-data">
                             {% csrf_token %}
-{#                                <div class="row">#}
-{#                                    <div class="col-12 col-md-12 col-lg-12 text-right">#}
-{#                                        <div class="row justify-content-evenly">#}
-{#                                            <div class="col-12 col-md-6 col-lg-6" s>#}
-{#                                                <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutMarque()">#}
-{#                                                    <i class="ion-plus-circled"></i>Ajouter une marque#}
-{#                                                </button>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
+
                                 <div class="row">
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="col-md-12" style="margin-top: 15px">
@@ -231,13 +221,13 @@
        <div class="modal-dialog">
            <div class="modal-content">
                <div class="modal-header">
-                   <h2 class="modal-title fs-5" id="exampleModalLabel1">Ajouter un type commercial</h2>
+                   <h2 class="modal-title fs-5" id="exampleModalLabel1">Ajouter un type commerciale</h2>
                </div>
                <div class="modal-body">
                    <form method="post" id="typeForm">
                        {% csrf_token %}
                          <div class="mb-3">
-{#                           <label for="marque" class="col-form-label">Marque:</label>#}
+                           <label for="marque" class="col-form-label">Marque:</label>
                           {{ form.marque }}
                        </div>
                        <div class="mb-3">
@@ -329,6 +319,11 @@
        </div>
    </div>
    <script>
+       $(document).ready(function() {
+           $('#selectMarque').select2();
+       });
+   </script>
+   <script>
        {% if messages %}
        {% for messages in messages %}
            $(document).ready(function() {
@@ -417,7 +412,7 @@
                    }
                },
                error: function(response) {
-                   var errorMessage = JSON.parse(response.responseText).error;
+                   var errorMessage = "JSON.parse(response.responseText).error";
                    $('#errorType .modal-body').text(errorMessage);
                    $('#errorType').modal('show');
                }

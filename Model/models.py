@@ -106,7 +106,7 @@ class Type_Commerciale(models.Model):
 
 
 class Vehicule(models.Model):
-    date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
+    date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     numero_immatriculation = models.CharField(max_length=250, unique=True)
@@ -141,7 +141,7 @@ class Vehicule(models.Model):
         return f" {self.marque} {self.type_commercial} {self.numero_immatriculation} "
 
     class Meta:
-        ordering = ['date_mise_a_jour']
+        ordering = ['-date_mise_a_jour']
 
 
 class Deplacement(models.Model):

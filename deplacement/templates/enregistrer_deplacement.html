@@ -89,8 +89,8 @@
                         </div>
                      </div>
                   <div class="form-horizontal row">
-                    <textarea class="col-md-6" rows="5" disabled id="textareaDeplacements" placeholder="DISPONIBILITE CONDUCTEURS"></textarea>
-                    <textarea class="col-md-6" rows="5" disabled id="textareaDeplacements2" placeholder="DISPONIBILITE VEHICULES"></textarea>
+                    <textarea class="col-md-6" rows="5" hidden="hidden" disabled id="textareaDeplacements" placeholder="DISPONIBILITE CONDUCTEURS"></textarea>
+                    <textarea class="col-md-6" rows="5" hidden="hidden" disabled id="textareaDeplacements2" placeholder="DISPONIBILITE VEHICULES"></textarea>
 
                   </div>
                   </div>
@@ -238,6 +238,7 @@
                         });
                         // Mettre à jour le contenu du textarea
                         $('#textareaDeplacements').val(textareaContent);
+                        $('#textareaDeplacements').removeAttr('hidden disabled');
                     },
                     error: function(xhr, errmsg, err) {
                         console.log(errmsg);
@@ -265,10 +266,11 @@
                         var textareaContent = '';
                         // Construire le contenu du textarea avec les dates et durées des déplacements
                         deplacements.forEach(function(deplacement) {
-                            textareaContent += 'Date de départ : ' + deplacement.date_depart + ', Durée : ' + deplacement.duree_deplacement + ' jours' + '\n';
+                            textareaContent +='Date de départ : ' + deplacement.date_depart + ', Durée : ' + deplacement.duree_deplacement + ' jours' + '\n';
                         });
                         // Mettre à jour le contenu du textarea
                         $('#textareaDeplacements2').val(textareaContent);
+                        $('#textareaDeplacements2').removeAttr('hidden disabled');
                     },
                     error: function(xhr, errmsg, err) {
                         console.log(errmsg);

@@ -194,7 +194,7 @@ class typeForm(forms.ModelForm):
         super(typeForm, self).__init__(*args, **kwargs)
         self.fields['marque'].widget.attrs.update({
             'class': "form-control",
-            'id': "selectMarque",
+            'id': "selectMarques",
             'required': True,
         })
         self.fields['modele'].widget.attrs.update({

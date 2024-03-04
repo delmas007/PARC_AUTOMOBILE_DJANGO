@@ -38,7 +38,7 @@ def Ajouter_vehicule(request):
 
 
 def liste_vehicules(request):
-    vehicules_list = Vehicule.objects.all().order_by('numero_immatriculation')
+    vehicules_list = Vehicule.objects.all().order_by('date_mise_a_jour')
 
     paginator = Paginator(vehicules_list.order_by('date_mise_a_jour'), 5)
     try:
@@ -92,6 +92,7 @@ def modifier_vehicule(request, pk):
                     Photo.objects.create(vehicule=vehicule, images=image)
 
             # Enregistrez le formulaire du véhicule mis à jour
+            form.instance.utilisateur = request.user
             form.save()
 
             return redirect('vehicule:liste_vehicules')
