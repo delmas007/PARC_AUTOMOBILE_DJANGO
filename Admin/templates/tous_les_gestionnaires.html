@@ -30,7 +30,7 @@
                     <div class="iq-card">
                         <div class="iq-card-header d-flex justify-content-between">
                             <div class="iq-header-title">
-                                <h4 class="card-title">Tous les gestionnaire  {% if gestionnaires %} Actifs{% else %}{% endif %} {% if gestionnaires2 %} Inactifs{% endif %}</h4>
+                                <h4 class="card-title">Tous les gestionnaires actifs</h4>
                             </div>
                         </div>
                         {% if gestionnaires %}
@@ -47,7 +47,7 @@
                                                     <div class="form-group mb-0">
                                                         <form class="mr-3 position-relative" method="get" action="{% url 'admins:gestionnaire_a_search' %}">
                                                             <div class="col-sm-10">
-                                                                <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Marque, ou matricule...">
+                                                                <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par Nom, Prenoms ou Mail">
                                                             </div>
                                                             <button type="submit" class="btn btn-primary">Rechercher</button>
                                                         </form>
@@ -68,7 +68,7 @@
                                             <thead>
                                             <tr style="background-color: #8861d2; color:white">
                                                 <th style="color: white">Nom</th>
-                                                <th style="color: white">Prenom</th>
+                                                <th style="color: white">Prenoms</th>
                                                 <th style="color: white">Email</th>
                                                 <th style="color: white">Status</th>
                                                 <th style="color: white">Activer/Desactiver</th>

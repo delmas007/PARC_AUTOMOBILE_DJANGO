@@ -59,7 +59,7 @@ def desactive_amp(request, employer_id):
 
 def gestionnaire_a_search(request):
     form = VehiculSearchForm(request.GET)
-    gestionnaire = Utilisateur.objects.filter(roles__role='GESTIONNAIRE')
+    gestionnaire = Utilisateur.objects.filter(roles__role='GESTIONNAIRE').exclude(is_active=False)
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -74,3 +74,22 @@ def gestionnaire_a_search(request):
             context['no_results'] = True
 
     return render(request, 'tous_les_gestionnaires.html', context)
+
+
+def gestionnaire_a_search_i(request):
+    form = VehiculSearchForm(request.GET)
+    gestionnaire = Utilisateur.objects.filter(roles__role='GESTIONNAIRE').exclude(is_active=True)
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            gestionnaire = gestionnaire.filter(Q(nom__icontains=query) |
+                                               Q(email__icontains=query) |
+                                               Q(prenom__icontains=query))
+
+        context = {'gestionnaires2': gestionnaire, 'form': form}
+        # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
+        if not gestionnaire.exists() and form.is_valid():
+            context['no_results'] = True
+
+    return render(request, 'tous_les_gestionnairess.html', context)
