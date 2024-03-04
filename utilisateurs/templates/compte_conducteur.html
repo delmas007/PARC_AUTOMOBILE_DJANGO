@@ -47,7 +47,7 @@
                                  </tr>
                              </thead>
                              <tbody>
-                             {% if mission %}
+                             {% if mission and prolongement %}
                                 {% for deplacement in mission %}
                                 {% for prolongements in prolongement %}
                                      <tr>
@@ -95,6 +95,47 @@
                                      </tr>
                                 {% endfor %}
                                 {% endfor %}
+                                {% elif mission %}
+                                 {% for deplacement in mission %}
+                                         <tr>
+                                             <td>{{ deplacement.vehicule }}</td>
+                                             <td>{{ deplacement.date_depart }}</td>
+                                             <td>{{ deplacement.duree_deplacement }}</td>
+                                             <td>{{ deplacement.kilometrage_depart }} Km/h</td>
+                                             <td>{{ deplacement.niveau_carburant }} Litres</td>
+                                             <td>
+                                                 {% if deplacement.date_depart <= date_aujourdui %}
+
+                                                     {% if deplacement.id not in prolongement_encours and deplacement.id not in prolongement_refuse and deplacement.id not in prolongement_accepter %}
+
+                                                         <button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info terminer-btn" data-toggle="modal" data-target="#exampleModalScrollable" data-deplacement-id="{{ deplacement.id }}">
+                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                                                                 <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
+                                                                 <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
+                                                             </svg>
+                                                             Demander Prolongement
+                                                         </button>
+                                                     {% elif deplacement.id in prolongement_encours and deplacement.id not in prolongement_refuse and deplacement.id not in prolongement_accepter%}
+                                                         <span style="border:none; background-color: #2db92f; color: white; cursor: auto" class="btn mb-3 btn-infot">
+                                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-check-fill" viewBox="0 0 16 16">
+                                                            <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m-1.146 6.854-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
+                                                        </svg>
+                                                       Demande DEJA FAITES
+                                                   </span>
+                                                     {% elif deplacement.id not in prolongement_encours and deplacement.id  in prolongement_refuse or  deplacement.id  in prolongement_accepter%}
+                                                         <span style="border:none; background-color: #2db92f; color: white; cursor: auto" class="btn mb-3 btn-infot">
+                                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-check-fill" viewBox="0 0 16 16">
+                                                            <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m-1.146 6.854-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
+                                                        </svg>
+                                                       Veuillez regarder la reponse dans VOIR MES DEMANDES
+                                                   </span>
+                                                     {% endif %}
+                                                 {% endif %}
+
+
+                                             </td>
+                                         </tr>
+                                 {% endfor %}
                                 {% else %}
                                  <tr>
                                      <td colspan="10" class="text-center">Aucun véhicule disponible</td>
