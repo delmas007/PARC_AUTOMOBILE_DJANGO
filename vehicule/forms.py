@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ClearableFileInput
 from django.forms.widgets import Input
 
-from Model.models import Vehicule, Marque, Type_Commerciale, Carburant
+from Model.models import Vehicule, Marque, Type_Commerciale, Carburant, type_carburant
 
 
 class XYZ_DateInput(forms.DateInput):
@@ -49,7 +49,7 @@ class VehiculeForm(forms.ModelForm):
 
     marque = forms.ModelChoiceField(queryset=Marque.objects.all(), required=True)
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
-    energie = forms.ModelChoiceField(queryset=Carburant.objects.all(), required=True)
+    energie = forms.ModelChoiceField(queryset=type_carburant.objects.all(), required=True)
     type_commercial = forms.ModelChoiceField(queryset=Type_Commerciale.objects.all(), required=True)
 
     def __init__(self, *args, **kwargs):
@@ -69,7 +69,9 @@ class VehiculeForm(forms.ModelForm):
         self.fields['image_recto'].required = True
         self.fields['image_verso'].required = True
         self.fields['date_expiration_assurance'].required = True
-        self.fields['date_videnge'].required = True
+        self.fields['date_visite_technique'].required = True
+        self.fields['videnge'].required = True
+        self.fields['taille_reservoir'].required = True
         self.fields['date_mise_circulation'].required = True
         self.fields['energie'].widget.attrs.update({
             'class': "form-control",
@@ -188,4 +190,9 @@ class marqueForm(forms.ModelForm):
 class typeForm(forms.ModelForm):
     class Meta:
         model = Type_Commerciale
+        fields = '__all__'
+
+class typeCarburantForm(forms.ModelForm):
+    class Meta:
+        model = type_carburant
         fields = '__all__'

@@ -38,6 +38,7 @@ def enregistrer_deplacement(request):
         if form.is_valid():
 
             deplacement = form.save(commit=False)
+
             deplacement.utilisateur = request.user
 
             # Obtenez l'instance du véhicule associé à ce déplacement (hypothétique)

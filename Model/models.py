@@ -63,6 +63,9 @@ class type_carburant(models.Model):
     nom = models.CharField()
     prix = models.IntegerField()
 
+    def __str__(self):
+        return f" {self.nom} "
+
 
 class Conducteur(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
@@ -144,6 +147,7 @@ class Vehicule(models.Model):
     videnge = models.IntegerField(blank=False)
     # prix_location
     energie = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
+    disponibilite = models.BooleanField(default=True)
 
     def __str__(self):
         return f" {self.marque} {self.type_commercial} {self.numero_immatriculation} "
@@ -160,7 +164,8 @@ class Deplacement(models.Model):
     date_depart = models.DateField(blank=True, null=True)
     kilometrage_depart = models.IntegerField()
     duree_deplacement = models.IntegerField()
-    photo_jauge_depart = models.ImageField(upload_to='jaugeDepart/', null=True, blank=True)
+    photo_jauge_depart = models.ImageField(upload_to='photo_jauge/', blank=False)
+
 
     def __str__(self):
         return f"{self.vehicule} - {self.conducteur.nom}"
