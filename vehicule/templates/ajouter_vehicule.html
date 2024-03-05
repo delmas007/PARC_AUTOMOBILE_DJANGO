@@ -231,7 +231,7 @@
                 <form method="post" id="typeForm">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <select class="form-control " id="marque2" name="marque" required>
+                      <select class="form-control" id="marque2" name="marque" required style="width: 100%;">
                             <option value="">Sélectionner une marque</option>
                             {% for marque in marques %}
                             <option value="{{ marque.id }}">{{ marque.marque }} </option>
