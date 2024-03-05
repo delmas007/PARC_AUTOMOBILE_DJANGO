@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ClearableFileInput
 from django.forms.widgets import Input
 
-from Model.models import Vehicule, Marque, Type_Commerciale
+from Model.models import Vehicule, Marque, Type_Commerciale, Carburant
 
 
 class XYZ_DateInput(forms.DateInput):
@@ -49,7 +49,7 @@ class VehiculeForm(forms.ModelForm):
 
     marque = forms.ModelChoiceField(queryset=Marque.objects.all(), required=True)
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
-    energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
+    energie = forms.ModelChoiceField(queryset=Carburant.objects.all(), required=True)
     type_commercial = forms.ModelChoiceField(queryset=Type_Commerciale.objects.all(), required=True)
 
     def __init__(self, *args, **kwargs):
@@ -119,7 +119,7 @@ class VehiculeModifierForm(forms.ModelForm):
         exclude = ['disponibilite', 'marque', 'type_commercial']
 
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
-    energie = forms.ChoiceField(choices=Vehicule._meta.get_field('energie').choices, required=True)
+    energie = forms.ModelChoiceField(queryset=Carburant.objects.all(), required=True)
 
     def __init__(self, *args, **kwargs):
         super(VehiculeModifierForm, self).__init__(*args, **kwargs)

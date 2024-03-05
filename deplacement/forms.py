@@ -86,7 +86,7 @@ class EtatArriveForm(forms.ModelForm):
 
     class Meta:
         model = EtatArrive
-        fields = ['deplacement_id', 'kilometrage_arrive', 'niveau_carburant_a']
+        fields = ['deplacement_id', 'kilometrage_arrive', 'photo_jauge_arrive']
         images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
 
     def __init__(self, *args, **kwargs):
