@@ -213,7 +213,7 @@ class Demande_prolongement(models.Model):
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True, )
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     kilometrage = models.IntegerField()
-    models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
+    photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.conducteur.nom} {self.conducteur.prenom}"
