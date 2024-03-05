@@ -127,6 +127,7 @@
                                        {% endif %}
                                    </div>
                                    <div class="form-group col-md-6 {% if conducteur_form.email.errors %}has-error{% endif %}" style="margin-top: 33px">
+                                       <label for="num_cni">Une photo du conducteur( facultatif ):</label>
                                        <div class="form-control h-auto" style="border-radius: 10px">
                                            <input placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image"  value="{% if conducteur_form.image.value %}{{ conducteur_form.image.value }}{% endif %}">
                                        </div>
