@@ -118,10 +118,12 @@ class Vehicule(models.Model):
     carrosserie = models.CharField(max_length=250, blank=True, null=True)
     place_assises = models.IntegerField(blank=True, null=True)
     date_expiration_assurance = models.DateField()
-    date_videnge = models.DateField()
     kilometrage = models.IntegerField()
     image_recto = models.ImageField(upload_to='carteGrise/', blank=False)
     image_verso = models.ImageField(upload_to='carteGrise/', blank=False)
+    date_visite_technique = models.DateField(blank=False)
+    taille_reservoir = models.IntegerField(blank=False)
+    videnge = models.IntegerField(blank=False)
     # prix_location
     energie = models.CharField(
         max_length=250,
@@ -152,7 +154,7 @@ class Deplacement(models.Model):
     date_depart = models.DateField(blank=True, null=True)
     niveau_carburant = models.IntegerField()
     duree_deplacement = models.IntegerField()
-    kilometrage_depart = models.IntegerField()
+    photo_jauge_depart = models.ImageField(upload_to='jaugeDepart/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.vehicule} - {self.conducteur.nom}"
@@ -204,6 +206,7 @@ class Demande_prolongement(models.Model):
     refuser = models.BooleanField(default=False)
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True, )
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
+    models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.conducteur.nom} {self.conducteur.prenom}"
@@ -245,9 +248,9 @@ class EtatArrive(models.Model):
                                     related_name='deplacement_etat')
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='utilisateur_etat')
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, blank=True, null=True)
-    kilometrage_arrive = models.IntegerField()
     niveau_carburant_a = models.IntegerField()
     date_arrive = models.DateField(auto_now=True)
+    photo_jauge_arrive = models.ImageField(upload_to='jaugeArrive/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.date_arrive:
