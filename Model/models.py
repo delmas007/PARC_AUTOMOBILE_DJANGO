@@ -47,16 +47,11 @@ class Roles(models.Model):
 
 
 class type_entretien(models.Model):
-    ROLE_CHOICES = [
-        ('VIDENGE', 'VIDENGE'),
-        ('ENTRETIEN', 'ENTRETIEN'),
-        ('AUTRE', 'AUTRE'),
 
-    ]
-    role = models.CharField(max_length=200, choices=ROLE_CHOICES)
+    nom = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.get_role_display()
+        return self.nom
 
 
 class type_carburant(models.Model):
@@ -77,6 +72,7 @@ class Conducteur(models.Model):
     disponibilite = models.BooleanField(default=True)
     num_cni = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
+    supprimer = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.utilisateur.nom} {self.utilisateur.prenom} "
@@ -148,6 +144,7 @@ class Vehicule(models.Model):
     # prix_location
     energie = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
     disponibilite = models.BooleanField(default=True)
+    supprimer = models.BooleanField(default=False)
 
     def __str__(self):
         return f" {self.marque} {self.type_commercial} {self.numero_immatriculation} "
@@ -236,11 +233,12 @@ class Carburant(models.Model):
 class Entretien(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
-    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, blank=True, null=True)
     date_entretien = models.DateField()
     prix_entretient = models.IntegerField()
     description = models.TextField(blank=True)
     type = models.ForeignKey(type_entretien, on_delete=models.SET_NULL, null=True)
+    recu = models.ImageField(upload_to='recu/', blank=False)
 
 
 class EtatArrive(models.Model):

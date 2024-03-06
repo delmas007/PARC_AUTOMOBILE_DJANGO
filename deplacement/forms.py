@@ -33,8 +33,8 @@ class DeplacementForm(forms.ModelForm):
                 Q(disponibilite=True) | Q(pk=conducteur_actuel.pk))
         else:
             # Si aucune instance n'existe (ajout), afficher tous les véhicules/conducteurs disponibles
-            self.fields['vehicule'].queryset = Vehicule.objects.filter(disponibilite=True)
-            self.fields['conducteur'].queryset = Conducteur.objects.filter(disponibilite=True)
+            self.fields['vehicule'].queryset = Vehicule.objects.filter(disponibilite=True).exclude(supprimer=True)
+            self.fields['conducteur'].queryset = Conducteur.objects.filter(disponibilite=True).exclude(supprimer=True)
 
         # Mise à jour des attributs du widget 'vehicule'
         self.fields['vehicule'].widget.attrs.update({
@@ -90,6 +90,6 @@ class EtatArriveForm(forms.ModelForm):
         model = EtatArrive
         fields = ['deplacement_id', 'kilometrage_arrive', 'photo_jauge_arrive']
         images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
-
+        photo_jauge_arrive= forms.ImageField(required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

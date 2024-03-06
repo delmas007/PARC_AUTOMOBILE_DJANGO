@@ -7,13 +7,15 @@ from entretien.forms import EntretienForm
 
 def Ajouter_Entretien(request):
     if request.method == 'POST':
-        form = EntretienForm(request.POST)
+        form = EntretienForm(request.POST, request.FILES)
         if form.is_valid():
+            form.save(commit=False)
+            form.instance.utilisateur = request.user
             form.save()
-            messages.success(request, 'Le véhicule a été ajouté avec succès.')
-            return redirect('vehicule:Ajouter_vehicule')
+            messages.success(request, "L' entretien a été ajouté avec succès.")
+            return redirect('entretien:Ajouter_Entretien')
         else:
             print(form.errors)
     else:
         form = EntretienForm()
-    return render(request, 'enregistrer_deplacement.html', {'form': form})
+    return render(request, 'enregistrer_entretient.html', {'form': form})

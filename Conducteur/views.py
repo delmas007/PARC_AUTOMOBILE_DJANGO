@@ -53,6 +53,9 @@ def tous_les_conducteurs(request):
 
 def supprimer_conducteur(request, conducteur_id):
     utilisateurs = get_object_or_404(Utilisateur, conducteur=conducteur_id)
+    conducteur = get_object_or_404(Conducteur, pk=conducteur_id)
+    conducteur.supprimer = True
+    conducteur.save()
     utilisateurs.is_active = False
     utilisateurs.save()
     return redirect('conducteur:tous_les_conducteurs')

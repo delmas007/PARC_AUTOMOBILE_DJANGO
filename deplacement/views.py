@@ -208,6 +208,9 @@ def enregistrer_etatArriver(request):
             if conducteur:
                 conducteur.disponibilite = True
                 conducteur.save()
+            photo_jauge_arrive = request.FILES.get('photo_jauge_arrive')
+            if photo_jauge_arrive:
+                etat_arrive.photo_jauge_arrive = photo_jauge_arrive
             etat_arrive.save()
             images = request.FILES.getlist('images')
             if len(images) <= 6:
