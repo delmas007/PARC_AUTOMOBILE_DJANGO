@@ -23,3 +23,19 @@ class EntretienForm(forms.ModelForm):
     class Meta:
         model = Entretien
         fields = '__all__'
+
+
+class IncidentSearchForm(forms.Form):
+    q = forms.CharField(
+        label='',
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Rechercher un véhicule : Marque, matricule...', 'class': 'form-control'}),
+    )
+
+
+class EntretienModifierForm(forms.ModelForm):
+    class Meta:
+        model = Entretien
+        fields = ['description']
+

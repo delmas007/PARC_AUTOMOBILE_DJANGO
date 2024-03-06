@@ -1,7 +1,9 @@
+from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 
+from Admin.forms import typeCarburantForm
 from Conducteur.forms import ConducteurSearchForm
 from Model.forms import UserRegistrationForm
 from Model.models import Roles, Utilisateur
@@ -93,3 +95,17 @@ def gestionnaire_a_search_i(request):
             context['no_results'] = True
 
     return render(request, 'tous_les_gestionnairess.html', context)
+
+
+def Ajouter_Carburant(request):
+    if request.method == 'POST':
+        form = typeCarburantForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Carburant ajouté avec succès.")
+            return redirect('admins:Ajouter_Carburant')
+        else:
+            print(form.errors)
+    else:
+        form = typeCarburantForm()
+    return render(request, 'enregistrer_carburant.html', {'form': form})

@@ -34,6 +34,7 @@
             {% url 'incident:liste_incidents_externe' as liste_incident_externe_url %}
             {% url 'incident:liste_incidents_interne' as liste_incident_interne_url %}
             {% url 'entretien:Ajouter_Entretien' as entretien_Ajouter_Entretien_url %}
+            {% url 'entretien:liste_Entretien' as entretien_liste_Entretien_url %}
             {% url 'carburant:Ajouter_carburant' as carburant_Ajout_carburant_url %}
 
     <div id="sidebar-scrollbar">
@@ -77,11 +78,12 @@
                     </ul>
              </li>
 
-                <li class="{% if request.path == entretien_Ajouter_Entretien_url   %}active{% endif %}">
+                <li class="{% if request.path == entretien_Ajouter_Entretien_url or request.path == entretien_liste_Entretien_url   %}active{% endif %}">
                     <a href="#entretien" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-tools" style=" margin-right: 5px"></i><span>Entretien</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="entretien" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == entretien_Ajouter_Entretien_url %}active{% endif %}" ><a href="{% url 'entretien:Ajouter_Entretien' %}"><i class="bi bi-wrench-adjustable"></i> Enregistrer</a></li>
-                        </ul>
+                        <li class="{% if request.path == entretien_liste_Entretien_url %}active{% endif %}" ><a href="{% url 'entretien:liste_Entretien' %}"><i class="bi bi-list-check"></i> Liste entretien</a></li>
+                    </ul>
                 </li>
 
 
