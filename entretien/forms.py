@@ -11,7 +11,7 @@ class EntretienForm(forms.ModelForm):
 
         self.fields['type'].widget.attrs.update({
             'class': "form-control",
-            'id': "selectVehicule",
+            'id': "selectType",
             'required': True,
         })
         self.fields['vehicule'].widget.attrs.update({

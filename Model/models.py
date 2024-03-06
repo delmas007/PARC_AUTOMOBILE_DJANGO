@@ -47,16 +47,11 @@ class Roles(models.Model):
 
 
 class type_entretien(models.Model):
-    ROLE_CHOICES = [
-        ('VIDENGE', 'VIDENGE'),
-        ('VISITE', 'VISITE'),
-        ('AUTRE', 'AUTRE'),
 
-    ]
-    nom = models.CharField(max_length=200, choices=ROLE_CHOICES)
+    nom = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.get_nom_display()
+        return self.nom
 
 
 class type_carburant(models.Model):
