@@ -55,10 +55,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="niveau_carburant">Niveau de carburant(litres):</label>
-                                        <div class="col-sm-10">
-                                            <input type="number" class="form-control" id="niveau_carburant"  name="niveau_carburant" value="{{ form.niveau_carburant.value }}">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Photo de la jauge:</label>
+                                        <div class="form-control col-sm-10" style="border-radius: 10px">
+                                            <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
                                         </div>
+                                        {% if form.photo_jauge_depart.errors %}
+                                            <p class="help-block">Veillez joindre une image</p>
+                                        {% endif %}
                                     </div>
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="kilometrage_depart">Kilométrage(km/h):</label>
@@ -79,11 +82,11 @@
                                 </form>
                             </div>
                         </div>
-                      <div class="form-horizontal">
-                    <textarea class="col-md-12" rows="5" disabled id="textareaDeplacements" placeholder="DEPLACEMENT CONDUCTEURS"></textarea>
-                    <textarea class="col-md-12" rows="5" disabled id="textareaDeplacements2" placeholder="DEPLACEMENT VEHICULES"></textarea>
+                        <div class="form-horizontal">
+                            <textarea class="col-md-6 mr-md-auto" rows="5" hidden="hidden" disabled id="textareaDeplacements"></textarea>
+                            <textarea class="col-md-6 ml-md-auto" rows="5" hidden="hidden" disabled id="textareaDeplacements2" ></textarea>
 
-                  </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -134,6 +137,17 @@
         </div>
     </div>
     {% include 'footer.html' %}
+
+
+    <script>
+        $(document).ready(function() {
+            $('#selectVehicule').select2();
+        });
+
+        $(document).ready(function() {
+            $('#selectConducteur').select2();
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var fileInput = document.getElementById('customFile');
@@ -147,97 +161,128 @@
             });
         });
     </script>
-          <script>
-          document.addEventListener('DOMContentLoaded', function () {
-              var fileInput = document.getElementById('customFile');
-              fileInput.addEventListener('change', function (event) {
-                  var selectedFiles = event.target.files;
-                  var maxAllowedFiles = 6;
-                  if (selectedFiles.length > maxAllowedFiles) {
-                      $('#existImage').modal('show');
-                      fileInput.value = '';
-                  }
-              });
-          });
-      </script>
-   <script>
-    // Récupérer la date actuelle
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January est 0 !
-    var yyyy = today.getFullYear();
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var fileInput = document.getElementById('customFile');
+            fileInput.addEventListener('change', function (event) {
+                var selectedFiles = event.target.files;
+                var maxAllowedFiles = 6;
+                if (selectedFiles.length > maxAllowedFiles) {
+                    $('#existImage').modal('show');
+                    fileInput.value = '';
+                }
+            });
+        });
+    </script>
+    <script>
+        // Récupérer la date actuelle
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); // January est 0 !
+        var yyyy = today.getFullYear();
 
-    today = yyyy + '-' + mm + '-' + dd;
+        today = yyyy + '-' + mm + '-' + dd;
 
-    // Affecterf la date actuelle comme date minimale
-    document.getElementById("date_depart").min = today;
-</script>
+        // Affecterf la date actuelle comme date minimale
+        document.getElementById("date_depart").min = today;
+    </script>
 
 
     <script>
-    $(document).ready(function() {
-        // Gestionnaire d'événements pour le changement de conducteur
-        $('#selectConducteur').change(function() {
-            var selectedConducteurId = $(this).val();
-            // Vérifie si l'identifiant du conducteur est une chaîne non vide
-            if (selectedConducteurId !== '') {
-                $.ajax({
-                    url: '{% url "deplacement:get_deplacements_data" %}', // URL pour récupérer les déplacements du conducteur
-                    method: 'GET',
-                    data: {
-                        conducteur_id: selectedConducteurId // ID du conducteur sélectionné
-                    },
-                    success: function(response) {
-                        var deplacements = response.deplacements;
-                        var textareaContent = '';
-                        // Construire le contenu du textarea avec les dates et durées des déplacements
-                        deplacements.forEach(function(deplacement) {
-                            textareaContent += 'Date de départ : ' + deplacement.date_depart + ', Durée : ' + deplacement.duree_deplacement + '\n';
-                        });
-                        // Mettre à jour le contenu du textarea
-                        $('#textareaDeplacements').val(textareaContent);
-                    },
-                    error: function(xhr, errmsg, err) {
-                        console.log(errmsg);
-                    }
-                });
-            } else {
-                // Si aucun conducteur n'est sélectionné, le textarea est vidé
-                $('#textareaDeplacements').val('');
-            }
+        $(document).ready(function() {
+            $('#selectConducteur').change(function() {
+                var selectedConducteurId = $(this).val();
+                var selectedOption = $(this).find('option:selected'); // Déclarer et récupérer l'élément sélectionné
+                var selectedConducteurText = selectedOption.text(); // Récupérer le texte de l'option sélectionnée
+                // Vérifie si l'identifiant du conducteur est une chaîne non vide
+                if (selectedConducteurId !== '') {
+                    $.ajax({
+                        url: '{% url "deplacement:get_deplacements_data" %}', // Remplacez "nom_de_votre_vue_get_deplacements_data" par le nom de votre vue Django pour récupérer les déplacements
+                        method: 'GET',
+                        data: {
+                            conducteur_id: selectedConducteurId // ID du conducteur sélectionné
+                        },
+                        success: function(response) {
+                            var deplacements = response.deplacements;
+                            if (deplacements.length > 0) {
+                                var textareaContent = 'Déplacements du conducteur ' + selectedConducteurText + ' : \n';
+                                textareaContent += 'Date de départ | Date de fin\n';
+                                textareaContent += '-------------------------\n';
+                                // Construire le contenu du textarea avec les dates et durées des déplacements
+                                deplacements.forEach(function(deplacement) {
+                                    var dateDebut = new Date(deplacement.date_depart);
+                                    var dureeJours = deplacement.duree_deplacement;
+                                    var dateFin = new Date(dateDebut);
+                                    dateFin.setDate(dateDebut.getDate() + dureeJours);
+                                    textareaContent += '' + deplacement.date_depart + '     |     ' + dateFin.toLocaleDateString() + '\n';
+                                });
+                                // Mettre à jour le contenu du textarea
+                                $('#textareaDeplacements').val(textareaContent);
+                                $('#textareaDeplacements').removeAttr('hidden disabled');
+                            } else {
+                                $('#textareaDeplacements').val('');
+                                $('#textareaDeplacements').attr('hidden', true);
+                            }
+                        },
+                        error: function(xhr, errmsg, err) {
+                            console.log(errmsg);
+                        }
+                    });
+                } else {
+                    // Si aucun conducteur n'est sélectionné, le textarea est vidé
+                    $('#textareaDeplacements').val('');
+                }
+            });
         });
 
+
         // Gestionnaire d'événements pour le changement de véhicule
-        $('#selectVehicule').change(function() {
-            var selectedVehiculeId = $(this).val();
-            // Vérifie si l'identifiant du véhicule est une chaîne non vide
-            if (selectedVehiculeId !== '') {
-                $.ajax({
-                    url: '{% url "deplacement:get_deplacements_data2" %}', // URL pour récupérer les déplacements du véhicule
-                    method: 'GET',
-                    data: {
-                        vehicule_id: selectedVehiculeId // ID du véhicule sélectionné
-                    },
-                    success: function(response) {
-                        var deplacements = response.deplacements;
-                        var textareaContent = '';
-                        // Construire le contenu du textarea avec les dates et durées des déplacements
-                        deplacements.forEach(function(deplacement) {
-                            textareaContent += 'Date de départ : ' + deplacement.date_depart + ', Durée : ' + deplacement.duree_deplacement + '\n';
-                        });
-                        // Mettre à jour le contenu du textarea
-                        $('#textareaDeplacements2').val(textareaContent);
-                    },
-                    error: function(xhr, errmsg, err) {
-                        console.log(errmsg);
-                    }
-                });
-            } else {
-                // Si aucun véhicule n'est sélectionné, le textarea est vidé
-                $('#textareaDeplacements2').val('');
-            }
-        });
-    });
-</script>
+        $(document).ready(function() {
+            $('#selectVehicule').change(function () {
+                var selectedVehiculeId = $(this).val();
+                var selectedOption = $(this).find('option:selected'); // Déclarer et récupérer l'élément sélectionné
+                var selectedVehiculeText = selectedOption.text(); // Récupérer le texte de l'option sélectionnée
+                // Vérifie si l'identifiant du véhicule est une chaîne non vide
+                if (selectedVehiculeId !== '') {
+                    $.ajax({
+                        url: '{% url "deplacement:get_deplacements_data2" %}', // URL pour récupérer les déplacements du véhicule
+                        method: 'GET',
+                        data: {
+                            vehicule_id: selectedVehiculeId // ID du véhicule sélectionné
+                        },
+                        success: function (response) {
+                            var deplacements = response.deplacements;
+                            if (deplacements.length > 0) {
+                                var textareaContent = 'Indisponibilité du véhicule ' + selectedVehiculeText + ' : \n';
+                                textareaContent += 'Date de départ | Date de fin\n';
+                                textareaContent += '-------------------------\n';
+                                // Construire le contenu du textarea avec les dates et durées des déplacements
+                                deplacements.forEach(function (deplacement) {
+                                    var dateDebut = new Date(deplacement.date_depart);
+                                    var dureeJours = deplacement.duree_deplacement;
+                                    var dateFin = new Date(dateDebut);
+                                    dateFin.setDate(dateDebut.getDate() + dureeJours);
+
+                                    textareaContent += '' + deplacement.date_depart + '     |     ' + dateFin.toLocaleDateString() + '\n';
+                                });
+                                // Mettre à jour le contenu du textarea
+                                $('#textareaDeplacements2').val(textareaContent);
+                                $('#textareaDeplacements2').removeAttr('hidden disabled');
+                            } else {
+                                $('#textareaDeplacements2').val('');
+                                $('#textareaDeplacements2').attr('hidden', true);
+                            }
+                        },
+                        error: function (xhr, errmsg, err) {
+                            console.log(errmsg);
+                        }
+                    });
+                } else {
+                    // Si aucun véhicule n'est sélectionné, le textarea est vidé
+                    $('#textareaDeplacements2').val('');
+                }
+            })
+        })
+    </script>
     </body>
 {% endblock %}

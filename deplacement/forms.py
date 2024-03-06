@@ -54,9 +54,10 @@ class DeplacementForm(forms.ModelForm):
 
     class Meta:
         model = Deplacement
-        exclude = ['demande_prolongement_id']
+        fields='__all__'
 
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+    photo_jauge_depart = forms.ImageField(required=False)
 
 
 class deplacementModifierForm(forms.ModelForm):
@@ -76,9 +77,10 @@ class deplacementModifierForm(forms.ModelForm):
 
     class Meta:
         model = Deplacement
-        exclude = ['demande_prolongement_id', 'utilisateur']
+        exclude = ['utilisateur']
 
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
+    photo_jauge_depart = forms.ImageField(required=False)
 
 
 class EtatArriveForm(forms.ModelForm):

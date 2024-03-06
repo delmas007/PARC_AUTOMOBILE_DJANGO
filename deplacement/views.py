@@ -47,6 +47,10 @@ def enregistrer_deplacement(request):
             # Obtenez l'instance du conducteur associé à ce déplacement (hypothétique)
             conducteur = deplacement.conducteur
 
+            photo_jauge_depart = request.FILES.get('photo_jauge_depart')
+            if photo_jauge_depart:
+                deplacement.photo_jauge_depart = photo_jauge_depart
+
             deplacement.save()
             images = request.FILES.getlist('images')
             if len(images) <= 6:
@@ -154,6 +158,10 @@ def modifier_deplacement(request, pk):
                 Photo.objects.filter(deplacement=deplacement).delete()
                 for image in request.FILES.getlist('images'):
                     Photo.objects.create(deplacement=deplacement, images=image)
+                if request.FILES.getlist('images'):
+                 Photo.objects.filter(deplacement=deplacement).delete()
+                 for image in request.FILES.getlist('images'):
+                    Photo.objects.create(deplacement=deplacement, images=image)
             form.save()
 
             return redirect('deplacement:liste_deplacement')
@@ -164,9 +172,11 @@ def modifier_deplacement(request, pk):
             'conducteur': deplacement.conducteur,
             'date_depart': deplacement.date_depart,
             'duree_deplacement': deplacement.duree_deplacement,
-            'niveau_carburant': deplacement.niveau_carburant,
             'kilometrage_depart': deplacement.kilometrage_depart,
+            'photo_jauge_depart': deplacement.photo_jauge_depart
         })
+        # if deplacement.photo_jauge_depart:
+        #     initial_data['photo_jauge_depart'] = deplacement.image_jauge
 
     return render(request, 'modifier_deplacement.html', {'form': form, 'deplacement': deplacement, 'photos': photos})
 

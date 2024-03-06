@@ -51,15 +51,15 @@
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="email">Durée ( jours ):</label>
                                         <div class="col-sm-10">
-                                            <input type="number" class="form-control" id="exampleInputdate"  name="duree_deplacement">
+                                            <input type="number" class="form-control" id="exampleInputdate"  min="1" name="duree_deplacement">
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="images" class="font-weight-bold">Photo jauge d'Essence :</label>
-                                        <div class="form-control h-auto" style="border-radius: 10px">
-                                            <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
+                                    <div class="form-group row">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Photo de la jauge:</label>
+                                        <div class="form-control col-sm-10" style="border-radius: 10px">
+                                            <input  required  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
                                         </div>
-                                        {% if form.image.errors %}
+                                        {% if form.photo_jauge_depart.errors %}
                                             <p class="help-block">Veillez joindre une image</p>
                                         {% endif %}
                                     </div>
