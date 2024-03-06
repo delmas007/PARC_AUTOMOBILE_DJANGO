@@ -115,13 +115,17 @@
                                             <td><strong>KILOMETRAGE DE DEPART :</strong></td>
                                             <td class="center-text">{{ deplacement.kilometrage_depart }} Km/h</td>
                                         </tr>
-                                        <tr>
-                                            <td><strong>JAUDE D'ESSENCE :</strong></td>
-                                            <img src="{{ deplacement.photo_jauge_depart }}" alt="Image de la jauge">
-                                        </tr>
                                         </tbody>
                                     </table>
+                                <tr>
+                                            <td ><strong>JAUGE D'ESSENCE :</strong></td>
+                                            <td  class="center-text"></td>
+                                        </tr>
                                     <div class="imageContent"  style="align-items: center; text-align: center;">
+                                    <div>
+                                        <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">JAUGE D'ESSENCE</label></div>
+                                        <img src="{{ deplacement.photo_jauge_depart.url }}" alt="Image de la jauge" style="height: 250px" onclick="showImagePopup('{{ deplacement.photo_jauge_depart.url }}')">
+                                    </div>
                                         <div>  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE AU DEPART</label></div>
                                         {% for image in image %}
                                             <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
@@ -158,6 +162,35 @@
             popupContainer.style.padding = '70px';
             popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
             popupContainer.style.zIndex = '9999';
+            document.body.appendChild(popupContainer);
+
+            popupContainer.addEventListener('click', function (event) {
+                if (event.target === popupContainer) {
+                    document.body.removeChild(popupContainer);
+                }
+            });
+        }
+          function showImagePopup(photo_jauge_departURL) {
+            var popupContainer = document.createElement('div');
+            popupContainer.style.position = 'fixed';
+            popupContainer.style.top = '50%';
+            popupContainer.style.left = '50%';
+            popupContainer.style.width = '50%';
+            popupContainer.style.height = 'auto';
+            popupContainer.style.transform = 'translate(-50%, -50%)';
+            popupContainer.style.background = 'rgba(255, 255, 255, 0.9)';
+            popupContainer.style.padding = '20px';
+            popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+            popupContainer.style.zIndex = '9999';
+
+            var popupImage = document.createElement('img');
+            popupImage.src = photo_jauge_departURL;
+            popupImage.style.display = 'block';
+            popupImage.style.margin = '0 auto';
+            popupImage.style.maxWidth = '100%';
+            popupImage.style.height = 'auto';
+
+            popupContainer.appendChild(popupImage);
             document.body.appendChild(popupContainer);
 
             popupContainer.addEventListener('click', function (event) {

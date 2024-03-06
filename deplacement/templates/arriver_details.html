@@ -100,6 +100,11 @@
                                             <td></td>
                                         </tr>
                                         <tr>
+                                            <td><strong>TAILLE DU RESERVOIR :</strong></td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.vehicule }} Litres</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
                                             <td><strong></strong></td>
                                             <td class="center-text"><strong>DEPART</strong></td>
                                             <td class="center-text"><strong>ARRIVE</strong></td>
@@ -114,15 +119,21 @@
                                             <td class="center-text">{{ etat_arrive.deplacement.kilometrage_depart }} Km/h</td>
                                             <td class="center-text">{{ etat_arrive.kilometrage_arrive }} Km/h</td>
                                         </tr>
-                                        <tr>
-                                            <td><strong>NIVEAU DE CARBURANT :</strong></td>
-                                            <td class="center-text">{{ etat_arrive.deplacement.niveau_carburant }} Litres</td>
-                                            <td class="center-text">{{ etat_arrive.niveau_carburant_a }} Litres</td>
-                                        </tr>
                                         </tbody>
                                     </table>
 
                                     <div class="imageContent"  style="align-items: center; text-align: center;">
+
+                                        <div style="overflow: auto;">
+                                            <div style="float: left; width: 50%;">
+                                                <label style="display: block; text-align: center; text-decoration: underline; text-underline: #0b0b0b">JAUGE D'ESSENCE AU DÉPART</label>
+                                                <img src="{{ deplacement.photo_jauge_depart.url }}" alt="Image de la jauge" style="height: 250px; display: block; margin: 0 auto;" onclick="showImagePopup('{{ deplacement.photo_jauge_depart.url }}')">
+                                            </div>
+                                            <div style="float: right; width: 50%;">
+                                                <label style="display: block; text-align: center; text-decoration: underline; text-underline: #0b0b0b">JAUGE D'ESSENCE À L'ARRIVÉE</label>
+                                                <img src="{{ etat_arrive.photo_jauge_arrive.url }}" alt="Image de la jauge" style="height: 250px; display: block; margin: 0 auto;" onclick="showImagePopup('{{ etat_arrive.photo_jauge_arrive.url }}')">
+                                            </div>
+                                        </div>
                                         <div style="margin-bottom: 50px;">
                                             <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE AU DEPART</label>
                                             {% for image in images %}
@@ -130,11 +141,11 @@
                                             {% endfor %}
                                         </div>
 
-                                            <div style="margin-top: 270px">  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE A L'ARRIVEE</label>
+                                        <div style="margin-top: 270px">  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE A L'ARRIVEE</label>
                                             {% for image in image %}
                                                 <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
                                             {% endfor %}
-                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -208,6 +219,36 @@
             popupContainer.style.padding = '70px';
             popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
             popupContainer.style.zIndex = '9999';
+            document.body.appendChild(popupContainer);
+
+            popupContainer.addEventListener('click', function (event) {
+                if (event.target === popupContainer) {
+                    document.body.removeChild(popupContainer);
+                }
+            });
+        }
+
+        function showImagePopup(photo_jauge_departURL) {
+            var popupContainer = document.createElement('div');
+            popupContainer.style.position = 'fixed';
+            popupContainer.style.top = '50%';
+            popupContainer.style.left = '50%';
+            popupContainer.style.width = '50%';
+            popupContainer.style.height = 'auto';
+            popupContainer.style.transform = 'translate(-50%, -50%)';
+            popupContainer.style.background = 'rgba(255, 255, 255, 0.9)';
+            popupContainer.style.padding = '20px';
+            popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+            popupContainer.style.zIndex = '9999';
+
+            var popupImage = document.createElement('img');
+            popupImage.src = photo_jauge_departURL;
+            popupImage.style.display = 'block';
+            popupImage.style.margin = '0 auto';
+            popupImage.style.maxWidth = '100%';
+            popupImage.style.height = 'auto';
+
+            popupContainer.appendChild(popupImage);
             document.body.appendChild(popupContainer);
 
             popupContainer.addEventListener('click', function (event) {
