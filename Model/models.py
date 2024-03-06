@@ -148,6 +148,7 @@ class Vehicule(models.Model):
     # prix_location
     energie = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
     disponibilite = models.BooleanField(default=True)
+    supprimer = models.BooleanField(default=False)
 
     def __str__(self):
         return f" {self.marque} {self.type_commercial} {self.numero_immatriculation} "
