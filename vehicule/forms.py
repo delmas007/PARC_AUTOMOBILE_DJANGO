@@ -128,7 +128,6 @@ class VehiculeModifierForm(forms.ModelForm):
         self.fields['image_recto'].required = True
         self.fields['image_verso'].required = True
         self.fields['date_expiration_assurance'].required = True
-        self.fields['date_videnge'].required = True
         self.fields['date_mise_circulation'].required = True
         self.fields['energie'].widget.attrs.update({
             'class': "form-control",

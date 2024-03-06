@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, ExpressionWrapper, F, fields
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.urls import reverse_lazy
+
 from Model.models import Vehicule, Photo, Marque, Type_Commerciale
 from vehicule.forms import VehiculeForm, VehiculSearchForm, marqueForm, VehiculeModifierForm, typeForm
 from django.views.decorators.http import require_GET
@@ -12,7 +14,7 @@ from django.core.serializers import serialize
 
 # Create your views here.
 
-# Dans votre vue Django
+@login_required(login_url=reverse_lazy('Connexion'))
 def Ajouter_vehicule(request):
     if request.method == 'POST':
         form = VehiculeForm(request.POST, request.FILES)
@@ -37,10 +39,15 @@ def Ajouter_vehicule(request):
     return render(request, 'ajouter_vehicule.html', {'form': form, 'marques': marques})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def liste_vehicules(request):
-    vehicules_list = Vehicule.objects.all().order_by('date_mise_a_jour')
+    vehicules_list = (
+        Vehicule.objects.filter(supprimer=False)
+        .annotate(hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField()))
+        .order_by('-hour')
+    )
 
-    paginator = Paginator(vehicules_list.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(vehicules_list, 5)
     try:
         page = request.GET.get("page")
         if not page:
@@ -53,30 +60,50 @@ def liste_vehicules(request):
     return render(request, 'afficher_vehicule.html', {'vehicules': vehicules_list})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def vehicul_search(request):
     form = VehiculSearchForm(request.GET)
-    vehicules = Vehicule.objects.all()
+    vehicules = (
+        Vehicule.objects.filter(supprimer=False).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
+
+    paginator = Paginator(vehicules, 5)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        vehicules_list = paginator.page(page)
+    except (EmptyPage, PageNotAnInteger):
+
+        vehicules_list = paginator.page(paginator.num_pages())
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
         if query:
-            vehicules = vehicules.filter(Q(marque__marque__icontains=query) |
-                                         Q(numero_immatriculation__icontains=query))
+            vehicules_list = vehicules.filter(Q(marque__marque__icontains=query) |
+                                              Q(numero_immatriculation__icontains=query))
 
-        context = {'vehicules': vehicules, 'form': form}
+        context = {'vehicules': vehicules_list, 'form': form}
         # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
-        if not vehicules.exists() and form.is_valid():
+        if not vehicules_list and form.is_valid():
             context['no_results'] = True
 
     return render(request, 'afficher_vehicule.html', context)
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def supprimer_vehicule(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
-    vehicule.delete()
+    print(vehicule.supprimer)
+    vehicule.supprimer = True
+    vehicule.save()
+    print(vehicule.supprimer)
     return redirect('vehicule:liste_vehicules')
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def modifier_vehicule(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
     photos = Photo.objects.filter(vehicule=pk)
@@ -105,6 +132,7 @@ def modifier_vehicule(request, pk):
     return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule, 'photos': photos})
 
 
+@login_required(login_url='Connexion')
 def ajouter_marque(request):
     if request.method == 'POST':
         form = marqueForm(request.POST)
@@ -123,12 +151,12 @@ def ajouter_marque(request):
     return render(request, 'ajouter_vehicule.html', {'form': form})
 
 
+@login_required(login_url='Connexion')
 def ajouter_type(request):
     if request.method == 'POST':
         form = typeForm(request.POST)
         if form.is_valid():
             marque_id = request.POST.get('marque_id')
-
 
             modele = form.cleaned_data['modele']
             if Type_Commerciale.objects.filter(modele=modele, marque_id=marque_id).exists():
@@ -143,12 +171,14 @@ def ajouter_type(request):
     return render(request, 'ajouter_vehicule.html', {'form': form})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def details_vehicule(request, vehicule_id):
     vehicule = get_object_or_404(Vehicule, id=vehicule_id)
     image = Photo.objects.filter(vehicule=vehicule_id)
     return render(request, 'vehicule_details.html', {'vehicule': vehicule, 'image': image})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 @require_GET
 def get_modeles(request):
     marque_id = request.GET.get('marque_id')

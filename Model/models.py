@@ -77,9 +77,6 @@ class Conducteur(models.Model):
     def __str__(self):
         return f"{self.utilisateur.nom} {self.utilisateur.prenom} "
 
-    class Meta:
-        ordering = ['date_mise_a_jour']
-
 
 class Utilisateur(AbstractBaseUser):
     mon_uuid = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -149,9 +146,6 @@ class Vehicule(models.Model):
     def __str__(self):
         return f" {self.marque} {self.type_commercial} {self.numero_immatriculation} "
 
-    class Meta:
-        ordering = ['-date_mise_a_jour']
-
 
 class Deplacement(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
@@ -163,12 +157,8 @@ class Deplacement(models.Model):
     duree_deplacement = models.IntegerField()
     photo_jauge_depart = models.ImageField(upload_to='photo_jauge/', blank=False)
 
-
     def __str__(self):
         return f"{self.vehicule} - {self.conducteur.nom}"
-
-    class Meta:
-        ordering = ['date_mise_a_jour']
 
 
 class Demande_location(models.Model):
@@ -199,9 +189,6 @@ class Location(models.Model):
         ],
         default='en cours'
     )
-
-    class Meta:
-        ordering = ['date_mise_a_jour']
 
 
 class Demande_prolongement(models.Model):

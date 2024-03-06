@@ -13,16 +13,15 @@
                 <div class="row no-gutters">
                     <div class="col-sm-12 text-center">
                         <div class="iq-error">
-                            <img src="{% static 'images/Success.gif' %}" class="img-fluid iq-error-img" alt="">
-                            <h2 class="mb-0">Oops! This Page is Not Found.</h2>
-                            <p>The requested page dose not exist.</p>
-                            <a class="btn btn-primary mt-3" href="index.html"><i class="ri-home-4-line"></i>Back to Home</a>
+                            <img src="{% static 'images/error/01.png' %}" class="img-fluid iq-error-img" alt="">
+                            <h2 class="mb-0">Oops! La page demandée n'a pas été trouvée.</h2>
+                            <p>Veuillez Revenir à la page d'accueil.</p>
+                            <a class="btn btn-primary mt-3" href="{% url 'Accueil' %}"><i class="ri-home-4-line"></i>Revenir</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-      <!-- Footer -->
       {% include 'footer.html' %}
 
    </body>

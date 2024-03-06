@@ -24,7 +24,7 @@
                          <div class="card-header">
                             <div class="iq-card-header d-flex justify-content-between">
                                <div class="iq-header-title">
-                                  <h4 class="card-title">Modifier les informations de {{ vehicule.marque }}--{{ vehicule.numero_immatriculation }}</h4>
+                                  <h2 class="card-title">Modifier les informations de {{ vehicule.marque }}--{{ vehicule.numero_immatriculation }} <i class="ri-roadster-line"></i></h2>
                                </div>
                             </div>
                          </div>
@@ -34,10 +34,9 @@
                                <div class="row">
                                    <div class="col-12 col-md-6">
                                        <div class="form-group row">
-                                           <label class="control-label col-sm-3  align-self-center mb-0" for="marque">Voiture :</label>
+                                           <label class="control-label col-sm-3  align-self-center mb-0" for="marque">Type commercial :</label>
                                            <div class="col-sm-8">
-                                               {{ vehicule.marque }}
-                                               {{ vehicule.type_commercial }}
+                                                {{ form.type_commercial }}
                                            </div>
                                        </div>
                                    </div>
@@ -157,7 +156,7 @@
                                                 <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image_recto"  value="{% if form.image_verso.value %}{{ form.image_verso.value }}{% endif %}">
                                             </div>
                                             {% if form.image.errors %}
-                                                <p class="help-block">Veillez joindre une image</p>
+                                                <p class="help-block">Veuillez joindre une image</p>
                                             {% endif %}
                                        </div>
                                    </div>
@@ -168,7 +167,7 @@
                                                 <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="image_verso"  value="{% if form.image_recto.value %}{{ form.image_recto.value }}{% endif %}">
                                             </div>
                                             {% if form.image.errors %}
-                                                <p class="help-block">Veillez joindre une image</p>
+                                                <p class="help-block">Veuillez joindre une image</p>
                                             {% endif %}
                                        </div>
                           </div>
@@ -183,7 +182,7 @@
                                                 <input type="file" class="custom-file-input" id="customFile" accept="image/*" name="images" multiple value="{{ form.images.value }}">
                                                 <label class="custom-file-label" for="customFile">Choisir des images</label>
                                             </div>
-                                            <small class="form-text text-muted">Vous pouvez sélectionner 6 images maximum en même temps.</small>
+                                            <small class="form-text text-muted">Vous ne pouvez sélectionner que 6 images maximum.</small>
                                         </div>
                                    </div>
 
@@ -196,7 +195,7 @@
                                    {% for field, errors in form.errors.items %}
                                        {% for error in errors %}
                                            <div class="alert alert-dark mt-4" role="alert">
-                                               <strong>Erreur :</strong> {{ error }}
+                                               <strong>Erreur :</strong>{{ field }} {{ error }}
                                            </div>
                                        {% endfor %}
                                    {% endfor %}

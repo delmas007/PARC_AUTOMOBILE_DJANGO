@@ -97,43 +97,47 @@
                                         <tbody>
                                         <tr>
                                             <td><strong>MARQUE :</strong></td>
-                                            <td class="center-text">{{ vehicule.marque }}</td>
+                                            <td class="center-text">{{ vehicule.marque.marque|capfirst }}</td>
                                         </tr>
+
+                                        <tr>
+                                            <td><strong>TYPE COMMERCIAL :</strong></td>
+                                            <td class="center-text">{{ vehicule.type_commercial.modele|capfirst }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>COULEUR :</strong></td>
+                                            <td class="center-text">{% if vehicule.couleur %} {{ vehicule.couleur|capfirst }} {% else %} AUCUNE {% endif %}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>TYPE DE CARBURANT :</strong></td>
+                                            <td class="center-text">{{ vehicule.energie.nom|capfirst }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>KILOMÉTRAGE :</strong></td>
+                                            <td class="center-text">{{ vehicule.kilometrage }} Km/H</td>
+                                        </tr>
+
                                         <tr>
                                             <td><strong>NUMÉRO DE LA CARTE GRISE :</strong></td>
                                             <td class="center-text">{{ vehicule.carte_grise }}</td>
                                         </tr>
-                                        <tr>
-                                            <td><strong>COULEUR :</strong></td>
-                                            <td class="center-text">{{ vehicule.couleur }}</td>
-                                        </tr>
+
                                         <tr>
                                             <td><strong>NUMÉRO D'IMMATRICULATION :</strong></td>
                                             <td class="center-text">{{ vehicule.numero_immatriculation }}</td>
                                         </tr>
+
+                                        <tr>
+                                            <td><strong>NUMÉRO du VIN/Chassis :</strong></td>
+                                            <td class="center-text">{{ vehicule.numero_chassis }}</td>
+                                        </tr>
+
                                         <tr>
                                             <td><strong>DATE DE MISE EN SERVICE :</strong></td>
                                             <td class="center-text">{{ vehicule.date_mise_circulation }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>TYPE DE CARBURANT :</strong></td>
-                                            <td class="center-text">{{ vehicule.energie }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>KILOMÉTRAGE :</strong></td>
-                                            <td class="center-text">{{ vehicule.kilometrage }} Km/h</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>TYPE COMMERCIAL :</strong></td>
-                                            <td class="center-text">{{ vehicule.type_commercial }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Numero du VIN/Chassis :</strong></td>
-                                            <td class="center-text">{{ vehicule.numero_chassis }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>DATE DE VIDENGE :</strong></td>
-                                            <td class="text-center">{{ vehicule.date_videnge }}</td>
                                         </tr>
 
                                         <tr>
@@ -142,18 +146,33 @@
                                         </tr>
 
                                         <tr>
+                                            <td><strong>DATE DE VISITE TECHNIQUE :</strong></td>
+                                            <td class="text-center">{{ vehicule.date_visite_technique }}</td>
+                                        </tr>
+
+                                        <tr>
                                             <td><strong>PLACES ASSISE :</strong></td>
-                                            <td class="text-center">{{ vehicule.place_assises }}</td>
+                                            <td class="text-center">{% if vehicule.place_assises %} {{ vehicule.place_assises }} PLACES {% else %} AUCUNE {% endif %}</td>
                                         </tr>
 
                                         <tr>
                                             <td><strong>CARROSSERIE :</strong></td>
-                                            <td class="text-center">{% if vehicule.carrosserie  %} {{ vehicule.carrosserie }} {% else %} AUCUN {% endif %}</td>
+                                            <td class="text-center">{% if vehicule.carrosserie  %} {{ vehicule.carrosserie|capfirst }} {% else %} AUCUN {% endif %}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>TAILLE DU RESERVOIR :</strong></td>
+                                            <td class="text-center">{{ vehicule.taille_reservoir }} L</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>KILOMÉTRAGE AVANT VIDANGE :</strong></td>
+                                            <td class="text-center">{{ vehicule.videnge }} Km/H</td>
                                         </tr>
 
                                         <tr>
                                             <td><strong>GESTIONNAIRE :</strong></td>
-                                            <td class="text-center">{% if vehicule.utilisateur  %} {{ vehicule.utilisateur }} {% else %} AUCUN {% endif %}</td>
+                                            <td class="text-center">{% if vehicule.utilisateur  %} {{ vehicule.utilisateur.nom|capfirst }} {{ vehicule.utilisateur.prenom|capfirst }} {% else %} AUCUN {% endif %}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -172,9 +191,8 @@
                                         </div>
                                      <div>  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE </label></div>
 
-
                                         {% for image in image %}
-                                            <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                            <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image mb-5" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
                                         {% endfor %}
 
                                     </div>
