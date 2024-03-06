@@ -32,6 +32,7 @@ urlpatterns = [
                   path('vehicule/', include('vehicule.urls')),
                   path('deplacement/', include('deplacement.urls')),
                   path('incident/', include('incident.urls')),
+                  path('carburant/', include('carburant.urls')),
                   path('admin/', admin.site.urls),
                   path('Conducteur/', include('Conducteur.urls'), name='Conducteur'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
