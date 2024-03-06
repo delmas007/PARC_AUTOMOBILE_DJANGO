@@ -27,6 +27,7 @@ urlpatterns = [
                   path('', Connexion.as_view(), name='Connexion'),
                   path('admins/', include('Admin.urls')),
                   path('user/', include('utilisateurs.urls')),
+                  path('entretien/', include('entretien.urls')),
                   path('authentification/', include('Model.urls')),
                   path('vehicule/', include('vehicule.urls')),
                   path('deplacement/', include('deplacement.urls')),
