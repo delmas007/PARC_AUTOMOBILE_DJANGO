@@ -236,7 +236,7 @@ class Carburant(models.Model):
 class Entretien(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
-    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
+    utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, blank=True, null=True)
     date_entretien = models.DateField()
     prix_entretient = models.IntegerField()
     description = models.TextField(blank=True)
