@@ -242,6 +242,7 @@ class Entretien(models.Model):
     prix_entretient = models.IntegerField()
     description = models.TextField(blank=True)
     type = models.ForeignKey(type_entretien, on_delete=models.SET_NULL, null=True)
+    recu = models.ImageField(upload_to='recu/', blank=False)
 
 
 class EtatArrive(models.Model):

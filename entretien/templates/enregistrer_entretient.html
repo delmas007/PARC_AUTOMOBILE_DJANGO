@@ -106,6 +106,12 @@
         </div>
     </div>
     <script>
+        $(document).ready(function() {
+            $('#selectVehicule2').select2();
+        });
+    </script>
+    <script>
+
         {% if messages %}
             {% for messages in messages %}
                 $(document).ready(function() {
@@ -118,16 +124,6 @@
                 $('#errorModal').modal('show');
             });
         {% endif %}
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#selectVehicule').select2();
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#selectConducteur').select2();
-        });
     </script>
     <script>
         // Récupérer la date actuelle

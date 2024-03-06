@@ -1,11 +1,14 @@
 from django import forms
 
-from Model.models import Entretien
+from Model.models import Entretien, Vehicule
 
 
 class EntretienForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields['vehicule'].queryset = Vehicule.objects.exclude(supprimer=True)
+
         self.fields['type'].widget.attrs.update({
             'class': "form-control",
             'id': "selectVehicule",
@@ -13,7 +16,7 @@ class EntretienForm(forms.ModelForm):
         })
         self.fields['vehicule'].widget.attrs.update({
             'class': "form-control",
-            'id': "selectVehicule",
+            'id': "selectVehicule2",
             'required': True,
         })
 
