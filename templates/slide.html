@@ -10,10 +10,7 @@
                     <img src="images/logo-dark.gif" class="img-fluid" alt="">
                 </div>
             </div>
-            <div class="iq-dark-logo">
-                <img src="images/logo-dark.gif" class="img-fluid" alt="">
-            </div>
-            <span>Vito</span>
+            <span><strong style="font-size: 15px; color: #4b2db9">Espace gestionnaire</strong></span>
         </a>
         <div class="iq-menu-bt-sidebar">
             <div class="iq-menu-bt align-self-center">
@@ -42,60 +39,56 @@
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
             <ul id="iq-sidebar-toggle" class="iq-menu">
-                <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Home</span></li>
+                <li class="iq-menu-title"><span></span></li>
                 <li >
-                    <a href="{% url 'Accueil' %}" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></a>
+                    <a href="{% url 'Accueil' %}" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Accueil</span></a>
                 </li>
-                <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Apps</span></li>
+                <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Menu</span></li>
                 <li class="{% if request.path == vehicule_Ajouter_vehicule_url or request.path == vehicule_liste_vehicules_url %}active{% endif %}">
                     <a href="#vehicule" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="fa fa-car"></i><span>Vehicule</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="vehicule" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == vehicule_Ajouter_vehicule_url %}active{% endif %}" ><a href="{% url 'vehicule:Ajouter_vehicule' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
-                        <li class="{% if request.path == vehicule_liste_vehicules_url %}active{% endif %}"><a href="{% url 'vehicule:liste_vehicules' %}"><i class="ri-file-edit-line"></i>List</a></li>
+                        <li class="{% if request.path == vehicule_Ajouter_vehicule_url %}active{% endif %}" ><a href="{% url 'vehicule:Ajouter_vehicule' %}"><i class="bi bi-plus-circle"></i>Ajouter</a></li>
+                        <li class="{% if request.path == vehicule_liste_vehicules_url %}active{% endif %}"><a href="{% url 'vehicule:liste_vehicules' %}"><i class="bi bi-list-ul"></i> List des vehicules</a></li>
                     </ul>
                 </li>
                 <li class="{% if request.path == conducteur_liste_conducteur_url or request.path == conducteur_ajouter_conducteu_url %}active{% endif %}" >
                     <a href="#conducteur" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-user-line"></i><span>Conducteur</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="conducteur" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == conducteur_ajouter_conducteu_url %}active{% endif %}"><a href="{% url 'conducteur:ajouter_conducteur' %}"><i class="ri-profile-line"></i>Ajouter un conducteur</a></li>
-                        <li class=" {% if request.path == conducteur_liste_conducteur_url %}active{% endif %}"><a href="{% url 'conducteur:tous_les_conducteurs' %}"><i class="ri-file-edit-line"></i>Liste des conducteurs</a></li>
+                        <li class="{% if request.path == conducteur_ajouter_conducteu_url %}active{% endif %}"><a href="{% url 'conducteur:ajouter_conducteur' %}"><i class="bi bi-person-add" style="font-size: 25px"></i> Ajouter un conducteur</a></li>
+                        <li class=" {% if request.path == conducteur_liste_conducteur_url %}active{% endif %}"><a href="{% url 'conducteur:tous_les_conducteurs' %}"><i class="bi bi-person-lines-fill"></i> Liste des conducteurs</a></li>
                     </ul>
                 </li>
                 <li class="{% if request.path == deplacement_enregistrer_deplacement_url or request.path == deplacement_liste_deplacement_url  or request.path == deplacement_liste_deplacement_en_cours_url or request.path == deplacement_liste_deplacement_arrive_url %}active{% endif %}">
                     <a href="#deplacement" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="fa fa-paper-plane"></i><span>Deplacement</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="deplacement" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:enregistrer_deplacement' %}"><i class="ri-profile-line"></i>Ajouter</a></li>
-                        <li class="{% if request.path == deplacement_liste_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement' %}"><i class="ri-file-edit-line"></i>En attente de départ</a></li>
-                        <li class="{% if request.path == deplacement_liste_deplacement_en_cours_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_en_cours' %}"><i class="ri-file-edit-line"></i>En cours...</a></li>
-                        <li class="{% if request.path == deplacement_liste_deplacement_arrive_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_arrive' %}"><i class="ri-file-edit-line"></i>Arrivé</a></li>
+                        <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:enregistrer_deplacement' %}"><i class="bi bi-send-plus"></i> Ajouter un deplacement</a></li>
+                        <li class="{% if request.path == deplacement_liste_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement' %}"><i class="bi bi-hourglass"></i> En attente de départ</a></li>
+                        <li class="{% if request.path == deplacement_liste_deplacement_en_cours_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_en_cours' %}"><i class="bi bi-send-check-fill"></i> En cours...</a></li>
+                        <li class="{% if request.path == deplacement_liste_deplacement_arrive_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_arrive' %}"><i class="bi bi-check-circle"></i> Deplacements terminés</a></li>
                     </ul>
                 </li>
 
              <li class="{% if request.path == enregistrer_incident_url or request.path == liste_incident_externe_url   or request.path == liste_incident_interne_url  %}active{% endif %}">
                     <a href="#incidents" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-alert-line" style="font-size: 27px"></i><span>Incidents</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="incidents" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == enregistrer_incident_url %}active{% endif %}" ><a href="{% url 'incident:enregistrer_incident' %}"><i class="ri-profile-line"></i>Enregistrer</a></li>
-                        <li class="{% if request.path == liste_incident_interne_url %}active{% endif %}" ><a href="{% url 'incident:liste_incidents_interne' %}"><i class="ri-file-edit-line"></i>Liste incidents interne </a></li>
-                        <li class="{% if request.path == liste_incident_externe_url %}active{% endif %}" ><a href="{% url 'incident:liste_incidents_externe' %}"><i class="ri-file-edit-line"></i>Liste incidents externe</a></li>
+                        <li class="{% if request.path == enregistrer_incident_url %}active{% endif %}" ><a href="{% url 'incident:enregistrer_incident' %}"><i class="bi bi-plus-circle"></i> Enregistrer</a></li>
+                        <li class="{% if request.path == liste_incident_interne_url %}active{% endif %}" ><a href="{% url 'incident:liste_incidents_interne' %}"><i class="bi bi-list-check"></i> Liste incidents interne </a></li>
+                        <li class="{% if request.path == liste_incident_externe_url %}active{% endif %}" ><a href="{% url 'incident:liste_incidents_externe' %}"><i class="bi bi-list-check"></i> Liste incidents externe</a></li>
                     </ul>
              </li>
 
                 <li class="{% if request.path == entretien_Ajouter_Entretien_url   %}active{% endif %}">
-                    <a href="#entretien" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-tools" viewBox="0 0 16 16" style=" margin-right: 5px">
-                            <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3q0-.405-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708M3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z"></path>
-                        </svg>
-                        <span>Entretien</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <a href="#entretien" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-tools" style=" margin-right: 5px"></i><span>Entretien</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="entretien" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == entretien_Ajouter_Entretien_url %}active{% endif %}" ><a href="{% url 'entretien:Ajouter_Entretien' %}"><i class="ri-profile-line"></i>Enregistrer</a></li>
+                        <li class="{% if request.path == entretien_Ajouter_Entretien_url %}active{% endif %}" ><a href="{% url 'entretien:Ajouter_Entretien' %}"><i class="bi bi-wrench-adjustable"></i> Enregistrer</a></li>
                         </ul>
                 </li>
 
 
              <li class="{% if request.path == carburant_Ajout_carburant_url  %}active{% endif %}">
-                    <a href="#carburant" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-alert-line" style="font-size: 27px"></i><span>carburant</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <a href="#carburant" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-fuel-pump" style=" margin-right: 5px"></i><span>Carburant</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="carburant" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == carburant_Ajout_carburant_url %}active{% endif %}" ><a href="{% url 'carburant:Ajouter_carburant' %}"><i class="ri-profile-line"></i>Enregistrer</a></li>
+                        <li class="{% if request.path == carburant_Ajout_carburant_url %}active{% endif %}" ><a href="{% url 'carburant:Ajouter_carburant' %}"><i class="bi bi-plus-circle"></i> Enregistrer</a></li>
                         </ul>
                 </li>
 
