@@ -49,7 +49,6 @@
                                             <th>Date de départ</th>
                                             <th>Duree</th>
                                             <th>Kilometrage</th>
-                                            <th>Niveau de carburant</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -62,7 +61,6 @@
                                                     <td>{{ deplacement.date_depart }}</td>
                                                     <td>{{ deplacement.duree_deplacement }}</td>
                                                     <td>{{ deplacement.kilometrage_depart }} Km/h</td>
-                                                    <td>{{ deplacement.niveau_carburant }} Litres</td>
                                                     <td>
                                                         {% if deplacement.id in prolongement_encours and deplacement.id not in prolongement_arrive and deplacement.id not in prolongement_accepte %}
                                                             <button type="button" class="btn mb-3 btn-info terminer-btn2 prolongement-btn" data-target="#prolongementModal{{ deplacement.id }}" data-toggle="modal" data-deplacement-id="{{ deplacement.id }}">

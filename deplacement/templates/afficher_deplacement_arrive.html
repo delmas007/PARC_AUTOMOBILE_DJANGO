@@ -35,7 +35,6 @@
                                      <th>Vehicule</th>
                                      <th>Date de départ</th>
                                      <th>Kilometrage</th>
-                                     <th>Niveau de carburant</th>
                                      <th>Action</th>
                                  </tr>
                              </thead>
@@ -47,7 +46,6 @@
                                          <td>{{ etatarrive.deplacement.vehicule }}</td>
                                          <td>{{ etatarrive.date_arrive }}</td>
                                          <td>{{ etatarrive.kilometrage_arrive }} Km/h</td>
-                                         <td>{{ etatarrive.niveau_carburant_a }} Litres</td>
                                          <td>
                                              <div class="flex align-items-center list-user-action">
                                                  <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" data-original-title=" Voir le deplacement" href="{% url 'deplacement:details_arriver' etatarrive_id=etatarrive.id %}"  ><i class="ri-eye-line"></i></a>
