@@ -20,6 +20,7 @@ def enregistrer_deplacement(request):
     vehicules = Vehicule.objects.all()
     date_aujourdhui = date.today()
     etatarrives = EtatArrive.objects.all()
+
     for conducteur in conducteurs:
         deplacements = Deplacement.objects.filter(conducteur=conducteur)
         for deplacement in deplacements:
@@ -50,7 +51,8 @@ def enregistrer_deplacement(request):
             photo_jauge_depart = request.FILES.get('photo_jauge_depart')
             if photo_jauge_depart:
                 deplacement.photo_jauge_depart = photo_jauge_depart
-
+            vehicule.kilometrage=deplacement.kilometrage_depart
+            vehicule.save()
             deplacement.save()
             images = request.FILES.getlist('images')
             if len(images) <= 6:
@@ -151,6 +153,7 @@ def liste_deplacement_arrive(request):
 def modifier_deplacement(request, pk):
     deplacement = get_object_or_404(Deplacement, pk=pk)
     photos = Photo.objects.filter(deplacement=pk)
+    vehicule=deplacement.vehicule
     if request.method == 'POST':
         form = deplacementModifierForm(request.POST, request.FILES, instance=deplacement)
         if form.is_valid():
@@ -162,6 +165,8 @@ def modifier_deplacement(request, pk):
                  Photo.objects.filter(deplacement=deplacement).delete()
                  for image in request.FILES.getlist('images'):
                     Photo.objects.create(deplacement=deplacement, images=image)
+            vehicule.kilometrage=deplacement.kilometrage_depart
+            vehicule.save()
             form.save()
 
             return redirect('deplacement:liste_deplacement')
@@ -186,12 +191,20 @@ def details_deplacement(request, deplacement_id):
     image = Photo.objects.filter(deplacement=deplacement_id)
     return render(request, 'deplacement_details.html', {'deplacement': deplacement, 'image': image})
 
+def delete_deplacement(request, deplacement_id):
+    deplacement = get_object_or_404(Deplacement, id=deplacement_id)
+    image = Photo.objects.filter(deplacement=deplacement_id)
+    image.delete()
+    deplacement.delete()
+    return redirect('deplacement:liste_deplacement')
+
 
 def enregistrer_etatArriver(request):
     if request.method == 'POST':
         form = EtatArriveForm(request.POST)
         if form.is_valid():
             etat_arrive = form.save(commit=False)
+
             etat_arrive.utilisateur = request.user
 
             deplacement_id = form.cleaned_data['deplacement_id']
@@ -204,6 +217,7 @@ def enregistrer_etatArriver(request):
 
             if vehicule:
                 vehicule.disponibilite = True
+                vehicule.kilometrage=etat_arrive.kilometrage_arrive
                 vehicule.save()
             if conducteur:
                 conducteur.disponibilite = True

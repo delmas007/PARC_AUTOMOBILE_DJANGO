@@ -156,5 +156,47 @@
           {% endfor %}
           {% endif %}
       </script>
+
+   <script>
+
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear()-18;
+
+        today = yyyy + '-' + mm + '-' + dd;
+
+        // Set the minimum date for date_expiration_assurance input
+        document.getElementById("date_de_naissance").max = today;
+
+
+</script>
+
+   <script>
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+
+        // Set the minimum date for date_expiration_assurance input
+        document.getElementById("date_embauche").max = today;
+   </script>
+
+  <script>
+    // Écouter les événements clavier sur le champ de numéro de téléphone
+    document.getElementById('numero_telephone').addEventListener('input', function() {
+        var maxLength = 10; // Définir la longueur maximale autorisée
+        var inputValue = this.value; // Récupérer la valeur saisie par l'utilisateur
+
+        // Vérifier si la longueur de la valeur saisie dépasse la longueur maximale autorisée
+        if (inputValue.length > maxLength) {
+            this.value = inputValue.slice(0, maxLength); // Tronquer la valeur saisie pour ne pas dépasser la longueur maximale
+        }
+    });
+
+</script>
+
    </body>
 {% endblock %}
