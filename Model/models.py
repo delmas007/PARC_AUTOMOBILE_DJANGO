@@ -47,16 +47,11 @@ class Roles(models.Model):
 
 
 class type_entretien(models.Model):
-    ROLE_CHOICES = [
-        ('VIDENGE', 'VIDENGE'),
-        ('ENTRETIEN', 'ENTRETIEN'),
-        ('AUTRE', 'AUTRE'),
 
-    ]
-    role = models.CharField(max_length=200, choices=ROLE_CHOICES)
+    nom = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.get_role_display()
+        return self.nom
 
 
 class type_carburant(models.Model):
@@ -77,6 +72,7 @@ class Conducteur(models.Model):
     disponibilite = models.BooleanField(default=True)
     num_cni = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
+    supprimer = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.utilisateur.nom} {self.utilisateur.prenom} "

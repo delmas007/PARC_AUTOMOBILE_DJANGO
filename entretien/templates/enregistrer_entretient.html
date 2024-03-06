@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             <div class="iq-card-body">
-                                <form class="form-horizontal" method="post" >
+                                <form class="form-horizontal" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="email">Type d'entretien:</label>
@@ -48,7 +48,19 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">prix d'entretien :</label>
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email"> Prix d'entretien :</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control" id="exampleInputdate"  min="1" name="prix_entretient">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" hidden="hidden">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Date prochain entretien:</label>
+                                        <div class="col-sm-10">
+                                            <input type="date" class="form-control" id="exampleInputdate"  name="date_entretien" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" hidden="hidden" id="div-videnge">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Kilometrage de la prochaine videnge :</label>
                                         <div class="col-sm-10">
                                             <input type="number" class="form-control" id="exampleInputdate"  min="1" name="prix_entretient">
                                         </div>
@@ -58,6 +70,15 @@
                                         <div class="col-sm-10">
                                             <textarea class="form-control" id="description" name="description" rows="4"></textarea>
                                         </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Photo du reçu:</label>
+                                        <div class="form-control col-sm-10" style="border-radius: 10px">
+                                            <input  required  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="recu"  value="{% if form.recu.value %}{{ form.recu.value }}{% endif %}">
+                                        </div>
+                                        {% if form.recu.errors %}
+                                            <p class="help-block">Veillez joindre une image</p>
+                                        {% endif %}
                                     </div>
 
                                     <div class="form-group">
@@ -136,6 +157,21 @@
 
         // Affecterf la date actuelle comme date minimale
         document.getElementById("exampleInputdate").min = today;
+    </script>
+
+    <script>
+
+        $(document).ready(function() {
+            $('#selectType').change(function () {
+                var selectTypeId = $(this).val();
+                var selectedOption = $(this).find('option:selected');
+
+                if (selectedOption === 'VIDENGE'  ) {
+                    $('#div-videnge').removeAttr('hidden disabled');
+
+                }
+            })
+        })
     </script>
 
 
