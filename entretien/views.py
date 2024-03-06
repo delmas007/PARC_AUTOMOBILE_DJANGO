@@ -7,7 +7,7 @@ from entretien.forms import EntretienForm
 
 def Ajouter_Entretien(request):
     if request.method == 'POST':
-        form = EntretienForm(request.POST)
+        form = EntretienForm(request.POST, request.FILES)
         if form.is_valid():
             form.save(commit=False)
             form.instance.utilisateur = request.user
