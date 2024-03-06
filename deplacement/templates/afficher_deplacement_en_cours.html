@@ -91,6 +91,8 @@
                                                     {% if prolongement.deplacement_id == deplacement.id %}
                                                         <p><strong>Motif :</strong> {{ prolongement.motif }}</p>
                                                         <p><strong>Durée :</strong> {{ prolongement.duree }} </p>
+                                                        <p><strong>Photo de la jauge :</strong> <img style="max-width: 200px; height: auto" src="{{ prolongement.photo_jauge_demande.url }}" alt="photo_jauge_demande"> </p>
+                                                        <p><h4>Photo du vehicule :</h4></p>
                                                         <div id="photo-container"></div>
                                                     </div>
                                                     <div class="modal-footer">
