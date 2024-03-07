@@ -215,6 +215,9 @@ class Carburant(models.Model):
     prix_total = models.IntegerField()
     quantite = models.IntegerField()
 
+    def prix_total_format(self):
+        return "{:,.2f}".format(self.prix_total)
+
 
 class Entretien(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)

@@ -78,7 +78,7 @@
                                          <td>{{  carburant.vehicule|capfirst }}</td>
                                          <td style="padding-left: 50px">{{  carburant.type|capfirst }}</td>
                                          <td style="padding-left: 50px">{{  carburant.quantite}} Litres</td>
-                                         <td>{{  carburant.prix_total }} FCFA</td>
+                                         <td>{{  carburant.prix_total_format }} FCFA</td>
                                         <td>
                                            <div class="flex align-items-center list-user-action">
                                                <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'carburant:Modifier_carburant' pk=carburant.pk %}"><i class="ri-pencil-line"></i></a>
