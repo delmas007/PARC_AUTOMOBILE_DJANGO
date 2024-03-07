@@ -128,6 +128,7 @@ def modifier_vehicule(request, pk):
     else:
         form = VehiculeForm(instance=vehicule, initial={
             'date_mise_circulation': vehicule.date_mise_circulation,
+            'energie': vehicule.energie,
 
         })
 

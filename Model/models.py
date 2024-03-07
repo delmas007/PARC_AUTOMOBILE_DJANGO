@@ -59,7 +59,7 @@ class type_carburant(models.Model):
     prix = models.IntegerField()
 
     def __str__(self):
-        return f" {self.nom} "
+        return f"{self.nom}"
 
 
 class Conducteur(models.Model):
@@ -143,7 +143,7 @@ class Vehicule(models.Model):
     supprimer = models.BooleanField(default=False)
 
     def __str__(self):
-        return f" {self.marque} {self.type_commercial} {self.numero_immatriculation} "
+        return f"{self.marque} {self.type_commercial} {self.numero_immatriculation}"
 
 
 class Deplacement(models.Model):

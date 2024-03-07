@@ -115,6 +115,29 @@ class VehiculeForm(forms.ModelForm):
 
         })
 
+        self.fields['date_expiration_assurance'].widget.attrs.update({
+            'class': "form-control",
+            'id': "date_expiration_assurance",
+        })
+        self.fields['date_mise_circulation'].widget.attrs.update({
+            'class': "form-control",
+            'id': "date_mise_circulation",
+
+        })
+
+        self.fields['date_visite_technique'].widget.attrs.update({
+            'class': "form-control",
+            'id': "date_visite_technique",
+        })
+        self.fields['taille_reservoir'].widget.attrs.update({
+            'class': "form-control",
+            'id': "taille_reservoir ",
+        })
+        self.fields['videnge'].widget.attrs.update({
+            'class': "form-control",
+            'id': "videnge ",
+        })
+
         self.fields['numero_immatriculation'].error_messages = {
             'unique': 'Un véhicule a déjà été enregistré avec ce numéro d\'immatriculation.',
             'required': 'Ce champ est obligatoire.'
@@ -132,7 +155,7 @@ class VehiculeForm(forms.ModelForm):
 class VehiculeModifierForm(forms.ModelForm):
     class Meta:
         model = Vehicule
-        exclude = ['disponibilite', 'marque', 'type_commercial']
+        exclude = ['disponibilite', 'marque', 'supprimer']
 
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
     energie = forms.ModelChoiceField(queryset=Carburant.objects.all(), required=True)
@@ -183,6 +206,35 @@ class VehiculeModifierForm(forms.ModelForm):
             'id': "numero_chassis",
             'required': True,
         })
+        self.fields['type_commercial'].widget.attrs.update({
+            'class': "form-control",
+            'id': "type_commercial",
+        })
+        self.fields['date_visite_technique'].widget.attrs.update({
+            'class': "form-control",
+            'id': "date_visite_technique",
+        })
+        self.fields['date_expiration_assurance'].widget.attrs.update({
+            'class': "form-control",
+            'id': "date_expiration_assurance",
+        })
+        self.fields['date_mise_circulation'].widget.attrs.update({
+            'class': "form-control",
+            'id': "date_mise_circulation",
+
+        })
+        self.fields['taille_reservoir'].widget.attrs.update({
+            'class': "form-control",
+            'id': "taille_reservoir",
+        })
+        self.fields['videnge'].widget.attrs.update({
+            'class': "form-control",
+            'id': "videnge ",
+        })
+        # self.fields['energie'].widget.attrs.update({
+        #     'class': "form-control",
+        #     'id': "energie ",
+        # })
 
 
 class VehiculSearchForm(forms.Form):
