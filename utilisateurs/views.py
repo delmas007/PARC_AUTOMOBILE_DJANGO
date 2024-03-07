@@ -18,7 +18,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from Model.forms import UserRegistrationForm, ConnexionForm
 from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement
-from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse, DemandeProlongementForm
+from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse, DemandeProlongementForm, \
+    DeclareIncidentForm
 from utilisateurs.tokens import account_activation_token
 from django.utils.html import strip_tags
 
@@ -344,3 +345,55 @@ def liste_demandes(request):
         print(demande_list)
 
     return render(request, 'compte_conducteur.html', {'demande': demande_list})
+
+def declare_incident(request):
+    date_aujourdui = date.today()
+    # Récupérer l'utilisateur actuellement connecté
+    utilisateur_actif = request.user
+
+    # Récupérer l'ID du conducteur actif à partir de l'utilisateur actif
+    conducteur_actif_id = utilisateur_actif.conducteur_id
+
+    deplacements_arrives_ids = EtatArrive.objects.values('deplacement_id')
+
+
+    # Exclure les déplacements avec leurs IDs dans la sous-requête
+    mission_list = Deplacement.objects.filter(conducteur_id=conducteur_actif_id).filter(date_depart__lte=date_aujourdui).exclude(id__in=Subquery(deplacements_arrives_ids))
+
+    paginator = Paginator(mission_list.order_by('date_depart'), 3)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        mission_list = paginator.page(page)
+    except EmptyPage:
+        mission_list = paginator.page(paginator.num_pages())
+
+    return render(request, 'compte_conducteur.html', {'mission': mission_list})
+
+
+def sendIncident(request):
+    if request.method == 'POST':
+        form = DeclareIncidentForm(request.POST, request.FILES)
+        if form.is_valid():
+            images = request.FILES.getlist('images')
+            if len(images) <= 6:
+                incident = form.save(commit=False)
+                utilisateur_actif = request.user
+                conducteur_actif_id = utilisateur_actif.conducteur_id
+                incident.conducteur_id = conducteur_actif_id
+                deplacement_id = form.cleaned_data['deplacement_id']
+                deplacement = Deplacement.objects.get(id=deplacement_id)
+                incident.vehicule = deplacement.vehicule
+                incident.save()
+
+                for uploaded_file in images:
+                    photo = Photo.objects.create(incident=incident, images=uploaded_file)
+
+                messages.success(request, 'Le prolongement a été ajouté avec succès.')
+            return redirect('utilisateur:declare_incident')
+        else:
+            print(form.errors)
+    else:
+        form = DemandeProlongementForm()
+    return render(request, 'compte_conducteur.html', {'form': form})

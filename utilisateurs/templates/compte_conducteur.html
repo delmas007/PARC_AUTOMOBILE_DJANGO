@@ -8,10 +8,17 @@
             background-color: #ffc107;
             border-color: #ffc107;
         }
+        .modal-custom {
+            max-width: 90%;
+        }
+        .modal-dialog.modal-custom .modal-content{
+            width: 100%;
+        }
     </style>
     {% include 'nav-bar_conducteur.html' %}
     {% url 'utilisateur:liste_mission' as liste_mission %}
     {% url 'utilisateur:list_de_demande_prolongement' as list_de_demande_prolongement %}
+    {% url 'utilisateur:declare_incident' as declare_incident %}
     <div class="my-account">
         <div class="container-fluid">
             <div class="row">
@@ -22,11 +29,11 @@
                             <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"/>
                         </svg> Tableau de bord</a>
                         <a class="nav-link {% if request.path == list_de_demande_prolongement %}active{% else %} {% endif %} " id="orders-nav"  href=" {% url 'utilisateur:list_de_demande_prolongement' %}" role="tab" data-target="#orders-tab"><i class="fa fa-paper-plane"></i>Voir mes demandes</a>
-                        <a class="nav-link" id="payment-nav" data-toggle="pill" href="#payment-tab" role="tab"><i class="ri-alert-line  "></i>Signaler incident</a>
-                        <a class="nav-link" id="address-nav" data-toggle="pill" href="#address-tab" role="tab"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-                        </svg> address</a>
-                        <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Account Details</a>
+                        <a class="nav-link {% if request.path == declare_incident %}active{% else %} {% endif %} " id="payment-nav" href=" {% url 'utilisateur:declare_incident' %}" role="tab"><i class="ri-alert-line  "></i>Signaler incident</a>
+{#                        <a class="nav-link" id="address-nav" data-toggle="pill" href="#address-tab" role="tab"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">#}
+{#                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>#}
+{#                        </svg> address</a>#}
+{#                        <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Account Details</a>#}
                         <a class="nav-link" href="{% url 'Model:Deconnexion' %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
                             <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
@@ -44,7 +51,6 @@
                                         <th>Date de départ</th>
                                         <th>Duree</th>
                                         <th>Kilometrage</th>
-                                        <th>Niveau de carburant</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -62,7 +68,6 @@
                                                         <td>{{ deplacement.duree_deplacement }}</td>
                                                     {% endif %}
                                                     <td>{{ deplacement.kilometrage_depart }} Km/h</td>
-                                                    <td>{{ deplacement.niveau_carburant }} Litres</td>
                                                     <td>
                                                         {% if deplacement.date_depart <= date_aujourdui %}
 
@@ -104,7 +109,6 @@
                                                 <td>{{ deplacement.date_depart }}</td>
                                                 <td>{{ deplacement.duree_deplacement }}</td>
                                                 <td>{{ deplacement.kilometrage_depart }} Km/h</td>
-                                                <td>{{ deplacement.niveau_carburant }} Litres</td>
                                                 <td>
                                                     {% if deplacement.date_depart <= date_aujourdui %}
 
@@ -259,14 +263,116 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade show {% if request.path == declare_incident  %}active{% else %} {% endif %} text-center " id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav" >
+                            <div class="table-responsive">
+                                <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
+                                    <thead>
+                                    <tr style="background-color: #8861d2; color:white">
+                                        <th>Vehicule</th>
+                                        <th>Date de départ</th>
+                                        <th>Duree</th>
+                                        <th>Kilometrage</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if mission and prolongement %}
+                                        {% for deplacement in mission %}
+                                            {% for prolongements in prolongement %}
+                                                <tr>
+                                                    <td>{{ deplacement.vehicule }}</td>
+                                                    <td>{{ deplacement.date_depart }}</td>
+                                                    {% if prolongements.deplacement.id == deplacement.id %}
+                                                        <td>{{ deplacement.duree_deplacement|add:prolongements.duree }}</td>
+
+                                                    {% else %}
+                                                        <td>{{ deplacement.duree_deplacement }}</td>
+                                                    {% endif %}
+                                                    <td>{{ deplacement.kilometrage_depart }} Km/h</td>
+                                                    <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident" data-deplacement-id="{{ deplacement.id }}">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                                                                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
+                                                                        <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
+                                                                    </svg>
+                                                                    Declarer un incident
+                                                                </button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% elif mission %}
+                                        {% for deplacement in mission %}
+                                            <tr>
+                                                <td>{{ deplacement.vehicule }}</td>
+                                                <td>{{ deplacement.date_depart }}</td>
+                                                <td>{{ deplacement.duree_deplacement }}</td>
+                                                <td>{{ deplacement.kilometrage_depart }} Km/h</td>
+                                               <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident" data-deplacement-id="{{ deplacement.id }}">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                                                                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
+                                                                        <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
+                                                                    </svg>
+                                                                    Declarer un incident
+                                                                </button>
+                                                    </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="10" class="text-center">Aucun véhicule disponible</td>
+                                        </tr>
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                          </div>
+                            <div class="row justify-content-between mt-3">
+                                <div id="user-list-page-info" class="col-md-6">
+                                    <span>Affichage de {{ demande.start_index }} à {{ demande.end_index }} sur {{ demande.paginator.count }} entrées</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-end mb-0">
+                                            {% if demande.has_previous %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page={{ demande.previous_page_number }}">Précédent</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">Précédent</span>
+                                                </li>
+                                            {% endif %}
+
+                                            {% for num in demande.paginator.page_range %}
+                                                {% if num == demande.number %}
+                                                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                                                {% else %}
+                                                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if demande.has_next %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page={{ demande.next_page_number }}">Suivant</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">Suivant</span>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" >
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document" >
-            <div class="modal-content" style="width: 1000px">
+    <div class="modal fade " id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" >
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-custom" role="document" >
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalScrollableTitle">Demande de prolongement</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -312,12 +418,59 @@
 
                         </div>
                         <div class="modal-footer">
-                            <div class="row">
+                            <div class="row ">
                                 <div class="col-6">
-                                    <button type="submit" class="btn btn-primary" style="background-color: #ff7a29; border-color: #ff7a29; color: white; width: 100%; margin-right: 550px">Enregistrer</button>
+                                    <button type="submit" class="btn btn-primary" style="background-color: #ff7a29; border-color: #ff7a29; color: white;">Enregistrer</button>
                                 </div>
                                 <div class="col-6">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fermerModal()" style="width: 100%">Fermer</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fermerModal()">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+     <div class="modal fade " id="modal_incident" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" >
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Signalement d'incident </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="iq-card-body">
+                    <form class="form-horizontal" id="DeplacementArriverForm" method="post" enctype="multipart/form-data" action="{% url 'utilisateur:sendIncident' %}">
+                        {% csrf_token %}
+                     <input type="hidden" id="deplacement_id" name="deplacement_id">
+                        <div class="form-group row">
+
+                            <label class="control-label col-sm-4 align-self-center mb-0" for="description_incident" >DESCRIPTION:</label>
+
+                            <div class="col-sm-8">
+                                <textarea rows="10" class="form-control" id="description_incident" name="description_incident" required placeholder="Veillez decrire l'incident"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="customFile" class="font-weight-bold">SELECTIONNEZ IMAGE DU VEHICULE :</label>
+                            <div class="form-control h-auto" style="border-radius: 10px">
+                                <input multiple required placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
+                            </div>
+                            {% if form.images.errors %}
+                                <p class="help-block">Veillez joindre une image</p>
+                            {% endif %}
+
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row ">
+                                <div class="col-6">
+                                    <button type="submit" class="btn btn-primary" style="background-color: #ff7a29; border-color: #ff7a29; color: white;">Enregistrer</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fermerModal()">Fermer</button>
                                 </div>
                             </div>
                         </div>
@@ -426,6 +579,16 @@
         });
         function fermerModal() {
             $('#exampleModalScrollable').modal('hide');
+        }
+        $(document).ready(function() {
+            $('.enregistrer-btn').on('click', function() {
+                var deplacementId = $(this).data('deplacement-id');
+                $('#deplacement_id').val(deplacementId);
+
+            });
+        });
+        function fermerModal() {
+            $('#modal_incident').modal('hide');
         }
     </script>
     <script>
