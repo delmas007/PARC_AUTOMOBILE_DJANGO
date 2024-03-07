@@ -29,8 +29,6 @@ class IncidentSearchForm(forms.Form):
     q = forms.CharField(
         label='',
         required=False,
-        widget=forms.TextInput(
-            attrs={'placeholder': 'Rechercher un véhicule : Marque, matricule...', 'class': 'form-control'}),
     )
 
 
