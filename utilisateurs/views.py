@@ -19,7 +19,7 @@ from django.contrib import messages
 
 import deplacement
 from Model.forms import UserRegistrationForm, ConnexionForm
-from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement
+from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement, Entretien
 from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse, DemandeProlongementForm, \
     DeclareIncidentForm
 from utilisateurs.tokens import account_activation_token
@@ -351,6 +351,7 @@ def liste_demandes(request):
 
 
 def declare_incident(request):
+
     date_aujourdui = date.today()
     # Récupérer l'utilisateur actuellement connecté
     utilisateur_actif = request.user
@@ -381,6 +382,7 @@ def sendIncident(request):
         form = DeclareIncidentForm(request.POST, request.FILES)
 
         if form.is_valid():
+
             images = request.FILES.getlist('images')
             if len(images) <= 6:
                 incident = form.save(commit=False)
@@ -390,8 +392,10 @@ def sendIncident(request):
 
                 # Maintenant, vous pouvez obtenir le véhicule du formulaire
                 vehicule_id = form.cleaned_data['vehicule_id']
-
+                deplacement_id = form.cleaned_data['deplacement2_id']
+                deplacement = Deplacement.objects.get(id=deplacement_id)
                 incident.vehicule = Vehicule.objects.get(id=vehicule_id.id)
+                incident.deplacement = deplacement
 
                 incident.save()
 

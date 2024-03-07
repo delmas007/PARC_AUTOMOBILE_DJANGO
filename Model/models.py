@@ -247,6 +247,7 @@ class Incident(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
     description_incident = models.TextField()
     utilisateurs = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='gestionnaire',
                                      blank=True)

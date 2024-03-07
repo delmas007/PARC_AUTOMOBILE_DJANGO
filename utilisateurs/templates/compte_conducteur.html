@@ -289,7 +289,7 @@
                                                         <td>{{ deplacement.duree_deplacement }}</td>
                                                     {% endif %}
                                                     <td>{{ deplacement.kilometrage_depart }} Km/h</td>
-                                                    <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident" data-deplacement-id="{{ deplacement.id }}" data-vehicule-id="{{ deplacement.vehicule.id }}">
+                                                    <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident" data-deplacements-id="{{ deplacement.id }}" data-vehicule-id="{{ deplacement.vehicule.id }}">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
                                                             <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
                                                             <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
@@ -308,7 +308,7 @@
                                                 <td>{{ deplacement.date_depart }}</td>
                                                 <td>{{ deplacement.duree_deplacement }}</td>
                                                 <td>{{ deplacement.kilometrage_depart }} Km/h</td>
-                                                <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident"  data-deplacement-id="{{ deplacement.id }}" data-vehicule-id="{{ deplacement.vehicule.id }}">
+                                                <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident"  data-deplacements-id="{{ deplacement.id }}" data-vehicule-id="{{ deplacement.vehicule.id }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
                                                         <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
                                                         <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
@@ -447,10 +447,12 @@
                 <div class="iq-card-body">
                     <form class="form-horizontal" id="DeplacementArriverForm" method="post" enctype="multipart/form-data" action="{% url 'utilisateur:sendIncident' %}">
                         {% csrf_token %}
+                        <input type="hidden" id="deplacement2_id" name="deplacement2_id">
                         <input type="hidden" id="vehicule_id" name="vehicule_id">
+
                         <div class="form-group row">
 
-                            <label class="control-label col-sm-4 align-self-center mb-0" for="description_incident" >DESCRIPTION:</label>
+                            <label class="control-label col-sm-4 align-self-center mb-0" for="description_incident" >DESCRIPTION: </label>
 
                             <div class="col-sm-8">
                                 <textarea rows="10" class="form-control" id="description_incident" name="description_incident" required placeholder="Veillez decrire l'incident"></textarea>
@@ -581,10 +583,10 @@
         });
         $(document).ready(function() {
             $('.enregistrer-btn').on('click', function() {
-                var deplacementId = $(this).data('deplacement-id');
+                var deplacementId = $(this).data('deplacements-id');
                 var vehiculeId = $(this).data('vehicule-id');
 
-                $('#deplacement_id').val(deplacementId);
+                $('#deplacement2_id').val(deplacementId);
                 $('#vehicule_id').val(vehiculeId);
             });
         });
