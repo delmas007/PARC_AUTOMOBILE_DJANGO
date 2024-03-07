@@ -121,15 +121,18 @@ def modifier_vehicule(request, pk):
                     Photo.objects.create(vehicule=vehicule, images=image)
 
             # Enregistrez le formulaire du véhicule mis à jour
+            if 'energie' not in form.cleaned_data:
+                form.cleaned_data['energie'] = vehicule.energie
             form.instance.utilisateur = request.user
             form.save()
 
             return redirect('vehicule:liste_vehicules')
     else:
-        form = VehiculeForm(instance=vehicule, initial={
-            'date_mise_circulation': vehicule.date_mise_circulation,
-            'energie': vehicule.energie,
-
+        form = VehiculeModifierForm(instance=vehicule, initial={
+            'date_mise_circulation': vehicule.date_mise_circulation.strftime('%Y-%m-%d') if vehicule.date_mise_circulation else None,
+            'date_expiration_assurance': vehicule.date_expiration_assurance.strftime('%Y-%m-%d') if vehicule.date_expiration_assurance else None,
+            'date_visite_technique': vehicule.date_visite_technique.strftime('%Y-%m-%d') if vehicule.date_visite_technique else None,
+            'energie': vehicule.energie if vehicule.energie else None
         })
 
     return render(request, 'modifier_vehicule.html', {'form': form, 'vehicule': vehicule, 'photos': photos})

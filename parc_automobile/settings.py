@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'Admin',
     'utilisateurs',
     'incident',
+    'gestion_cout',
     'entretien',
-    'carburant'
-
+    'carburant',
 ]
 
 MIDDLEWARE = [
@@ -87,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'parc',
         'USER': 'postgres',
-        'PASSWORD': 'root',
+        'PASSWORD': '09102079Darius',
         'HOST': 'localhost',
         'PORT': '5432',
     }
