@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
 from Model.models import Deplacement, Photo, EtatArrive, Demande_prolongement, Conducteur, Vehicule
-from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm
+from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm, DeplacementSearchForm
 from datetime import date, timedelta
 from django.db.models import Q, Exists, OuterRef
 import json
@@ -33,8 +33,14 @@ def enregistrer_deplacement(request):
             if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(deplacement=deplacement).exists():
                 vehicule.disponibilite = False
                 vehicule.save()
-
+    vehicule_id = request.POST.get('vehicule')
+    if vehicule_id:
+        vehicule = Vehicule.objects.get(pk=vehicule_id)
+        kilometrage_min = vehicule.kilometrage
+    else:
+        kilometrage_min = 0  # Définir une valeur par défaut si aucun véhicule n'est sélectionné
     if request.method == 'POST':
+
         form = DeplacementForm(request.POST)
         if form.is_valid():
 
@@ -51,7 +57,7 @@ def enregistrer_deplacement(request):
             photo_jauge_depart = request.FILES.get('photo_jauge_depart')
             if photo_jauge_depart:
                 deplacement.photo_jauge_depart = photo_jauge_depart
-            vehicule.kilometrage=deplacement.kilometrage_depart
+            vehicule.kilometrage = deplacement.kilometrage_depart
             vehicule.save()
             deplacement.save()
             images = request.FILES.getlist('images')
@@ -66,7 +72,7 @@ def enregistrer_deplacement(request):
     else:
         form = DeplacementForm()
 
-    return render(request, 'enregistrer_deplacement.html', {'form': form})
+    return render(request, 'enregistrer_deplacement.html', {'form': form, 'kilometrage_min': kilometrage_min})
 
 
 def liste_deplacement(request):
@@ -153,7 +159,7 @@ def liste_deplacement_arrive(request):
 def modifier_deplacement(request, pk):
     deplacement = get_object_or_404(Deplacement, pk=pk)
     photos = Photo.objects.filter(deplacement=pk)
-    vehicule=deplacement.vehicule
+    vehicule = deplacement.vehicule
     if request.method == 'POST':
         form = deplacementModifierForm(request.POST, request.FILES, instance=deplacement)
         if form.is_valid():
@@ -162,10 +168,10 @@ def modifier_deplacement(request, pk):
                 for image in request.FILES.getlist('images'):
                     Photo.objects.create(deplacement=deplacement, images=image)
                 if request.FILES.getlist('images'):
-                 Photo.objects.filter(deplacement=deplacement).delete()
-                 for image in request.FILES.getlist('images'):
-                    Photo.objects.create(deplacement=deplacement, images=image)
-            vehicule.kilometrage=deplacement.kilometrage_depart
+                    Photo.objects.filter(deplacement=deplacement).delete()
+                    for image in request.FILES.getlist('images'):
+                        Photo.objects.create(deplacement=deplacement, images=image)
+            vehicule.kilometrage = deplacement.kilometrage_depart
             vehicule.save()
             form.save()
 
@@ -190,6 +196,7 @@ def details_deplacement(request, deplacement_id):
     deplacement = get_object_or_404(Deplacement, id=deplacement_id)
     image = Photo.objects.filter(deplacement=deplacement_id)
     return render(request, 'deplacement_details.html', {'deplacement': deplacement, 'image': image})
+
 
 def delete_deplacement(request, deplacement_id):
     deplacement = get_object_or_404(Deplacement, id=deplacement_id)
@@ -217,7 +224,7 @@ def enregistrer_etatArriver(request):
 
             if vehicule:
                 vehicule.disponibilite = True
-                vehicule.kilometrage=etat_arrive.kilometrage_arrive
+                vehicule.kilometrage = etat_arrive.kilometrage_arrive
                 vehicule.save()
             if conducteur:
                 conducteur.disponibilite = True
@@ -284,7 +291,6 @@ def get_deplacements_data2(request):
         return JsonResponse({'error': 'Identifiant du conducteur non spécifié'}, status=400)
 
 
-
 # def get_info_prolongement(request):
 #   if request.method == 'GET':
 #      id_deplacement = request.GET.get('id_deplacement')
@@ -338,3 +344,139 @@ def refuse_prolongement(request, prolongement_id):
     prolongement.save()
 
     return redirect('deplacement:liste_deplacement_en_cours')
+
+
+def deplacement_search(request):
+    form = DeplacementSearchForm(request.GET)
+    aujourdhui = date.today()
+    deplacement = Deplacement.objects.filter(date_depart__gt=aujourdhui)
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            query_parts = query.split()
+            if len(query_parts) == 2:
+                nom, prenom = query_parts
+                # Recherchez le nom et le prénom séparément
+                deplacement = deplacement.filter(
+                    Q(vehicule__marque__marque__icontains=query) |
+                    Q(vehicule__numero_immatriculation__icontains=query) |
+                    Q(vehicule__type_commercial__modele__icontains=query) |
+                    (Q(conducteur__utilisateur__nom__icontains=nom) & Q(
+                        conducteur__utilisateur__prenom__icontains=prenom))
+                )
+            else:
+                # Si la requête ne contient pas exactement deux parties, recherchez normalement
+                deplacement = deplacement.filter(
+                    Q(vehicule__marque__marque__icontains=query) |
+                    Q(vehicule__numero_immatriculation__icontains=query) |
+                    Q(vehicule__type_commercial__modele__icontains=query) |
+                    Q(conducteur__utilisateur__nom__icontains=query) |
+                    Q(conducteur__utilisateur__prenom__icontains=query)
+                )
+
+    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
+    page = request.GET.get("page", 1)
+    try:
+        deplacements = paginator.page(page)
+    except EmptyPage:
+        deplacements = paginator.page(paginator.num_pages)
+
+    context = {'deplacements': deplacements, 'form': form}
+
+    # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
+    if deplacement.count() == 0 and form.is_valid():
+        context['no_results'] = True
+
+    return render(request, 'afficher_deplacement.html', context)
+
+
+def deplacement_encours_search(request):
+    form = DeplacementSearchForm(request.GET)
+    aujourdhui = date.today()
+    deplacement = Deplacement.objects.filter(date_depart__lte=aujourdhui)
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            query_parts = query.split()
+            if len(query_parts) == 2:
+                nom, prenom = query_parts
+                # Recherchez le nom et le prénom séparément
+                deplacement = deplacement.filter(
+                    Q(vehicule__marque__marque__icontains=query) |
+                    Q(vehicule__numero_immatriculation__icontains=query) |
+                    Q(vehicule__type_commercial__modele__icontains=query) |
+                    (Q(conducteur__utilisateur__nom__icontains=nom) & Q(
+                        conducteur__utilisateur__prenom__icontains=prenom))
+                )
+            else:
+                # Si la requête ne contient pas exactement deux parties, recherchez normalement
+                deplacement = deplacement.filter(
+                    Q(vehicule__marque__marque__icontains=query) |
+                    Q(vehicule__numero_immatriculation__icontains=query) |
+                    Q(vehicule__type_commercial__modele__icontains=query) |
+                    Q(conducteur__utilisateur__nom__icontains=query) |
+                    Q(conducteur__utilisateur__prenom__icontains=query)
+                )
+
+    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
+    page = request.GET.get("page", 1)
+    try:
+        deplacements = paginator.page(page)
+    except EmptyPage:
+        deplacements = paginator.page(paginator.num_pages)
+
+    context = {'deplacements': deplacements, 'form': form}
+
+    # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
+    if deplacement.count() == 0 and form.is_valid():
+        context['no_results'] = True
+
+    return render(request, 'afficher_deplacement_en_cours.html', context)
+
+
+def arrive_search(request):
+    form = DeplacementSearchForm(request.GET)
+    aujourd_hui=date.today()
+    arrivee = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
+        date_arrive__gt=aujourd_hui)
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            query_parts = query.split()
+            if len(query_parts) == 2:
+                nom, prenom = query_parts
+                # Recherchez le nom et le prénom séparément
+                arrivee = arrivee.filter(
+                    Q(deplacement__vehicule__marque__marque__icontains=query) |
+                    Q(deplacement__vehicule__numero_immatriculation__icontains=query) |
+                    Q(deplacement__vehicule__type_commercial__modele__icontains=query) |
+                    (Q(deplacement__conducteur__utilisateur__nom__icontains=nom) & Q(
+                        deplacement__conducteur__utilisateur__prenom__icontains=prenom))
+                )
+            else:
+                # Si la requête ne contient pas exactement deux parties, recherchez normalement
+                arrivee = arrivee.filter(
+                    Q(deplacement__vehicule__marque__marque__icontains=query) |
+                    Q(deplacement__vehicule__numero_immatriculation__icontains=query) |
+                    Q(deplacement__vehicule__type_commercial__modele__icontains=query) |
+                    Q(deplacement__conducteur__utilisateur__nom__icontains=query) |
+                    Q(deplacement__conducteur__utilisateur__prenom__icontains=query)
+                )
+
+    paginator = Paginator(arrivee.order_by('date_mise_a_jour'), 5)
+    page = request.GET.get("page", 1)
+    try:
+        etatarrives = paginator.page(page)
+    except EmptyPage:
+        etatarrives = paginator.page(paginator.num_pages)
+
+    context = {'etatarrives': etatarrives, 'form': form}
+
+    # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
+    if arrivee.count() == 0 and form.is_valid():
+        context['no_results'] = True
+
+    return render(request, 'afficher_deplacement_arrive.html', context)

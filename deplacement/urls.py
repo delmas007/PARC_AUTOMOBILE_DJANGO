@@ -3,7 +3,7 @@ from django.urls import path
 from deplacement.views import enregistrer_deplacement, depart, liste_deplacement, liste_deplacement_en_cours, arrivee, \
     liste_deplacement_arrive, modifier_deplacement, details_deplacement, enregistrer_etatArriver, details_arriver, \
     get_deplacements_data, get_deplacements_data2, get_photos_demande_prolongement, accept_prolongement, \
-    refuse_prolongement, delete_deplacement
+    refuse_prolongement, delete_deplacement, deplacement_search, deplacement_encours_search, arrive_search
 
 app_name = 'deplacement'
 
@@ -24,5 +24,8 @@ urlpatterns = [
     path('accept_prolongement/<int:prolongement_id>/', accept_prolongement, name='accept_prolongement'),
     path('refuse_prolongement/<int:prolongement_id>/', refuse_prolongement, name='refuse_prolongement'),
     path('delete_deplacement/<int:deplacement_id>/', delete_deplacement, name='delete_deplacement'),
+    path('recherche/', deplacement_search, name='deplacement_search'),
+    path('recherche_encours/', deplacement_encours_search, name='deplacement_encours_search'),
+    path('recherche_arrivee/', arrive_search, name='arrive_search'),
 
 ]

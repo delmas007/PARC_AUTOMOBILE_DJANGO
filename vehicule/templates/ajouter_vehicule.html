@@ -112,7 +112,7 @@
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <label for="kilometrage" class="font-weight-bold">Kilométrage (Km/H) :</label>
-                                                <input type="number" class="form-control" id="kilometrage" placeholder="Exemple : 5000" name="kilometrage" value="{% if form.kilometrage.value %}{{ form.kilometrage.value }}{% endif %}">
+                                                <input min="1" type="number" class="form-control" id="kilometrage" placeholder="Exemple : 5000" name="kilometrage" value="{% if form.kilometrage.value %}{{ form.kilometrage.value }}{% endif %}">
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <label for="type_commercial" class="col-form-label">Type commercial :</label>
@@ -540,7 +540,17 @@
         });
     </script>
 
+<script>
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
 
+    today = yyyy + '-' + mm + '-' + dd;
+
+    // Set the minimum date for date_expiration_assurance input
+    document.getElementById("date_mise_circulation").max = today;
+</script>
 
     </body>
 {% endblock %}
