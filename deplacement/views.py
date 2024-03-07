@@ -21,6 +21,7 @@ def enregistrer_deplacement(request):
     date_aujourdhui = date.today()
     etatarrives = EtatArrive.objects.all()
 
+    # Définir une valeur par défaut si aucun véhicule n'est sélectionné
     for conducteur in conducteurs:
         deplacements = Deplacement.objects.filter(conducteur=conducteur)
         for deplacement in deplacements:
@@ -33,12 +34,7 @@ def enregistrer_deplacement(request):
             if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(deplacement=deplacement).exists():
                 vehicule.disponibilite = False
                 vehicule.save()
-    vehicule_id = request.POST.get('vehicule')
-    if vehicule_id:
-        vehicule = Vehicule.objects.get(pk=vehicule_id)
-        kilometrage_min = vehicule.kilometrage
-    else:
-        kilometrage_min = 0  # Définir une valeur par défaut si aucun véhicule n'est sélectionné
+
     if request.method == 'POST':
 
         form = DeplacementForm(request.POST)
@@ -72,7 +68,7 @@ def enregistrer_deplacement(request):
     else:
         form = DeplacementForm()
 
-    return render(request, 'enregistrer_deplacement.html', {'form': form, 'kilometrage_min': kilometrage_min})
+    return render(request, 'enregistrer_deplacement.html', {'form': form})
 
 
 def liste_deplacement(request):
@@ -480,3 +476,16 @@ def arrive_search(request):
         context['no_results'] = True
 
     return render(request, 'afficher_deplacement_arrive.html', context)
+
+
+def get_kilometrage_actuel(request):
+    vehicule_id = request.GET.get('vehicule_id')
+    if vehicule_id:
+        try:
+            vehicule = Vehicule.objects.get(pk=vehicule_id)
+            kilometrage_actuel = vehicule.kilometrage
+            return JsonResponse({'kilometrage_actuel': kilometrage_actuel})
+        except Vehicule.DoesNotExist:
+            return JsonResponse({'error': 'Véhicule non trouvé'}, status=404)
+    else:
+        return JsonResponse({'error': 'ID de véhicule non fourni'}, status=400)

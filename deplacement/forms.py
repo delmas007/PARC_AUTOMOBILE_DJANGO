@@ -19,14 +19,6 @@ class MultipleFileInput(Input):
 class DeplacementForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DeplacementForm, self).__init__(*args, **kwargs)
-
-        # Récupérer le kilométrage minimum du véhicule passé en argument
-        kilometrage_min = kwargs.pop('kilometrage_min', None)
-        super().__init__(*args, **kwargs)
-        if kilometrage_min is not None:
-            # Définir la valeur minimale du champ kilometrage_depart sur le kilométrage minimum
-            self.fields['kilometrage_depart'].widget.attrs['min'] = kilometrage_min
-
         # Récupérer l'instance de déplacement actuelle
         instance = kwargs.get('instance')
 

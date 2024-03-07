@@ -3,7 +3,8 @@ from django.urls import path
 from deplacement.views import enregistrer_deplacement, depart, liste_deplacement, liste_deplacement_en_cours, arrivee, \
     liste_deplacement_arrive, modifier_deplacement, details_deplacement, enregistrer_etatArriver, details_arriver, \
     get_deplacements_data, get_deplacements_data2, get_photos_demande_prolongement, accept_prolongement, \
-    refuse_prolongement, delete_deplacement, deplacement_search, deplacement_encours_search, arrive_search
+    refuse_prolongement, delete_deplacement, deplacement_search, deplacement_encours_search, arrive_search, \
+    get_kilometrage_actuel
 
 app_name = 'deplacement'
 
@@ -27,5 +28,6 @@ urlpatterns = [
     path('recherche/', deplacement_search, name='deplacement_search'),
     path('recherche_encours/', deplacement_encours_search, name='deplacement_encours_search'),
     path('recherche_arrivee/', arrive_search, name='arrive_search'),
+    path('deplacement/get_kilometrage_actuel/', get_kilometrage_actuel, name='get_kilometrage_actuel')
 
 ]
