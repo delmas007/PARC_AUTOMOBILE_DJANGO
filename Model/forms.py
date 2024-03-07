@@ -14,12 +14,12 @@ class ConnexionForm(AuthenticationForm):
         self.fields['password'].error_messages = {
             'required': "Veuillez saisir un mot de passe valide !!"
         }
-        self.error_messages = {
-            "invalid_login":
-                "Veuillez saisir les mêmes informations que lors de la création de votre compte. "
-                "Vous devez respecter les majuscules ou les minuscules !!",
-            "inactive": "Ce compte est inactif veuillez contacter votre administrateur."
-        }
+        # self.error_messages = {
+        #     "invalid_login":
+        #         "Veuillez saisir les mêmes informations que lors de la création de votre compte. "
+        #         "Vous devez respecter les majuscules ou les minuscules !!",
+        #     "inactive": "Ce compte est inactif veuillez contacter votre administrateur."
+        # }
 
     class Meta:
         model = Utilisateur

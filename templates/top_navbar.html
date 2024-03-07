@@ -71,7 +71,8 @@
             {#        Notifications            #}
                     <li class="nav-item">
                         <a href="#" class="search-toggle iq-waves-effect">
-                            <div id="lottie-beil"></div>
+                            <div id="lottie-beil" ></div>
+                            <i class="bi bi-bell" ></i>
                             <span class="bg-danger dots"></span>
                         </a>
                         <div class="iq-sub-dropdown">
@@ -189,4 +190,30 @@
 
 
     </div>
+    <script>
+        $(document).ready(function() {
+            $('.search-toggle').on('click', function() {
+                // Vérifie si lottie-beil et les points sont en cours et si Demande_prolongement existe
+                {% if not demande %}
+                    {% if not demande.en_cours %}
+                        if ($('#lottie-beil').length && $('.dots').length) {
+                            // Logique pour afficher lottie-beil et les points
+                            $('#lottie-beil').show();
+                            $('.dots').show();
+                            $('.bi-bell').hide(); // Masquer l'icône de la cloche si nécessaire
+                        }
+                    {% else %}
+                        // Logique pour afficher l'icône de cloche
+                        $('.bi-bell').show();
+                        $('#lottie-beil').hide(); // Masquer lottie-beil s'il ne doit pas être affiché
+                        $('.dots').hide(); // Masquer les points s'ils ne doivent pas être affichés
+                    {% endif %}
+                {% else %}
+                    // Logique pour afficher l'icône de cloche lorsque Demande_prolongement n'existe pas
+                    $('.bi-bell').show();
+                {% endif %}
+            });
+        });
+    </script>
+
 </div>

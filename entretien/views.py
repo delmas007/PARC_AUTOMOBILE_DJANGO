@@ -108,4 +108,4 @@ def modifier_entretien(request, pk):
 
         })
 
-    return render(request, 'modifier_entretien.html', {'form': form, 'vehicule': entretien, })
+    return render(request, 'modifier_entretien.html', {'form': form, 'entretien': entretien, })

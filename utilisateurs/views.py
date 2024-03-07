@@ -160,29 +160,37 @@ def inscription_user(request):
 #         if self.request.user.roles.role == 'CONDUCTEUR':
 #             return reverse('utilisateur:liste_mission')
 
-def Connexion_user(request):
-    if request.method == 'POST':
-        if 'connexion' in request.POST:
-            form = ConnexionForm(request, data=request.POST)
-            if form.is_valid():
-                username = form.cleaned_data.get('username')
-                password = form.cleaned_data.get('password')
-                user = authenticate(request, username=username, password=password)
-                if user is not None:
-                    login(request, user)
-                    role = user.roles.role
-                    if role == 'CLIENT':
-                        return redirect('utilisateur:Accueil_utilisateur')
-                    elif role == 'CONDUCTEUR':
-                        return redirect('utilisateur:liste_mission')
-            else:
-                return render(request, 'connexion_user.html', {'form': form})
-        else:
-            return inscription_user(request)
+# def Connexion_user(request):
+#     if request.method == 'POST':
+#         if 'connexion' in request.POST:
+#             form = ConnexionForm(request, data=request.POST)
+#             if form.is_valid():
+#                 username = form.cleaned_data.get('username')
+#                 password = form.cleaned_data.get('password')
+#                 user = authenticate(request, username=username, password=password)
+#                 if user is not None:
+#                     login(request, user)
+#                     role = user.roles.role
+#                     if role == 'CLIENT':
+#                         return redirect('utilisateur:Accueil_utilisateur')
+#                     elif role == 'CONDUCTEUR':
+#                         return redirect('utilisateur:liste_mission')
+#             else:
+#                 return render(request, 'connexion_user.html', {'form': form})
+#         else:
+#             return inscription_user(request)
+#
+#     else:
+#         form = ConnexionForm()
+#         return render(request, 'connexion_user.html', {'form': form})
 
-    else:
-        form = ConnexionForm()
-        return render(request, 'connexion_user.html', {'form': form})
+class Connexion_user(LoginView):
+    template_name = 'connexion_user.html'
+    form_class = ConnexionForm
+
+    def get_success_url(self) -> str:
+        if self.request.user.roles.role == 'CONDUCTEUR':
+            return reverse('utilisateur:liste_mission')
 
 
 def Acceuil_conducteur(request):
@@ -351,7 +359,6 @@ def liste_demandes(request):
 
 
 def declare_incident(request):
-
     date_aujourdui = date.today()
     # Récupérer l'utilisateur actuellement connecté
     utilisateur_actif = request.user
@@ -411,5 +418,3 @@ def sendIncident(request):
         form = DeclareIncidentForm()
 
     return render(request, 'compte_conducteur.html', {'form': form})
-
-
