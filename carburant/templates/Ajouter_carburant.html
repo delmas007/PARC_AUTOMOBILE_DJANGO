@@ -33,13 +33,13 @@
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="email">Vehicule:</label>
                                         <div class="col-sm-9">
-                                            {{ form.vehicule}}
+                                           {{ form.vehicule }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="email">Type carburant:</label>
                                         <div class="col-sm-9">
-                                            {{ form.type_carburant }}
+                                            {{ form.type }}
 
                                         </div>
                                     </div>
@@ -47,7 +47,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="email">Quantité:</label>
                                         <div class="col-sm-9">
-                                            <input type="number" min="0" class="form-control" id="exampleInputdate"  name="kilometrage_depart" required>
+                                             {{ form.quantite }}
                                         </div>
                                     </div>
 
@@ -95,7 +95,7 @@
                 </div>
                 <div class="modal-footer text-center" style="display: flex; justify-content: center; align-items: center;">
                     <button type="button" class="btn btn-secondary align-items-center" data-dismiss="modal">Fermer</button>
-                    <a type="button" class="zoom-on-hover btn btn-success align-items-center text-white" href="{% url 'deplacement:liste_deplacement' %}">Voir la liste des entretients </a>
+                    <a type="button" class="zoom-on-hover btn btn-success align-items-center text-white" href="{% url 'carburant:Liste_carburant' %}">Voir la liste des coûts liés au carburant </a>
                 </div>
             </div>
         </div>

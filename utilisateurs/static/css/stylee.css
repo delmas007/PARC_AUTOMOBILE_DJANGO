@@ -299,7 +299,11 @@ h2 {
 @media (min-width: 768px) {
     .nav,
     .nav .navbar {
-        background: #9376ff !important;
+         background: #9376ff;
+  background: -webkit-linear-gradient(-135deg, #d7bbd2, #9376ff);
+  background: -o-linear-gradient(-135deg, #d7bbd2, #9376ff);
+  background: -moz-linear-gradient(-135deg, #d7bbd2, #9376ff);
+  background: linear-gradient(-135deg, #d7bbd2, #9376ff);
     }
 
     .nav .navbar-brand {

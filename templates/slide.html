@@ -36,6 +36,7 @@
             {% url 'entretien:Ajouter_Entretien' as entretien_Ajouter_Entretien_url %}
             {% url 'entretien:liste_Entretien' as entretien_liste_Entretien_url %}
             {% url 'carburant:Ajouter_carburant' as carburant_Ajout_carburant_url %}
+            {% url 'carburant:Liste_carburant' as carburant_list_carburant_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -87,11 +88,13 @@
                 </li>
 
 
-             <li class="{% if request.path == carburant_Ajout_carburant_url  %}active{% endif %}">
+             <li class="{% if request.path == carburant_Ajout_carburant_url or request.path ==  carburant_list_carburant_url  %}active{% endif %}">
                     <a href="#carburant" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-fuel-pump" style=" margin-right: 5px"></i><span>Carburant</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="carburant" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == carburant_Ajout_carburant_url %}active{% endif %}" ><a href="{% url 'carburant:Ajouter_carburant' %}"><i class="bi bi-plus-circle"></i> Enregistrer</a></li>
-                        </ul>
+                        <li class="{% if request.path == carburant_list_carburant_url %}active{% endif %}" ><a href="{% url 'carburant:Liste_carburant' %}"><i class="bi bi-list-check"></i> Liste des coûts carburant</a></li>
+
+                    </ul>
                 </li>
 
             </ul>

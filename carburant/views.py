@@ -1,26 +1,65 @@
-from django.shortcuts import render, redirect
+from django.core.paginator import EmptyPage, Paginator
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from Model.models import Carburant, type_carburant, Vehicule
-from carburant.forms import CarburantForm
+
+from Model.models import Carburant
+from carburant.forms import ModifierCarburantForm ,AjouterCarburantForm
 
 
 # Create your views here.
 def Ajouter_carburant(request):
-    vehicules = Vehicule.objects.all()
     if request.method == 'POST':
-        form = CarburantForm(request.POST)
+        form = AjouterCarburantForm(request.POST)
         if form.is_valid():
-            nom_carburant = form.cleaned_data['nom']
-            prix_carburant = form.cleaned_data['prix']
+            carburant = form.save(commit=False)  # Je Récupere les données du formulaire sans les sauvegarder immédiatement
+            carburant.prix_total = carburant.quantite * carburant.type.prix  # Je Calculer le prix total
+            carburant.save()
 
-            # Enregistrement des données dans la table type_carburant
-            type_carburant.objects.create(nom=nom_carburant, prix=prix_carburant)
-
-            messages.success(request, 'Les informations sur le carburant a été ajouté avec succès.')
+            messages.success(request, 'Enregistrement des coûts liés au carburant !')
             return redirect('carburant:Ajouter_carburant')
     else:
-        form = CarburantForm()
-    return render(request, 'Ajouter_carburant.html', {'form': form, 'vehicules': vehicules})
+        form = AjouterCarburantForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'Ajouter_carburant.html',  context)
 
 
+def liste_carburant(request):
+        carburant_list = Carburant.objects.all().order_by('date_mise_a_jour')
 
+        paginator = Paginator(carburant_list.order_by('date_mise_a_jour'), 3)
+        try:
+            page = request.GET.get("page")
+            if not page:
+                page = 1
+            carburant_list = paginator.page(page)
+        except EmptyPage:
+
+            carburant_list = paginator.page(paginator.num_pages())
+
+        return render(request, 'Liste_carburant.html', {'carburants': carburant_list} )
+
+
+def Modifier_carburant(request, pk):
+    carburant = get_object_or_404(Carburant, pk=pk)
+
+    if request.method == 'POST':
+        form = ModifierCarburantForm(request.POST, instance=carburant)
+        if form.is_valid():
+            carburant = form.save(commit=False)
+            carburant.prix_total = carburant.quantite * carburant.type.prix
+            carburant.save()
+
+            return redirect('carburant:Liste_carburant')
+    else:
+        form = ModifierCarburantForm(instance=carburant)
+
+    context = {
+        'form': form,
+        'carburant': carburant,
+    }
+
+    return render(request, 'Modifier_carburant.html', context)
