@@ -30,10 +30,10 @@
                         </svg> Tableau de bord</a>
                         <a class="nav-link {% if request.path == list_de_demande_prolongement %}active{% else %} {% endif %} " id="orders-nav"  href=" {% url 'utilisateur:list_de_demande_prolongement' %}" role="tab" data-target="#orders-tab"><i class="fa fa-paper-plane"></i>Voir mes demandes</a>
                         <a class="nav-link {% if request.path == declare_incident %}active{% else %} {% endif %} " id="payment-nav" href=" {% url 'utilisateur:declare_incident' %}" role="tab"><i class="ri-alert-line  "></i>Signaler incident</a>
-{#                        <a class="nav-link" id="address-nav" data-toggle="pill" href="#address-tab" role="tab"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">#}
-{#                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>#}
-{#                        </svg> address</a>#}
-{#                        <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Account Details</a>#}
+                        {#                        <a class="nav-link" id="address-nav" data-toggle="pill" href="#address-tab" role="tab"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">#}
+                        {#                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>#}
+                        {#                        </svg> address</a>#}
+                        {#                        <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Account Details</a>#}
                         <a class="nav-link" href="{% url 'Model:Deconnexion' %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
                             <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
@@ -289,13 +289,14 @@
                                                         <td>{{ deplacement.duree_deplacement }}</td>
                                                     {% endif %}
                                                     <td>{{ deplacement.kilometrage_depart }} Km/h</td>
-                                                    <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident" data-deplacement-id="{{ deplacement.id }}">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
-                                                                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                                                                        <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
-                                                                    </svg>
-                                                                    Declarer un incident
-                                                                </button>
+                                                    <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident" data-deplacement-id="{{ deplacement.id }}" data-vehicule-id="{{ deplacement.vehicule.id }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                                                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
+                                                            <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
+                                                        </svg>
+
+                                                        Declarer un incident
+                                                    </button>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -307,14 +308,15 @@
                                                 <td>{{ deplacement.date_depart }}</td>
                                                 <td>{{ deplacement.duree_deplacement }}</td>
                                                 <td>{{ deplacement.kilometrage_depart }} Km/h</td>
-                                               <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident" data-deplacement-id="{{ deplacement.id }}">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
-                                                                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                                                                        <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
-                                                                    </svg>
-                                                                    Declarer un incident
-                                                                </button>
-                                                    </td>
+                                                <td><button style="background-color: #4b2db9; color: white" type="button" class="btn mb-3 btn-info enregistrer-btn" data-toggle="modal" data-target="#modal_incident"  data-deplacement-id="{{ deplacement.id }}" data-vehicule-id="{{ deplacement.vehicule.id }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                                                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
+                                                        <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
+                                                    </svg>
+
+                                                    Declarer un incident
+                                                </button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     {% else %}
@@ -324,7 +326,7 @@
                                     {% endif %}
                                     </tbody>
                                 </table>
-                          </div>
+                            </div>
                             <div class="row justify-content-between mt-3">
                                 <div id="user-list-page-info" class="col-md-6">
                                     <span>Affichage de {{ demande.start_index }} à {{ demande.end_index }} sur {{ demande.paginator.count }} entrées</span>
@@ -433,7 +435,7 @@
             </div>
         </div>
     </div>
-     <div class="modal fade " id="modal_incident" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" >
+    <div class="modal fade " id="modal_incident" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" >
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document" >
             <div class="modal-content">
                 <div class="modal-header">
@@ -445,7 +447,7 @@
                 <div class="iq-card-body">
                     <form class="form-horizontal" id="DeplacementArriverForm" method="post" enctype="multipart/form-data" action="{% url 'utilisateur:sendIncident' %}">
                         {% csrf_token %}
-                     <input type="hidden" id="deplacement_id" name="deplacement_id">
+                        <input type="hidden" id="vehicule_id" name="vehicule_id">
                         <div class="form-group row">
 
                             <label class="control-label col-sm-4 align-self-center mb-0" for="description_incident" >DESCRIPTION:</label>
@@ -577,19 +579,20 @@
 
             });
         });
-        function fermerModal() {
-            $('#exampleModalScrollable').modal('hide');
-        }
         $(document).ready(function() {
             $('.enregistrer-btn').on('click', function() {
                 var deplacementId = $(this).data('deplacement-id');
-                $('#deplacement_id').val(deplacementId);
+                var vehiculeId = $(this).data('vehicule-id');
 
+                $('#deplacement_id').val(deplacementId);
+                $('#vehicule_id').val(vehiculeId);
             });
         });
+
         function fermerModal() {
             $('#modal_incident').modal('hide');
         }
+
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {

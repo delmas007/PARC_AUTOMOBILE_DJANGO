@@ -16,6 +16,8 @@ from django.utils.encoding import force_str, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
+
+import deplacement
 from Model.forms import UserRegistrationForm, ConnexionForm
 from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement
 from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse, DemandeProlongementForm, \
@@ -331,8 +333,9 @@ def prolongement(request):
 def liste_demandes(request):
     utilisateur_actif = request.user
     conducteur_actif = utilisateur_actif.conducteur_id
-    arrive_list_ids=EtatArrive.objects.values_list('deplacement_id', flat=True)
-    demande_list = Demande_prolongement.objects.filter(conducteur_id=conducteur_actif).exclude(deplacement__in=arrive_list_ids)
+    arrive_list_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+    demande_list = Demande_prolongement.objects.filter(conducteur_id=conducteur_actif).exclude(
+        deplacement__in=arrive_list_ids)
     paginator = Paginator(demande_list.order_by('date_mise_a_jour'), 3)
     try:
         page = request.GET.get("page")
@@ -346,6 +349,7 @@ def liste_demandes(request):
 
     return render(request, 'compte_conducteur.html', {'demande': demande_list})
 
+
 def declare_incident(request):
     date_aujourdui = date.today()
     # Récupérer l'utilisateur actuellement connecté
@@ -356,9 +360,9 @@ def declare_incident(request):
 
     deplacements_arrives_ids = EtatArrive.objects.values('deplacement_id')
 
-
     # Exclure les déplacements avec leurs IDs dans la sous-requête
-    mission_list = Deplacement.objects.filter(conducteur_id=conducteur_actif_id).filter(date_depart__lte=date_aujourdui).exclude(id__in=Subquery(deplacements_arrives_ids))
+    mission_list = Deplacement.objects.filter(conducteur_id=conducteur_actif_id).filter(
+        date_depart__lte=date_aujourdui).exclude(id__in=Subquery(deplacements_arrives_ids))
 
     paginator = Paginator(mission_list.order_by('date_depart'), 3)
     try:
@@ -375,6 +379,7 @@ def declare_incident(request):
 def sendIncident(request):
     if request.method == 'POST':
         form = DeclareIncidentForm(request.POST, request.FILES)
+
         if form.is_valid():
             images = request.FILES.getlist('images')
             if len(images) <= 6:
@@ -382,18 +387,25 @@ def sendIncident(request):
                 utilisateur_actif = request.user
                 conducteur_actif_id = utilisateur_actif.conducteur_id
                 incident.conducteur_id = conducteur_actif_id
-                deplacement_id = form.cleaned_data['deplacement_id']
-                deplacement = Deplacement.objects.get(id=deplacement_id)
-                incident.vehicule = deplacement.vehicule
+
+                # Maintenant, vous pouvez obtenir le véhicule du formulaire
+                vehicule_id = form.cleaned_data['vehicule_id']
+
+                incident.vehicule = Vehicule.objects.get(id=vehicule_id.id)
+
                 incident.save()
 
                 for uploaded_file in images:
                     photo = Photo.objects.create(incident=incident, images=uploaded_file)
 
                 messages.success(request, 'Le prolongement a été ajouté avec succès.')
+
             return redirect('utilisateur:declare_incident')
         else:
             print(form.errors)
     else:
-        form = DemandeProlongementForm()
+        form = DeclareIncidentForm()
+
     return render(request, 'compte_conducteur.html', {'form': form})
+
+

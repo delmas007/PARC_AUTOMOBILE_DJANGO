@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.forms.widgets import Input
 
-from Model.models import Conducteur, Utilisateur, Demande_prolongement, Incident
+from Model.models import Conducteur, Utilisateur, Demande_prolongement, Incident, Vehicule
 from django import forms
 
 
@@ -44,8 +44,10 @@ class DemandeProlongementForm(forms.ModelForm):
 
 
 class DeclareIncidentForm(forms.ModelForm):
-    deplacement_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+    vehicule_id= forms.ModelChoiceField(queryset=Vehicule.objects.all(), widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = Incident
-        exclude = ['utilisateurs','vehicule','conducteur']
+        exclude = ['utilisateurs', 'vehicule', 'conducteur']
         images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=True)
+
