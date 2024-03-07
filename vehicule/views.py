@@ -33,8 +33,10 @@ def Ajouter_vehicule(request):
                 form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
         else:
             print(form.errors)
+
     else:
         form = VehiculeForm()
+
     marques = Marque.objects.all()
     return render(request, 'ajouter_vehicule.html', {'form': form, 'marques': marques})
 

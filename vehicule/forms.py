@@ -112,7 +112,21 @@ class VehiculeForm(forms.ModelForm):
             'class': "form-control",
             'id': "numero_chassis",
             'required': True,
+
         })
+
+        self.fields['numero_immatriculation'].error_messages = {
+            'unique': 'Un véhicule a déjà été enregistré avec ce numéro d\'immatriculation.',
+            'required': 'Ce champ est obligatoire.'
+        }
+        self.fields['numero_chassis'].error_messages = {
+            'unique': 'Un véhicule a déjà été enregistré avec ce numéro VIN/CHASSIS.',
+            'required': 'Ce champ est obligatoire.'
+        }
+        self.fields['carte_grise'].error_messages = {
+            'unique': 'Un véhicule a déjà été enregistré avec ce numéro de carte grise.',
+            'required': 'Ce champ est obligatoire.'
+        }
 
 
 class VehiculeModifierForm(forms.ModelForm):
