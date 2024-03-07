@@ -33,8 +33,10 @@ def Ajouter_vehicule(request):
                 form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
         else:
             print(form.errors)
+
     else:
         form = VehiculeForm()
+
     marques = Marque.objects.all()
     return render(request, 'ajouter_vehicule.html', {'form': form, 'marques': marques})
 
@@ -126,6 +128,7 @@ def modifier_vehicule(request, pk):
     else:
         form = VehiculeForm(instance=vehicule, initial={
             'date_mise_circulation': vehicule.date_mise_circulation,
+            'energie': vehicule.energie,
 
         })
 

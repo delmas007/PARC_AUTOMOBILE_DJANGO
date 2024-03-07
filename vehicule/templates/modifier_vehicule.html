@@ -34,7 +34,7 @@
                                <div class="row">
                                    <div class="col-12 col-md-6">
                                        <div class="form-group row">
-                                           <label class="control-label col-sm-3  align-self-center mb-0" for="marque">Type commercial :</label>
+                                           <label class="control-label col-sm-3  align-self-center mb-0" for="type_commercial">Type commercial :</label>
                                            <div class="col-sm-8">
                                                 {{ form.type_commercial }}
                                            </div>
@@ -80,7 +80,26 @@
                                    </div>
                                    <div class="col-12 col-md-6">
                                        <div class="form-group row">
-                                           <label class="control-label col-sm-3 align-self-center mb-0" for="numero_chassis">Numero du VIN/Chassis :</label>
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="videnge">Kilométrage avant videnge :</label>
+                                           <div class="col-sm-8">
+                                              {{ form.videnge }}
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+
+                               <div class="row">
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="taille_reservoir">Taille du reservoir :</label>
+                                           <div class="col-sm-8">
+                                                {{ form.taille_reservoir }}
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="col-12 col-md-6">
+                                       <div class="form-group row">
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="numero_chassis">Numéro du VIN/Chassis :</label>
                                            <div class="col-sm-8">
                                               {{ form.numero_chassis }}
                                            </div>
@@ -99,10 +118,9 @@
                                    </div>
                                    <div class="col-12 col-md-6">
                                        <div class="form-group row">
-                                           <label class="control-label col-sm-3 align-self-center mb-0" for="date_videnge">Date de videnge :</label>
+                                           <label class="control-label col-sm-3 align-self-center mb-0" for="date_visite_technique">Date de visite technique :</label>
                                            <div class="col-sm-8">
-                                               <input type="date" class="form-control" id="exampleInputdate" value="2019-12-18" name="date_videnge">
-{#                                               {{ form.date_videnge }}#}
+                                               {{ form.date_visite_technique }}
                                            </div>
                                        </div>
                                    </div>
@@ -121,8 +139,8 @@
                                        <div class="form-group row">
                                           <label class="control-label col-sm-3 align-self-center mb-0" for="date_mise_circulation">Date de mise en service :</label>
                                            <div class="col-sm-8">
-                                               <input type="date" class="form-control ml-4" id="exampleInputdate" value="2019-12-18" name="date_mise_circulation">
-{#                                               {{ form.date_mise_circulation }}#}
+{#                                               <input type="date" class="form-control ml-4" id="exampleInputdate" value="2019-12-18" name="date_mise_circulation">#}
+                                               {{ form.date_mise_circulation }}
                                            </div>
                                        </div>
                                    </div>
@@ -141,8 +159,8 @@
                                        <div class="form-group row">
                                            <label class="control-label col-sm-3 align-self-center mb-0" for="date_expiration_assurance">Date d'expiration assurance :</label>
                                            <div class="col-sm-8">
-                                               <input type="date" class="form-control" id="exampleInputdate" value="2019-12-18" name="date_expiration_assurance">
-{#                                               {{ form.date_expiration_assurance }}#}
+{#                                               <input type="date" class="form-control" id="exampleInputdate" value="" name="date_expiration_assurance">#}
+                                               {{ form.date_expiration_assurance }}
                                            </div>
                                        </div>
                                    </div>

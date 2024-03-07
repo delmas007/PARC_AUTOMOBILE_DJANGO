@@ -59,7 +59,7 @@ class type_carburant(models.Model):
     prix = models.IntegerField()
 
     def __str__(self):
-        return f" {self.nom} "
+        return f"{self.nom}"
 
 
 class Conducteur(models.Model):
@@ -123,28 +123,27 @@ class Vehicule(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, blank=True)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
-    numero_immatriculation = models.CharField(max_length=250, unique=True)
+    numero_immatriculation = models.CharField(max_length=25, unique=True)
     type_commercial = models.ForeignKey(Type_Commerciale, on_delete=models.CASCADE)
-    numero_chassis = models.CharField(max_length=250)
-    couleur = models.CharField(max_length=250, blank=True, null=True)
-    carte_grise = models.CharField(max_length=250)
+    numero_chassis = models.CharField(max_length=25, unique=True)
+    couleur = models.CharField(max_length=20, blank=True, null=True)
+    carte_grise = models.CharField(max_length=25, unique=True)
     date_mise_circulation = models.DateField(blank=True, null=True)
-    carrosserie = models.CharField(max_length=250, blank=True, null=True)
+    carrosserie = models.CharField(max_length=100, blank=True, null=True)
     place_assises = models.IntegerField(blank=True, null=True)
     date_expiration_assurance = models.DateField()
     kilometrage = models.IntegerField()
-    image_recto = models.ImageField(upload_to='carteGrise/', blank=False)
-    image_verso = models.ImageField(upload_to='carteGrise/', blank=False)
-    date_visite_technique = models.DateField(blank=False)
-    taille_reservoir = models.IntegerField(blank=False)
-    videnge = models.IntegerField(blank=False)
-    # prix_location
-    energie = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
+    image_recto = models.ImageField(upload_to='carteGrise/')
+    image_verso = models.ImageField(upload_to='carteGrise/')
+    date_visite_technique = models.DateField()
+    taille_reservoir = models.IntegerField()
+    videnge = models.IntegerField()
+    energie = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, null=True)
     disponibilite = models.BooleanField(default=True)
     supprimer = models.BooleanField(default=False)
 
     def __str__(self):
-        return f" {self.marque} {self.type_commercial} {self.numero_immatriculation} "
+        return f"{self.marque} {self.type_commercial} {self.numero_immatriculation}"
 
 
 class Deplacement(models.Model):
@@ -248,6 +247,7 @@ class Incident(models.Model):
     date_mise_a_jour = models.DateField(verbose_name="Date de mise a jour", auto_now=True)
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
     description_incident = models.TextField()
     utilisateurs = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='gestionnaire',
                                      blank=True)
