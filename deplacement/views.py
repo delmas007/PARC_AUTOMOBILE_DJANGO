@@ -390,10 +390,12 @@ def deplacement_search(request):
 def deplacement_encours_search(request):
     form = DeplacementSearchForm(request.GET)
     aujourdhui = date.today()
-    deplacement = Deplacement.objects.filter(date_depart__lte=aujourdhui)
+    deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+    deplacement = Deplacement.objects.filter(date_depart__lte=aujourdhui).exclude(
+        Q(id__in=deplacements_etat_arrive_ids))
     prolongement = Demande_prolongement.objects.all()
 
-    deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+
     deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourdhui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
     deplacement_ids = deplacements.values_list('id', flat=True)
