@@ -74,7 +74,10 @@ def enregistrer_deplacement(request):
 def liste_deplacement(request):
     aujourd_hui = date.today()
     deplacement = Deplacement.objects.filter(Q(date_depart__gt=aujourd_hui))
-
+    nombre_deplacement = deplacement.count()
+    deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+    deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
+        Q(id__in=deplacements_etat_arrive_ids))
     paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 4)
     try:
         page = request.GET.get("page")
@@ -84,7 +87,7 @@ def liste_deplacement(request):
     except EmptyPage:
 
         deplacement = paginator.page(paginator.num_pages())
-    return render(request, 'afficher_deplacement.html', {'deplacements': deplacement})
+    return render(request, 'afficher_deplacement.html', {'deplacements': deplacement, 'nombre_deplacement': nombre_deplacement})
 
 
 def depart(request, pk):
@@ -102,6 +105,8 @@ def liste_deplacement_en_cours(request):
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
     deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
+
+    nombre_deplacement_en_cours = deplacements.count()
     deplacement_ids = deplacements.values_list('id', flat=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
     prolongement_arrive = Demande_prolongement.objects.filter(refuser=True)
@@ -111,7 +116,7 @@ def liste_deplacement_en_cours(request):
     prolongement_encours_ids = prolongement_encours.values_list('deplacement_id', flat=True)
     prolongement_arrive_ids = prolongement_arrive.values_list('deplacement_id', flat=True)
     prolongement_accepte_ids = prolongement_accepte.values_list('deplacement_id', flat=True)
-
+    nombre_prolongement = Deplacement.objects.filter(id__in=prolongement_encours_ids).count()
     paginator = Paginator(deplacements.order_by('date_mise_a_jour'), 5)
     try:
         page = request.GET.get("page")
@@ -124,7 +129,7 @@ def liste_deplacement_en_cours(request):
     return render(request, 'afficher_deplacement_en_cours.html',
                   {'deplacements': deplacement, 'prolongement_encours': prolongement_encours_ids,
                    'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids,
-                   'prolongements': prolongement})
+                   'prolongements': prolongement, 'nombre_deplacement_en_cours': nombre_deplacement_en_cours, 'nombre_prolongement': nombre_prolongement})
 
 
 def arrivee(request, pk):
@@ -444,7 +449,6 @@ def deplacement_encours_search(request):
                'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids,
                'prolongements': prolongement}
 
-
     # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
     if deplacement.count() == 0 and form.is_valid():
         context['no_results'] = True
@@ -454,7 +458,7 @@ def deplacement_encours_search(request):
 
 def arrive_search(request):
     form = DeplacementSearchForm(request.GET)
-    aujourd_hui=date.today()
+    aujourd_hui = date.today()
     arrivee = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
         date_arrive__gt=aujourd_hui)
 

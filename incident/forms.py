@@ -14,8 +14,6 @@ class IncidentFormGestionnaire(forms.ModelForm):
             'id': "selectVehicule",
             'required': True,
         })
-
-        #####VALIDATION, AFFICHAGE D ERREUR
         self.fields['description_incident'].error_messages = {
             'required': " Le champ Description de l'incident est obligatoire."
         }
@@ -25,8 +23,6 @@ class IncidentSearchForm(forms.Form):
     q = forms.CharField(
         label='',
         required=False,
-        #     widget=forms.TextInput(
-        #         attrs={'placeholder': 'Rechercher un incident : Marque, matricule...', 'class': 'form-control'}),
     )
 
 

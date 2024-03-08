@@ -35,18 +35,27 @@ def enregistrer_incident(request):
 
 @login_required(login_url='Connexion')
 def liste_incidents_externe(request):
-    return render(request, 'Liste_incidents_externe.html')
+    aujourd_hui = date.today()
+    une_semaine_avant = aujourd_hui - timedelta(days=7)
+    incidents_list = Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=False)
+    incidents = {}
+    for item_incident in incidents_list:
+        latest_photo = get_latest_photo(item_incident)
+        incidents[item_incident.id] = {'incident': item_incident, 'latest_photo': latest_photo}
+    paginator = Paginator(list(incidents.values()), 3)
+    page = request.GET.get('page')
+    try:
+        incidents_page = paginator.page(page)
+    except PageNotAnInteger:
+        incidents_page = paginator.page(1)
+    return render(request, 'Liste_incidents_externe.html', {'incidents': incidents_page, 'paginator': paginator})
 
 
 @login_required(login_url='Connexion')
 def liste_incidents_interne(request):
     aujourd_hui = date.today()
-
-    # Calculer la date d'une semaine avant la date actuelle
     une_semaine_avant = aujourd_hui - timedelta(days=7)
-
-    # Filtrer les incidents pour obtenir ceux qui ont été mis à jour au cours de la semaine précédente
-    incidents_list = Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant)
+    incidents_list = Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=True)
     incidents = {}
     for item_incident in incidents_list:
         latest_photo = get_latest_photo(item_incident)
@@ -72,7 +81,7 @@ def get_latest_photo(incident):
 @login_required(login_url='Connexion')
 def incidents_search(request):
     form = IncidentSearchForm(request.GET)
-    incidents_list = Incident.objects.all()
+    incidents_list = Incident.objects.filter(conducteur_id__isnull=True)
     incidents = {}
 
     if form.is_valid():
@@ -96,10 +105,57 @@ def incidents_search(request):
         incidents_page = paginator.page(paginator.num_pages)
 
     context = {'incidents': incidents_page, 'form': form, 'paginator': paginator}
-    # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
     if not incidents and form.is_valid():
         context['no_results'] = True
     return render(request, 'Liste_incidents_interne.html', context)
+
+
+@login_required(login_url='Connexion')
+def incidents_externe_search(request):
+    form = IncidentSearchForm(request.GET)
+    incidents_list = Incident.objects.filter(conducteur_id__isnull=False)
+    incidents = {}
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            query_parts = query.split()
+            if len(query_parts) == 2:
+                nom, prenom = query_parts
+                incidents_list = incidents_list.filter(
+                    Q(vehicule__marque__marque__icontains=query) |
+                    Q(vehicule__numero_immatriculation__icontains=query) |
+                    Q(vehicule__type_commercial__modele__icontains=query) |
+                    Q(description_incident__icontains=query) |
+                    (Q(conducteur__utilisateur__nom__icontains=nom) & Q(
+                        conducteur__utilisateur__prenom__icontains=prenom))
+                )
+            else:
+
+                incidents_list = incidents_list.filter(Q(vehicule__numero_immatriculation__icontains=query) |
+                                                       Q(description_incident__icontains=query) |
+                                                       Q(vehicule__marque__marque__icontains=query) |
+                                                       Q(conducteur__utilisateur__nom__icontains=query)|
+                                                       Q(conducteur__utilisateur__prenom__icontains=query))
+    for incident in incidents_list:
+        latest_photo = get_latest_photo(incident)
+        incidents[incident.id] = {'incident': incident, 'latest_photo': latest_photo}
+
+    paginator = Paginator(list(incidents.values()), 3)
+
+    page = request.GET.get('page')
+    try:
+        incidents_page = paginator.page(page)
+    except PageNotAnInteger:
+        incidents_page = paginator.page(1)
+    except EmptyPage:
+        incidents_page = paginator.page(paginator.num_pages)
+
+    context = {'incidents': incidents_page, 'form': form, 'paginator': paginator}
+    # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
+    if not incidents and form.is_valid():
+        context['no_results'] = True
+    return render(request, 'Liste_incidents_externe.html', context)
 
 
 @login_required(login_url='Connexion')
@@ -129,4 +185,4 @@ def modifier_incident_interne(request, pk):
 
 
 def handler_404(request, exception):
-    return render(request, '404.html',  status=404)
+    return render(request, '404.html', status=404)

@@ -61,11 +61,11 @@
                     </ul>
                 </li>
                 <li class="{% if request.path == deplacement_enregistrer_deplacement_url or request.path == deplacement_liste_deplacement_url  or request.path == deplacement_liste_deplacement_en_cours_url or request.path == deplacement_liste_deplacement_arrive_url %}active{% endif %}">
-                    <a href="#deplacement" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="fa fa-paper-plane"></i><span>Deplacement</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <a href="#deplacement" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="fa fa-paper-plane"></i><span>Deplacement </span><br>  <span style="font-size: 10px; color: red">{% if nombre_prolongement %}Vous avez {{ nombre_prolongement }} de prolongement{% else %}{% endif %}</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="deplacement" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:enregistrer_deplacement' %}"><i class="bi bi-send-plus"></i> Ajouter un deplacement</a></li>
-                        <li class="{% if request.path == deplacement_liste_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement' %}"><i class="bi bi-hourglass"></i> En attente de départ</a></li>
-                        <li class="{% if request.path == deplacement_liste_deplacement_en_cours_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_en_cours' %}"><i class="bi bi-send-check-fill"></i> En cours...</a></li>
+                        <li class="{% if request.path == deplacement_enregistrer_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:enregistrer_deplacement' %}"><i class="bi bi-send-plus"></i> Ajouter un deplacement </a></li>
+                        <li class="{% if request.path == deplacement_liste_deplacement_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement' %}"><i class="bi bi-hourglass"></i> En attente de départ (<span class="text-danger">{% if nombre_deplacement %}{{ nombre_deplacement }}{% else %}0{% endif %}</span>)</a></li>
+                        <li class="{% if request.path == deplacement_liste_deplacement_en_cours_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_en_cours' %}"><i class="bi bi-send-check-fill"></i> En cours... (<span class="text-danger">{% if nombre_deplacement_en_cours %}{{ nombre_deplacement_en_cours }}{% else %}0{% endif %}</span>)</a></li>
                         <li class="{% if request.path == deplacement_liste_deplacement_arrive_url %}active{% endif %}" ><a href="{% url 'deplacement:liste_deplacement_arrive' %}"><i class="bi bi-check-circle"></i> Deplacements terminés</a></li>
                     </ul>
                 </li>
@@ -86,8 +86,6 @@
                         <li class="{% if request.path == entretien_liste_Entretien_url %}active{% endif %}" ><a href="{% url 'entretien:liste_Entretien' %}"><i class="bi bi-list-check"></i> Liste entretien</a></li>
                     </ul>
                 </li>
-
-
              <li class="{% if request.path == carburant_Ajout_carburant_url or request.path ==  carburant_list_carburant_url  %}active{% endif %}">
                     <a href="#carburant" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-fuel-pump" style=" margin-right: 5px"></i><span>Carburant</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="carburant" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">

@@ -28,6 +28,6 @@ urlpatterns = [
     path('recherche/', deplacement_search, name='deplacement_search'),
     path('recherche_encours/', deplacement_encours_search, name='deplacement_encours_search'),
     path('recherche_arrivee/', arrive_search, name='arrive_search'),
-    path('deplacement/get_kilometrage_actuel/', get_kilometrage_actuel, name='get_kilometrage_actuel')
+    path('deplacement/get_kilometrage_actuel/', get_kilometrage_actuel, name='get_kilometrage_actuel'),
 
 ]
