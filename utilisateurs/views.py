@@ -418,3 +418,4 @@ def sendIncident(request):
         form = DeclareIncidentForm()
 
     return render(request, 'compte_conducteur.html', {'form': form})
+
