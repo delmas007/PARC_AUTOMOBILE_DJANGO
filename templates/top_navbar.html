@@ -43,8 +43,6 @@
                                 <li class="iq-bg-primary-hover rounded"><a href="{% url 'incident:liste_incidents_interne' %}" class="nav-link"><i class="ri-alert-line pr-2"></i>Incidents</a></li>
                                 <li class="iq-bg-primary-hover rounded"><a href="" class="nav-link"><i class="bi bi-tools" style=" margin-right: 5px"></i> Entretien</a></li>
                                 <li class="iq-bg-primary-hover rounded"><a href="" class="nav-link"><i class="bi bi-fuel-pump" style=" margin-right: 5px"></i> Carburant</a></li>
-                                <li class="iq-bg-primary-hover rounded"><a href="pages-faq.html" class="nav-link"><i class="ri-compasses-line pr-2"></i>Faq</a></li>
-                                <li class="iq-bg-primary-hover rounded"><a href="form-wizard.html" class="nav-link"><i class="ri-clockwise-line pr-2"></i>Form-wizard</a></li>
                             </ul>
                         </div>
                     </form>
@@ -71,69 +69,72 @@
             {#        Notifications            #}
                     <li class="nav-item">
                         <a href="#" class="search-toggle iq-waves-effect">
-                            <div id="lottie-beil" ></div>
-                            <i class="bi bi-bell" ></i>
-                            <span class="bg-danger dots"></span>
+                            {% if demandes or incidents %}
+                                <span class="bg-danger dots"></span>
+                                <div id="lottie-beil"></div>
+                            {% else %}
+                                <i class="bi bi-bell"></i>
+                            {% endif %}
+
                         </a>
                         <div class="iq-sub-dropdown">
                             <div class="iq-card shadow-none m-0">
                                 <div class="iq-card-body p-0 ">
                                     <div class="bg-primary p-3">
-                                        <h5 class="mb-0 text-white">All Notifications<small class="badge  badge-light float-right pt-1">4</small></h5>
+                                        <h5 class="mb-0 text-white">All Notifications<small class="badge  badge-light float-right pt-1">{{ total }}</small></h5>
                                     </div>
 
-                                    <a href="#" class="iq-sub-card" >
-                                        <div class="media align-items-center">
-                                            <div class="">
-                                                <img class="avatar-40 rounded" src="images/user/01.jpg" alt="">
-                                            </div>
-                                            <div class="media-body ml-3">
-                                                <h6 class="mb-0 ">Emma Watson Nik</h6>
-                                                <small class="float-right font-size-12">Just Now</small>
-                                                <p class="mb-0">95 MB</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="iq-sub-card" >
-                                        <div class="media align-items-center">
-                                            <div class="">
-                                                <img class="avatar-40 rounded" src="images/user/02.jpg" alt="">
-                                            </div>
-                                            <div class="media-body ml-3">
-                                                <h6 class="mb-0 ">New customer is join</h6>
-                                                <small class="float-right font-size-12">5 days ago</small>
-                                                <p class="mb-0">Jond Nik</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="iq-sub-card" >
-                                        <div class="media align-items-center">
-                                            <div class="">
-                                                <img class="avatar-40 rounded" src="images/user/03.jpg" alt="">
-                                            </div>
-                                            <div class="media-body ml-3">
-                                                <h6 class="mb-0 ">Two customer is left</h6>
-                                                <small class="float-right font-size-12">2 days ago</small>
-                                                <p class="mb-0">Jond Nik</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="iq-sub-card" >
-                                        <div class="media align-items-center">
-                                            <div class="">
-                                                <img class="avatar-40 rounded" src="images/user/04.jpg" alt="">
-                                            </div>
-                                            <div class="media-body ml-3">
-                                                <h6 class="mb-0 ">New Mail from Fenny</h6>
-                                                <small class="float-right font-size-12">3 days ago</small>
-                                                <p class="mb-0">Jond Nik</p>
-                                            </div>
-                                        </div>
-                                    </a>
+                                    {% if demandes %}
+                                        {% for demande in demandes %}
+                                            <a href="{% url 'deplacement:liste_deplacement_en_cours' %}" class="iq-sub-card">
+                                                <div class="media align-items-center">
+                                                    {% if demande.conducteur.image %}
+                                                        <div class="">
+                                                            <img src="{{ demande.conducteur.image.url }}" alt="Photo du conducteur" width="60" height="60">
+                                                        </div>
+
+                                                    {% else %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                                        </svg>
+                                                    {% endif %}
+                                                    <div class="media-body ml-3">
+                                                        <h6 class="mb-0 ">{{ demande.conducteur }}</h6>
+                                                        <small class="float-right font-size-12">Just Now</small>
+                                                        <p class="mb-0"> demande de prolongement  </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if incidents %}
+                                        {% for incident in incidents %}
+                                            <a href="{% url 'incident:liste_incidents_externe' %}" class="iq-sub-card">
+                                                <div class="media align-items-center">
+                                                    {% if incident.conducteur.image %}
+                                                        <div class="">
+                                                            <img src="{{ incident.conducteur.image.url }}" alt="Photo du conducteur">
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="">
+                                                            <img class="avatar-40 rounded" src="images/user/01.jpg" alt="">
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="media-body ml-3">
+                                                        <h6 class="mb-0 ">{{ incident.conducteur }}</h6>
+                                                        <small class="float-right font-size-12">Just Now</small>
+                                                        <p class="mb-0">  nouvelle incident  </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </li>
+
                 </ul>
             </div>
         {#        Profile Gestionnaire            #}
@@ -152,7 +153,7 @@
                         <div class="iq-card shadow-none m-0">
                             <div class="iq-card-body p-0 ">
                                 <div class="bg-primary p-3">
-                                    <h5 class="mb-0 text-white line-height">Salut {{ user.username}}</h5>
+                                    <h5 class="mb-0 text-white line-height">Salut {{ user.nom}} {{ user.prenom}}</h5>
                                     <span class="text-success font-size-12"><i class="fa fa-circle"></i> Connecté</span>
                                 </div>
                                 <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
