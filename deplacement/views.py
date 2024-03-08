@@ -391,6 +391,20 @@ def deplacement_encours_search(request):
     form = DeplacementSearchForm(request.GET)
     aujourdhui = date.today()
     deplacement = Deplacement.objects.filter(date_depart__lte=aujourdhui)
+    prolongement = Demande_prolongement.objects.all()
+
+    deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+    deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourdhui)).exclude(
+        Q(id__in=deplacements_etat_arrive_ids))
+    deplacement_ids = deplacements.values_list('id', flat=True)
+    prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
+    prolongement_arrive = Demande_prolongement.objects.filter(refuser=True)
+    prolongement_accepte = Demande_prolongement.objects.filter(accepter=True)
+
+    # recuperer liste des id de demandes de prolongement
+    prolongement_encours_ids = prolongement_encours.values_list('deplacement_id', flat=True)
+    prolongement_arrive_ids = prolongement_arrive.values_list('deplacement_id', flat=True)
+    prolongement_accepte_ids = prolongement_accepte.values_list('deplacement_id', flat=True)
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -423,7 +437,11 @@ def deplacement_encours_search(request):
     except EmptyPage:
         deplacements = paginator.page(paginator.num_pages)
 
-    context = {'deplacements': deplacements, 'form': form}
+    context = {'deplacements': deplacements, 'form': form,
+               'deplacement': deplacement, 'prolongement_encours': prolongement_encours_ids,
+               'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids,
+               'prolongements': prolongement}
+
 
     # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
     if deplacement.count() == 0 and form.is_valid():
