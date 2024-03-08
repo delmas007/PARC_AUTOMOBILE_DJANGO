@@ -68,7 +68,7 @@
                     </li>
             {#        Notifications            #}
                     <li class="nav-item">
-                        <a href="#" class="search-toggle iq-waves-effect">
+                        <a href="#" class="search-toggle iq-waves-effect" id="truc">
                             {% if demandes or incidents %}
                                 <span class="bg-danger dots"></span>
                                 <div id="lottie-beil"></div>
@@ -95,8 +95,8 @@
 
                                                     {% else %}
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
                                                         </svg>
                                                     {% endif %}
                                                     <div class="media-body ml-3">
@@ -118,8 +118,8 @@
                                                         </div>
                                                     {% else %}
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                                                            s<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
                                                         </svg>
                                                     {% endif %}
                                                     <div class="media-body ml-3">
@@ -193,27 +193,18 @@
 
     </div>
     <script>
-        $(document).ready(function() {
-            $('.search-toggle').on('click', function() {
-                // Vérifie si lottie-beil et les points sont en cours et si Demande_prolongement existe
-                {% if not demande %}
-                    {% if not demande.en_cours %}
-                        if ($('#lottie-beil').length && $('.dots').length) {
-                            // Logique pour afficher lottie-beil et les points
-                            $('#lottie-beil').show();
-                            $('.dots').show();
-                            $('.bi-bell').hide(); // Masquer l'icône de la cloche si nécessaire
-                        }
-                    {% else %}
-                        // Logique pour afficher l'icône de cloche
-                        $('.bi-bell').show();
-                        $('#lottie-beil').hide(); // Masquer lottie-beil s'il ne doit pas être affiché
-                        $('.dots').hide(); // Masquer les points s'ils ne doivent pas être affichés
-                    {% endif %}
-                {% else %}
-                    // Logique pour afficher l'icône de cloche lorsque Demande_prolongement n'existe pas
-                    $('.bi-bell').show();
-                {% endif %}
+        document.addEventListener("DOMContentLoaded", function() {
+            var lottieContainer = document.getElementById("truc");
+            var bellIcon = document.createElement("i");
+            bellIcon.className = "bi bi-bell";
+            var dotsElement = document.querySelector(".dots");
+
+
+            // Ajout d'un écouteur de clic à l'élément "lottie-beil"
+            lottieContainer.addEventListener("click", function() {
+                // Remplacez le contenu de lottie-beil avec l'icône de la cloche
+                lottieContainer.innerHTML = "";
+                lottieContainer.appendChild(bellIcon);
             });
         });
     </script>
