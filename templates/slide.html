@@ -37,6 +37,7 @@
             {% url 'entretien:liste_Entretien' as entretien_liste_Entretien_url %}
             {% url 'carburant:Ajouter_carburant' as carburant_Ajout_carburant_url %}
             {% url 'carburant:Liste_carburant' as carburant_list_carburant_url %}
+            {% url 'utilisateur:ChangerMotDePassee' as utilisateur_ChangerMotDePassee_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -92,6 +93,12 @@
                         <li class="{% if request.path == carburant_Ajout_carburant_url %}active{% endif %}" ><a href="{% url 'carburant:Ajouter_carburant' %}"><i class="bi bi-plus-circle"></i> Enregistrer</a></li>
                         <li class="{% if request.path == carburant_list_carburant_url %}active{% endif %}" ><a href="{% url 'carburant:Liste_carburant' %}"><i class="bi bi-list-check"></i> Liste des coûts carburant</a></li>
 
+                    </ul>
+             </li>
+                <li class="{% if request.path == utilisateur_ChangerMotDePassee_url  %}active{% endif %}">
+                    <a href="#passe" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-lock" style=" margin-right: 5px"></i><span>Changer mot de passe</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="passe" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                        <li class="{% if request.path == utilisateur_ChangerMotDePassee_url %}active{% endif %}" ><a href="{% url 'utilisateur:ChangerMotDePassee' %}"><i class="bi bi-plus-circle"></i> Changer</a></li>
                     </ul>
                 </li>
 

@@ -1,6 +1,6 @@
 from utilisateurs.views import Accueil_user, inscription_user, Connexion_user, Compte, vehicule_details, list_vehicule, \
     Acceuil_conducteur, activate, password_reset_request, passwordResetConfirm, liste_mission, prolongement, \
-    liste_demandes, declare_incident, sendIncident
+    liste_demandes, declare_incident, sendIncident, ChangerMotDePassee, ChangerMotDePasseConducteur
 from django.urls import path
 
 app_name = 'utilisateur'
@@ -22,5 +22,7 @@ urlpatterns = [
     path('list_de_demande_prolongement/', liste_demandes, name='list_de_demande_prolongement'),
     path('declare_incident/', declare_incident, name='declare_incident'),
     path('sendIncident/', sendIncident, name='sendIncident'),
+    path('Changer_mot_de_passe', ChangerMotDePassee, name='ChangerMotDePassee'),
+    path('ChangerMotDePasseConducteur', ChangerMotDePasseConducteur, name='ChangerMotDePasseConducteur'),
 
 ]

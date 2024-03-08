@@ -419,3 +419,79 @@ def sendIncident(request):
 
     return render(request, 'compte_conducteur.html', {'form': form})
 
+
+def ChangerMotDePassee(request):
+    if request.method == 'POST':
+        form = ChangerMotDePasse(request.user, request.POST)
+        print(request.POST.get('passe'))
+        print(request.user.check_password(request.POST.get('passe')))
+        if request.user.check_password(request.POST.get('passe')):
+            print('1111')
+            if form.is_valid():
+                print('2222')
+                form.save()
+                messages.success(request, "Votre mot de passe a été changer.")
+                return redirect('utilisateur:ChangerMotDePassee')
+            else:
+                messages.error(request, "Les deux mots de passe ne correspondent pas")
+        else:
+            messages.error(request, "Le mot de passe actuel est incorrect.")
+    form = ChangerMotDePasse(request.user)
+    return render(request, 'changerMotDePasse.html', {'form': form})
+
+
+def ChangerMotDePasseConducteur(request):
+    if request.method == 'POST':
+        form = ChangerMotDePasse(request.user, request.POST)
+        print(request.POST.get('passe'))
+        print(request.user.check_password(request.POST.get('passe')))
+        if request.user.check_password(request.POST.get('passe')):
+            print('1111')
+            if form.is_valid():
+                print('2222')
+                form.save()
+                messages.success(request, "Votre mot de passe a été changer.")
+                return redirect('utilisateur:ChangerMotDePasseConducteur')
+            else:
+                messages.error(request, "Les deux mots de passe ne correspondent pas")
+        else:
+            messages.error(request, "Le mot de passe actuel est incorrect.")
+    form = ChangerMotDePasse(request.user)
+    return render(request, 'compte_conducteur.html', {'form': form})
+
+# def ChangerMotDePassee(request):
+#     if request.method == 'POST':
+#         form = ChangerMotDePasse(request.user, request.POST)
+#         if request.user.check_password(form.cleaned_data['passe']):
+#             if form.is_valid():
+#                 user = request.user
+#                 old_password = form.cleaned_data['passe']
+#                 new_password1 = form.cleaned_data['new_password1']
+#                 new_password2 = form.cleaned_data['new_password2']
+#
+#                 # Vérifier si le mot de passe actuel est correct
+#                 if user.check_password(old_password):
+#                     # Vérifier si les nouveaux mots de passe correspondent
+#                     if new_password1 == new_password2:
+#                         # Définir le nouveau mot de passe et sauvegarder l'utilisateur
+#                         user.set_password(new_password1)
+#                         user.save()
+#
+#                         # Mise à jour de la session de l'authentification pour éviter la déconnexion de l'utilisateur
+#                         update_session_auth_hash(request, user)
+#
+#                         messages.success(request, "Votre mot de passe a été modifié avec succès.")
+#                         return redirect('Model:connexion')
+#                     else:
+#                         messages.error(request, "Les nouveaux mots de passe ne correspondent pas.")
+#                 else:
+#                     messages.error(request, "Le mot de passe actuel est incorrect.")
+#             else:
+#                 for error in list(form.errors.values()):
+#                     messages.error(request, error)
+#
+#                 print(form.errors)
+#     else:
+#         form = ChangerMotDePasse(request.user)
+#     return render(request, 'changerMotDePasse.html', {'form': form})
+#
