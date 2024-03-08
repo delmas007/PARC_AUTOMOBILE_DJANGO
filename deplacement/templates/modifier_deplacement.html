@@ -57,7 +57,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="email">Photo de la jauge:</label>
                                         <div class="form-control col-sm-10" style="border-radius: 10px">
-                                            <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
+                                            <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="photo_jauge_depart" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
                                         </div>
                                         {% if form.photo_jauge_depart.errors %}
                                             <p class="help-block">Veillez joindre une image</p>
@@ -146,19 +146,6 @@
 
         $(document).ready(function() {
             $('#selectConducteur').select2();
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var fileInput = document.getElementById('customFile');
-            fileInput.addEventListener('change', function (event) {
-                var selectedFiles = event.target.files;
-                var maxAllowedFiles = 6;
-                if (selectedFiles.length > maxAllowedFiles) {
-                    $('#existImage').modal('show');
-                    fileInput.value = '';
-                }
-            });
         });
     </script>
     <script>

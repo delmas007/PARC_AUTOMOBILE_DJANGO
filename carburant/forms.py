@@ -11,9 +11,9 @@ class AjouterCarburantForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AjouterCarburantForm, self).__init__(*args, **kwargs)
-        self.fields['vehicule'].widget.attrs.update({'class': 'form-control'})
-        self.fields['type'].widget.attrs.update({'class': 'form-control'})
-        self.fields['quantite'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter le litre de carburant ', 'min': '1', 'required': 'required'})
+        self.fields['vehicule'].widget.attrs.update({'class': 'form-control', 'id': 'selectVehicule'})
+        self.fields['type'].widget.attrs.update({'class': 'form-control', 'id': 'selectType'})
+        self.fields['quantite'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter le litre de carburant', 'min': '1', 'required': 'required'})
 
     def clean_quantite(self):
         quantite = self.cleaned_data.get('quantite')
