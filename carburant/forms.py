@@ -27,11 +27,20 @@ class ModifierCarburantForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ModifierCarburantForm, self).__init__(*args, **kwargs)
-        self.fields['vehicule'].widget.attrs.update({'class': 'form-control'})
-        self.fields['type'].widget.attrs.update({'class': 'form-control'})
+        self.fields['vehicule'].widget.attrs.update({'class': 'form-control', 'id': 'selectVehicule'})
+        self.fields['type'].widget.attrs.update({'class': 'form-control', 'id': 'selectType'})
         self.fields['quantite'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter le litre de carburant ', 'min': '1', 'required': 'required'})
 
     def clean_quantite(self):
         quantite = self.cleaned_data.get('quantite')
         # Ajoutez ici d'autres validations personnalisées selon vos besoins
         return quantite
+
+
+class CarburantSearchForm(forms.Form):
+    q = forms.CharField(
+        label='',
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Rechercher un véhicule : Marque, matricule...', 'class': 'form-control'}),
+    )

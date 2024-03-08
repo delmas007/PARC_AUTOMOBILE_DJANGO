@@ -1,9 +1,12 @@
+from urllib import request
+
 from django.core.paginator import EmptyPage, Paginator
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 from Model.models import Carburant
-from carburant.forms import ModifierCarburantForm ,AjouterCarburantForm
+from carburant.forms import ModifierCarburantForm, AjouterCarburantForm, CarburantSearchForm
 
 
 # Create your views here.
@@ -63,3 +66,33 @@ def Modifier_carburant(request, pk):
     }
 
     return render(request, 'Modifier_carburant.html', context)
+
+
+def carburant_search(request):
+   form = CarburantSearchForm(request.GET)
+   carburant=Carburant.objects.all()
+   if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+
+            carburant = carburant.filter(
+                Q(vehicule__marque__marque__icontains=query) |
+                Q(type__nom__icontains=query) |
+                Q(vehicule__numero_immatriculation__icontains=query) |
+                Q(vehicule__type_commercial__modele__icontains=query)
+
+            )
+   paginator = Paginator(carburant.order_by('date_mise_a_jour'), 5)
+   page = request.GET.get("page", 1)
+   try:
+       carburants = paginator.page(page)
+   except EmptyPage:
+       carburants = paginator.page(paginator.num_pages)
+
+   context = {'carburants': carburants, 'form': form}
+
+   # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
+   if carburant.count() == 0 and form.is_valid():
+       context['no_results'] = True
+
+   return render(request, 'Liste_carburant.html', context)
