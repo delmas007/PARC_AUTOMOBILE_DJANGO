@@ -98,10 +98,8 @@ def vehicul_search(request):
 @login_required(login_url=reverse_lazy('Connexion'))
 def supprimer_vehicule(request, pk):
     vehicule = get_object_or_404(Vehicule, pk=pk)
-    print(vehicule.supprimer)
     vehicule.supprimer = True
     vehicule.save()
-    print(vehicule.supprimer)
     return redirect('vehicule:liste_vehicules')
 
 

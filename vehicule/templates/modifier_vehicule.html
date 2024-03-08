@@ -34,13 +34,6 @@
 
                                 <div class="row">
                                     <div class="col-12 col-md-6 col-lg-6">
-                                        <div class="col-md-12 {% if form.marque.errors %}has-error{% endif %}" style="margin-top: 15px">
-                                            <label for="marque" class="font-weight-bold" >Marque du véhicule :</label>
-                                            {{ form.marque }}
-                                            {% if form.marque.errors %}
-                                                <p class="help-block">{{ form.marque.errors.0 }}</p>
-                                            {% endif %}
-                                        </div>
 
                                         <div class="form-group col-md-12 {% if form.numero_immatriculation.errors %}has-error{% endif %}">
                                             <label for="numero_immatriculation" class="font-weight-bold">Numéro d'immatriculation :</label>
@@ -99,25 +92,20 @@
                                         </div>
 
                                         <div class="form-group col-md-12 {% if form.image_recto.errors %}has-error{% endif %}">
-                                            <label for="image_recto" class="font-weight-bold">Sélectionner l'image recto de la carte grise :</label>
+                                            <label for="image_recto" class="font-weight-bold">Modifier l'image recto de la carte grise :</label>
                                             <div class="form-control h-auto" style="border-radius: 10px">
                                                 <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="image_recto" name="image_recto">
                                             </div>
                                             {% if form.image_recto.errors %}
+
                                                 <p class="help-block">Veuillez joindre une image</p>
                                             {% endif %}
                                         </div>
+
                                     </div>
 
                                     <div class="col-12 col-md-6 col-lg-6">
-                                        <div class="form-group col-md-12 text-right">
-                                            <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutType()" style="margin-right: 5px">
-                                                <i class="ion-plus-circled"></i>Ajouter un type commercial
-                                            </button>
-                                            <button type="button" class="iq-icons-list btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="ajoutMarque()">
-                                                <i class="ion-plus-circled"></i>Ajouter une marque
-                                            </button>
-                                        </div>
+
                                         <div class="form-group col-md-12 {% if form.date_visite_technique.errors %}has-error{% endif %}">
                                             <label for="date_visite_technique" class="font-weight-bold">Date de la prochaine visite technique :</label>
                                             <input type="date" class="form-control" id="date_visite_technique" placeholder="Date prochaine visite technique" name="date_visite_technique" value="{% if form.date_visite_technique.value %}{{ form.date_visite_technique.value }}{% endif %}">
@@ -151,6 +139,7 @@
                                         </div>
 
                                         <div class="form-group col-md-12 {% if form.type_commercial.errors %}has-error{% endif %}">
+
                                             <label for="type_commercial" class="col-form-label">Type commercial :</label>
                                             {{ form.type_commercial }}
                                             {% if form.type_commercial.errors %}
@@ -159,6 +148,7 @@
                                         </div>
 
                                         <div class="form-group col-md-12 {% if form.energie.errors %}has-error{% endif %}">
+
                                             <label for="energie" class="font-weight-bold">Énergie :</label>
                                             {{ form.energie }}
                                             {% if form.energie.errors %}
@@ -166,9 +156,9 @@
                                             {% endif %}
                                         </div>
 
-
                                         <div class="form-group col-md-12 {% if form.videnge.errors %}has-error{% endif %}">
                                             <label for="videnge" class="font-weight-bold">Kilométrage avant vidange (Km/H) :</label>
+
                                             <input type="number" class="form-control" id="videnge" placeholder="Exemple : 5000" name="videnge" value="{% if form.videnge.value %}{{ form.videnge.value }}{% endif %}">
                                             {% if form.videnge.errors %}
                                                 <p class="help-block">{{ form.videnge.errors.0 }}</p>
@@ -176,18 +166,20 @@
                                         </div>
 
                                         <div class="form-group col-md-12 {% if form.image_verso.errors %}has-error{% endif %}">
-                                            <label for="image_verso" class="font-weight-bold">Sélectionner l'image verso de la carte grise :</label>
+                                            <label for="image_verso" class="font-weight-bold">Modifier l'image verso de la carte grise :</label>
                                             <div class="form-control h-auto" style="border-radius: 10px">
                                                 <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="image_verso" name="image_verso">
                                             </div>
                                             {% if form.image_verso.errors %}
+
                                                 <p class="help-block">Veuillez joindre une image</p>
                                             {% endif %}
                                         </div>
+
                                     </div>
 
                                     <div class="form-group col-md-11 ml-3 {% if form.images.errors %}has-error{% endif %}">
-                                        <label for="customFile" class="font-weight-bold">Sélectionner les images du véhicule :</label>
+                                        <label for="customFile" class="font-weight-bold">Modifier les images du véhicule :</label>
                                         <div class="form-control h-auto" style="border-radius: 10px">
                                             <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images">
                                         </div>
@@ -201,7 +193,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary" style="width: 100%">Ajouter</button>
+                                <button type="submit" class="btn btn-primary" style="width: 100%">Modifier</button>
                             </form>
                         </div>
 

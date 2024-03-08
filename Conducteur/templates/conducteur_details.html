@@ -69,32 +69,32 @@
                                     <table style="left: auto; right: auto; padding: 20px">
                                         <thead style="height: 100px; text-align: center; font-size: 30px">
                                         <tr>
-                                            <th colspan="5">Informations du conducteur {{ utilisateur.nom }} {{ utilisateur.prenom}} {% if conducteur.image%} <img src="{{ conducteur.image.url}}" alt="profile-img" class="avatar-130 img-fluid conducteur-image"> {% endif %}</th>
+                                            <th colspan="5">Informations du conducteur {{ utilisateur.nom|title }} {{ utilisateur.prenom|title}} {% if conducteur.image%} <img src="{{ conducteur.image.url}}" alt="profile-img" class="avatar-130 img-fluid conducteur-image"> {% endif %}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
                                             <td><strong>NOM :</strong></td>
-                                            <td class="center-text">{{ utilisateur.nom }}</td>
+                                            <td class="center-text">{{ utilisateur.nom|title }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>PRENOM :</strong></td>
-                                            <td class="center-text">{{ utilisateur.prenom }}</td>
+                                            <td><strong>PRÉNOMS :</strong></td>
+                                            <td class="center-text">{{ utilisateur.prenom|title }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>NUMERO DE PERMIS DE CONDUIRE :</strong></td>
+                                            <td><strong>NUMÉRO DE PERMIS DE CONDUIRE :</strong></td>
                                             <td class="center-text">{{ conducteur.numero_permis_conduire }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>NUMERO DE TELEPHONE :</strong></td>
+                                            <td><strong>NUMÉRO DE TÉLÉPHONE :</strong></td>
                                             <td class="center-text">{{ conducteur.numero_telephone }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>NUMERO CNI :</strong></td>
+                                            <td><strong>NUMÉRO CNI :</strong></td>
                                             <td class="center-text">{{ conducteur.num_cni }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>EMAIL:</strong></td>
+                                            <td><strong>EMAIL :</strong></td>
                                             <td class="center-text">{{ utilisateur.email }}</td>
                                         </tr>
                                         <tr>
@@ -103,17 +103,17 @@
                                         </tr>
                                         <tr>
                                             <td><strong>DATE D'EMBAUCHE :</strong></td>
-                                            <td class="center-text">{{ conducteur.date_de_naissance }}</td>
+                                            <td class="center-text">{{ conducteur.date_embauche }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>ADRESSE :</strong></td>
-                                            <td class="text-center">{{ conducteur.adresse }}</td>
+                                            <td class="text-center">{{ conducteur.adresse|title }}</td>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <button style="text-align: center; margin-left: 700px; margin-right: auto; border: 0; margin-top: 10px" class="bouton_telecharger" onclick="ouvrePopup()">
+                            <button style="text-align: center; margin-left: 600px; margin-right: auto; border: 0; margin-top: 10px" class="bouton_telecharger" onclick="ouvrePopup()">
                                 <a class="zoom-on-hover iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Exporter les informations du conducteur en pdf">
                                     <i style="text-align: center; font-size: 50px" class="ri-upload-2-fill"></i>
                                 </a>
@@ -129,10 +129,10 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="display: flex; justify-content: center; align-items: center;">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel">Voulez-vous exporter les informations de <span style="color: #4b2db9">{{ conducteur.nom }} {{ conducteur.prenom }}</span> ?</h5>
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Voulez-vous exporter les informations de <span style="color: #4b2db9">{{ utilisateur.nom|title }} {{ utilisateur.prenom|title }}</span> ?</h5>
                 </div>
                 <div class="modal-body">
-                     Les données seront exportés sous un fichier PDF
+                     Les données seront exportées sous un fichier PDF !
                 </div>
                 <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
                     <a href="" class="btn btn-success" >Annuler</a>
@@ -155,7 +155,7 @@
             }
 
             var options = {
-                filename: '{{ conducteur.nom }}-{{ conducteur.prenom }}.pdf',
+                filename: '{{ utilisateur.nom|title }}-{{ utilisateur.prenom|title }}.pdf',
                 html2canvas: { scale: 2 },
                 margin: 10,
                 image: { type: 'jpeg', quality: 0.98 },

@@ -158,14 +158,13 @@ class VehiculeModifierForm(forms.ModelForm):
         exclude = ['disponibilite', 'marque', 'supprimer']
 
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
-    energie = forms.ModelChoiceField(queryset=type_carburant.objects.all(), required=False)
+    energie = forms.ModelChoiceField(queryset=type_carburant.objects.all(), required=True)
 
     def __init__(self, *args, **kwargs):
         super(VehiculeModifierForm, self).__init__(*args, **kwargs)
         self.fields['energie'].widget.attrs.update({
             'class': "form-control",
             'id': "energie",
-            'required': False,
         })
         self.fields['place_assises'].widget.attrs.update({
             'class': "form-control",

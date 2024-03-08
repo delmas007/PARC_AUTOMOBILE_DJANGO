@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,6 +12,7 @@ from Model.models import Conducteur, Roles, Utilisateur
 from .forms import ConducteurForm, ConducteurSearchForm
 
 
+@login_required(login_url='Connexion')
 def ajouter_conducteur(request):
     if request.method == 'POST':
         conducteur_form = ConducteurForm(request.POST, request.FILES)
@@ -35,6 +37,7 @@ def ajouter_conducteur(request):
                   {'conducteur_form': conducteur_form, 'utilisateur_form': utilisateur_form})
 
 
+@login_required(login_url='Connexion')
 def tous_les_conducteurs(request):
     conducteurs = Conducteur.objects.all().order_by('date_mise_a_jour')
     utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
@@ -51,6 +54,7 @@ def tous_les_conducteurs(request):
     return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'utilisateurs': utilisateurs})
 
 
+@login_required(login_url='Connexion')
 def supprimer_conducteur(request, conducteur_id):
     utilisateurs = get_object_or_404(Utilisateur, conducteur=conducteur_id)
     conducteur = get_object_or_404(Conducteur, pk=conducteur_id)
@@ -61,6 +65,7 @@ def supprimer_conducteur(request, conducteur_id):
     return redirect('conducteur:tous_les_conducteurs')
 
 
+@login_required(login_url='Connexion')
 def modifier_conducteur(request, conducteur_id):
     global form
     conducteur = get_object_or_404(Conducteur, pk=conducteur_id)
@@ -85,22 +90,29 @@ def modifier_conducteur(request, conducteur_id):
                   {'form': form, 'conducteur': conducteur, 'utilisateur': utilisateur})
 
 
+@login_required(login_url='Connexion')
 def conducteur_search(request):
     form = ConducteurSearchForm(request.GET)
     conducteurs = Conducteur.objects.all()
+    utilisateurs = Utilisateur.objects.all()
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
+        print(conducteurs)
+        print(utilisateurs)
         if query:
-            conducteurs = conducteurs.filter(
-                Q(nom__icontains=query) |
+            conducteurs = utilisateurs.filter(
+                Q(nom=query) |
                 Q(prenom__icontains=query) |
-                Q(numero_telephone__icontains=query)
+                Q(conducteur__num_cni__icontains=query)
             )
+            print(Q(nom=query))
+            print(query)
 
     return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'search_form': form})
 
 
+@login_required(login_url='Connexion')
 def details_conducteur(request, conducteur_id):
     conducteur = get_object_or_404(Conducteur, id=conducteur_id)
     utilisateur = get_object_or_404(Utilisateur, conducteur=conducteur_id)
