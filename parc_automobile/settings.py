@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'Admin',
     'utilisateurs',
     'incident',
+    'entretien',
     'carburant',
-    'entretien'
 ]
 
 MIDDLEWARE = [
@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'parc_automobile.context_processors.accueil_data',
             ],
         },
     },
@@ -86,9 +87,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'parc',
         'USER': 'postgres',
-        'PASSWORD': '09102079Darius',
+        'PASSWORD': '0000',
         'HOST': 'localhost',
-
         'PORT': '5432',
     }
 }

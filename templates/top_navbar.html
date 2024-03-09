@@ -48,6 +48,28 @@
                     </form>
                 </div>
             </div>
+            {% if total > 0 %}
+                <div id="alerte" class="alerte">
+                    Il y a {{ total }} demandes en attente.
+                </div>
+            {% endif %}
+
+            <!-- Le reste de votre contenu HTML -->
+
+            <script>
+                // Masquer l'alerte après quelques secondes
+                setTimeout(function(){
+                    document.getElementById('alerte').style.display = 'none';
+                }, 5000); // 5000 millisecondes = 5 secondes
+            </script>
+            <style>
+                .alerte {
+                    background-color: #f44336;
+                    color: white;
+                    padding: 10px;
+                    text-align: center;
+                }
+            </style>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"  aria-label="Toggle navigation">
                 <i class="ri-menu-3-line"></i>
             </button>
@@ -66,7 +88,7 @@
                             <a class="iq-sub-card" href="#"><img src="{% static "images/small/flag-01.png" %}" alt="img-flaf" class="img-fluid mr-2"/> English</a>
                         </div>
                     </li>
-            {#        Notifications            #}
+                    {#        Notifications            #}
                     <li class="nav-item">
                         <a href="#" class="search-toggle iq-waves-effect" id="truc">
                             {% if demandes or incidents %}
@@ -138,55 +160,55 @@
 
                 </ul>
             </div>
-        {#        Profile Gestionnaire            #}
+            {#        Profile Gestionnaire            #}
             <ul class="navbar-list">
                 {% if user.is_authenticated %}
-                <li>
-                    <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
-                        <img src="{% static "images/user/1.jpg" %}" class="img-fluid rounded mr-3" alt="user">
-                        <div class="caption">
-                            <h6 class="mb-0 line-height text-white">{{ user.username}}</h6>
-                            <span class="font-size-12 text-success"><i class="fa fa-circle"></i> Connecté</span>
-                        </div>
+                    <li>
+                        <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center bg-primary rounded">
+                            <img src="{% static "images/user/1.jpg" %}" class="img-fluid rounded mr-3" alt="user">
+                            <div class="caption">
+                                <h6 class="mb-0 line-height text-white">{{ user.username}}</h6>
+                                <span class="font-size-12 text-success"><i class="fa fa-circle"></i> Connecté</span>
+                            </div>
 
-                    </a>
-                    <div class="iq-sub-dropdown iq-user-dropdown">
-                        <div class="iq-card shadow-none m-0">
-                            <div class="iq-card-body p-0 ">
-                                <div class="bg-primary p-3">
-                                    <h5 class="mb-0 text-white line-height">Salut {{ user.nom}} {{ user.prenom}}</h5>
-                                    <span class="text-success font-size-12"><i class="fa fa-circle"></i> Connecté</span>
-                                </div>
-                                <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
-                                    <div class="media align-items-center">
-                                        <div class="rounded iq-card-icon iq-bg-primary">
-                                            <i class="ri-file-user-line"></i>
-                                        </div>
-                                        <div class="media-body ml-3">
-                                            <h6 class="mb-0 ">My Profile</h6>
-                                            <p class="mb-0 font-size-12">View personal profile details.</p>
-                                        </div>
+                        </a>
+                        <div class="iq-sub-dropdown iq-user-dropdown">
+                            <div class="iq-card shadow-none m-0">
+                                <div class="iq-card-body p-0 ">
+                                    <div class="bg-primary p-3">
+                                        <h5 class="mb-0 text-white line-height">Salut {{ user.nom}} {{ user.prenom}}</h5>
+                                        <span class="text-success font-size-12"><i class="fa fa-circle"></i> Connecté</span>
                                     </div>
-                                </a>
-                                <a href="profile-edit.html" class="iq-sub-card iq-bg-primary-hover">
-                                    <div class="media align-items-center">
-                                        <div class="rounded iq-card-icon iq-bg-primary">
-                                            <i class="ri-profile-line"></i>
+                                    <a href="profile.html" class="iq-sub-card iq-bg-primary-hover">
+                                        <div class="media align-items-center">
+                                            <div class="rounded iq-card-icon iq-bg-primary">
+                                                <i class="ri-file-user-line"></i>
+                                            </div>
+                                            <div class="media-body ml-3">
+                                                <h6 class="mb-0 ">My Profile</h6>
+                                                <p class="mb-0 font-size-12">View personal profile details.</p>
+                                            </div>
                                         </div>
-                                        <div class="media-body ml-3">
-                                            <h6 class="mb-0 ">Editer le Profil</h6>
-                                            <p class="mb-0 font-size-12">Modifier vos informations personnelles.</p>
+                                    </a>
+                                    <a href="profile-edit.html" class="iq-sub-card iq-bg-primary-hover">
+                                        <div class="media align-items-center">
+                                            <div class="rounded iq-card-icon iq-bg-primary">
+                                                <i class="ri-profile-line"></i>
+                                            </div>
+                                            <div class="media-body ml-3">
+                                                <h6 class="mb-0 ">Editer le Profil</h6>
+                                                <p class="mb-0 font-size-12">Modifier vos informations personnelles.</p>
+                                            </div>
                                         </div>
+                                    </a>
+                                    <div class="d-inline-block w-100 text-center p-3">
+                                        <a class="btn btn-primary dark-btn-primary" href="{% url 'Model:Deconnexion2' %}" role="button">Se déconnecter<i class="ri-login-box-line ml-2"></i></a>
                                     </div>
-                                </a>
-                                <div class="d-inline-block w-100 text-center p-3">
-                                    <a class="btn btn-primary dark-btn-primary" href="{% url 'Model:Deconnexion2' %}" role="button">Se déconnecter<i class="ri-login-box-line ml-2"></i></a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-                 {% endif %}
+                    </li>
+                {% endif %}
             </ul>
         </nav>
 
