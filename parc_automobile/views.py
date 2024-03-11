@@ -18,8 +18,7 @@ def Accueil(request):
     nombre_conducteurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True).count()
     nombre_incidents = incidents_interne + incidents_externe
     nombre_deplacement_en_attente = Deplacement.objects.filter(Q(date_depart__gt=aujourd_hui)).count()
-    nombre_deplacement_termine = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
-        date_arrive__gt=aujourd_hui).count()
+    nombre_deplacement_termine = Deplacement.objects.all().count()
     nombre_deplacements_en_cours = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids)).count()
 
@@ -50,7 +49,8 @@ def Accueil(request):
         'nombre_deplacement_termine': nombre_deplacement_termine,
         'deplacements_recents': deplacements_recents,
         'vehicule_disponible': vehicules_page,
-        'deplacements_planifies': deplacements_planifies    ,
+        'deplacements_planifies': deplacements_planifies,
+        'now': aujourd_hui
     }
 
     return render(request, 'index.html', context)

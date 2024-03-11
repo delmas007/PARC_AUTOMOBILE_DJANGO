@@ -48,9 +48,9 @@
                     </form>
                 </div>
             </div>
-            {% if total > 0 %}
+            {% if totals > 0 %}
                 <div id="alerte" class="alerte">
-                    Il y a {{ total }} demandes en attente.
+                    Il y a {{ totals }} notifications.
                 </div>
             {% endif %}
 
@@ -60,7 +60,7 @@
                 // Masquer l'alerte après quelques secondes
                 setTimeout(function(){
                     document.getElementById('alerte').style.display = 'none';
-                }, 5000); // 5000 millisecondes = 5 secondes
+                }, 10000); // 5000 millisecondes = 5 secondes
             </script>
             <style>
                 .alerte {
@@ -91,7 +91,7 @@
                     {#        Notifications            #}
                     <li class="nav-item">
                         <a href="#" class="search-toggle iq-waves-effect" id="truc">
-                            {% if demandes or incident %}
+                            {% if demandes or incidents %}
                                 <span class="bg-danger dots"></span>
                                 <div id="lottie-beil"></div>
                             {% else %}
@@ -103,8 +103,99 @@
                             <div class="iq-card shadow-none m-0">
                                 <div class="iq-card-body p-0 " style="max-height: 500px; overflow-y: auto;">
                                     <div class="bg-primary p-3">
-                                        <h5 class="mb-0 text-white">Notifications<small class="badge  badge-light float-right pt-1">{{ total }}</small></h5>
+                                        <h5 class="mb-0 text-white">Toutes les Notifications<small class="badge  badge-light float-right pt-1">{{ totals }}</small></h5>
                                     </div>
+                                    {% if vehicules_et_jours_restants %}
+                                        {% for vehicule, info  in vehicules_et_jours_restants.items %}
+                                            <a href="{% url 'vehicule:details_vehicule' vehicule_id=vehicule.id %}" class="iq-sub-card">
+                                                <div class="media align-items-center">
+                                                    <!-- Afficher l'image du véhicule s'il en a une -->
+                                                    {% if info.photo %}
+                                                        <div class="">
+                                                            <img src="{{ info.photo.images.url }}" alt="Image du véhicule" width="60" height="60">
+                                                        </div>
+                                                    {% else %}
+                                                        <!-- Afficher une image par défaut si le véhicule n'a pas d'image -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
+                                                        </svg>
+                                                    {% endif %}
+                                                    <div class="media-body ml-3">
+                                                        <h6 class="mb-0">{{ vehicule.marque }} - {{ vehicule.numero_immatriculation }}</h6>
+                                                        <!-- Afficher les jours restants avant l'expiration de l'assurance -->
+                                                        {% if info.jours_restants == -1 %}
+                                                            <p class="mb-0">Date d'expiration de l'assurance passée, mettez à jour la nouvelle date  </p>
+                                                        {% elif info.jours_restants == 0 %}
+                                                            <p class="mb-0"> Assurance expire aujourd'hui  </p>
+                                                        {% else %}
+                                                            <p class="mb-0"> Assurance expire dans {{ info.jours_restants }} jours  </p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if vehicules_et_jours_restants_technique %}
+                                        {% for vehicule, info  in vehicules_et_jours_restants_technique.items %}
+                                            <a href="{% url 'vehicule:details_vehicule' vehicule_id=vehicule.id %}" class="iq-sub-card">
+                                                <div class="media align-items-center">
+                                                    <!-- Afficher l'image du véhicule s'il en a une -->
+                                                    {% if info.photo %}
+                                                        <div class="">
+                                                            <img src="{{ info.photo.images.url }}" alt="Image du véhicule" width="60" height="60">
+                                                        </div>
+                                                    {% else %}
+                                                        <!-- Afficher une image par défaut si le véhicule n'a pas d'image -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
+                                                        </svg>
+                                                    {% endif %}
+                                                    <div class="media-body ml-3">
+                                                        <h6 class="mb-0">{{ vehicule.marque }} - {{ vehicule.numero_immatriculation }}</h6>
+                                                        <!-- Afficher les jours restants avant l'expiration de l'assurance -->
+                                                        {% if info.jours_restants == -1 %}
+                                                            <p class="mb-0">Date visite technique passé, mettez à jour la nouvelle date  </p>
+                                                        {% elif info.jours_restants == 0 %}
+                                                            <p class="mb-0"> Visite technique aujourd'hui  </p>
+                                                        {% elif info.jours_restants == 1 %}
+                                                            <p class="mb-0"> Visite technique demain  </p>
+                                                        {% else %}
+                                                            <p class="mb-0"> Visite technique dans {{ info.jours_restants }} jours  </p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if vehicules_proches_vidange %}
+                                        {% for vehicule , info in vehicules_proches_vidange.items %}
+                                            <a href="{% url 'vehicule:details_vehicule' vehicule_id=vehicule.id %}" class="iq-sub-card">
+                                                <div class="media align-items-center">
+                                                    <!-- Afficher l'image du véhicule s'il en a une -->
+                                                    {% if info.photo %}
+                                                        <div class="">
+                                                            <img src="{{ info.photo.images.url }}" alt="Image du véhicule" width="60" height="60">
+                                                        </div>
+                                                    {% else %}
+                                                        <!-- Afficher une image par défaut si le véhicule n'a pas d'image -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
+                                                        </svg>
+                                                    {% endif %}
+                                                    <div class="media-body ml-3">
+                                                        <h6 class="mb-0">{{ vehicule.marque }} - {{ vehicule.numero_immatriculation }}</h6>
+                                                            <p class="mb-0"> Est a {{ vehicule.kilometrage }} Km doit avoir une vidange dans {{ vehicule.videnge }} Km </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
+
 
                                     {% if demandes %}
                                         {% for demande in demandes %}
@@ -123,7 +214,6 @@
                                                     {% endif %}
                                                     <div class="media-body ml-3">
                                                         <h6 class="mb-0 ">{{ demande.conducteur }}</h6>
-                                                        <small class="float-right font-size-12">Just Now</small>
                                                         <p class="mb-0"> demande de prolongement  </p>
                                                     </div>
                                                 </div>
@@ -146,7 +236,6 @@
                                                     {% endif %}
                                                     <div class="media-body ml-3">
                                                         <h6 class="mb-0 ">{{ incident.conducteur }}</h6>
-                                                        <small class="float-right font-size-12">Just Now</small>
                                                         <p class="mb-0">  nouvelle incident  </p>
                                                     </div>
                                                 </div>
@@ -168,7 +257,10 @@
                             {% if user.image  %}
                             <img src="{{ user.image.url}}" class="img-fluid rounded mr-3" alt="user">
                               {% else  %}
-                                <i class="bi bi-person-circle" style="font-size: 50px; color: #ffffff"></i>
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                     <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                 </svg>
                              {% endif  %}
                             <div class="caption">
                                 <h6 class="mb-0 line-height text-white">{{ user.username}}</h6>
