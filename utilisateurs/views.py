@@ -459,6 +459,10 @@ def ChangerMotDePasseConducteur(request):
     form = ChangerMotDePasse(request.user)
     return render(request, 'compte_conducteur.html', {'form': form})
 
+
+def ProfilUser(request):
+    return render(request, 'Profil_user.html')
+
 # def ChangerMotDePassee(request):
 #     if request.method == 'POST':
 #         form = ChangerMotDePasse(request.user, request.POST)
@@ -494,4 +498,3 @@ def ChangerMotDePasseConducteur(request):
 #     else:
 #         form = ChangerMotDePasse(request.user)
 #     return render(request, 'changerMotDePasse.html', {'form': form})
-#

@@ -10,7 +10,7 @@
                     <img src="images/logo-dark.gif" class="img-fluid" alt="">
                 </div>
             </div>
-            <span><strong style="font-size: 15px; color: #4b2db9">Espace gestionnaire</strong></span>
+            <span><strong style="font-size: 18px; color: #4b2db9">Espace gestionnaire</strong></span>
         </a>
         <div class="iq-menu-bt-sidebar">
             <div class="iq-menu-bt align-self-center">
@@ -37,7 +37,6 @@
             {% url 'entretien:liste_Entretien' as entretien_liste_Entretien_url %}
             {% url 'carburant:Ajouter_carburant' as carburant_Ajout_carburant_url %}
             {% url 'carburant:Liste_carburant' as carburant_list_carburant_url %}
-            {% url 'utilisateur:ChangerMotDePassee' as utilisateur_ChangerMotDePassee_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -95,12 +94,7 @@
 
                     </ul>
              </li>
-                <li class="{% if request.path == utilisateur_ChangerMotDePassee_url  %}active{% endif %}">
-                    <a href="#passe" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-lock" style=" margin-right: 5px"></i><span>Changer mot de passe</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
-                    <ul id="passe" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == utilisateur_ChangerMotDePassee_url %}active{% endif %}" ><a href="{% url 'utilisateur:ChangerMotDePassee' %}"><i class="bi bi-plus-circle"></i> Changer</a></li>
-                    </ul>
-                </li>
+
 
             </ul>
         </nav>

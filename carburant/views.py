@@ -69,6 +69,35 @@ def Modifier_carburant(request, pk):
 
 
 def carburant_search(request):
+    form = CarburantSearchForm(request.GET)
+    carburant = Carburant.objects.all()
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            entretien = carburant.filter(Q(type__nom__icontains=query) |
+                                         Q(vehicule__marque__marque__icontains=query) |
+                                         Q(vehicule__numero_immatriculation__icontains=query) |
+                                         Q(vehicule__type_commercial__modele__icontains=query))
+
+        context = {'entretiens': entretien, 'form': form}
+        paginator = Paginator(entretien.order_by('date_mise_a_jour'), 5)
+        try:
+            page = request.GET.get("page")
+            if not page:
+                page = 1
+            entretienss = paginator.page(page)
+        except EmptyPage:
+            entretienss = paginator.page(paginator.num_pages())
+        context = {'entretiens': entretienss, 'form': form}
+        # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
+        if not entretien.exists() and form.is_valid():
+            context['no_results'] = True
+
+    return render(request, 'afficher_entretien.html', context)
+
+
+def carburant_search(request):
    form = CarburantSearchForm(request.GET)
    carburant=Carburant.objects.all()
    if form.is_valid():

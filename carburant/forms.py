@@ -36,6 +36,14 @@ class ModifierCarburantForm(forms.ModelForm):
         # Ajoutez ici d'autres validations personnalisées selon vos besoins
         return quantite
 
+    class CarburantSearchForm(forms.Form):
+        q = forms.CharField(
+            label='',
+            required=False,
+            #     widget=forms.TextInput(
+            #         attrs={'placeholder': 'Rechercher un incident : Marque, matricule...', 'class': 'form-control'}),
+        )
+
 
 class CarburantSearchForm(forms.Form):
     q = forms.CharField(

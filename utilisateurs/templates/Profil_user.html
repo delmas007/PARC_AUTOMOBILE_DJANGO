@@ -1,0 +1,89 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content%}
+    <body>
+
+    {% include 'slide.html' %}
+        <!-- TOP Nav Bar -->
+        {% include 'top_navbar.html' %}
+
+   <!-- Page Content  -->
+
+         <div id="content-page" class="content-page">
+            <div class="container-fluid">
+               <div class="row">
+            {% if user.is_authenticated %}
+                  <div class="col-sm-12">
+                     <div class="iq-card">
+
+                        <div class="iq-card-body profile-page p-0">
+                           <div class="profile-header">
+                              <div class="cover-container">
+                                 <img src="{% static 'images/page-img/profil_img.jpg' %}" alt="profile-bg" class="rounded img-fluid">
+                              </div>
+                              <div class="profile-info p-4">
+                                 <div class="row">
+                                    <div class="col-sm-12 col-md-6">
+                                       <div class="user-detail pl-5">
+                                          <div class="d-flex flex-wrap align-items-center">
+                                             <div class="profile-img pr-4">
+                                                <img src="{% static 'images/user/11.png' %}" alt="profile-img" class="avatar-130 img-fluid" />
+                                             </div>
+                                             <div class="profile-detail d-flex align-items-center">
+                                                <h3>{{ user.nom}} {{ user.prenom}}</h3>
+                                                 <p class="m-0 pl-2"> <strong style="color: red"> - {{ user.roles}} </strong> </p>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+
+                           </div>
+                        </div>
+                     </div>
+
+                        <div  class="iq-card"  role="tabpanel">
+                                 <div class="iq-card">
+                                    <div class="iq-card-header d-flex justify-content-between">
+                                       <div class="iq-header-title">
+                                          <h4 class="card-title"> <strong>  * Mes informations personnelles </strong> </h4>
+                                       </div>
+                                    </div>
+                                    <div class="iq-card-body">
+{#                                      <div class="user-bio">#}
+{#                                          <p>Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer.</p>#}
+{#                                      </div>#}
+                                      <div class="mt-2">
+                                      <h6> <strong>  Nom d'utilisateur: </strong> </h6>
+                                       <p>{{ user.username }}</p>
+                                      </div>
+
+                                      <div class="mt-2">
+                                     <strong> <strong>  Adresse mail: </strong> </strong>
+                                       <p><a href=""> {{ user.email }}</a></p>
+                                      </div>
+
+                                      <div class="mt-2">
+                                       <h6> <strong>  Contact: </strong> </h6>
+                                       <p><a href="#">(+225) 4544 565 456</a></p>
+                                      </div>
+                                    </div>
+                                 </div>
+                              </div>
+
+                        </div>
+      {% endif %}
+                  </div>
+
+
+                  </div>
+               </div>
+            </div>
+
+
+
+     {% include 'footer.html' %}
+</body>
+{% endblock %}
+ <!-- Wrapper END -->
