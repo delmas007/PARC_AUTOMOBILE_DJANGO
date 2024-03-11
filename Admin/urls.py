@@ -1,7 +1,8 @@
 from django.urls import path
 
 from Admin.views import inscription, employer_compte, active_emp, desactive_amp, gestionnaire_inactifs, \
-    gestionnaire_a_search, gestionnaire_a_search_i, Ajouter_Carburant, liste_Carburant, modifier_carburant
+    gestionnaire_a_search, gestionnaire_a_search_i, Ajouter_Carburant, liste_Carburant, modifier_carburant, \
+    Carburant_search
 
 app_name = 'admins'
 
@@ -16,5 +17,6 @@ urlpatterns = [
     path('Desactive_employer/<int:employer_id>/', desactive_amp, name='desactive_amp'),
     path('liste_Carburant/', liste_Carburant, name='liste_Carburant'),
     path('modifier_carburant/<int:pk>/', modifier_carburant, name='modifier_carburant'),
+    path('recherche_carburant/', Carburant_search, name='Carburant_search'),
 
 ]

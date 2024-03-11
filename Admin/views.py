@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 
-from Admin.forms import typeCarburantForm, CarburantModifierForm
+from Admin.forms import typeCarburantForm, CarburantModifierForm, CarburantSearchForm
 from Conducteur.forms import ConducteurSearchForm
 from Model.forms import UserRegistrationForm
 from Model.models import Roles, Utilisateur, type_carburant
@@ -126,6 +126,31 @@ def liste_Carburant(request):
         carburants = paginator.page(paginator.num_pages())
 
     return render(request, 'afficher_carburant.html', {'carburants': carburants})
+
+def Carburant_search(request):
+    form = CarburantSearchForm(request.GET)
+    carburant = type_carburant.objects.all()
+
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        if query:
+            carburant = carburant.filter(Q(nom__icontains=query))
+
+        context = {'carburants': carburant, 'form': form}
+        paginator = Paginator(carburant.order_by('-date_mise_a_jour'), 5)
+        try:
+            page = request.GET.get("page")
+            if not page:
+                page = 1
+            carburants = paginator.page(page)
+        except EmptyPage:
+            carburants = paginator.page(paginator.num_pages())
+        context = {'carburants': carburants, 'form': form}
+        # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
+        if not carburant.exists() and form.is_valid():
+            context['no_results'] = True
+
+    return render(request, 'afficher_carburant.html', context)
 
 
 def modifier_carburant(request, pk):

@@ -24,3 +24,9 @@ class CarburantModifierForm(forms.ModelForm):
         super(CarburantModifierForm, self).__init__(*args, **kwargs)
         self.fields['nom'].widget.attrs.update({'class': 'form-control', 'id': 'exampleInputdate'})
         self.fields['prix'].widget.attrs.update({'class': 'form-control', 'min': '1'})
+
+class CarburantSearchForm(forms.Form):
+    q = forms.CharField(
+        label='',
+        required=False,
+    )

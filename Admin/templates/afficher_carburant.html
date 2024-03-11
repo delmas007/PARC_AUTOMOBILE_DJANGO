@@ -42,9 +42,9 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                            <div class="form-group mb-0">
-                                               <form class="mr-3 position-relative" method="get" action="{% url 'entretien:entretien_search' %}">
+                                               <form class="mr-3 position-relative" method="get" action="{% url 'admins:Carburant_search' %}">
                                                    <div class="col-sm-10">
-                                                       <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par type entretien, marque, modèle ou matricule">
+                                                       <input type="text" class="form-control" id="search" value="{{ request.GET.q }}" name="q" placeholder="Rechercher par nom du carburant">
                                                    </div>
                                                    <button type="submit" class="btn btn-primary">Rechercher</button>
                                                </form>
