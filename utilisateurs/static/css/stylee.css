@@ -9,6 +9,9 @@ body {
     position: relative;
     margin: 0;
     padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -43,28 +46,28 @@ h2 {
 
 
 .footer{
-   margin-top: 250px;
-  }
+    margin-top: 250px;
+}
 
 .scrollable-row {
     display: flex;
-   max-height: 1000px;
+    max-height: 1000px;
     overflow: hidden;
-    padding-bottom: 30px;   
-    
+    padding-bottom: 30px;
+
 }
 .scrollable-row:hover{
     overflow-y: overlay;
-    
+
 }
 ::-webkit-scrollbar{
     background-color: transparent;
 }
 .taille{
     display: flex;
-   max-height: 320px;
+    max-height: 320px;
     overflow: hidden;
-    padding-bottom: 30px;  
+    padding-bottom: 30px;
 }
 .taille:hover{
     overflow-y: overlay;
@@ -299,11 +302,11 @@ h2 {
 @media (min-width: 768px) {
     .nav,
     .nav .navbar {
-         background: #9376ff;
-  background: -webkit-linear-gradient(-135deg, #d7bbd2, #9376ff);
-  background: -o-linear-gradient(-135deg, #d7bbd2, #9376ff);
-  background: -moz-linear-gradient(-135deg, #d7bbd2, #9376ff);
-  background: linear-gradient(-135deg, #d7bbd2, #9376ff);
+        background: #9376ff;
+        background: -webkit-linear-gradient(-135deg, #d7bbd2, #9376ff);
+        background: -o-linear-gradient(-135deg, #d7bbd2, #9376ff);
+        background: -moz-linear-gradient(-135deg, #d7bbd2, #9376ff);
+        background: linear-gradient(-135deg, #d7bbd2, #9376ff);
     }
 
     .nav .navbar-brand {
@@ -1859,6 +1862,7 @@ h2 {
 .my-account {
     position: relative;
     padding: 30px 0;
+    flex: 1 0 auto;
 }
 
 .my-account .nav.nav-pills .nav-link {
@@ -2386,11 +2390,11 @@ h2 {
     .footer .payment-method {
         margin-bottom: 15px;
     }
-    
+
     .footer .payment-method,
     .footer .payment-security {
-        text-align: center; 
-    } 
+        text-align: center;
+    }
 }
 
 .footer .payment-method h2,
@@ -2446,14 +2450,69 @@ h2 {
 @media (max-width: 768.98px) {
     .footer-bottom .copyright,
     .footer-bottom .template-by {
-        text-align: center; 
-    } 
-}
-@media screen and (min-width: 768px) {
-    .footer-bottom2 {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
+        text-align: center;
     }
+}
+
+.footer-custom {
+    flex-shrink: 0;
+    border-top: 1px dashed #000;
+    width: 100%;
+    background: #000000;
+    padding: 25px;
+}
+.footer-custom .copyright {
+    text-align: left;
+}
+
+.footer-custom .template-by {
+    text-align: right;
+}
+.footer-custom .copyright p,
+.footer-custom .template-by p {
+    color: #ffffff;
+    font-weight: 400;
+    margin: 0;
+}
+
+.footer-custom .copyright p a,
+.footer-custom .template-by p a {
+    font-weight: 600;
+}
+
+.footer-custom .copyright p a:hover,
+.footer-custom .template-by p a:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 768.98px) {
+    .footer-custom .copyright,
+    .footer-custom .template-by {
+        text-align: center;
+    }
+}
+.content-footer {
+    width: 100%;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+
+
+@media screen and (max-width: 1000px) {
+
+    .content-footer {
+        max-width: 100%;
+        flex-wrap: wrap;
+    }
+
+
+}
+
+
+@media screen and (max-width: 600px) {
+    .content-footer {
+        padding: 15px;
+    }
+
 }
