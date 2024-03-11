@@ -1,12 +1,13 @@
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 
-from Admin.forms import typeCarburantForm
+from Admin.forms import typeCarburantForm, CarburantModifierForm
 from Conducteur.forms import ConducteurSearchForm
 from Model.forms import UserRegistrationForm
-from Model.models import Roles, Utilisateur
+from Model.models import Roles, Utilisateur, type_carburant
 from vehicule.forms import VehiculSearchForm
 
 
@@ -109,3 +110,35 @@ def Ajouter_Carburant(request):
     else:
         form = typeCarburantForm()
     return render(request, 'enregistrer_carburant.html', {'form': form})
+
+
+def liste_Carburant(request):
+    carburant_list = type_carburant.objects.all().order_by('-date_mise_a_jour')
+
+    paginator = Paginator(carburant_list.order_by('date_mise_a_jour'), 5)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        carburants = paginator.page(page)
+    except EmptyPage:
+
+        carburants = paginator.page(paginator.num_pages())
+
+    return render(request, 'afficher_carburant.html', {'carburants': carburants})
+
+
+def modifier_carburant(request, pk):
+    carburant = get_object_or_404(type_carburant, pk=pk)
+
+    if request.method == 'POST':
+        form = CarburantModifierForm(request.POST, request.FILES, instance=carburant)
+        if form.is_valid():
+            form.instance.utilisateur = request.user
+            form.save()
+
+            return redirect('admins:liste_Carburant')
+    else:
+        form = CarburantModifierForm(instance=carburant)
+
+    return render(request, 'modifier_carburants.html', {'form': form, 'entretien': carburant, })

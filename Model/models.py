@@ -55,6 +55,7 @@ class type_entretien(models.Model):
 
 
 class type_carburant(models.Model):
+    date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
     nom = models.CharField()
     prix = models.IntegerField()
 
