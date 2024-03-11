@@ -166,6 +166,13 @@ def incident_interne_detail(request, pk):
 
 
 @login_required(login_url='Connexion')
+def incident_externe_detail(request, pk):
+    incident = get_object_or_404(Incident, id=pk)
+    image = Photo.objects.filter(incident=incident)
+    return render(request, 'incident_externe_details.html', {'incident': incident, 'image': image})
+
+
+@login_required(login_url='Connexion')
 def modifier_incident_interne(request, pk):
     incident = get_object_or_404(Incident, pk=pk)
     photos = Photo.objects.filter(incident=incident)

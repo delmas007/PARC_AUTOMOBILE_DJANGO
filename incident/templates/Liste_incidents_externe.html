@@ -62,6 +62,7 @@
                                                     <th style="color: white;">Véhicule</th>
                                                     <th style="color: white;">Matricule du véhicule</th>
                                                     <th style="color: white;">Conducteur</th>
+                                                    <th style="color: white;">Numero conducteur</th>
                                                     <th style="color: white; ">Description</th>
                                                     <th style="color: white; ">Action</th>
                                                 </tr>
@@ -75,20 +76,17 @@
                                                         <td> {% if item.latest_photo  %}
                                                             <img src="{{ item.latest_photo.images.url }}" alt="incident-image" class="avatar-130 img-fluid incident_image" style="width: 40%;height: 65px">
                                                         {% else  %}
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
-                                                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
-                                                            </svg>
+                                                            <i class="bi bi-person-circle" style="font-size: 70px; color: #030303"></i>
                                                         {% endif  %}
                                                         </td>
                                                         <td>{{ item.incident.vehicule.marque}} - {{item.incident.vehicule.type_commercial}}</td>
                                                         <td>{{ item.incident.vehicule.numero_immatriculation}}</td>
                                                         <td>{{ item.incident.conducteur}}</td>
+                                                        <td>{{ item.incident.conducteur.numero_telephone}}</td>
                                                         <td>{{ item.incident.description_incident|truncatewords:8}}</td>
                                                         <td>
                                                             <div class="flex align-items-center list-user-action">
-                                                                <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'incident:modifier_incident_interne' item.incident.pk  %}"><i class="ri-pencil-line"></i></a>
-                                                                <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'incident:incident_interne_detail' item.incident.pk  %}" ><i class="ri-eye-line"></i></a>
+                                                                <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'incident:incident_externe_detail' item.incident.pk  %}" ><i class="ri-eye-line"></i></a>
 
                                                             </div>
                                                         </td>
