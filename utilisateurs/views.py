@@ -431,7 +431,7 @@ def ChangerMotDePassee(request):
                 print('2222')
                 form.save()
                 messages.success(request, "Votre mot de passe a été changer.")
-                return redirect('utilisateur:ChangerMotDePassee')
+                return redirect('Connexion')
             else:
                 messages.error(request, "Les deux mots de passe ne correspondent pas")
         else:
@@ -451,7 +451,7 @@ def ChangerMotDePasseConducteur(request):
                 print('2222')
                 form.save()
                 messages.success(request, "Votre mot de passe a été changer.")
-                return redirect('utilisateur:ChangerMotDePasseConducteur')
+                return redirect('utilisateur:connexion_user')
             else:
                 messages.error(request, "Les deux mots de passe ne correspondent pas")
         else:

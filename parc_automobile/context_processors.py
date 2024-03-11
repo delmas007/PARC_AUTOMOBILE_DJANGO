@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.db.models import Subquery, Q
-from Model.models import Demande_prolongement, EtatArrive, Incident, Deplacement
+from Model.models import Demande_prolongement, EtatArrive, Incident, Deplacement, Vehicule
 
 
 def accueil_data(request):
@@ -20,6 +20,6 @@ def accueil_data(request):
     nombre_prolongement = Deplacement.objects.filter(id__in=prolongement_encours_ids).count()
     deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
-
+    vehicules=Vehicule.objects.all()
     nombre_deplacement_en_cours = deplacements.count()
     return {'demandes': demande, 'incidents': incidents, 'total': total,'nombre_deplacement': nombre_deplacement, 'nombre_deplacement_en_cours': nombre_deplacement_en_cours, 'nombre_prolongement': nombre_prolongement}

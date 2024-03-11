@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Q
+from django.db.models import Q, ExpressionWrapper, fields, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 
@@ -113,9 +113,13 @@ def Ajouter_Carburant(request):
 
 
 def liste_Carburant(request):
-    carburant_list = type_carburant.objects.all().order_by('-date_mise_a_jour')
+    carburant_list =(
+        type_carburant.objects.all()
+        .annotate(hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField()))
+        .order_by('-hour')
+    )
 
-    paginator = Paginator(carburant_list.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(carburant_list, 5)
     try:
         page = request.GET.get("page")
         if not page:
