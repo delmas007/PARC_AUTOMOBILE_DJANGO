@@ -5,7 +5,8 @@ from django.utils import timezone
 from datetime import timedelta
 
 from django.db.models import Subquery, Q, F
-from Model.models import Demande_prolongement, EtatArrive, Incident, Deplacement, Vehicule, Photo
+from Model.models import Demande_prolongement, EtatArrive, Incident, Deplacement, Vehicule, Photo, Entretien, Carburant, \
+    Conducteur, Utilisateur
 
 
 def accueil_data(request):
@@ -65,7 +66,6 @@ def accueil_data(request):
         except ObjectDoesNotExist:
             pass
 
-
     date_actuelle = timezone.now().date()
     une_semaine_plus_tard = date_actuelle + timedelta(days=7)
     vehicules_proches_expiration_technique = Vehicule.objects.filter(date_visite_technique__lte=une_semaine_plus_tard)
@@ -90,8 +90,28 @@ def accueil_data(request):
     totals = demande_compte + incidents_compte + assurance_compte + vidanges_compte + technique_compte
     print(totals)
 
+    aujourd_hui = date.today()
+    une_semaine_avant = aujourd_hui - timedelta(days=7)
+    incidents_interne = Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=True)
+    incidents_externe = Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=False)
+    nombre_incident_interne = incidents_interne.count()
+    nombre_incident_externe = incidents_externe.count()
+
+    entretien_list = Entretien.objects.all().order_by('-date_mise_a_jour')
+    nombre_entretien = entretien_list.count()
+    carburant_list = Carburant.objects.all().order_by('date_mise_a_jour')
+    nombre_carburant = carburant_list.count()
+    etatarrive = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
+        date_arrive__gt=aujourd_hui)
+    nombre_etatarrive = etatarrive.count()
+    utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
+    nombre_conducteurs = utilisateurs.count()
+    vehicules_list = Vehicule.objects.filter(supprimer=False)
+    nombre_vehicule = vehicules_list.count()
+
     return {'demandes': demande, 'inciden': incidents, 'totals': totals, 'nombre_deplacement': nombre_deplacement,
             'nombre_deplacement_en_cours': nombre_deplacement_en_cours, 'nombre_prolongement': nombre_prolongement,
             'vehicules_et_jours_restants': vehicules_et_jours_restants,
             'vehicules_et_jours_restants_technique': vehicules_et_jours_restants_technique,
-            'vehicules_proches_vidange': vehicules_proches_vidange}
+            'vehicules_proches_vidange': vehicules_proches_vidange, 'nombre_incident_externe': nombre_incident_externe,
+            'nombre_incident_interne': nombre_incident_interne, 'nombre_entretien': nombre_entretien, 'nombre_carburant': nombre_carburant, 'nombre_etatarrive': nombre_etatarrive, 'nombre_conducteurs': nombre_conducteurs, 'nombre_vehicule': nombre_vehicule}
