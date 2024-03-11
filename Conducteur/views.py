@@ -1,13 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.http import HttpResponse
+from django.db.models import Q, ExpressionWrapper, F, fields
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template.loader import get_template
-from xhtml2pdf import pisa
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from Model.forms import UserRegistrationForm, UserRegistrationForme, UserRegistrationFormee
+from Model.forms import UserRegistrationForme, UserRegistrationFormee
 from Model.models import Conducteur, Roles, Utilisateur
 from .forms import ConducteurForm, ConducteurSearchForm
 
@@ -93,23 +90,26 @@ def modifier_conducteur(request, conducteur_id):
 @login_required(login_url='Connexion')
 def conducteur_search(request):
     form = ConducteurSearchForm(request.GET)
-    conducteurs = Conducteur.objects.all()
-    utilisateurs = Utilisateur.objects.all()
+    utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
-        print(conducteurs)
-        print(utilisateurs)
         if query:
-            conducteurs = utilisateurs.filter(
-                Q(nom=query) |
+            utilisateurs = utilisateurs.filter(
+                Q(nom__icontains=query) |
                 Q(prenom__icontains=query) |
-                Q(conducteur__num_cni__icontains=query)
+                Q(conducteur__numero_permis_conduire__icontains=query)
             )
-            print(Q(nom=query))
-            print(query)
+            print(utilisateurs)
+        else:
+            utilisateurs = utilisateurs
 
-    return render(request, 'tous_les_conducteurs.html', {'conducteurs': conducteurs, 'search_form': form})
+        context = {'utilisateurs': utilisateurs, 'form': form}
+        # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
+        if not utilisateurs and form.is_valid():
+            context['no_results'] = True
+
+    return render(request, 'tous_les_conducteurs.html', context)
 
 
 @login_required(login_url='Connexion')

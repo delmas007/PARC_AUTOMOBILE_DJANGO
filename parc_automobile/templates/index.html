@@ -1,7 +1,21 @@
 {% extends 'header.html' %}
 {% load static %}
 {% block content%}
-   <body class="sidebar-main-active right-column-fixed header-top-bgcolor">
+    <style>
+        body.sidebar-main-active.right-column-fixed .content-page, body.sidebar-main-active.right-column-fixed{
+            margin-right: 0;
+        }
+        body.sidebar-main-active.right-column-fixed .iq-top-navbar {
+            margin-right: 150px;
+            /* width: calc(100% - 460px); */
+        }
+        body.sidebar-main-active.right-column-fixed .content-page, body.sidebar-main-active.right-column-fixed .iq-footer {
+            margin-left: 80px;
+            margin-right: 0;
+        }
+    </style>
+
+<body class="sidebar-main-active right-column-fixed header-top-bgcolor">
       <!-- loader Start -->
       <div id="loading">
          <div id="loading-center">
@@ -19,55 +33,81 @@
          <div id="content-page" class="content-page">
             <div class="container-fluid">
                <div class="row">
-                  <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="col-sm-6 col-md-6 col-lg-2">
                      <div class="iq-card iq-card-block iq-card-stretch ">
                         <div class="iq-card-body">
                                 <div class="d-flex d-flex align-items-center justify-content-between">
                                    <div>
-                                       <h2>352</h2>
-                                       <p class="fontsize-sm m-0">Invoice Sent</p>
+                                       <h2>{% if nombre_vehicules %} {{nombre_vehicules}} {% else %} 0 {% endif %}</h2>
+                                       <p class="fontsize-sm m-0">Nombre de voitures</p>
                                    </div>
-                                   <div class="rounded-circle iq-card-icon dark-icon-light iq-bg-primary "> <i class="ri-inbox-fill"></i></div>
+                                   <div class="rounded-circle iq-card-icon dark-icon-light iq-bg-primary "> <i class="ri-roadster-line"></i></div>
                                 </div>
                         </div>
                      </div>
                   </div>
-                  <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="col-sm-6 col-md-6 col-lg-2">
                      <div class="iq-card iq-card-block iq-card-stretch ">
                         
                         <div class="iq-card-body">
                            <div class="d-flex d-flex align-items-center justify-content-between">
                               <div>
-                                  <h2>$37k</h2>
-                                  <p class="fontsize-sm m-0">Credited</p>
+                                  <h2>{% if nombre_conducteurs %} {{nombre_conducteurs}} {% else %} 0 {% endif %}</h2>
+                                  <p class="fontsize-sm m-0">Nombre de conducteurs</p>
                               </div>
-                              <div class="rounded-circle iq-card-icon iq-bg-danger"><i class="ri-radar-line"></i></div>
+                              <div class="rounded-circle iq-card-icon iq-bg-secondary"><i class="ri-user-line"></i></div>
                            </div>
                          </div>
                      </div>
                   </div>
-                  <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="col-sm-6 col-md-6 col-lg-2">
                      <div class="iq-card iq-card-block iq-card-stretch ">
                         <div class="iq-card-body">
                            <div class="d-flex d-flex align-items-center justify-content-between">
                               <div>
-                                  <h2>32%</h2>
-                                  <p class="fontsize-sm m-0">Employee Costs</p>
+                                  <h2>{% if nombre_incidents %} {{nombre_incidents}} {% else %} 0 {% endif %}</h2>
+                                  <p class="fontsize-sm m-0">Nombre d'incidents</p>
                               </div>
-                              <div class="rounded-circle iq-card-icon iq-bg-warning "><i class="ri-price-tag-3-line"></i></div>
+                              <div class="rounded-circle iq-card-icon iq-bg-danger"><i class="ri-alert-line"></i></div>
                            </div>
                        </div>
                      </div>
                   </div>
-                  <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="col-sm-6 col-md-6 col-lg-2">
                      <div class="iq-card iq-card-block iq-card-stretch ">
                         <div class="iq-card-body">
                            <div class="d-flex d-flex align-items-center justify-content-between">
                               <div>
-                                  <h2>27h</h2>
-                                  <p class="fontsize-sm m-0">Payment Delay</p>
+                                  <h2>{% if nombre_deplacements_en_cours %} {{nombre_deplacements_en_cours}} {% else %} 0 {% endif %}</h2>
+                                  <p class="fontsize-sm m-0">Déplacements en cours</p>
                               </div>
-                              <div class="rounded-circle iq-card-icon iq-bg-info "><i class="ri-refund-line"></i></div>
+                              <div class="rounded-circle iq-card-icon iq-bg-info "><i class="fa fa-paper-plane"></i></div>
+                           </div>
+                       </div>
+                     </div>
+                  </div>
+                 <div class="col-sm-6 col-md-6 col-lg-2">
+                     <div class="iq-card iq-card-block iq-card-stretch ">
+                        <div class="iq-card-body">
+                           <div class="d-flex d-flex align-items-center justify-content-between">
+                              <div>
+                                  <h2>{% if nombre_deplacement_en_attente %} {{nombre_deplacement_en_attente}} {% else %} 0 {% endif %}</h2>
+                                  <p class="fontsize-sm m-0">Déplacements en attente</p>
+                              </div>
+                              <div class="rounded-circle iq-card-icon iq-bg-warning "><i class="fa fa-paper-plane"></i></div>
+                           </div>
+                       </div>
+                     </div>
+                  </div>
+                   <div class="col-sm-6 col-md-6 col-lg-2">
+                     <div class="iq-card iq-card-block iq-card-stretch ">
+                        <div class="iq-card-body">
+                           <div class="d-flex d-flex align-items-center justify-content-between">
+                              <div>
+                                  <h2>{% if nombre_deplacement_termine %} {{nombre_deplacement_termine}} {% else %} 0 {% endif %}   </h2>
+                                  <p class="fontsize-sm m-0">Déplacements total</p>
+                              </div>
+                              <div class="rounded-circle iq-card-icon iq-bg-success "><i class="fa fa-paper-plane"></i></div>
                            </div>
                        </div>
                      </div>
@@ -78,7 +118,7 @@
                      <div class="iq-card iq-card-block iq-card-stretch iq-card-height overflow-hidden">
                         <div class="iq-card-header d-flex justify-content-between">
                            <div class="iq-header-title">
-                              <h4 class="card-title">Invoice Stats</h4>
+                              <h4 class="card-title">Résumé des véhicules</h4>
                            </div>
                            <div class="iq-card-header-toolbar d-flex align-items-center">
                               <div class="dropdown">
@@ -96,16 +136,59 @@
                            </div>
                         </div>
                         <div class="iq-card-body">
-                        <div id="home-chart-02"></div>
-                     </div>
+                            <div class="table-responsive" id="vehicules-table">
+                              <table class="table mb-0 table-borderless">
+                                 <thead>
+                                    <tr>
+                                       <th scope="col">Marque</th>
+                                       <th scope="col">Type commercial</th>
+                                       <th scope="col">Numéro d'immatriculation</th>
+                                       <th scope="col">Kilométrage</th>
+                                        <th scope="col">Disponibilité</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    {% for vehicule in vehicule_disponible %}
+                                        <tr>
+                                            <td>{{ vehicule.marque }}</td>
+                                            <td>{{ vehicule.type_commercial }}</td>
+                                            <td>{{ vehicule.numero_immatriculation }}</td>
+                                            <td>{{ vehicule.kilometrage }}</td>
+                                            <td class="text-center">
+                                                <div class="badge badge-pill iq-bg-warning" style="font-size: medium">
+                                                    Oui
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                 </tbody>
+                              <!-- Ajoutez la pagination -->
+                                <div class="pagination" id="pagination-links">
+                                   <span class="step-links">
+                                      {% if vehicule_disponible.has_previous %}
+                                         <a href="?page=1">&laquo; 1</a>
+                                         <a href="?page={{ vehicule_disponible.previous_page_number }}">Précédent</a>
+                                      {% endif %}
+
+                                      <span class="current">
+                                          {{ vehicule_disponible.number }} sur {{ vehicule_disponible.paginator.num_pages }}.
+                                      </span>
+
+                                      {% if vehicule_disponible.has_next %}
+                                         <a href="?page={{ vehicule_disponible.next_page_number }}">Suivant</a>
+                                         <a href="?page={{ vehicule_disponible.paginator.num_pages }}">{{ vehicule_disponible.paginator.num_pages }} &raquo;</a>
+                                      {% endif %}
+                                   </span>
+                                </div>
+                              </table>
+                           </div>
+                        </div>
                      </div>
                   </div>
                   <div class="col-md-6 col-lg-5">
                      <div class="iq-card iq-card-block iq-card-stretch iq-card-height" style="background: transparent;">
                         <div class="iq-card-body rounded p-0" style="background: url({% static 'images/vehicul.jpg' %}) no-repeat;    background-size: cover; height: 415px;">
                           <div class="iq-caption">
-                             <h1>450</h1>
-                             <p>Invoice</p>
                           </div>
                         </div>
                      </div>
@@ -116,7 +199,7 @@
                      <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                         <div class="iq-card-header d-flex justify-content-between">
                            <div class="iq-header-title">
-                              <h4 class="card-title">Open Invoices</h4>
+                              <h4 class="card-title">Déplacements récents</h4>
                            </div>
                            <div class="iq-card-header-toolbar d-flex align-items-center">
                               <div class="dropdown">
@@ -138,71 +221,35 @@
                               <table class="table mb-0 table-borderless">
                                  <thead>
                                     <tr>
-                                       <th scope="col">Client</th>
-                                       <th scope="col">Date</th>
-                                       <th scope="col">Invoice</th>
-                                       <th scope="col" class="text-right">Amount</th>
+                                       <th scope="col">Conducteur</th>
+                                       <th scope="col">Véhicule</th>
+                                       <th scope="col">Date de début</th>
                                        <th scope="col" class="text-center">Status</th>
-                                       <th scope="col">Action</th>
-
                                     </tr>
                                  </thead>
                                  <tbody>
-                                    <tr>
-                                       <td>Ira Membrit</td>
-                                       <td>18/10/2019</td>
-                                       <td>20156</td>
-                                       <td class="text-right">$1500.00</td>
-                                       <td class="text-center"><div class="badge badge-pill iq-bg-success">Paid</div></td>
-                                       <td>
-                                          <i class="ri-ball-pen-fill text-success pr-1"></i>
-                                          <i class="ri-delete-bin-5-line text-danger"></i>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>Pete Sariya</td>
-                                       <td>26/10/2019</td>
-                                       <td>7859</td>
-                                       <td class="text-right">$2000.00</td>
-                                       <td class="text-center"><div class="badge badge-pill iq-bg-success">Paid</div></td>
-                                       <td>
-                                          <i class="ri-ball-pen-fill text-success pr-1"></i>
-                                          <i class="ri-delete-bin-5-line text-danger"></i>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>Cliff Hanger</td>
-                                       <td>18/11/2019</td>
-                                       <td>6396</td>
-                                       <td class="text-right">$2500.00</td>
-                                       <td class="text-center"><div class="badge badge-pill iq-bg-danger">Past Due</div></td>
-                                       <td>
-                                          <i class="ri-ball-pen-fill text-success pr-1"></i>
-                                          <i class="ri-delete-bin-5-line text-danger"></i>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>Terry Aki</td>
-                                       <td>14/12/2019</td>
-                                       <td>7854</td>
-                                       <td class="text-right">$5000.00</td>
-                                       <td class="text-center"><div class="badge badge-pill iq-bg-success">Paid</div></td>
-                                       <td>
-                                          <i class="ri-ball-pen-fill text-success pr-1"></i>
-                                          <i class="ri-delete-bin-5-line text-danger"></i>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>Anna Mull</td>
-                                       <td>24/12/2019</td>
-                                       <td>568569</td>
-                                       <td class="text-right">$10000.00</td>
-                                       <td class="text-center"><div class="badge badge-pill iq-bg-success">Paid</div></td>
-                                       <td>
-                                          <i class="ri-ball-pen-fill text-success pr-1"></i>
-                                          <i class="ri-delete-bin-5-line text-danger"></i>
-                                       </td>
-                                    </tr>
+                                    {% for deplacement in deplacements_recents %}
+                                        <tr>
+                                            <td>{{ deplacement.conducteur }}</td>
+                                            <td>{{ deplacement.vehicule }}</td>
+                                            <td>{{ deplacement.date_depart }}</td>
+                                            <td class="text-center">
+                                                {% if deplacement.date_depart > now  %}
+                                                <div class="badge badge-pill iq-bg-danger">
+                                                    En attente
+                                                </div>
+                                                {% elif deplacement.date_depart <= now %}
+                                                <div class="badge badge-pill iq-bg-warning">
+                                                    En cours
+                                                </div>
+                                                {% else %}
+                                                <div class="badge badge-pill iq-bg-success">
+                                                    Terminé
+                                                </div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                  </tbody>
                               </table>
                            </div>
@@ -305,59 +352,8 @@
                               </div>
                            </div>
                            <div class="iq-card-body">
-                              <div id="home-chart-01"></div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="col-md-6">
-                        <div class="iq-card iq-card-block iq-card-stretch ">
-                           <div class="iq-card-header d-flex justify-content-between">
-                              <div class="iq-header-title">
-                                 <h4 class="card-title">Last costs</h4>
-                              </div>
-                              <div class="iq-card-header-toolbar d-flex align-items-center">
-                                 <div class="dropdown">
-                                    <span class="dropdown-toggle" id="dropdownMenuButton-two" data-toggle="dropdown" >
-                                    <i class="ri-more-fill"></i>
-                                    </span>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton-two" style="">
-                                       <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="iq-card-body ">
-                              <div id="home-chart-05"></div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="col-md-6">
-                        <div class="iq-card iq-card-block iq-card-stretch ">
-                           <div class="iq-card-header d-flex justify-content-between">
-                              <div class="iq-header-title">
-                                 <h4 class="card-title">Efficiency</h4>
-                              </div>
-                              <div class="iq-card-header-toolbar d-flex align-items-center">
-                                 <div class="dropdown">
-                                    <span class="dropdown-toggle" id="dropdownMenuButton-three" data-toggle="dropdown" >
-                                    <i class="ri-more-fill"></i>
-                                    </span>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton-three" style="">
-                                       <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="iq-card-body ">
-                              <div id="home-chart-11"></div>
+{#                              <div id="home-chart-01"></div>#}
+                               <div id="calendrier"></div>
                            </div>
                         </div>
                      </div>
@@ -478,141 +474,73 @@
             
          </div>
  
-         <div class="iq-right-fixed">
-            <div class="iq-card mb-0" style="box-shadow: none;">
-               <div class="iq-card-header d-flex justify-content-between">
-                  <div class="iq-header-title">
-                     <h4 class="card-title">Customer Distribution</h4>
-                  </div>
-                  <div class="iq-card-header-toolbar d-flex align-items-center">
-                     <div class="dropdown">
-                       <span class="dropdown-toggle" id="dropdownMenuButton-five" data-toggle="dropdown">
-                        <a href="#">See All</a>
-                        </span>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton-five">
-                           <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
-                           <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                           <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                           <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
-                           <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="iq-card-body">
-                  <div id="chartdiv"></div>
-               </div>
-            </div>
-            <div class="iq-card mb-0" style="box-shadow: none;">
-               <div class="iq-card-header d-flex justify-content-between">
-                  <div class="iq-header-title">
-                     <h4 class="card-title">Project Statistic</h4>
-                  </div>
-               </div>
-                <div class="iq-card-body">
-                  <ul class="suggestions-lists m-0 p-0">
-                     <li class="d-flex mb-4 align-items-center">
-                        <div class="profile-icon iq-bg-danger"><span>G</span></div>
-                        <div class="media-support-info ml-3">
-                           <h6>Adding Item</h6>
-                           <p class="mb-0 fontsize-sm">Development</p>
-                        </div>
-                        <div class="iq-card-header-toolbar d-flex align-items-center">
-                           <div class="dropdown">
-                              <span class="dropdown-toggle text-primary" id="dropdownMenuButton41" data-toggle="dropdown">
-                              <i class="ri-more-line"></i>
-                              </span>
-                              <div class="dropdown-menu dropdown-menu-right p-0">
-                                 <a class="dropdown-item" href="#"><i class="ri-user-unfollow-line mr-2"></i>Unfollow</a>
-                                 <a class="dropdown-item" href="#"><i class="ri-close-circle-line mr-2"></i>Unfriend</a>
-                                 <a class="dropdown-item" href="#"><i class="ri-lock-line mr-2"></i>block</a>
-                              </div>
-                           </div>
-                        </div>
-                     </li>
-                     <li class="d-flex align-items-center">
-                        <div class="profile-icon iq-bg-warning"><span>B</span></div>
-                        <div class="media-support-info ml-3">
-                           <h6>Admin Panel</h6>
-                           <p class="mb-0 fontsize-sm">Development</p>
-                        </div>
-                        <div class="iq-card-header-toolbar d-flex align-items-center">
-                           <div class="dropdown">
-                              <span class="dropdown-toggle text-primary" id="dropdownMenuButton42" data-toggle="dropdown">
-                              <i class="ri-more-line"></i>
-                              </span>
-                              <div class="dropdown-menu dropdown-menu-right p-0">
-                                 <a class="dropdown-item" href="#"><i class="ri-user-unfollow-line mr-2"></i>Unfollow</a>
-                                 <a class="dropdown-item" href="#"><i class="ri-close-circle-line mr-2"></i>Unfriend</a>
-                                 <a class="dropdown-item" href="#"><i class="ri-lock-line mr-2"></i>block</a>
-                              </div>
-                           </div>
-                        </div>
-                     </li>
-                  </ul>
-               </div>
-            </div>
-            <div class="iq-card" style="box-shadow: none;">
-               <div class="iq-card-header d-flex justify-content-between">
-                  <div class="iq-header-title">
-                     <h4 class="card-title">Countries</h4>
-                  </div>
-                  <div class="iq-card-header-toolbar d-flex align-items-center">
-                     <div class="dropdown">
-                        <span class="dropdown-toggle text-primary" id="dropdownMenuButton6" data-toggle="dropdown">
-                        <i class="ri-more-2-fill"></i>
-                        </span>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton6">
-                           <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
-                           <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                           <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                           <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
-                           <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="iq-card-body">
-                  <div class="row">
-                     <div class="col-lg-12">
-                        <div class="iq-details">
-                           <div class="d-flex align-items-center justify-content-between">
-                              <h6 class="title text-dark">United States</h6>
-                              <div class="percentage float-right text-primary">95 <span>%</span></div>
-                           </div>
-                           <div class="iq-progress-bar-linear d-inline-block w-100">
-                              <div class="iq-progress-bar">
-                                 <span class="bg-primary" data-percent="95"></span>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="iq-details mt-3">
-                           <div class="d-flex align-items-center justify-content-between">
-                              <h6 class="title text-dark">India</h6>
-                              <div class="percentage float-right text-warning">75 <span>%</span></div>
-                           </div>
-                           <div class="iq-progress-bar-linear d-inline-block w-100">
-                              <div class="iq-progress-bar">
-                                 <span class="bg-warning" data-percent="75"></span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
+
 
       <!-- Wrapper END -->
       <!-- Footer -->
-      <!-- Insérez ce code dans votre template HTML -->
 
 {% include 'footer.html' %}
       <!-- Footer END -->
       <!-- Optional JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-      
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+   function loadVehicules(page) {
+      $.ajax({
+         url: location.href,
+         data: { page: page },
+         dataType: 'html',
+         success: function (data) {
+            const $data = $(data);
+            $('#vehicules-table').html($data.find('#vehicules-table').html());
+            $('#pagination-links').html($data.find('#pagination-links').html());
+         }
+      });
+   }
 
-   </body>
+   $(document).on('click', '.pagination a', function (e) {
+      e.preventDefault();
+      const page = $(this).attr('data-page');
+      loadVehicules(page);
+   });
+
+   // Chargement initial des véhicules
+   loadVehicules(1);
+</script>
+
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+<script>
+   $(document).ready(function () {
+      $('#calendrier').fullCalendar({
+         header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek'
+         },
+            height: 500,
+         events: [
+            {% for deplacement in deplacements_planifies %}
+               {
+                  title: '{{ deplacement.conducteur }} - {{ deplacement.vehicule }}',
+                  start: '{{ deplacement.date_depart|date:"Y-m-d" }}T{{ deplacement.heure_depart|date:"H:i:s" }}',
+                  end: '{{ deplacement.date_arrivee|date:"Y-m-d" }}T{{ deplacement.heure_arrivee|date:"H:i:s" }}'
+               },
+            {% endfor %}
+         ],
+         eventClick: function (event) {
+            // Gérer le clic sur un événement
+            alert('Clic sur l\'événement : ' + event.title);
+         }
+      });
+   });
+</script>
+
+
+</body>
 
 {% endblock %}
