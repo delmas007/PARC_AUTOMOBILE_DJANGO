@@ -98,6 +98,7 @@ class Utilisateur(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    image = models.ImageField(upload_to='ImagesGestionnaire/', null=True, blank=True)
     USERNAME_FIELD = 'username'
     objects = MyUserManager()
 

@@ -4,9 +4,8 @@ from django.db.models import Q, ExpressionWrapper, fields, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 
-from Admin.forms import typeCarburantForm, CarburantModifierForm, CarburantSearchForm
+from Admin.forms import typeCarburantForm, CarburantModifierForm, CarburantSearchForm, UserRegistrationForm
 from Conducteur.forms import ConducteurSearchForm
-from Model.forms import UserRegistrationForm
 from Model.models import Roles, Utilisateur, type_carburant
 from vehicule.forms import VehiculSearchForm
 
@@ -15,15 +14,18 @@ from vehicule.forms import VehiculSearchForm
 def inscription(request):
     context = {}
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+        form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
             client_role = Roles.objects.get(role=Roles.GESTIONNAIRE)
             user.roles = client_role
             user.save()
+            # Récupérez l'URL de l'image téléchargée
+            image_url = user.image.url if user.image else None
+            # Ajoutez l'URL de l'image au contexte
+            context['user_image_url'] = image_url
             return redirect('admins:Compte_gestionnaire')
         else:
-
             context['form'] = form
             return render(request, 'ajouter_gestionnaire.html', context=context)
 
