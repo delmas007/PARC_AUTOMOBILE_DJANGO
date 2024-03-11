@@ -220,9 +220,9 @@
                                             </a>
                                         {% endfor %}
                                     {% endif %}
-                                    {% if incidents %}
-                                        {% for incident in incidents %}
-                                            <a href="{% url 'incident:liste_incidents_externe' %}" class="iq-sub-card">
+                                    {% if inciden %}
+                                        {% for incident in inciden %}
+                                            <a href="{% url 'incident:incident_externe_detail' incident.pk  %}" class="iq-sub-card">
                                                 <div class="media align-items-center">
                                                     {% if incident.conducteur.image %}
                                                         <div class="">

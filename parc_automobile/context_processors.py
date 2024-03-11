@@ -90,7 +90,7 @@ def accueil_data(request):
     totals = demande_compte + incidents_compte + assurance_compte + vidanges_compte + technique_compte
     print(totals)
 
-    return {'demandes': demande, 'incidents': incidents, 'totals': totals, 'nombre_deplacement': nombre_deplacement,
+    return {'demandes': demande, 'inciden': incidents, 'totals': totals, 'nombre_deplacement': nombre_deplacement,
             'nombre_deplacement_en_cours': nombre_deplacement_en_cours, 'nombre_prolongement': nombre_prolongement,
             'vehicules_et_jours_restants': vehicules_et_jours_restants,
             'vehicules_et_jours_restants_technique': vehicules_et_jours_restants_technique,
