@@ -91,7 +91,7 @@
                     {#        Notifications            #}
                     <li class="nav-item">
                         <a href="#" class="search-toggle iq-waves-effect" id="truc">
-                            {% if demandes or incidents %}
+                            {% if demandes or incident %}
                                 <span class="bg-danger dots"></span>
                                 <div id="lottie-beil"></div>
                             {% else %}
@@ -101,9 +101,9 @@
                         </a>
                         <div class="iq-sub-dropdown">
                             <div class="iq-card shadow-none m-0">
-                                <div class="iq-card-body p-0 ">
+                                <div class="iq-card-body p-0 " style="max-height: 500px; overflow-y: auto;">
                                     <div class="bg-primary p-3">
-                                        <h5 class="mb-0 text-white">All Notifications<small class="badge  badge-light float-right pt-1">{{ total }}</small></h5>
+                                        <h5 class="mb-0 text-white">Notifications<small class="badge  badge-light float-right pt-1">{{ total }}</small></h5>
                                     </div>
 
                                     {% if demandes %}
@@ -168,10 +168,7 @@
                             {% if user.image  %}
                             <img src="{{ user.image.url}}" class="img-fluid rounded mr-3" alt="user">
                               {% else  %}
-                                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                     <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                                 </svg>
+                                <i class="bi bi-person-circle" style="font-size: 50px; color: #ffffff"></i>
                              {% endif  %}
                             <div class="caption">
                                 <h6 class="mb-0 line-height text-white">{{ user.username}}</h6>
