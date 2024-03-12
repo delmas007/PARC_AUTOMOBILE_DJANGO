@@ -19,13 +19,16 @@
          <div id="content-page" class="content-page">
             <div class="container-fluid">
                <div class="row d-flex justify-content-center">
-                  <div class="col-sm-12 col-lg-6">
+                  <div class="col-sm-12 col-lg-7">
                      <div class="iq-card">
-                        <div class="iq-card-header d-flex justify-content-between">
-                           <div class="iq-header-title">
-                              <h3 class="card-title"> Enregistrer un incident <i class="ri-alert-line" style="color: red"></i></h3>
-                           </div>
+                         <div class="card-header">
+                            <div class="iq-card-header d-flex justify-content-between">
+                                <div class="iq-header-title">
+                                    <h2 class="card-title"> Enregistrer un incident <i class="ri-alert-line"></i></h2>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="iq-card-body">
                            <form class="form-horizontal" method="post" action="{% url 'incident:enregistrer_incident'%}" enctype="multipart/form-data">
                                {% csrf_token %}
@@ -35,9 +38,9 @@
                                      {{ form.vehicule }}
                                    </div>
                                </div>
-                                <div class="form-group row" style="margin-top: 33px">
-                                        <label for="images" class="control-label col-sm-5 col-md-6 align-self-center mb-0" style="font-weight: bold">Sélectionner les images de l'incident du véhicule :</label>
-                                       <div class="form-control h-auto col-sm-7 col-md-6" style="border-radius: 10px;">
+                                <div class="form-group row" style="margin-top: 33px; margin-right: 0">
+                                        <label for="images" class="control-label col-sm-6 col-md-5 align-self-center mb-0" style="font-weight: bold">Sélectionner les images de l'incident :</label>
+                                       <div class="form-control h-auto col-sm-6 col-md-6" style="border-radius: 10px; margin-left: 50px">
                                            <input placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}" multiple required>
                                        </div>
                                         {% if form.image.errors %}

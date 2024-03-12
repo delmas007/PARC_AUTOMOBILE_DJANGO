@@ -37,9 +37,12 @@ def ajouter_conducteur(request):
 @login_required(login_url='Connexion')
 def tous_les_conducteurs(request):
     conducteurs = Conducteur.objects.all().order_by('date_mise_a_jour')
-    utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
+    utilisateurs = (
+        Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())).order_by('-hour')
+        )
 
-    paginator = Paginator(utilisateurs, 3)
+    paginator = Paginator(utilisateurs, 4)
     try:
         page = request.GET.get("page")
         if not page:
@@ -90,7 +93,10 @@ def modifier_conducteur(request, conducteur_id):
 @login_required(login_url='Connexion')
 def conducteur_search(request):
     form = ConducteurSearchForm(request.GET)
-    utilisateurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
+    utilisateurs = (
+        Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())).order_by('-hour')
+        )
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -100,9 +106,18 @@ def conducteur_search(request):
                 Q(prenom__icontains=query) |
                 Q(conducteur__numero_permis_conduire__icontains=query)
             )
-            print(utilisateurs)
         else:
             utilisateurs = utilisateurs
+
+        paginator = Paginator(utilisateurs, 4)
+        page = request.GET.get('page')
+
+        try:
+            utilisateurs = paginator.page(page)
+        except PageNotAnInteger:
+            utilisateurs = paginator.page(1)
+        except EmptyPage:
+            utilisateurs = paginator.page(paginator.num_pages)
 
         context = {'utilisateurs': utilisateurs, 'form': form}
         # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé

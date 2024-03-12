@@ -71,25 +71,27 @@ def vehicul_search(request):
         ).order_by('-hour')
     )
 
-    paginator = Paginator(vehicules, 5)
-    try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
-        vehicules_list = paginator.page(page)
-    except (EmptyPage, PageNotAnInteger):
-
-        vehicules_list = paginator.page(paginator.num_pages())
-
     if form.is_valid():
         query = form.cleaned_data.get('q')
         if query:
-            vehicules_list = vehicules.filter(Q(marque__marque__icontains=query) |
+            vehicules = vehicules.filter(Q(marque__marque__icontains=query) |
                                               Q(numero_immatriculation__icontains=query))
+        else:
+            vehicules = vehicules
 
-        context = {'vehicules': vehicules_list, 'form': form}
+        paginator = Paginator(vehicules, 5)
+        try:
+            page = request.GET.get("page")
+            if not page:
+                page = 1
+            vehicules = paginator.page(page)
+        except (EmptyPage, PageNotAnInteger):
+
+            vehicules = paginator.page(paginator.num_pages())
+
+        context = {'vehicules': vehicules, 'form': form}
         # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
-        if not vehicules_list and form.is_valid():
+        if not vehicules and form.is_valid():
             context['no_results'] = True
 
     return render(request, 'afficher_vehicule.html', context)

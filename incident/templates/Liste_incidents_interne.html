@@ -25,7 +25,7 @@
                     <div class="iq-card">
                         <div class="iq-card-header d-flex justify-content-between">
                             <div class="iq-header-title">
-                                <h3 class="card-title">Tous les incidents interne <i class="ri-alert-line"></i></h3>
+                                <h2 class="card-title">Tous les incidents interne <i class="ri-alert-line"></i></h2>
                             </div>
                         </div>
                         <div class="iq-card-body">
@@ -44,40 +44,35 @@
                                                         </form>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-12 ms-0" style="margin-top: 0; color: red">
+                                                <div class="col-12 col-md-6 ms-0">
                                                     {% if no_results %}
-                                                        <p>Aucun résultat trouvé pour la recherche "{{ request.GET.q }}".</p>
+                                                        <p>Aucun résultat trouvé pour la recherche <span class="text-danger">"{{ request.GET.q }}"</span>.</p>
                                                     {% endif %}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {% if incidents %}
+
                                <div class="table-responsive">
                                    <table id="user-list-table" class=" table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info" >
                                        <thead >
-                                       <tr style="background-color: #8861d2; color:white">
-                                           <th style="color: white; ">Image</th>
-                                           <th style="color: white;">Véhicule</th>
-                                           <th style="color: white;">Matricule du véhicule</th>
-                                           <th style="color: white; ">Description</th>
-                                           <th style="color: white; ">Action</th>
+                                       <tr class="table-danger">
+                                           <th >Image</th>
+                                           <th >Véhicule</th>
+                                           <th >Matricule du véhicule</th>
+                                           <th >Description</th>
+                                           <th >Action</th>
                                        </tr>
 
                                        </thead>
 
                                            <tbody>
-
+                                           {% if incidents %}
                                            {% for item in incidents %}
                                            <tr>
-                                               <td> {% if item.latest_photo  %}
-{#                                                   <img src="{{ incident.conducteur.image.url}}" alt="profile-img" class=" conducteur-image">#}
-{#                                                   <img src="{{ images }}" alt="incident-image" class="img-thumbnail">#}
-{#                                                   {% for image in incident.images %}#}
-{#                                                        <img src="{{ image.images.url }}" alt="incident-image-{{ image.id }}" class="img-thumbnail">#}
-{#                                                    {% endfor %}#}
-{#                                                   <span>bobuyzefoizfopzoejfopzehugea</span>#}
+                                               <td>
+                                                   {% if item.latest_photo  %}
                                                    <img src="{{ item.latest_photo.images.url }}" alt="incident-image" class="avatar-130 img-fluid incident_image" style="width: 40%;height: 65px">
                                                    {% else  %}
                                                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -86,9 +81,9 @@
                                                    </svg>
                                                    {% endif  %}
                                                </td>
-                                               <td>{{ item.incident.vehicule.marque}} - {{item.incident.vehicule.type_commercial}}</td>
+                                               <td>{{ item.incident.vehicule.marque.marque|title}} - {{item.incident.vehicule.type_commercial.modele|title}}</td>
                                                 <td>{{ item.incident.vehicule.numero_immatriculation}}</td>
-                                               <td>{{ item.incident.description_incident|truncatewords:8}}</td>
+                                               <td>{{ item.incident.description_incident|truncatewords:8|title}}</td>
                                                <td>
                                                    <div class="flex align-items-center list-user-action">
                                                        <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'incident:modifier_incident_interne' item.incident.pk  %}"><i class="ri-pencil-line"></i></a>
@@ -98,13 +93,17 @@
                                                </td>
                                            </tr>
                                            {% endfor %}
-
+                                           {% else %}
+                                             <tr>
+                                                 <td colspan="10" class="text-center">Aucun Incident disponible</td>
+                                             </tr>
+                                            {% endif %}
                                            </tbody>
                                    </table>
                                </div>
                             </div>
-                            <!-- Affichage de la pagination -->
-                              <div class="row justify-content-between mt-3">
+                        <!-- Affichage de la pagination -->
+                          <div class="row justify-content-between mt-3">
                             <div id="user-list-page-info" class="col-md-6">
                                 <span>Affichage de {{ incidents.start_index }} à {{ incidents.end_index }} sur {{ incidents.paginator.count }} entrées</span>
                             </div>
@@ -142,15 +141,6 @@
                                 </nav>
                             </div>
                         </div>
-                                {% else %}
-                                    <table id="user_list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
-                                        <thead>
-                                        <tr>
-                                            <span style="color: rebeccapurple">Aucun Incident disponible</span>
-                                        </tr>
-                                        </thead>
-                                    </table>
-                                {% endif %}
                         </div>
                     </div>
                 </div>

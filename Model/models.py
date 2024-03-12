@@ -81,6 +81,7 @@ class Conducteur(models.Model):
 
 class Utilisateur(AbstractBaseUser):
     mon_uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
     username = models.CharField(
         unique=True,
         max_length=255,
