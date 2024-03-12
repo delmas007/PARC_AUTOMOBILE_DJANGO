@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 
 from Admin.forms import typeCarburantForm, CarburantModifierForm, CarburantSearchForm, UserRegistrationForm
 from Conducteur.forms import ConducteurSearchForm
-from Model.models import Roles, Utilisateur, type_carburant
+from Model.models import Roles, Utilisateur, type_carburant, periode_carburant
 from vehicule.forms import VehiculSearchForm
 
 
@@ -103,8 +103,15 @@ def gestionnaire_a_search_i(request):
 def Ajouter_Carburant(request):
     if request.method == 'POST':
         form = typeCarburantForm(request.POST)
+        print(request.POST.get("nom"))
+        carburant_id=request.POST.get("nom")
+        carburant_prix=request.POST.get("prix")
         if form.is_valid():
-            form.save()
+
+            carburant=type_carburant.objects.get(id=carburant_id)
+            carburant.prix=carburant_prix
+            carburant.save()
+            periode=periode_carburant.objects.create(carburant=carburant,date_debut=carburant.date_mise_a_jour)
             messages.success(request, "Carburant ajouté avec succès.")
             return redirect('admins:Ajouter_Carburant')
         else:
