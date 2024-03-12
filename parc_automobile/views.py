@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-
+import os
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Subquery, Q
 from django.shortcuts import render
@@ -50,7 +50,8 @@ def Accueil(request):
         'deplacements_recents': deplacements_recents,
         'vehicule_disponible': vehicules_page,
         'deplacements_planifies': deplacements_planifies,
-        'now': aujourd_hui
+        'now': aujourd_hui,
+        'api_key': os.getenv('API_KEY'),
     }
 
     return render(request, 'index.html', context)
