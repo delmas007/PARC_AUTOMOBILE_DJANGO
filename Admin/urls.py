@@ -2,11 +2,12 @@ from django.urls import path
 
 from Admin.views import inscription, employer_compte, active_emp, desactive_amp, gestionnaire_inactifs, \
     gestionnaire_a_search, gestionnaire_a_search_i, Ajouter_Carburant, liste_Carburant, modifier_carburant, \
-    Carburant_search
+    Carburant_search, dashboard_admins
 
 app_name = 'admins'
 
 urlpatterns = [
+    path('dashboard_admins/', dashboard_admins, name='dashboard_admins'),
     path('Ajout_gestionnaire/', inscription, name='Ajout_gestionnaire'),
     path('Ajouter_Carburant/', Ajouter_Carburant, name='Ajouter_Carburant'),
     path('Compte_gestionnaire/', employer_compte, name='Compte_gestionnaire'),

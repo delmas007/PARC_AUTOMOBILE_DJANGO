@@ -173,3 +173,7 @@ def modifier_carburant(request, pk):
         form = CarburantModifierForm(instance=carburant)
 
     return render(request, 'modifier_carburants.html', {'form': form, 'entretien': carburant, })
+
+
+def dashboard_admins(request):
+    return render(request, 'dashoard_admins.html')
