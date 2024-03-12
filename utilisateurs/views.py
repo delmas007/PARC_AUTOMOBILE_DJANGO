@@ -20,8 +20,9 @@ from django.contrib import messages
 import deplacement
 from Model.forms import UserRegistrationForm, ConnexionForm
 from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement, Entretien
+from deplacement.forms import DeplacementSearchForm
 from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse, DemandeProlongementForm, \
-    DeclareIncidentForm
+    DeclareIncidentForm, notificationSearchForm
 from utilisateurs.tokens import account_activation_token
 from django.utils.html import strip_tags
 
@@ -463,6 +464,7 @@ def ChangerMotDePasseConducteur(request):
 def ProfilUser(request):
     return render(request, 'Profil_user.html')
 
+
 # def ChangerMotDePassee(request):
 #     if request.method == 'POST':
 #         form = ChangerMotDePasse(request.user, request.POST)
@@ -498,3 +500,95 @@ def ProfilUser(request):
 #     else:
 #         form = ChangerMotDePasse(request.user)
 #     return render(request, 'changerMotDePasse.html', {'form': form})
+
+# def deplacement_s(request, prolongement_id):
+#     form = DeplacementSearchForm(request.GET)
+#     aujourdhui = date.today()
+#     deplacement = Deplacement.objects.filter(date_depart__gte=aujourdhui)
+#
+#     if form.is_valid():
+#         if prolongement_id:
+#             deplacement = deplacement.filter(Q(conducteur__demande_prolongement=prolongement_id))
+#
+#     paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
+#     page = request.GET.get("page", 1)
+#     try:
+#         deplacements = paginator.page(page)
+#     except EmptyPage:
+#         deplacements = paginator.page(paginator.num_pages)
+#
+#     context = {'deplacements': deplacements, 'form': form}
+#
+#     # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
+#     if deplacement.count() == 0 and form.is_valid():
+#         context['no_results'] = True
+#
+#     return render(request, 'afficher_deplacement_en_cours.html', context)
+
+
+def deplacement_s(request, prolongement_nom):
+    form = DeplacementSearchForm(request.GET)
+    aujourdhui = date.today()
+    deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+    deplacement = Deplacement.objects.filter(date_depart__lte=aujourdhui).exclude(
+        Q(id__in=deplacements_etat_arrive_ids))
+    prolongement = Demande_prolongement.objects.all()
+
+    deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourdhui)).exclude(
+        Q(id__in=deplacements_etat_arrive_ids))
+    deplacement_ids = deplacements.values_list('id', flat=True)
+    prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
+    prolongement_arrive = Demande_prolongement.objects.filter(refuser=True)
+    prolongement_accepte = Demande_prolongement.objects.filter(accepter=True)
+
+    # recuperer liste des id de demandes de prolongement
+    prolongement_encours_ids = prolongement_encours.values_list('deplacement_id', flat=True)
+    prolongement_arrive_ids = prolongement_arrive.values_list('deplacement_id', flat=True)
+    prolongement_accepte_ids = prolongement_accepte.values_list('deplacement_id', flat=True)
+
+    if form.is_valid():
+        query = f'{prolongement_nom}'
+        print(f'{prolongement_nom}')
+        if query:
+            query_parts = query.split()
+            if len(query_parts) > 1:
+                nom = query_parts[0]  # First part is considered the last name (nom)
+                prenoms = query_parts[1:]  # All parts except the first one are considered first names (prenoms)
+                # Recherchez le nom
+                deplacement = deplacement.filter(
+                    Q(vehicule__marque__marque__icontains=query) |
+                    Q(vehicule__numero_immatriculation__icontains=query) |
+                    Q(vehicule__type_commercial__modele__icontains=query) |
+                    Q(conducteur__utilisateur__nom__icontains=nom)
+                )
+                # Filter by each first name (prenoms)
+                for prenom in prenoms:
+                    deplacement = deplacement.filter(conducteur__utilisateur__prenom__icontains=prenom)
+            else:
+                # Si la requête ne contient pas exactement deux parties, recherchez normalement
+                deplacement = deplacement.filter(
+                    Q(vehicule__marque__marque__icontains=query) |
+                    Q(conducteur_id=query) |
+                    Q(vehicule__numero_immatriculation__icontains=query) |
+                    Q(vehicule__type_commercial__modele__icontains=query) |
+                    Q(conducteur__utilisateur__nom__icontains=query) |
+                    Q(conducteur__utilisateur__prenom__icontains=query)
+                )
+
+    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
+    page = request.GET.get("page", 1)
+    try:
+        deplacements = paginator.page(page)
+    except EmptyPage:
+        deplacements = paginator.page(paginator.num_pages)
+
+    context = {'deplacements': deplacements, 'form': form,
+               'deplacement': deplacement, 'prolongement_encours': prolongement_encours_ids,
+               'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids,
+               'prolongements': prolongement}
+
+    # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
+    if deplacement.count() == 0 and form.is_valid():
+        context['no_results'] = True
+
+    return render(request, 'afficher_deplacement_en_cours.html', context)

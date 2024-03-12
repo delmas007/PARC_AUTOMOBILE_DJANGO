@@ -18,6 +18,11 @@ class PasswordResetForme(PasswordResetForm):
         model = Utilisateur
         fields = 'email'
 
+class notificationSearchForm(forms.Form):
+    q = forms.CharField(
+        label='',
+        required=False,
+    )
 
 class ChangerMotDePasse(SetPasswordForm):
     class Meta:

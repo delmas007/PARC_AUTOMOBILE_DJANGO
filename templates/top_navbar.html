@@ -81,17 +81,11 @@
             </div>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto navbar-list">
-                    {#        Langues            #}
-                    <li class="nav-item">
-                        <a class="search-toggle iq-waves-effect language-title" href="#"><img src="{% static "images/small/flag-07.png" %}" width="16px" height="16px" alt="img-flaf" class="img-fluid mr-1" style="height: 16px; width: 16px;"/>French<i class="ri-arrow-down-s-line"></i></a>
-                        <div class="iq-sub-dropdown">
-                            <a class="iq-sub-card" href="#"><img src="{% static "images/small/flag-01.png" %}" alt="img-flaf" class="img-fluid mr-2"/> English</a>
-                        </div>
-                    </li>
+
                     {#        Notifications            #}
                     <li class="nav-item">
                         <a href="#" class="search-toggle iq-waves-effect" id="truc">
-                            {% if demandes or incidents %}
+                            {% if demandes or incidents or vehicules_et_jours_restants_technique or vehicules_et_jours_restants or vehicules_proches_vidange %}
                                 <span class="bg-danger dots"></span>
                                 <div id="lottie-beil"></div>
                             {% else %}
@@ -189,7 +183,7 @@
                                                     {% endif %}
                                                     <div class="media-body ml-3">
                                                         <h6 class="mb-0">{{ vehicule.marque }} - {{ vehicule.numero_immatriculation }}</h6>
-                                                            <p class="mb-0"> Est a {{ vehicule.kilometrage }} Km doit avoir une vidange dans {{ vehicule.videnge }} Km </p>
+                                                            <p class="mb-0"> Votre véhicule a parcouru {{ vehicule.kilometrage }} km et devra subir une vidange dans les prochains {{ vehicule.videnge }} km </p>
                                                     </div>
                                                 </div>
                                             </a>
@@ -199,7 +193,7 @@
 
                                     {% if demandes %}
                                         {% for demande in demandes %}
-                                            <a href="{% url 'deplacement:liste_deplacement_en_cours' %}" class="iq-sub-card">
+                                            <a href="{% url 'utilisateur:prolongementt' demande.conducteur %}" class="iq-sub-card">
                                                 <div class="media align-items-center">
                                                     {% if demande.conducteur.image %}
                                                         <div class="">
@@ -214,7 +208,7 @@
                                                     {% endif %}
                                                     <div class="media-body ml-3">
                                                         <h6 class="mb-0 ">{{ demande.conducteur }}</h6>
-                                                        <p class="mb-0"> demande de prolongement  </p>
+                                                        <p class="mb-0"> demande de prolongement  {{ demande.conducteur.nom }}</p>
                                                     </div>
                                                 </div>
                                             </a>
