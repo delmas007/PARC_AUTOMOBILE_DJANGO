@@ -88,7 +88,6 @@ def accueil_data(request):
             pass
 
     totals = demande_compte + incidents_compte + assurance_compte + vidanges_compte + technique_compte
-    print(totals)
 
     aujourd_hui = date.today()
     une_semaine_avant = aujourd_hui - timedelta(days=7)
