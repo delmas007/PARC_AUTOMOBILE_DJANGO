@@ -20,14 +20,14 @@
             <div class="navbar-left">
                 <ul id="topbar-data-icon" class="d-flex p-0 topbar-menu-icon">
                     <li class="nav-item">
-                        <a href="{% url 'Accueil' %}" class="nav-link font-weight-bold search-box-toggle"><i class="ri-home-4-line"></i></a>
+                        <a href="{% url 'Accueil' %}" class="nav-link font-weight-bold search-box-toggle" style="color: #f799a3"><i class="ri-home-4-line"></i></a>
                     </li>
-                    <li><a href="{% url 'vehicule:liste_vehicules' %}" class="nav-link"><i class="fa fa-car"></i></a></li>
-                    <li><a href="{% url 'conducteur:tous_les_conducteurs' %}" class="nav-link"><i class="ri-user-line"></i></a></li>
-                    <li><a href="{% url 'deplacement:liste_deplacement' %}" class="nav-link router-link-exact-active router-link-active"><i class="fa fa-paper-plane"></i></a></li>
-                    <li><a href="{% url 'incident:liste_incidents_interne' %}" class="nav-link router-link-exact-active router-link-active"><i class="ri-alert-line" style="font-size: 18px"></i></a></li>
-                    <li><a href="" class="nav-link router-link-exact-active router-link-active"><i class="bi bi-tools" style="font-size: 18px"></i></a></li>
-                    <li><a href="" class="nav-link router-link-exact-active router-link-active"><i class="bi bi-fuel-pump" style="font-size: 18px"></i></a></li>
+                    <li><a href="{% url 'vehicule:liste_vehicules' %}" class="nav-link" style="color: #f799a3"><i class="fa fa-car"></i></a></li>
+                    <li><a href="{% url 'conducteur:tous_les_conducteurs' %}" class="nav-link" style="color: #f799a3"><i class="ri-user-line"></i></a></li>
+                    <li><a href="{% url 'deplacement:liste_deplacement' %}" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="fa fa-paper-plane"></i></a></li>
+                    <li><a href="{% url 'incident:liste_incidents_interne' %}" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="ri-alert-line" style="font-size: 18px"></i></a></li>
+                    <li><a href="" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="bi bi-tools" style="font-size: 18px"></i></a></li>
+                    <li><a href="" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="bi bi-fuel-pump" style="font-size: 18px"></i></a></li>
                 </ul>
                 <div class="iq-search-bar d-none d-md-block">
                     <form action="#" class="searchbox">
@@ -251,10 +251,10 @@
                             {% if user.image  %}
                             <img src="{{ user.image.url}}" class="img-fluid rounded mr-3" alt="user">
                               {% else  %}
-                                <i class="bi bi-person-circle" style="font-size: 50px; color: white"></i>
+                                <i class="bi bi-person-circle mr-3" style="font-size: 50px; color: white"></i>
                              {% endif  %}
                             <div class="caption">
-                                <h6 class="mb-0 line-height text-white">{{ user.username}}</h6>
+                                <h6 class="mb-0 line-height text-white">{{ user.username|title}}</h6>
                                 <span class="font-size-12 text-success"><i class="fa fa-circle"></i> Connecté</span>
                             </div>
 
@@ -263,7 +263,7 @@
                             <div class="iq-card shadow-none m-0">
                                 <div class="iq-card-body p-0 ">
                                     <div class="bg-primary p-3">
-                                        <h5 class="mb-0 text-white line-height">Salut {{ user.nom}} {{ user.prenom}}</h5>
+                                        <h5 class="mb-0 text-white line-height">Salut {{ user.nom|title}} {{ user.prenom|title}}</h5>
                                         <span class="text-success font-size-12"><i class="fa fa-circle"></i> Connecté</span>
                                     </div>
                                     <a href="{% url 'utilisateur:Profil_User' %}" class="iq-sub-card iq-bg-primary-hover">

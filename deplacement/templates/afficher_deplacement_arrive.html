@@ -23,7 +23,7 @@
                     <div class="iq-card">
                         <div class="iq-card-header d-flex justify-content-between">
                             <div class="iq-header-title">
-                                <h4 class="card-title">Liste des tous les etatarrives arrivees</h4>
+                                <h2 class="card-title">Liste des tous les déplacements terminés <i class="bi bi-send-check-fill"></i></h2>
                             </div>
                         </div>
                         <div class="iq-card-body">
@@ -41,18 +41,18 @@
                                     </div>
                                     <div class="col-12 col-md-6 ms-0" style="margin-top: 0">
                                         {% if no_results %}
-                                        <p>Aucun résultat trouvé pour la recherche "{{ request.GET.q }}".</p>
+                                        <p>Aucun résultat trouvé pour la recherche <span class="text-danger">"{{ request.GET.q }}"</span>.</p>
                                         {% endif %}
                                     </div>
 
                                 </div>
                                 <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
                                     <thead>
-                                    <tr style="background-color: #6546d2; color: #ffffff">
+                                    <tr class="table-danger">
                                         <th>Conducteur</th>
-                                        <th>Vehicule</th>
+                                        <th>Véhicule</th>
                                         <th>Date d'arrivée</th>
-                                        <th>Kilometrage</th>
+                                        <th>Kilométrage</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -73,7 +73,7 @@
                                     {% endfor %}
                                     {% else %}
                                     <tr>
-                                        <td colspan="10">Aucune arrivée sur la semaine</td>
+                                        <td colspan="10" class="text-center">Aucune arrivée sur la semaine</td>
                                     </tr>
                                     {% endif %}
                                     </tbody>

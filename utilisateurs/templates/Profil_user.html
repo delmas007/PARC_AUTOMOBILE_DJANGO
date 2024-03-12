@@ -37,8 +37,8 @@
                                                  {% endif  %}
                                              </div>
                                              <div class="profile-detail d-flex align-items-center">
-                                                <h3>{{ user.nom}} {{ user.prenom}}</h3>
-                                                 <p class="m-0 pl-2"> <strong style="color: red"> - {{ user.roles}} </strong> </p>
+                                                <h3>{{ user.nom|title}} {{ user.prenom|title}} - <span style="color: #f799a3">{{ user.roles|title}}</span></h3>
+                                                 <p class=""> <strong style="color: red">  </strong> </p>
                                              </div>
                                           </div>
                                        </div>
@@ -62,18 +62,18 @@
 {#                                          <p>Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer.</p>#}
 {#                                      </div>#}
                                       <div class="mt-2">
-                                      <h6> <strong>  Nom d'utilisateur: </strong> </h6>
-                                       <p>{{ user.username }}</p>
+                                      <h6> <strong>  Nom d'utilisateur : </strong> </h6>
+                                       <p>{{ user.username|title }}</p>
                                       </div>
 
                                       <div class="mt-2">
-                                     <strong> <strong>  Adresse mail: </strong> </strong>
+                                     <strong> <strong>  Adresse mail : </strong> </strong>
                                        <p><a href=""> {{ user.email }}</a></p>
                                       </div>
 
                                       <div class="mt-2">
-                                       <h6> <strong>  Contact: </strong> </h6>
-                                       <p><a href="#">(+225) 4544 565 456</a></p>
+                                       <h6> <strong>  Contact : </strong> </h6>
+                                       <p><a href="">(+225) 4544 565 456 </a></p> {# {{ user.contact}}  #}
                                       </div>
                                     </div>
                                  </div>

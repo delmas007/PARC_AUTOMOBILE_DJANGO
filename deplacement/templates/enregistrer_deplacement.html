@@ -19,59 +19,64 @@
         <div id="content-page" class="content-page">
             <div class="container-fluid">
                 <div class="row d-flex justify-content-center">
-                    <div class="col-sm-12 col-lg-6  ">
+                    <div class="col-sm-12 col-lg-8">
                         <div class="iq-card">
-                            <div class="iq-card-header d-flex justify-content-between">
-                                <div class="iq-header-title">
-                                    <h4 class="card-title">Enregistrement d'un deplacement</h4>
+                            <div class="card-header">
+                                <div class="iq-card-header d-flex justify-content-between">
+                                    <div class="iq-header-title">
+                                        <h2 class="card-title">Enregistrement d'un déplacement <i class="fa fa-paper-plane"></i></h2>
+                                    </div>
                                 </div>
                             </div>
                             <div class="iq-card-body">
                                 <form class="form-horizontal" method="post" action="{% url 'deplacement:enregistrer_deplacement' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Vehicule:</label>
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Véhicule :</label>
                                         <div class="col-sm-10">
                                             {{ form.vehicule}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Conducteur:</label>
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Conducteur :</label>
                                         <div class="col-sm-10">
                                             {{ form.conducteur }}
 
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Date de depart:</label>
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Date de départ :</label>
                                         <div class="col-sm-10">
                                             <input type="date" class="form-control" id="exampleInputdate"  name="date_depart" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Durée: <br> ( jours )</label>
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Durée ( jours ) :</label>
                                         <div class="col-sm-10">
                                             <input required type="number" class="form-control" id="exampleInputdate"  min="1" name="duree_deplacement">
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Photo de la jauge:</label>
-                                        <div class="form-control col-sm-10" style="border-radius: 10px">
-                                            <input  required  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="photo_jauge_depart" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
-                                        </div>
-                                        {% if form.photo_jauge_depart.errors %}
-                                            <p class="help-block">Veillez joindre une image</p>
-                                        {% endif %}
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Kilométrage: <br> (en Km)   </label>
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Kilométrage ( Km ) :</label>
                                         <div class="col-sm-10">
                                             <input type="number"   class="form-control" id="InputKilo"  name="kilometrage_depart" required oninvalid="this.setCustomValidity('Veuillez entrer un kilométrage supérieur ou égale à la valeur actuelle:  '  + this.getAttribute('min') + '.')">
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Sélectionnez les images:</label>
-                                        <div class="form-control col-sm-10" style="border-radius: 10px;">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Photo de la jauge :</label>
+                                        <div class="form-control col-sm-9" style="border-radius: 10px; margin-left: 15px; padding-bottom: 35px">
+                                            <input  required  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="photo_jauge_depart" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
+                                        </div>
+                                        {% if form.photo_jauge_depart.errors %}
+                                            <p class="help-block">Veuillez joindre une image</p>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Sélectionnez les images :</label>
+                                        <div class="form-control col-sm-9" style="border-radius: 10px;margin-left: 15px; padding-bottom: 35px">
                                             <input multiple required  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}">
                                         </div>
                                     </div>
@@ -110,7 +115,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;">Deplacement ajouter avec succes!</h5>
+                    <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;">Déplacement ajouter avec succès !</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -120,7 +125,7 @@
                 </div>
                 <div class="modal-footer text-center" style="display: flex; justify-content: center; align-items: center;">
                     <button type="button" class="btn btn-secondary align-items-center" data-dismiss="modal">Fermer</button>
-                    <a type="button" class="zoom-on-hover btn btn-success align-items-center text-white" href="{% url 'deplacement:liste_deplacement' %}">Voir les deplacements </a>
+                    <a type="button" class="zoom-on-hover btn btn-success align-items-center text-white" href="{% url 'deplacement:liste_deplacement' %}">Voir tous les déplacements </a>
                 </div>
             </div>
         </div>
@@ -164,7 +169,7 @@
                     </h1>
                 </div>
                 <div class="modal-body text-danger" style="font-size: 30px">
-                    Vous ne pouvez selectionner que 6 Images
+                    Vous ne pouvez sélectionner que 6 Images !
                 </div>
             </div>
         </div>
