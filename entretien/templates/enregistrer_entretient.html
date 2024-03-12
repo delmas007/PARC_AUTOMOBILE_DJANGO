@@ -130,7 +130,10 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('#selectVehicule2').select2();
+            $('#selectVehicule2').select2({
+                  width: '100%', // Définit la largeur à 100% pour s'adapter à la largeur parente
+                  dropdownAutoWidth: true, // Ajuste automatiquement la largeur du menu déroulant
+              })
         });
     </script>
     <script>

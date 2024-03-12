@@ -185,12 +185,18 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#selectVehicule').select2();
+            $('#selectVehicule').select2({
+                  width: '100%', // Définit la largeur à 100% pour s'adapter à la largeur parente
+                  dropdownAutoWidth: true, // Ajuste automatiquement la largeur du menu déroulant
+              })
         });
     </script>
     <script>
         $(document).ready(function() {
-            $('#selectConducteur').select2();
+            $('#selectConducteur').select2({
+                  width: '100%', // Définit la largeur à 100% pour s'adapter à la largeur parente
+                  dropdownAutoWidth: true, // Ajuste automatiquement la largeur du menu déroulant
+              })
         });
     </script>
     <script>
