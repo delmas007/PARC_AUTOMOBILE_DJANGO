@@ -120,16 +120,18 @@ def incidents_externe_search(request):
         query = form.cleaned_data.get('q')
         if query:
             query_parts = query.split()
-            if len(query_parts) == 2:
-                nom, prenom = query_parts
+            if len(query_parts) > 1:
+                nom = query_parts[0]  # First part is considered the last name (nom)
+                prenoms = query_parts[1:]  # All parts except the first one are considered first names (prenoms)
                 incidents_list = incidents_list.filter(
                     Q(vehicule__marque__marque__icontains=query) |
                     Q(vehicule__numero_immatriculation__icontains=query) |
                     Q(vehicule__type_commercial__modele__icontains=query) |
                     Q(description_incident__icontains=query) |
-                    (Q(conducteur__utilisateur__nom__icontains=nom) & Q(
-                        conducteur__utilisateur__prenom__icontains=prenom))
+                    Q(conducteur__utilisateur__nom__icontains=nom)
                 )
+                for prenom in prenoms:
+                    incidents_list=incidents_list.filter(conducteur__utilisateur__prenom__icontains=prenom)
             else:
 
                 incidents_list = incidents_list.filter(Q(vehicule__numero_immatriculation__icontains=query) |

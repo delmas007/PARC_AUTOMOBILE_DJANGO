@@ -475,7 +475,7 @@ def arrive_search(request):
                     Q(deplacement__vehicule__marque__marque__icontains=query) |
                     Q(deplacement__vehicule__numero_immatriculation__icontains=query) |
                     Q(deplacement__vehicule__type_commercial__modele__icontains=query) |
-                    (Q(deplacement__conducteur__utilisateur__nom__icontains=nom))
+                    Q(deplacement__conducteur__utilisateur__nom__icontains=nom)
                 )
                 for prenom in prenoms:
                     arrivee=arrivee.filter(deplacement__conducteur__utilisateur__prenom__icontains=prenom)
