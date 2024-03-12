@@ -3,6 +3,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, ExpressionWrapper, fields, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
+from oscrypto._ffi import null
 
 from Admin.forms import typeCarburantForm, CarburantModifierForm, CarburantSearchForm, UserRegistrationForm
 from Conducteur.forms import ConducteurSearchForm
@@ -111,7 +112,17 @@ def Ajouter_Carburant(request):
             carburant=type_carburant.objects.get(id=carburant_id)
             carburant.prix=carburant_prix
             carburant.save()
-            periode=periode_carburant.objects.create(carburant=carburant,date_debut=carburant.date_mise_a_jour)
+            dernier_periode = periode_carburant.objects.filter(carburant=carburant).order_by('-date_debut').first()
+            if dernier_periode:
+                date_fin = dernier_periode.date_debut
+                periode = periode_carburant.objects.create(carburant=carburant,date_debut=carburant.date_mise_a_jour,prix=carburant.prix)
+                dernier_periode.date_fin=date_fin
+                dernier_periode.save()
+                periode.save()
+            else:
+                periode = periode_carburant.objects.create(carburant=carburant, date_debut=carburant.date_mise_a_jour,
+                                                           prix=carburant.prix)
+                periode.save()
             messages.success(request, "Carburant ajouté avec succès.")
             return redirect('admins:Ajouter_Carburant')
         else:
