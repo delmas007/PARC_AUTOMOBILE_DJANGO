@@ -236,7 +236,6 @@ def enregistrer_etatArriver(request):
                     photo = Photo.objects.create(etat_arrive=etat_arrive, images=uploaded_file)
             else:
                 form.add_error('images', 'Vous ne pouvez sélectionner que 6 images.')
-            messages.success(request, 'Déplacement enregistré avec succès !')
             return redirect('deplacement:liste_deplacement_en_cours')
         else:
             print(form.errors)
