@@ -352,16 +352,19 @@ def deplacement_search(request):
         query = form.cleaned_data.get('q')
         if query:
             query_parts = query.split()
-            if len(query_parts) == 2:
-                nom, prenom = query_parts
-                # Recherchez le nom et le prénom séparément
+            if len(query_parts) > 1:
+                nom = query_parts[0]  # First part is considered the last name (nom)
+                prenoms = query_parts[1:]  # All parts except the first one are considered first names (prenoms)
+                # Recherchez le nom
                 deplacement = deplacement.filter(
                     Q(vehicule__marque__marque__icontains=query) |
                     Q(vehicule__numero_immatriculation__icontains=query) |
                     Q(vehicule__type_commercial__modele__icontains=query) |
-                    (Q(conducteur__utilisateur__nom__icontains=nom) & Q(
-                        conducteur__utilisateur__prenom__icontains=prenom))
+                    Q(conducteur__utilisateur__nom__icontains=nom)
                 )
+                # Filter by each first name (prenoms)
+                for prenom in prenoms:
+                    deplacement = deplacement.filter(conducteur__utilisateur__prenom__icontains=prenom)
             else:
                 # Si la requête ne contient pas exactement deux parties, recherchez normalement
                 deplacement = deplacement.filter(
@@ -412,16 +415,19 @@ def deplacement_encours_search(request):
         query = form.cleaned_data.get('q')
         if query:
             query_parts = query.split()
-            if len(query_parts) == 2:
-                nom, prenom = query_parts
-                # Recherchez le nom et le prénom séparément
+            if len(query_parts) > 1:
+                nom = query_parts[0]  # First part is considered the last name (nom)
+                prenoms = query_parts[1:]  # All parts except the first one are considered first names (prenoms)
+                # Recherchez le nom
                 deplacement = deplacement.filter(
                     Q(vehicule__marque__marque__icontains=query) |
                     Q(vehicule__numero_immatriculation__icontains=query) |
                     Q(vehicule__type_commercial__modele__icontains=query) |
-                    (Q(conducteur__utilisateur__nom__icontains=nom) & Q(
-                        conducteur__utilisateur__prenom__icontains=prenom))
+                    Q(conducteur__utilisateur__nom__icontains=nom)
                 )
+                # Filter by each first name (prenoms)
+                for prenom in prenoms:
+                    deplacement = deplacement.filter(conducteur__utilisateur__prenom__icontains=prenom)
             else:
                 # Si la requête ne contient pas exactement deux parties, recherchez normalement
                 deplacement = deplacement.filter(
@@ -461,16 +467,19 @@ def arrive_search(request):
         query = form.cleaned_data.get('q')
         if query:
             query_parts = query.split()
-            if len(query_parts) == 2:
-                nom, prenom = query_parts
-                # Recherchez le nom et le prénom séparément
+            if len(query_parts) > 1:
+                nom = query_parts[0]  # First part is considered the last name (nom)
+                prenoms = query_parts[1:]  # All parts except the first one are considered first names (prenoms)
+
                 arrivee = arrivee.filter(
                     Q(deplacement__vehicule__marque__marque__icontains=query) |
                     Q(deplacement__vehicule__numero_immatriculation__icontains=query) |
                     Q(deplacement__vehicule__type_commercial__modele__icontains=query) |
-                    (Q(deplacement__conducteur__utilisateur__nom__icontains=nom) & Q(
-                        deplacement__conducteur__utilisateur__prenom__icontains=prenom))
+                    (Q(deplacement__conducteur__utilisateur__nom__icontains=nom))
                 )
+                for prenom in prenoms:
+                    arrivee=arrivee.filter(deplacement__conducteur__utilisateur__prenom__icontains=prenom)
+
             else:
                 # Si la requête ne contient pas exactement deux parties, recherchez normalement
                 arrivee = arrivee.filter(
