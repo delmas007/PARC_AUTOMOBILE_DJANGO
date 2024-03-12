@@ -12,8 +12,10 @@
 
         }
         .modal-photo {
-            max-width: 100%; /* Ajustez la largeur maximale selon vos besoins */
+            max-width: 40%; /* Ajustez la largeur maximale selon vos besoins */
+            min-width: 40%; /* Ajustez la largeur minimale selon vos besoins */
             max-height: 300px; /* Ajustez la hauteur maximale selon vos besoins */
+            min-height: 300px; /* Ajustez la hauteur minimale selon vos besoins */
             margin-left: 50px /* Ajustez l'espace entre entre les photos selon vos besoins */;
             margin-bottom: 50px /* Ajustez l'espace entre entre les photos selon vos besoins */;
         }
@@ -122,8 +124,8 @@
                                                                     {% if prolongement.deplacement_id == deplacement.id %}
                                                                         <p><strong>Motif :</strong> {{ prolongement.motif }}</p>
                                                                         <p><strong>Durée :</strong> {{ prolongement.duree }} </p>
-                                                                        <p><strong>Photo de la jauge :</strong> <img style="max-width: 200px; height: auto" src="{{ prolongement.photo_jauge_demande.url }}" alt="photo_jauge_demande"> </p>
-                                                                        <div id="photo-container"></div>
+                                                                        <p><strong>Photo de la jauge :</strong> <img style="max-width: 200px; height: auto" src="{{ prolongement.photo_jauge_demande.url }}" alt="photo_jauge_demande" class="vehicule-image" onclick="showImagePopup2('{{  prolongement.photo_jauge_demande.url }}')"> </p>
+                                                                        <div id="photo-container" ></div>
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                         <form action="{% url 'deplacement:accept_prolongement' prolongement.id %}" method="post">
@@ -373,7 +375,14 @@
                                     var img = document.createElement('img');
                                     img.src = photoUrl;
                                     img.classList.add('modal-photo');
+                                     img.addEventListener('click', function() {
+                                showImagePopup(photoUrl);
+                            });
                                     photoContainer.appendChild(img);
+
+
+
+
                                 });
                             } else {
                                 console.error("Erreur lors de la récupération des photos associées à la demande de prolongement : " + xhr.status);
@@ -386,7 +395,66 @@
             });
         });
 
+ function showImagePopup2(photo_jauge_demandeUrl) {
+            var popupImage = document.createElement('img');
+            popupImage.src = photo_jauge_demandeUrl;
+            popupImage.style.maxWidth = '80%';
+            popupImage.style.minWidth = '60%';
+            var popupContainer = document.createElement('div');
+            popupContainer.appendChild(popupImage);
+            popupContainer.style.position = 'fixed';
+            popupContainer.style.top = '50%';
+            popupContainer.style.width = '90%';
+            popupContainer.style.height = 'auto';
+            popupContainer.style.left = '50%';
+            popupContainer.style.transform = 'translate(-50%, -50%)';
+            popupContainer.style.background="transparent";
+            popupContainer.style.padding = '70px';
+            popupContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+            popupContainer.style.zIndex = '9999';
+            document.body.appendChild(popupContainer);
 
+            popupContainer.addEventListener('click', function (event) {
+                if (event.target === popupContainer) {
+                    document.body.removeChild(popupContainer);
+                }
+            });
+        }
+        function showImagePopup(imageUrl) {
+    var popupContainer = document.createElement('div');
+    popupContainer.style.position = 'fixed';
+    popupContainer.style.top = '50%';
+    popupContainer.style.left = '50%';
+    popupContainer.style.transform = 'translate(-50%, -50%)';
+    popupContainer.style.background = 'rgba(255, 255, 255, 0.9)';
+    popupContainer.style.border = '1px solid #ccc';
+    popupContainer.style.padding = '20px';
+    popupContainer.style.zIndex = '9999';
+
+    var img = document.createElement('img');
+    img.src = imageUrl;
+    img.style.maxWidth = '100%';
+    img.style.height = 'auto';
+
+    // Append image to popup container
+    popupContainer.appendChild(img);
+
+    // Close popup when clicked outside the image
+    popupContainer.addEventListener('click', function(event) {
+        if (event.target === popupContainer) {
+            document.body.removeChild(popupContainer);
+        }
+    });
+
+    // Append popup container to body
+    document.body.appendChild(popupContainer);
+     popupContainer.addEventListener('click', function(event) {
+        if (event.target === popupContainer || event.target === img) {
+            document.body.removeChild(popupContainer);
+        }
+    });
+
+}
 
     </script>
 
