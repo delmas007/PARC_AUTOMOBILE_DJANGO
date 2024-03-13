@@ -2,6 +2,7 @@ from datetime import date, timedelta
 import os
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Subquery, Q
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from Model.models import Demande_prolongement, EtatArrive, Conducteur, Vehicule, Deplacement, Utilisateur
@@ -26,6 +27,7 @@ def Accueil(request):
     deplacements_recents = Deplacement.objects.order_by('-date_mise_a_jour')[:5]
 
     deplacements_planifies = Deplacement.objects.filter(date_depart__isnull=False)
+    print(deplacements_planifies)
 
     # Récupérer les véhicules disponibles
     vehicule_disponible = Vehicule.objects.filter(disponibilite=True)
@@ -55,3 +57,17 @@ def Accueil(request):
     }
 
     return render(request, 'index.html', context)
+
+
+def deplacements_planifies(request):
+    deplacements_planifies = Deplacement.objects.filter(date_depart__isnull=False)
+    out = []
+    for event in deplacements_planifies:
+        out.append({
+            'title': f"{event.vehicule.marque}-{event.conducteur.numero_permis_conduire}",
+            'id': event.id,
+            'start': event.date_depart.strftime("%m/%d/%Y, %H:%M:%S"),
+            'end': (event.date_depart + timedelta(hours=event.duree_deplacement)).strftime("%m/%d/%Y, %H:%M:%S"),
+        })
+
+    return JsonResponse(out, safe=False)

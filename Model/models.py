@@ -165,7 +165,7 @@ class Deplacement(models.Model):
     photo_jauge_depart = models.ImageField(upload_to='photo_jauge/', blank=False)
 
     def __str__(self):
-        return f"{self.vehicule} - {self.conducteur.nom}"
+        return f"{self.vehicule} - {self.conducteur.numero_permis_conduire}"
 
 
 class Demande_location(models.Model):
@@ -212,7 +212,7 @@ class Demande_prolongement(models.Model):
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.conducteur.nom} {self.conducteur.prenom}"
+        return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
 
 
 class Carburant(models.Model):

@@ -21,6 +21,7 @@ from django.conf.urls import handler404
 from Model.views import Connexion
 from parc_automobile import settings
 from parc_automobile.views import Accueil
+from .views import deplacements_planifies
 
 urlpatterns = [
                   path('Accueil', Accueil, name='Accueil'),
@@ -35,6 +36,7 @@ urlpatterns = [
                   path('carburant/', include('carburant.urls')),
                   path('admin/', admin.site.urls),
                   path('Conducteur/', include('Conducteur.urls'), name='Conducteur'),
+                  path('deplacements_planifies/', deplacements_planifies, name='deplacements_planifies'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = "incident.views.handler_404"

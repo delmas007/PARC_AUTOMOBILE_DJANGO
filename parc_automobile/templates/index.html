@@ -193,7 +193,7 @@
                   </div>
                   <div class="col-md-6 col-lg-5">
                      <div class="iq-card iq-card-block iq-card-stretch iq-card-height" style="background: transparent;">
-                        <div class="iq-card-body rounded p-0" style="background: url({% static 'images/vehicul.jpg' %}) no-repeat;    background-size: cover; height: 415px;">
+                        <div class="iq-card-body rounded p-0" style="background: url({% static 'images/vehicul.jpg' %}) no-repeat;    background-size: cover; height: 490px;">
                           <div class="iq-caption">
                           </div>
                         </div>
@@ -296,20 +296,6 @@
                               <div class="iq-header-title">
                                  <h4 class="card-title">Calendrier des déplacements</h4>
                               </div>
-                              <div class="iq-card-header-toolbar d-flex align-items-center">
-                                 <div class="dropdown">
-                                    <span class="dropdown-toggle" id="dropdownMenuButton-one" data-toggle="dropdown" >
-                                    <i class="ri-more-fill"></i>
-                                    </span>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton-one" style="">
-                                       <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
-                                       <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                                    </div>
-                                 </div>
-                              </div>
                            </div>
                            <div class="iq-card-body">
 {#                              <div id="home-chart-01"></div>#}
@@ -326,7 +312,24 @@
 
       </div>
 
-
+      <div class="modal fade" id="eventDeplacement" tabindex="-1" role="dialog" aria-labelledby="eventDeplacementModalLabel" aria-hidden="true">
+           <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                 <div class="modal-header">
+                    <h5 class="modal-title" id="eventDeplacementModalLabel">Voici tous les déplacemnts</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                    </button>
+                 </div>
+                 <div class="modal-body">
+                    <p class="lead text-danger">Déplacement !</p>
+                 </div>
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                 </div>
+              </div>
+           </div>
+      </div>
 
       <!-- Wrapper END -->
       <!-- Footer -->
@@ -336,6 +339,11 @@
       <!-- Optional JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/fr.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
 <script>
    function loadVehicules(page) {
       $.ajax({
@@ -361,36 +369,58 @@
 </script>
 
 
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
 <script>
    $(document).ready(function () {
       $('#calendrier').fullCalendar({
          header: {
-            left: 'prev,next today',
+            left: 'prev, today, next ',
             center: 'title',
-            right: 'month,agendaWeek'
+            right: 'month, agendaWeek, agendaDay, list'
          },
-            height: 500,
-         events: [
-            {% for deplacement in deplacements_planifies %}
-               {
-                  title: '{{ deplacement.conducteur }} - {{ deplacement.vehicule }}',
-                  start: '{{ deplacement.date_depart|date:"Y-m-d" }}T{{ deplacement.heure_depart|date:"H:i:s" }}',
-                  end: '{{ deplacement.date_arrivee|date:"Y-m-d" }}T{{ deplacement.heure_arrivee|date:"H:i:s" }}'
-               },
-            {% endfor %}
-         ],
+          footer: false,
+
+          buttonText:{
+             today: 'Aujourd\'hui',
+              month: 'Mois',
+              week: 'Semaine',
+              day: 'Jours',
+              list: 'Liste'
+          },
+
+          height: 500,
+          events: '/deplacements_planifies',
+          selectable: true,
+          selectHelper: true,
+          editable: true,
+          eventLimit: true,
+          locale: 'fr',
+
          eventClick: function (event) {
-            // Gérer le clic sur un événement
             alert('Clic sur l\'événement : ' + event.title);
+         },
+
+          dayRender: function (date,cell) {
+             let today = $.fullCalendar.moment();
+             let newdate = $.fullCalendar.formatDate(date, 'DD-MM-YYYY');
+             if (date.get('date')===today.get('date')){
+                    cell.css("background", 'yellow');
+              }
+          },
+
+          eventRender: function (event, element) {
+            let eventStart = moment(event.start);
+
+            if (eventStart) {
+                element.css("background", '#f799a3')
+                element.css("font-size", 20)
+            } else {
+                element.css("background", '#dc8787')
+            }
          }
       });
    });
 </script>
+
 
 <script>
     function recupererMeteo(ville) {
@@ -416,7 +446,7 @@
             });
     }
 
-    recupererMeteo('Paris');
+    recupererMeteo('Abidjan');
 
     $('#btnMeteo').on('click', ()=>{
         let villeChoisie = $('#cityInput').val();
