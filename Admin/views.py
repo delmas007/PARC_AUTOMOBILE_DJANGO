@@ -5,10 +5,8 @@ from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, ExpressionWrapper, fields, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
-from oscrypto._ffi import null
 
-from Admin.forms import typeCarburantForm, CarburantModifierForm, CarburantSearchForm, UserRegistrationForm
-from Conducteur.forms import ConducteurSearchForm
+from Admin.forms import typeCarburantForm, CarburantSearchForm, UserRegistrationForm
 from Model.models import Roles, Utilisateur, type_carburant, periode_carburant
 from vehicule.forms import VehiculSearchForm
 
@@ -107,20 +105,21 @@ def Ajouter_Carburant(request):
     if request.method == 'POST':
         form = typeCarburantForm(request.POST)
         print(request.POST.get("nom"))
-        carburant_id=request.POST.get("nom")
-        carburant_prix=request.POST.get("prix")
-        aujourdhui=date.today()
+        carburant_id = request.POST.get("nom")
+        carburant_prix = request.POST.get("prix")
+        aujourdhui = date.today()
         if form.is_valid():
 
-            carburant=type_carburant.objects.get(id=carburant_id)
-            carburant.prix=carburant_prix
+            carburant = type_carburant.objects.get(id=carburant_id)
+            carburant.prix = carburant_prix
             carburant.save()
             dernier_periode = periode_carburant.objects.filter(carburant=carburant).order_by('-date_debut').first()
             if dernier_periode:
 
-                periode = periode_carburant.objects.create(carburant=carburant,date_debut=carburant.date_mise_a_jour,prix=carburant.prix)
+                periode = periode_carburant.objects.create(carburant=carburant, date_debut=carburant.date_mise_a_jour,
+                                                           prix=carburant.prix)
                 date_fin = carburant.date_mise_a_jour
-                dernier_periode.date_fin=date_fin
+                dernier_periode.date_fin = date_fin
                 dernier_periode.save()
                 periode.save()
             else:
@@ -137,7 +136,7 @@ def Ajouter_Carburant(request):
 
 
 def liste_Carburant(request):
-    carburant_list =(
+    carburant_list = (
         type_carburant.objects.all()
         .annotate(hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField()))
         .order_by('-hour')
@@ -154,6 +153,7 @@ def liste_Carburant(request):
         carburants = paginator.page(paginator.num_pages())
 
     return render(request, 'afficher_carburant.html', {'carburants': carburants})
+
 
 def Carburant_search(request):
     form = CarburantSearchForm(request.GET)
@@ -179,9 +179,6 @@ def Carburant_search(request):
             context['no_results'] = True
 
     return render(request, 'afficher_carburant.html', context)
-
-
-
 
 
 def dashboard_admins(request):

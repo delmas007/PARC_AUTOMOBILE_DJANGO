@@ -9,20 +9,16 @@ class typeCarburantForm(forms.ModelForm):
         model = type_carburant
         fields = ['nom', 'prix']
 
-
     nom = forms.ModelChoiceField(queryset=type_carburant.objects.all(), required=True)
+
     def __init__(self, *args, **kwargs):
         super(typeCarburantForm, self).__init__(*args, **kwargs)
         self.fields['nom'].widget.attrs.update({
             'class': "form-control",
             'id': "energie",
             'required': True,
-            'name':'nom'
-    })
-# class CarburantModifierForm(forms.ModelForm):
-#     class Meta:
-#         model = type_carburant
-#         fields = ['nom', 'prix']
+            'name': 'nom'
+        })
 
 
 class CarburantModifierForm(forms.ModelForm):
@@ -61,4 +57,5 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = Utilisateur
-        fields = ['username', 'email', 'nom', 'prenom', 'conducteur', 'image']  # Inclure le champ 'image' dans les champs du formulaire
+        fields = ['username', 'email', 'nom', 'prenom', 'conducteur',
+                  'image']  # Inclure le champ 'image' dans les champs du formulaire
