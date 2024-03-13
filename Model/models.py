@@ -221,7 +221,7 @@ class Carburant(models.Model):
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
     type = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
     prix_total = models.IntegerField()
-    quantite = models.IntegerField()
+    quantite = models.FloatField()
 
     def prix_total_format(self):
         return "{:,.2f}".format(self.prix_total)
