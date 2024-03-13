@@ -62,6 +62,11 @@ class type_carburant(models.Model):
     def __str__(self):
         return f"{self.nom}"
 
+class periode_carburant(models.Model):
+    date_debut=models.DateTimeField(verbose_name="Date de debut",blank=True, null=True)
+    date_fin=models.DateTimeField(verbose_name="Date de fin",blank=True, null=True)
+    prix = models.IntegerField()
+    carburant=models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
 
 class Conducteur(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)

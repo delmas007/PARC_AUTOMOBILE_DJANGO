@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, ExpressionWrapper, fields, F
@@ -107,6 +109,7 @@ def Ajouter_Carburant(request):
         print(request.POST.get("nom"))
         carburant_id=request.POST.get("nom")
         carburant_prix=request.POST.get("prix")
+        aujourdhui=date.today()
         if form.is_valid():
 
             carburant=type_carburant.objects.get(id=carburant_id)
@@ -114,8 +117,9 @@ def Ajouter_Carburant(request):
             carburant.save()
             dernier_periode = periode_carburant.objects.filter(carburant=carburant).order_by('-date_debut').first()
             if dernier_periode:
-                date_fin = dernier_periode.date_debut
+
                 periode = periode_carburant.objects.create(carburant=carburant,date_debut=carburant.date_mise_a_jour,prix=carburant.prix)
+                date_fin = carburant.date_mise_a_jour
                 dernier_periode.date_fin=date_fin
                 dernier_periode.save()
                 periode.save()
