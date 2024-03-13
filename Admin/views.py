@@ -181,20 +181,7 @@ def Carburant_search(request):
     return render(request, 'afficher_carburant.html', context)
 
 
-def modifier_carburant(request, pk):
-    carburant = get_object_or_404(type_carburant, pk=pk)
 
-    if request.method == 'POST':
-        form = CarburantModifierForm(request.POST, request.FILES, instance=carburant)
-        if form.is_valid():
-            form.instance.utilisateur = request.user
-            form.save()
-
-            return redirect('admins:liste_Carburant')
-    else:
-        form = CarburantModifierForm(instance=carburant)
-
-    return render(request, 'modifier_carburants.html', {'form': form, 'entretien': carburant, })
 
 
 def dashboard_admins(request):

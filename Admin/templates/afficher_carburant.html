@@ -66,7 +66,6 @@
                                  <tr style="background-color: #8861d2; color:white">
                                      <th>Nom</th>
                                      <th>Prix</th>
-                                     <th>Modifier</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -75,14 +74,6 @@
                                      <tr>
                                          <td>{{ carburant.nom}}</td>
                                          <td>{{ carburant.prix }}</td>
-                                        <td>
-                                           <div class="flex align-items-center list-user-action">
-                                               <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'admins:modifier_carburant' pk=carburant.pk %}"><i class="ri-pencil-line"></i></a>
-{#                                               <a class="zoom-on-hover iq-bg-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Supprimer" data-vehicle-id="{{ vehicule.pk }}" href="#" onclick="confirmDelete(this)"><i class="ri-delete-bin-line"></i></a>#}
-{#                                               <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Voir" href="{% url 'entretien:details_entretien' entretien_id=entretien.id %}" ><i class="ri-eye-line"></i></a>#}
-
-                                           </div>
-                                        </td>
                                      </tr>
                                 {% endfor %}
                              {% else %}

@@ -15,6 +15,7 @@ def Ajouter_carburant(request):
         form = AjouterCarburantForm(request.POST)
         if form.is_valid():
             carburant = form.save(commit=False)  # Je Récupere les données du formulaire sans les sauvegarder immédiatement
+            carburant.utilisateur = request.user
             carburant.prix_total = carburant.quantite * carburant.type.prix  # Je Calculer le prix total
             carburant.save()
 
