@@ -29,6 +29,8 @@
             {% url 'admins:Compte_gestionnaire' as admin_Compte_gestionnaire_url %}
             {% url 'admins:Ajouter_Carburant' as admin_Ajouter_Carburant_url %}
             {% url 'admins:liste_Carburant' as admin_liste_Carburant_url %}
+            {% url 'admins:rapport_admins' as admin_rapport_url %}
+            {% url 'admins:rapport_mensuel_admins' as admin_rapport_mensuel_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -56,6 +58,15 @@
 
                     </ul>
                 </li>
+                <li class="{% if request.path == admin_rapport_url or request.path == admin_rapport_mensuel_url %}active{% endif %}">
+                    <a href="#rapport" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-file-earmark-bar-graph"></i><span > Rapport</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="rapport" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                        <li class="{% if request.path == admin_rapport_url %}active{% endif %}" ><a href="{% url 'admins:rapport_admins' %}"><i class="bi bi-easel"></i>Rapport Depense Global</a></li>
+                        <li class="{% if request.path == admin_rapport_mensuel_url %}active{% endif %}" ><a href="{% url 'admins:rapport_mensuel_admins' %}"><i class="bi bi-easel-fill"></i>Rapport Depense Mensuele</a></li>
+
+                    </ul>
+                </li>
+
             </ul>
         </nav>
         <div class="p-3"></div>
