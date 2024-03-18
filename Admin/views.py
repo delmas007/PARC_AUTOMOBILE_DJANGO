@@ -1,4 +1,9 @@
 import calendar
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.utils.translation import gettext as _
 from datetime import date, datetime
 
@@ -12,7 +17,9 @@ from xhtml2pdf import pisa
 
 from Admin.forms import typeCarburantForm, CarburantSearchForm, UserRegistrationForm
 from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, Vehicule, Carburant, Entretien
+from utilisateurs.forms import ChangerMotDePasse
 from vehicule.forms import VehiculSearchForm
+from secrets import compare_digest
 
 
 @csrf_protect
@@ -386,9 +393,11 @@ def create_pdf(request):
 
                    """
             for voiture in voitures:
-                carburant = Carburant.objects.filter(vehicule=voiture.id, date_mise_a_jour__date__range=(debut_date, fin_date))
+                carburant = Carburant.objects.filter(vehicule=voiture.id,
+                                                     date_mise_a_jour__date__range=(debut_date, fin_date))
                 carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
-                entretien = Entretien.objects.filter(vehicule=voiture.id, date_mise_a_jour__date__range=(debut_date, fin_date))
+                entretien = Entretien.objects.filter(vehicule=voiture.id,
+                                                     date_mise_a_jour__date__range=(debut_date, fin_date))
                 entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
                 html_content += f"""<tr> <td> {voiture} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
 
@@ -406,3 +415,47 @@ def create_pdf(request):
             return HttpResponse('Une erreur est survenue lors de la génération du PDF')
 
         return response
+
+
+def CustomPasswordResetConfirmView(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        passe = request.POST.get('new_password')
+        passe2 = request.POST.get('new_password2')
+
+        try:
+            # Rechercher l'utilisateur par nom d'utilisateur
+            user = Utilisateur.objects.get(username=username)
+        except Utilisateur.DoesNotExist:
+            user = None
+        if not user:
+            messages.error(request, "L'utilisateur n'existe pas")
+            return redirect('admins:password_reset_confirms')
+        if passe == passe2:
+            new_password = passe
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, "Mot de passe réinitialisé avec succès.")
+        else:
+            messages.error(request, "Les mots de passe ne correspondent pas.")
+        update_session_auth_hash(request, user)
+
+        return redirect('admins:password_reset_confirms')
+    else:
+        return render(request, 'reinitialiser.html')
+
+
+def ChangerMotDePasse_admin(request):
+    if request.method == 'POST':
+        form = ChangerMotDePasse(request.user, request.POST)
+        if request.user.check_password(request.POST.get('passe')):
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Votre mot de passe a été changer.")
+                return redirect('Connexion')
+            else:
+                messages.error(request, "Les deux mots de passe ne correspondent pas")
+        else:
+            messages.error(request, "Le mot de passe actuel est incorrect.")
+    form = ChangerMotDePasse(request.user)
+    return render(request, 'changerMotDePasse_admin.html', {'form': form})
