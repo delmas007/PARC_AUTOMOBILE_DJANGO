@@ -17,7 +17,7 @@ from xhtml2pdf import pisa
 
 from Admin.forms import typeCarburantForm, CarburantSearchForm, UserRegistrationForm
 from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, Vehicule, Carburant, Entretien, \
-    Deplacement
+    Deplacement, Conducteur, Incident
 from utilisateurs.forms import ChangerMotDePasse
 from vehicule.forms import VehiculSearchForm
 from secrets import compare_digest
@@ -211,6 +211,10 @@ def rapport_carburant_mensuel_admins(request):
     vehicule = Vehicule.objects.all()
     context = {'vehicule': vehicule}
     return render(request, 'rapport_carburant_mensuel.html', context)
+def rapport_incident_conducteur_mensuel_admins(request):
+    conducteurs = Conducteur.objects.all()
+    context = {'conducteurs': conducteurs}
+    return render(request, 'rapport_incident_conducteur_mensuel.html', context)
 
 
 def rapport_depense_mensuel_pdf(request):
@@ -577,8 +581,7 @@ def rapport_carburant_mensuel_pdf(request):
                                                  date_mise_a_jour__year=annee)
 
             # Calculer les totaux de carburant et d'entretien
-            total_carburant = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
-            total_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
+
             for voiture in voitures:
 
              if carburant:
@@ -590,7 +593,9 @@ def rapport_carburant_mensuel_pdf(request):
 
                 for essence in carburant:
                  if voiture == essence.vehicule:
-                    html_content += f"""
+                  total_carburant = carburant.filter(vehicule=voiture).aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+                  total_quantite = carburant.filter(vehicule=voiture).aggregate(Sum('quantite'))['quantite__sum'] or 0
+                  html_content += f"""
                                     <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                                 """
                 html_content += f"""
@@ -615,3 +620,96 @@ def rapport_carburant_mensuel_pdf(request):
             return HttpResponse('Une erreur est survenue lors de la génération du PDF')
 
         return response
+def rapport_incident_conducteur_mensuel_pdf(request):
+    if request.method == 'POST':
+        # Récupérez les données soumises du formulaire
+        conducteur_id = request.POST.get('conducteur')
+        mois = request.POST.get('mois')
+        annee = request.POST.get('annee')
+        mois_lettre = _(calendar.month_name[int(mois)])
+        conducteurs = Conducteur.objects.all()
+        print(conducteur_id)
+        if conducteur_id:
+
+            conducteur = Conducteur.objects.get(id=conducteur_id)
+            # Récupérer les données de carburant et d'entretien
+            incident = Incident.objects.filter(vehicule=conducteur_id, date_mise_a_jour__month=mois,
+                                                 date_mise_a_jour__year=annee)
+
+            # Calculer les totaux de carburant et d'entretien
+            total_carburant = incident.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+            total_quantite = incident.aggregate(Sum('quantite'))['quantite__sum'] or 0
+        #     html_content = f"""
+        #             <html>
+        #             <head><title>Rapport</title></head>
+        #             <body>
+        #             <h1>Rapport Carburant de {mois_lettre} {annee}  de {vehicule}</h1>
+        #         """
+        #
+        #     if carburant:
+        #         html_content += """
+        #          <table border="1">
+        #          <tr><th>Date</th><th>Litre</th><th>Prix</th><th>Gestionnaire</th></tr>
+        #          """
+        #         for essence in carburant:
+        #             html_content += f"""
+        #             <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+        #         """
+        #         html_content += f"""
+        #
+        #         <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+        #          </table>
+        #         """
+        #     else:
+        #         html_content += "<p>Aucune donnée de carburant disponible.</p>"
+        # else:
+        #     # Générer le contenu HTML du PDF
+        #     html_content = f"""
+        #     <html>
+        #     <head><title>Rapport PDF</title></head>
+        #     <body>
+        #     <h1>Rapport Carburant de {mois_lettre} {annee}</h1>
+        #
+        #     """
+        #     carburant = Carburant.objects.filter(date_mise_a_jour__month=mois,
+        #                                          date_mise_a_jour__year=annee)
+        #
+        #     # Calculer les totaux de carburant et d'entretien
+        #     total_carburant = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+        #     total_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
+        #     for voiture in voitures:
+        #
+        #      if carburant:
+        #         html_content += f"""
+        #                    <h1>Rapport  de {voiture}</h1>
+        #                      <table border="1">
+        #                      <tr><th>Date</th><th>Litre</th><th>Prix</th><th>Gestionnaire</th></tr>
+        #                  """
+        #
+        #         for essence in carburant:
+        #          if voiture == essence.vehicule:
+        #             html_content += f"""
+        #                             <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+        #                         """
+        #         html_content += f"""
+        #
+        #                         <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+        #                          </table>
+        #                         """
+        #      else:
+        #         html_content += "<p>Aucune donnée de carburant disponible.</p>"
+        #
+        # # Créer un objet HttpResponse avec le contenu du PDF
+        # response = HttpResponse(content_type='application/pdf')
+        # if conducteur_id:
+        #     vehicule = Vehicule.objects.get(id=conducteur_id)
+        #     response[
+        #         'Content-Disposition'] = f'attachment; filename="Rapport de {mois_lettre} {annee}  de {vehicule}.pdf"'
+        # else:
+        #     response['Content-Disposition'] = f'attachment; filename="Rapport Carburant de {mois_lettre} {annee}.pdf"'
+        # # Générer le PDF à partir du contenu HTML
+        # pisa_status = pisa.CreatePDF(html_content, dest=response)
+        # if pisa_status.err:
+        #     return HttpResponse('Une erreur est survenue lors de la génération du PDF')
+        #
+        # return response
