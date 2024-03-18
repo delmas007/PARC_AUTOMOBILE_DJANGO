@@ -35,4 +35,5 @@ urlpatterns = [
     path('ChangerMotDePasseConducteur', ChangerMotDePasse_admin, name='ChangerMotDePasse_admin'),
     path('rapport_mensuel_pdf/', rapport_entretien_mensuel_pdf, name='rapport_entretien_mensuel_pdf'),
     path('rapport_entretien_mensuel_pdf/', rapport_entretien_mensuel_admins, name='rapport_entretien_mensuel_admins'),
+
 ]

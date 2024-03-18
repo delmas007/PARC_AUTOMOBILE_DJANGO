@@ -32,7 +32,7 @@
                         <div class="iq-card">
                             <div class="iq-card-header d-flex justify-content-between">
                                 <div class="iq-header-title">
-                                    <h4 class="card-title">RAPPORT INCIDENT CONDUCTEUR MENSUELLE  </h4>
+                                    <h4 class="card-title">RAPPORT INCIDENT VEHICULE MENSUELLE  </h4>
                                 </div>
                             </div>
                             <div class="iq-card-body">
@@ -46,11 +46,11 @@
                                                         {% csrf_token %}
 
                                                         <div class="col-md-4">
-                                                            <label style="font-family: -apple-system; font-size: medium"> Conducteur</label>
-                                                            <select class="form-control" id="conducteur" name="conducteur" style="width: 100%;">
-                                                                <option value="">Sélectionner un conducteur</option>
-                                                                {% for conducteur in conducteurs %}
-                                                                    <option value="{{ conducteur.id }}">{{ conducteur }} </option>
+                                                            <label style="font-family: -apple-system; font-size: medium"> Véhicule</label>
+                                                            <select class="form-control" id="vehicule" name="vehicule" style="width: 100%;">
+                                                                <option value="">Sélectionner un véhicule</option>
+                                                                {% for vehicule in vehicules %}
+                                                                    <option value="{{ vehicule.id }}">{{ vehicule }} </option>
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
