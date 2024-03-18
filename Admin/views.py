@@ -16,7 +16,8 @@ from django.views.decorators.csrf import csrf_protect
 from xhtml2pdf import pisa
 
 from Admin.forms import typeCarburantForm, CarburantSearchForm, UserRegistrationForm
-from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, Vehicule, Carburant, Entretien
+from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, Vehicule, Carburant, Entretien, \
+    Deplacement
 from utilisateurs.forms import ChangerMotDePasse
 from vehicule.forms import VehiculSearchForm
 from secrets import compare_digest
@@ -241,11 +242,11 @@ def generate_pdf(request):
                 html_content += "<h2>Carburant</h2>"
                 html_content += """
                  <table border="1">
-                 <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
+                 <tr><th>Date</th><th>Litre</th><th>Prix</th><th>Gestionnaire</th></tr>
                  """
                 for essence in carburant:
                     html_content += f"""
-                    <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td></tr>
+                    <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -262,7 +263,7 @@ def generate_pdf(request):
                  """
                 for reparation in entretien:
                     html_content += f"""
-                    <tr><td>{reparation.date_mise_a_jour.date()}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td></tr>
+                    <tr><td>{reparation.date_mise_a_jour.date()}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td><td>{reparation.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -287,7 +288,7 @@ def generate_pdf(request):
             <body>
             <h1>Rapport Depenses de {mois_lettre} {annee}</h1>
             <table border="1">
-            <tr><th>Voitures</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
+            <tr><th>Voitures</th><th>Nombre de déplacements</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
 
             """
             for voiture in voitures:
@@ -301,17 +302,20 @@ def generate_pdf(request):
                     total_carburant=Sum('prix_total')).order_by('-total_carburant').first()
                 vehicule_max_entretien_id = entretien.objects.values('vehicule').annotate(
                     total_entretien=Sum('prix_entretient')).order_by('-total_entretien').first()
-
+                deplacement = Deplacement.objects.filter(vehicule=voiture).count()
+                nbre_deplacements = +deplacement
                 vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
                 vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
-                html_content += f"""<tr> <td> {voiture} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
+                html_content += f"""<tr class="max-total"> <td> {voiture} </td><td> {deplacement} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
+
 
             html_content += f"""
-            <tr><td>Total</td><td>{total_carburant}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
+            <tr><td>Total</td><td>{nbre_deplacements}</td><td>{total_carburant}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
             </table>
-             <h1>{vehicule_max_carburant}<h1>
-             <h1>{vehicule_max_entretien}<h1>
+              <h1> plus grosse depense en carburant: {vehicule_max_carburant}<h1>
+              <h1>plus grosse depense en entretien:{vehicule_max_entretien}<h1>
             </body>
+            
             </html>
             """
         # Créer un objet HttpResponse avec le contenu du PDF
@@ -362,11 +366,11 @@ def create_pdf(request):
                 html_content += "<h2>Carburant</h2>"
                 html_content += """
                             <table border="1">
-                            <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
+                            <tr><th>Date</th><th>Litre</th><th>Prix</th><th>Gestionnaire</th></tr>
                             """
                 for essence in carburants:
                     html_content += f"""
-                               <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td></tr>
+                               <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                            """
                 html_content += f"""
 
@@ -384,7 +388,7 @@ def create_pdf(request):
                             """
                 for reparation in entretiens:
                     html_content += f"""
-                               <tr><td>{reparation.date_mise_a_jou.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td></tr>
+                               <tr><td>{reparation.date_mise_a_jour.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
                            """
                 html_content += f"""
 
@@ -407,7 +411,7 @@ def create_pdf(request):
                    <body>
                   <h1>Rapport de {debut_date} à {fin_date}</h1>
                    <table border="1">
-                   <tr><th>Voitures</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
+                   <tr><th>Voitures</th><th>Nombre de deplacement</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
 
                    """
             for voiture in voitures:
@@ -416,24 +420,33 @@ def create_pdf(request):
                 carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
                 entretien = Entretien.objects.filter(vehicule=voiture.id,
                                                      date_mise_a_jour__date__range=(debut_date, fin_date))
+
                 vehicule_max_carburant_id = Carburant.objects.filter(
                     date_mise_a_jour__date__range=(debut_date, fin_date)).values('vehicule').annotate(
                     total_carburant=Sum('prix_total')).order_by('-total_carburant').first()
+                if vehicule_max_carburant_id:
+                    vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
+                else:
+                    vehicule_max_carburant = "Aucun donné carburant"
+
                 vehicule_max_entretien_id = Entretien.objects.filter(
                     date_mise_a_jour__date__range=(debut_date, fin_date)).values('vehicule').annotate(
                     total_entretien=Sum('prix_entretient')).order_by('-total_entretien').first()
+                if vehicule_max_entretien_id:
+                    vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
+                else:
+                    vehicule_max_entretien = "Aucun donné carburant"
 
-                vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
-                vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
-
+                deplacement=Deplacement.objects.filter(vehicule=voiture).count()
+                nbre_deplacements=+deplacement
                 entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
-                html_content += f"""<tr> <td> {voiture} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
+                html_content += f"""<tr> <td> {voiture} </td><td> {deplacement} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
 
             html_content += f"""
-                   <tr><td>Total</td><td>{total_carburant}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
+                   <tr><td>Total</td><td>{nbre_deplacements}</td><td>{total_carburant}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
                    </table>
-                   <h1>{vehicule_max_carburant}<h1>
-                   <h1>{vehicule_max_entretien}<h1>
+                   <h1> plus grosse depense en carburant: {vehicule_max_carburant}<h1>
+                   <h1>plus grosse depense en entretien:{vehicule_max_entretien}<h1>
                    </body>
                    </html>
                    """
