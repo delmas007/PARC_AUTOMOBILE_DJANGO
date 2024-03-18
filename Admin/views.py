@@ -207,6 +207,10 @@ def rapport_depense_mensuel_admins(request):
     vehicule = Vehicule.objects.all()
     context = {'vehicule': vehicule}
     return render(request, 'rapport_depense_mensuel.html', context)
+def rapport_carburant_mensuel_admins(request):
+    vehicule = Vehicule.objects.all()
+    context = {'vehicule': vehicule}
+    return render(request, 'rapport_carburant_mensuel.html', context)
 
 
 def rapport_depense_mensuel_pdf(request):
@@ -235,7 +239,7 @@ def rapport_depense_mensuel_pdf(request):
                     <html>
                     <head><title>Rapport</title></head>
                     <body>
-                    <h1>Rapport de {mois_lettre} {annee}  de {vehicule}</h1>
+                    <h1>Rapport Depense de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
 
             if carburant:
@@ -286,7 +290,7 @@ def rapport_depense_mensuel_pdf(request):
             <html>
             <head><title>Rapport PDF</title></head>
             <body>
-            <h1>Rapport Depenses de {mois_lettre} {annee}</h1>
+            <h1>Rapport Depense de {mois_lettre} {annee}</h1>
             <table border="1">
             <tr><th>Voitures</th><th>Nombre de déplacements</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
 
@@ -298,15 +302,21 @@ def rapport_depense_mensuel_pdf(request):
                 entretien = Entretien.objects.filter(vehicule=voiture.id, date_mise_a_jour__month=mois,
                                                      date_mise_a_jour__year=annee)
                 entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
-                vehicule_max_carburant_id = carburant.objects.values('vehicule').annotate(
+                vehicule_max_carburant_id = Carburant.objects.values('vehicule').annotate(
                     total_carburant=Sum('prix_total')).order_by('-total_carburant').first()
-                vehicule_max_entretien_id = entretien.objects.values('vehicule').annotate(
+                vehicule_max_entretien_id = Entretien.objects.values('vehicule').annotate(
                     total_entretien=Sum('prix_entretient')).order_by('-total_entretien').first()
                 deplacement = Deplacement.objects.filter(vehicule=voiture).count()
                 nbre_deplacements = +deplacement
-                vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
-                vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
-                html_content += f"""<tr class="max-total"> <td> {voiture} </td><td> {deplacement} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
+                if vehicule_max_carburant_id:
+                    vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
+                else:
+                    vehicule_max_carburant= "Aucun donné carburant"
+                if vehicule_max_entretien_id:
+                    vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
+                else:
+                    vehicule_max_entretien= "Aucun donné carburant"
+                html_content += f"<tr> <td> {voiture} </td><td> {deplacement} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"
 
 
             html_content += f"""
@@ -322,7 +332,7 @@ def rapport_depense_mensuel_pdf(request):
         response = HttpResponse(content_type='application/pdf')
         if vehicule_id:
             vehicule = Vehicule.objects.get(id=vehicule_id)
-            response['Content-Disposition'] = f'attachment; filename="Rapport de {mois_lettre} {annee}  de {vehicule}.pdf"'
+            response['Content-Disposition'] = f'attachment; filename="Rapport Depense de {mois_lettre} {annee}  de {vehicule}.pdf"'
         else:
             response['Content-Disposition'] = f'attachment; filename="Rapport Depenses de {mois_lettre} {annee}.pdf"'
         # Générer le PDF à partir du contenu HTML
@@ -359,7 +369,7 @@ def rapport_depense_pdf(request):
                                <html>
                                <head><title>Rapport</title></head>
                                <body>
-                               <h1>Rapport de {debut_date} à {fin_date}  de {vehicule}</h1>
+                               <h1>Rapport Depense de {debut_date} à {fin_date}  de {vehicule}</h1>
                            """
 
             if carburants:
@@ -409,7 +419,7 @@ def rapport_depense_pdf(request):
                    <html>
                    <head><title>Rapport PDF</title></head>
                    <body>
-                  <h1>Rapport de {debut_date} à {fin_date}</h1>
+                  <h1>Rapport Depense de {debut_date} à {fin_date}</h1>
                    <table border="1">
                    <tr><th>Voitures</th><th>Nombre de deplacement</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
 
@@ -453,9 +463,9 @@ def rapport_depense_pdf(request):
         response = HttpResponse(content_type='application/pdf')
         if vehicule_id:
          vehicule = Vehicule.objects.get(id=vehicule_id)
-         response['Content-Disposition'] = f'attachment; filename="Rapport de {debut_date} à {fin_date}  de {vehicule}.pdf"'
+         response['Content-Disposition'] = f'attachment; filename="Rapport Depense de {debut_date} à {fin_date}  de {vehicule}.pdf"'
         else:
-         response['Content-Disposition'] = f'attachment; filename="Rapport de {debut_date} à {fin_date}.pdf"'
+         response['Content-Disposition'] = f'attachment; filename="Rapport Depense de {debut_date} à {fin_date}.pdf"'
         # Générer le PDF à partir du contenu HTML
         pisa_status = pisa.CreatePDF(html_content, dest=response)
         if pisa_status.err:
@@ -506,3 +516,103 @@ def ChangerMotDePasse_admin(request):
             messages.error(request, "Le mot de passe actuel est incorrect.")
     form = ChangerMotDePasse(request.user)
     return render(request, 'changerMotDePasse_admin.html', {'form': form})
+
+
+def rapport_carburant_mensuel_pdf(request):
+    if request.method == 'POST':
+        # Récupérez les données soumises du formulaire
+        vehicule_id = request.POST.get('vehicule')
+        mois = request.POST.get('mois')
+        annee = request.POST.get('annee')
+        mois_lettre = _(calendar.month_name[int(mois)])
+        voitures = Vehicule.objects.all()
+        if vehicule_id:
+
+            vehicule = Vehicule.objects.get(id=vehicule_id)
+            # Récupérer les données de carburant et d'entretien
+            carburant = Carburant.objects.filter(vehicule=vehicule_id, date_mise_a_jour__month=mois,
+                                                 date_mise_a_jour__year=annee)
+
+            # Calculer les totaux de carburant et d'entretien
+            total_carburant = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+            total_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
+            html_content = f"""
+                    <html>
+                    <head><title>Rapport</title></head>
+                    <body>
+                    <h1>Rapport Carburant de {mois_lettre} {annee}  de {vehicule}</h1>
+                """
+
+            if carburant:
+                html_content += """
+                 <table border="1">
+                 <tr><th>Date</th><th>Litre</th><th>Prix</th><th>Gestionnaire</th></tr>
+                 """
+                for essence in carburant:
+                    html_content += f"""
+                    <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                """
+                html_content += f"""
+
+                <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                 </table>
+                """
+            else:
+                html_content += "<p>Aucune donnée de carburant disponible.</p>"
+        else:
+            carburant = Carburant.objects.filter(date_mise_a_jour__month=mois,
+                                                 date_mise_a_jour__year=annee)
+
+
+            # Calculer les totaux de carburant et d'entretien
+            total_carburant = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+            # Générer le contenu HTML du PDF
+            html_content = f"""
+            <html>
+            <head><title>Rapport PDF</title></head>
+            <body>
+            <h1>Rapport Carburant de {mois_lettre} {annee}</h1>
+            <table border="1">
+            <tr><th>Voitures</th><th>Nombre de déplacements</th><th>Carburant</th></tr>
+
+            """
+            for voiture in voitures:
+                carburant = Carburant.objects.filter(vehicule=voiture.id, date_mise_a_jour__month=mois,
+                                                     date_mise_a_jour__year=annee)
+                carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+
+
+                vehicule_max_carburant_id = Carburant.objects.values('vehicule').annotate(
+                    total_carburant=Sum('prix_total')).order_by('-total_carburant').first()
+
+                deplacement = Deplacement.objects.filter(vehicule=voiture).count()
+                nbre_deplacements = +deplacement
+                if vehicule_max_carburant_id:
+                    vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
+                else:
+                    vehicule_max_carburant = "Aucun donné carburant"
+
+                html_content += f"<tr> <td> {voiture} </td><td> {deplacement} </td><td>{carburant_vehicule}</td></tr>"
+
+            html_content += f"""
+            <tr><td>Total</td><td>{nbre_deplacements}</td><td>{total_carburant}</td></tr>
+            </table>
+              <h1> plus grosse depense en carburant: {vehicule_max_carburant}<h1>
+            </body>
+
+            </html>
+            """
+        # Créer un objet HttpResponse avec le contenu du PDF
+        response = HttpResponse(content_type='application/pdf')
+        if vehicule_id:
+            vehicule = Vehicule.objects.get(id=vehicule_id)
+            response[
+                'Content-Disposition'] = f'attachment; filename="Rapport de {mois_lettre} {annee}  de {vehicule}.pdf"'
+        else:
+            response['Content-Disposition'] = f'attachment; filename="Rapport Carburant de {mois_lettre} {annee}.pdf"'
+        # Générer le PDF à partir du contenu HTML
+        pisa_status = pisa.CreatePDF(html_content, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Une erreur est survenue lors de la génération du PDF')
+
+        return response
