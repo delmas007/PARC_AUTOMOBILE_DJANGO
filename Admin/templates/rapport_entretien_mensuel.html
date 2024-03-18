@@ -1,0 +1,121 @@
+{% extends 'header_admin.html' %}
+{% load static %}
+{% block content%}
+    <body>
+    <!-- loader Start -->
+    <style>
+        .zoom-on-hover {
+            transition: transform 0.3s ease-in-out; /* Ajoute une transition douce pour l'effet de zoom */
+        }
+
+        .zoom-on-hover:hover {
+            transform: scale(2); /* Applique le zoom au survol */
+        }
+    </style>
+    <div id="loading">
+        <div id="loading-center">
+        </div>
+    </div>
+    <!-- loader END -->
+    <!-- Wrapper Start -->
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        {% include 'slide_admin.html' %}
+        {% include 'top_navbar_admin.html' %}
+        <!-- TOP Nav Bar -->
+        <!-- TOP Nav Bar END -->
+        <!-- Page Content  -->
+        <div id="content-page" class="content-page">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="iq-card">
+                            <div class="iq-card-header d-flex justify-content-between">
+                                <div class="iq-header-title">
+                                    <h4 class="card-title">RAPPORT DEPENSE MENSUELLE  </h4>
+                                </div>
+                            </div>
+                            <div class="iq-card-body">
+                                <div>
+                                    <div class="row justify-content-between">
+                                        <div class="col-sm-12 col-md-12">
+                                            <div id="user_list_datatable_info" class="dataTables_filter">
+                                              <form method="post" action="{% url 'admins:rapport_entretien_mensuel_pdf' %}">
+                                                <div class="row">
+
+                                                        {% csrf_token %}
+
+                                                        <div class="col-md-4">
+                                                            <label style="font-family: -apple-system; font-size: medium"> Vehicule</label>
+                                                            <select class="form-control" id="vehicule" name="vehicule" style="width: 100%;">
+                                                                <option value="">Sélectionner un vehicule</option>
+                                                                {% for voiture in vehicule %}
+                                                                    <option value="{{ voiture.id }}">{{ voiture }} </option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label style="font-family: -apple-system; font-size: medium"> MOIS</label>
+                                                            <select class="form-control" id="mois" name="mois" required style="width: 100%;">
+
+                                                                <option value="1">Janvier</option>
+                                                                <option value="2">Février</option>
+                                                                <option value="3">Mars</option>
+                                                                <option value="4">Avril</option>
+                                                                <option value="5">Mai</option>
+                                                                <option value="6">Juin</option>
+                                                                <option value="7">Juillet</option>
+                                                                <option value="8">Août</option>
+                                                                <option value="9">Septembre</option>
+                                                                <option value="10">Octobre</option>
+                                                                <option value="11">Novembre</option>
+                                                                <option value="12">Décembre</option>
+                                                            </select>
+
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label style="font-family: -apple-system; font-size: medium"> ANNEE</label>
+                                                            <select class="form-control" id="annee" name="annee" required style="width: 100%;">
+
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-12 mt-5 text-right">
+                                                            <button>GENERER</button>
+                                                            <button type="reset">RESET</button>
+                                                        </div>
+
+                                                </div>
+                                               </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Wrapper END -->
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <script>
+        // Sélection de l'élément select
+        var selectAnnee = document.getElementById("annee");
+
+        // Obtention de l'année actuelle
+        var anneeActuelle = new Date().getFullYear();
+
+        // Boucle pour ajouter les options des années au select
+        for (var annee = anneeActuelle; annee >= 1900; annee--) {
+            var option = document.createElement("option");
+            option.text = annee;
+            option.value = annee;
+            selectAnnee.appendChild(option);
+        }
+    </script>
+    </body>
+{% endblock %}
