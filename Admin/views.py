@@ -236,8 +236,9 @@ def generate_pdf(request):
                     <body>
                     <h1>Rapport de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
-            html_content += "<h2>Carburant</h2>"
+
             if carburant:
+                html_content += "<h2>Carburant</h2>"
                 html_content += """
                  <table border="1">
                  <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
@@ -254,13 +255,14 @@ def generate_pdf(request):
             else:
                 html_content += "<p>Aucune donnée de carburant disponible.</p>"
             if entretien:
+                html_content += "<h2>Entretien</h2>"
                 html_content += """
                  <table border="1">
-                 <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
+                 <tr><th>Date</th><th>Type</th><th>Prix</th></tr>
                  """
                 for reparation in entretien:
                     html_content += f"""
-                    <tr><td>{reparation.date_mise_a_jour}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td></tr>
+                    <tr><td>{reparation.date_mise_a_jour|date}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td></tr>
                 """
                 html_content += f"""
 
@@ -346,8 +348,9 @@ def create_pdf(request):
                                <body>
                                <h1>Rapport de {debut_date} à {fin_date}  de {vehicule}</h1>
                            """
-            html_content += "<h2>Carburant</h2>"
+
             if carburants:
+                html_content += "<h2>Carburant</h2>"
                 html_content += """
                             <table border="1">
                             <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
@@ -363,14 +366,16 @@ def create_pdf(request):
                            """
             else:
                 html_content += "<p>Aucune donnée de carburant disponible.</p>"
+
             if entretiens:
+                html_content += "<h2>Entretien</h2>"
                 html_content += """
                             <table border="1">
-                            <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
+                            <tr><th>Date</th><th>Type</th><th>Prix</th></tr>
                             """
                 for reparation in entretiens:
                     html_content += f"""
-                               <tr><td>{reparation.date_mise_a_jour}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td></tr>
+                               <tr><td>{reparation.date_mise_a_jour}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td></tr>
                            """
                 html_content += f"""
 
