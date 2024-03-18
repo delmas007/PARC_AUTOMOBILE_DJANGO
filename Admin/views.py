@@ -245,7 +245,7 @@ def generate_pdf(request):
                  """
                 for essence in carburant:
                     html_content += f"""
-                    <tr><td>{essence.date_mise_a_jour|date:"d/m/Y"}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td></tr>
+                    <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td></tr>
                 """
                 html_content += f"""
 
@@ -262,7 +262,7 @@ def generate_pdf(request):
                  """
                 for reparation in entretien:
                     html_content += f"""
-                    <tr><td>{reparation.date_mise_a_jour|date:"d/m/Y"}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td></tr>
+                    <tr><td>{reparation.date_mise_a_jour.date()}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td></tr>
                 """
                 html_content += f"""
 
@@ -297,11 +297,20 @@ def generate_pdf(request):
                 entretien = Entretien.objects.filter(vehicule=voiture.id, date_mise_a_jour__month=mois,
                                                      date_mise_a_jour__year=annee)
                 entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+                vehicule_max_carburant_id = carburant.objects.values('vehicule').annotate(
+                    total_carburant=Sum('prix_total')).order_by('-total_carburant').first()
+                vehicule_max_entretien_id = entretien.objects.values('vehicule').annotate(
+                    total_entretien=Sum('prix_entretient')).order_by('-total_entretien').first()
+
+                vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
+                vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
                 html_content += f"""<tr> <td> {voiture} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
 
             html_content += f"""
             <tr><td>Total</td><td>{total_carburant}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
             </table>
+             <h1>{vehicule_max_carburant}<h1>
+             <h1>{vehicule_max_entretien}<h1>
             </body>
             </html>
             """
@@ -357,7 +366,7 @@ def create_pdf(request):
                             """
                 for essence in carburants:
                     html_content += f"""
-                               <tr><td>{essence.date_mise_a_jour|date:"d/m/Y"}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td></tr>
+                               <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td></tr>
                            """
                 html_content += f"""
 
@@ -375,7 +384,7 @@ def create_pdf(request):
                             """
                 for reparation in entretiens:
                     html_content += f"""
-                               <tr><td>{reparation.date_mise_a_jour|date:"d/m/Y"}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td></tr>
+                               <tr><td>{reparation.date_mise_a_jou.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td></tr>
                            """
                 html_content += f"""
 
@@ -405,11 +414,17 @@ def create_pdf(request):
                 carburant = Carburant.objects.filter(vehicule=voiture.id,
                                                      date_mise_a_jour__date__range=(debut_date, fin_date))
                 carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
-                vehicule_max_carburant_id = Carburant.objects.filter(date_mise_a_jour__date__range=(debut_date, fin_date)).values('vehicule').annotate(total_carburant=Sum('prix_total')).order_by('-total_carburant').first()
-                vehicule_max_entretien_id = Entretien.objects.filter(date_mise_a_jour__date__range=(debut_date, fin_date)).values('vehicule').annotate(total_entretien=Sum('prix_entretien')).order_by('-total_entretien').first()
                 entretien = Entretien.objects.filter(vehicule=voiture.id,
                                                      date_mise_a_jour__date__range=(debut_date, fin_date))
+                vehicule_max_carburant_id = Carburant.objects.filter(
+                    date_mise_a_jour__date__range=(debut_date, fin_date)).values('vehicule').annotate(
+                    total_carburant=Sum('prix_total')).order_by('-total_carburant').first()
+                vehicule_max_entretien_id = Entretien.objects.filter(
+                    date_mise_a_jour__date__range=(debut_date, fin_date)).values('vehicule').annotate(
+                    total_entretien=Sum('prix_entretient')).order_by('-total_entretien').first()
+
                 vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
+                vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
 
                 entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
                 html_content += f"""<tr> <td> {voiture} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
@@ -418,7 +433,7 @@ def create_pdf(request):
                    <tr><td>Total</td><td>{total_carburant}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
                    </table>
                    <h1>{vehicule_max_carburant}<h1>
-                   <h1>{vehicule_max_entretien_id}<h1>
+                   <h1>{vehicule_max_entretien}<h1>
                    </body>
                    </html>
                    """
