@@ -1,13 +1,17 @@
-from datetime import date
+import calendar
+from django.utils.translation import gettext as _
+from datetime import date, datetime
 
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Q, ExpressionWrapper, fields, F
+from django.db.models import Q, ExpressionWrapper, fields, F, Sum
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
+from xhtml2pdf import pisa
 
 from Admin.forms import typeCarburantForm, CarburantSearchForm, UserRegistrationForm
-from Model.models import Roles, Utilisateur, type_carburant, periode_carburant
+from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, Vehicule, Carburant, Entretien
 from vehicule.forms import VehiculSearchForm
 
 
@@ -183,3 +187,222 @@ def Carburant_search(request):
 
 def dashboard_admins(request):
     return render(request, 'dashoard_admins.html')
+
+
+def rapport_admins(request):
+    vehicule = Vehicule.objects.all()
+    context = {'vehicule': vehicule}
+    return render(request, 'rapport.html', context)
+
+
+def rapport_mensuel_admins(request):
+    vehicule = Vehicule.objects.all()
+    context = {'vehicule': vehicule}
+    return render(request, 'rapport_mensuel.html', context)
+
+
+def generate_pdf(request):
+    if request.method == 'POST':
+        # Récupérez les données soumises du formulaire
+        vehicule_id = request.POST.get('vehicule')
+        mois = request.POST.get('mois')
+        annee = request.POST.get('annee')
+        mois_lettre = _(calendar.month_name[int(mois)])
+        voitures = Vehicule.objects.all()
+        if vehicule_id:
+
+            vehicule = Vehicule.objects.get(id=vehicule_id)
+            # Récupérer les données de carburant et d'entretien
+            carburant = Carburant.objects.filter(vehicule=vehicule_id, date_mise_a_jour__month=mois,
+                                                 date_mise_a_jour__year=annee)
+            entretien = Entretien.objects.filter(vehicule=vehicule_id, date_mise_a_jour__month=mois,
+                                                 date_mise_a_jour__year=annee)
+
+            # Calculer les totaux de carburant et d'entretien
+            total_carburant = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+            total_entretien = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+            total_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
+            nbre_entretien = entretien.count()
+            html_content = f"""
+                    <html>
+                    <head><title>Rapport</title></head>
+                    <body>
+                    <h1>Rapport de {mois_lettre} {annee}  de {vehicule}</h1>
+                """
+            html_content += "<h2>Carburant</h2>"
+            if carburant:
+                html_content += """
+                 <table border="1">
+                 <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
+                 """
+                for essence in carburant:
+                    html_content += f"""
+                    <tr><td>{essence.date_mise_a_jour}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td></tr>
+                """
+                html_content += f"""
+
+                <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                 </table>
+                """
+            else:
+                html_content += "<p>Aucune donnée de carburant disponible.</p>"
+            if entretien:
+                html_content += """
+                 <table border="1">
+                 <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
+                 """
+                for reparation in entretien:
+                    html_content += f"""
+                    <tr><td>{reparation.date_mise_a_jour}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td></tr>
+                """
+                html_content += f"""
+
+                <tr><td>Total</td><td>{nbre_entretien}</td><td>{total_entretien}</td></tr>
+                 </table>
+                """
+            else:
+                html_content += "<p>Aucune donnée d'entretien disponible.</p>"
+        else:
+            carburant = Carburant.objects.filter(date_mise_a_jour__month=mois,
+                                                 date_mise_a_jour__year=annee)
+            entretien = Entretien.objects.filter(date_mise_a_jour__month=mois,
+                                                 date_mise_a_jour__year=annee)
+
+            # Calculer les totaux de carburant et d'entretien
+            total_carburant = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+            total_entretien = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+            # Générer le contenu HTML du PDF
+            html_content = f"""
+            <html>
+            <head><title>Rapport PDF</title></head>
+            <body>
+            <h1>Rapport Depenses de {mois_lettre} {annee}</h1>
+            <table border="1">
+            <tr><th>Voitures</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
+
+            """
+            for voiture in voitures:
+                carburant = Carburant.objects.filter(vehicule=voiture.id, date_mise_a_jour__month=mois,
+                                                     date_mise_a_jour__year=annee)
+                carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+                entretien = Entretien.objects.filter(vehicule=voiture.id, date_mise_a_jour__month=mois,
+                                                     date_mise_a_jour__year=annee)
+                entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+                html_content += f"""<tr> <td> {voiture} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
+
+            html_content += f"""
+            <tr><td>Total</td><td>{total_carburant}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
+            </table>
+            </body>
+            </html>
+            """
+        # Créer un objet HttpResponse avec le contenu du PDF
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Rapport .pdf"'
+        # Générer le PDF à partir du contenu HTML
+        pisa_status = pisa.CreatePDF(html_content, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Une erreur est survenue lors de la génération du PDF')
+
+        return response
+
+
+def create_pdf(request):
+    if request.method == 'POST':
+        # Récupérez les données soumises du formulaire
+        vehicule_id = request.POST.get('vehicule')
+        debut = request.POST.get('date_debut_periode')
+        fin = request.POST.get('date_fin_periode')
+        voitures = Vehicule.objects.all()
+        debut_date = datetime.strptime(debut, '%Y-%m-%d').date()
+
+        if fin:
+            fin_date = datetime.strptime(fin, '%Y-%m-%d').date()
+        else:
+            fin_date = date.today()
+        if vehicule_id:
+
+            vehicule = Vehicule.objects.get(id=vehicule_id)
+            carburants = Carburant.objects.filter(date_mise_a_jour__date__range=(debut_date, fin_date))
+            entretiens = Entretien.objects.filter(date_mise_a_jour__date__range=(debut_date, fin_date))
+            total_carburant = carburants.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+            total_entretien = entretiens.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+            total_quantite = carburants.aggregate(Sum('quantite'))['quantite__sum'] or 0
+            nbre_entretien = entretiens.count()
+            html_content = f"""
+                               <html>
+                               <head><title>Rapport</title></head>
+                               <body>
+                               <h1>Rapport de {debut_date} à {fin_date}  de {vehicule}</h1>
+                           """
+            html_content += "<h2>Carburant</h2>"
+            if carburants:
+                html_content += """
+                            <table border="1">
+                            <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
+                            """
+                for essence in carburants:
+                    html_content += f"""
+                               <tr><td>{essence.date_mise_a_jour}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td></tr>
+                           """
+                html_content += f"""
+
+                           <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                            </table>
+                           """
+            else:
+                html_content += "<p>Aucune donnée de carburant disponible.</p>"
+            if entretiens:
+                html_content += """
+                            <table border="1">
+                            <tr><th>Date</th><th>Litre</th><th>Prix</th></tr>
+                            """
+                for reparation in entretiens:
+                    html_content += f"""
+                               <tr><td>{reparation.date_mise_a_jour}</td><td>{reparation.quantite}</td><td>{reparation.prix_total}</td></tr>
+                           """
+                html_content += f"""
+
+                           <tr><td>Total</td><td>{nbre_entretien}</td><td>{total_entretien}</td></tr>
+                            </table>
+                           """
+            else:
+                html_content += "<p>Aucune donnée d'entretien disponible.</p>"
+        else:
+            carburant = Carburant.objects.filter(date_mise_a_jour__date__range=(debut_date, fin_date))
+            entretien = Entretien.objects.filter(date_mise_a_jour__date__range=(debut_date, fin_date))
+
+            # Calculer les totaux de carburant et d'entretien
+            total_carburant = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+            total_entretien = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+            # Générer le contenu HTML du PDF
+            html_content = f"""
+                   <html>
+                   <head><title>Rapport PDF</title></head>
+                   <body>
+                  <h1>Rapport de {debut_date} à {fin_date}</h1>
+                   <table border="1">
+                   <tr><th>Voitures</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
+
+                   """
+            for voiture in voitures:
+                carburant = Carburant.objects.filter(vehicule=voiture.id, date_mise_a_jour__date__range=(debut_date, fin_date))
+                carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+                entretien = Entretien.objects.filter(vehicule=voiture.id, date_mise_a_jour__date__range=(debut_date, fin_date))
+                entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+                html_content += f"""<tr> <td> {voiture} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
+
+            html_content += f"""
+                   <tr><td>Total</td><td>{total_carburant}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
+                   </table>
+                   </body>
+                   </html>
+                   """
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="Rapport de {debut_date} à {fin_date}.pdf"'
+        # Générer le PDF à partir du contenu HTML
+        pisa_status = pisa.CreatePDF(html_content, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Une erreur est survenue lors de la génération du PDF')
+
+        return response

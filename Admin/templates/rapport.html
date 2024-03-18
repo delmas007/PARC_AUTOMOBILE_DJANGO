@@ -1,0 +1,120 @@
+{% extends 'header_admin.html' %}
+{% load static %}
+{% block content%}
+    <body>
+    <!-- loader Start -->
+    <style>
+        .zoom-on-hover {
+            transition: transform 0.3s ease-in-out; /* Ajoute une transition douce pour l'effet de zoom */
+        }
+
+        .zoom-on-hover:hover {
+            transform: scale(2); /* Applique le zoom au survol */
+        }
+    </style>
+    <div id="loading">
+        <div id="loading-center">
+        </div>
+    </div>
+    <!-- loader END -->
+    <!-- Wrapper Start -->
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        {% include 'slide_admin.html' %}
+        {% include 'top_navbar_admin.html' %}
+        <!-- TOP Nav Bar -->
+        <!-- TOP Nav Bar END -->
+        <!-- Page Content  -->
+        <div id="content-page" class="content-page">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="iq-card">
+                            <div class="iq-card-header d-flex justify-content-between">
+                                <div class="iq-header-title">
+                                    <h4 class="card-title">RAPPORT DEPENSE GLOBAL  </h4>
+                                </div>
+                            </div>
+                            <div class="iq-card-body">
+                                <div>
+                                    <div class="row justify-content-between">
+                                        <div class="col-sm-12 col-md-12">
+                                            <div id="user_list_datatable_info" class="dataTables_filter">
+                                                <form method="post" action="{% url 'admins:create_pdf' %}">
+                                                    <div class="row">
+
+                                                        {% csrf_token %}
+                                                        <div class="col-md-4">
+                                                            <label style="font-family: -apple-system; font-size: medium"> Vehicule</label>
+                                                            <select class="form-control" id="vehicule" name="vehicule" style="width: 100%;">
+                                                                <option value="">Sélectionner un vehicule</option>
+                                                                {% for voiture in vehicule %}
+                                                                    <option value="{{ voiture.id }}">{{ voiture }} </option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label style="font-family: -apple-system; font-size: medium"> DE</label>
+                                                            <input required type="date" class="form-control" id="date_debut_periode" placeholder="" name="date_debut_periode">
+
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label style="font-family: -apple-system; font-size: medium"> A</label>
+                                                            <input type="date" class="form-control" id="date_fin_periode" placeholder="" name="date_fin_periode">
+
+                                                        </div>
+                                                        <div class="col-12 mt-5 text-right">
+                                                            <button type="submit">GENERER</button>
+                                                            <button type="reset">RESET</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Wrapper END -->
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+
+
+    <script>
+        // Bloquer le calendrier à la date du jour
+        let today = new Date();
+        let date = String(today.getDate()).padStart(2, '0');
+        let month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let year = today.getFullYear();
+
+        today = year + '-' + month + '-' + date;
+
+        // Mettre le minimum de l'input des dates
+        document.getElementById("date_debut_periode").max = today;
+        document.getElementById("date_fin_periode").max = today;
+
+    // Récupération des éléments d'entrée
+    var dateDebutInput = document.getElementById('date_debut_periode');
+    var dateFinInput = document.getElementById('date_fin_periode');
+
+    // Écouteur d'événement pour les changements de date de début
+    dateDebutInput.addEventListener('input', function() {
+        // Convertir la valeur du champ de date de début en objet Date
+        var dateDebut = new Date(dateDebutInput.value);
+
+        // Ajouter un jour à la date de début pour obtenir la date minimale de la date de fin
+        var dateMinFin = new Date(dateDebut);
+        dateMinFin.setDate(dateMinFin.getDate() + 1);
+
+        // Mettre à jour la propriété min du champ de date de fin
+        dateFinInput.min = dateMinFin.toISOString().split('T')[0];
+    });
+</script>
+    </body>
+{% endblock %}
