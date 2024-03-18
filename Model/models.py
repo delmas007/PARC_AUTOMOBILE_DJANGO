@@ -1,5 +1,6 @@
 # models.py
 import uuid
+from datetime import timedelta
 
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.utils import timezone
@@ -47,7 +48,6 @@ class Roles(models.Model):
 
 
 class type_entretien(models.Model):
-
     nom = models.CharField(max_length=200)
 
     def __str__(self):
@@ -62,11 +62,13 @@ class type_carburant(models.Model):
     def __str__(self):
         return f"{self.nom}"
 
+
 class periode_carburant(models.Model):
-    date_debut=models.DateTimeField(verbose_name="Date de debut",blank=True, null=True)
-    date_fin=models.DateTimeField(verbose_name="Date de fin",blank=True, null=True)
+    date_debut = models.DateTimeField(verbose_name="Date de debut", blank=True, null=True)
+    date_fin = models.DateTimeField(verbose_name="Date de fin", blank=True, null=True)
     prix = models.IntegerField()
-    carburant=models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
+    carburant = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
+
 
 class Conducteur(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
@@ -164,6 +166,12 @@ class Deplacement(models.Model):
     duree_deplacement = models.IntegerField()
     photo_jauge_depart = models.ImageField(upload_to='photo_jauge/', blank=False)
 
+    def date_fin(self):
+        if self.date_depart:
+            return self.date_depart + timedelta(days=self.duree_deplacement)
+        else:
+            return None
+
     def __str__(self):
         return f"{self.vehicule} - {self.conducteur.numero_permis_conduire}"
 
@@ -210,6 +218,9 @@ class Demande_prolongement(models.Model):
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     kilometrage = models.IntegerField()
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
+
+    def ajout(self):
+        return self.deplacement.date_fin() + timedelta(days=self.duree)
 
     def __str__(self):
         return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"

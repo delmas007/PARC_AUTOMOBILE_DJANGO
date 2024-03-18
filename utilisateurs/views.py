@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from random import sample
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -293,16 +293,7 @@ def liste_mission(request):
 
     # Exclure les déplacements avec leurs IDs dans la sous-requête
     mission_list = Deplacement.objects.exclude(id__in=Subquery(deplacements_arrives_ids)).filter(
-        conducteur_id=conducteur_actif_id)
-
-    paginator = Paginator(mission_list.order_by('date_depart'), 3)
-    try:
-        page = request.GET.get("page")
-        if not page:
-            page = 1
-        mission_list = paginator.page(page)
-    except EmptyPage:
-        mission_list = paginator.page(paginator.num_pages())
+        conducteur_id=conducteur_actif_id).order_by('date_depart')
 
     return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui,
                                                       'prolongement_encours': prolongement_encours_ids,
