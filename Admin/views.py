@@ -305,7 +305,11 @@ def generate_pdf(request):
             """
         # Créer un objet HttpResponse avec le contenu du PDF
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="Rapport .pdf"'
+        if vehicule_id:
+            vehicule = Vehicule.objects.get(id=vehicule_id)
+            response['Content-Disposition'] = f'attachment; filename="Rapport de {mois_lettre} {annee}  de {vehicule}.pdf"'
+        else:
+            response['Content-Disposition'] = f'attachment; filename="Rapport Depenses de {mois_lettre} {annee}.pdf"'
         # Générer le PDF à partir du contenu HTML
         pisa_status = pisa.CreatePDF(html_content, dest=response)
         if pisa_status.err:
@@ -408,7 +412,11 @@ def create_pdf(request):
                    </html>
                    """
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="Rapport de {debut_date} à {fin_date}.pdf"'
+        if vehicule_id:
+         vehicule = Vehicule.objects.get(id=vehicule_id)
+         response['Content-Disposition'] = f'attachment; filename="Rapport de {debut_date} à {fin_date}  de {vehicule}.pdf"'
+        else:
+         response['Content-Disposition'] = f'attachment; filename="Rapport de {debut_date} à {fin_date}.pdf"'
         # Générer le PDF à partir du contenu HTML
         pisa_status = pisa.CreatePDF(html_content, dest=response)
         if pisa_status.err:
