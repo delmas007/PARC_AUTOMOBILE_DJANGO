@@ -197,19 +197,19 @@ def dashboard_admins(request):
     return render(request, 'dashoard_admins.html')
 
 
-def rapport_admins(request):
+def rapport_depense_admins(request):
     vehicule = Vehicule.objects.all()
     context = {'vehicule': vehicule}
-    return render(request, 'rapport.html', context)
+    return render(request, 'rapport_depense.html', context)
 
 
-def rapport_mensuel_admins(request):
+def rapport_depense_mensuel_admins(request):
     vehicule = Vehicule.objects.all()
     context = {'vehicule': vehicule}
-    return render(request, 'rapport_mensuel.html', context)
+    return render(request, 'rapport_depense_mensuel.html', context)
 
 
-def generate_pdf(request):
+def rapport_depense_mensuel_pdf(request):
     if request.method == 'POST':
         # Récupérez les données soumises du formulaire
         vehicule_id = request.POST.get('vehicule')
@@ -333,7 +333,7 @@ def generate_pdf(request):
         return response
 
 
-def create_pdf(request):
+def rapport_depense_pdf(request):
     if request.method == 'POST':
         # Récupérez les données soumises du formulaire
         vehicule_id = request.POST.get('vehicule')
