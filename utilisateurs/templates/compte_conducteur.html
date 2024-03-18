@@ -13,41 +13,131 @@
         .modal-dialog.modal-custom .modal-content{
             width: 100%;
         }
+        .notification-badge {
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 3px 7px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(50%, -50%);
+        }
+        .version {
+            position: absolute;
+            bottom: 10px;
+            right: auto;
+            left: auto;
+            color: gray;
+            text-align: center;
+            width: 100%;
+            transform: translateY(-50%);
+        }
+
+
     </style>
     <body>
-    {% include 'nav-bar_conducteur.html' %}
     {% url 'utilisateur:liste_mission' as liste_mission %}
     {% url 'utilisateur:list_de_demande_prolongement' as list_de_demande_prolongement %}
     {% url 'utilisateur:declare_incident' as declare_incident %}
     {% url 'utilisateur:ChangerMotDePasseConducteur' as ChangerMotDePasseConducteur %}
+    <nav class="menu__wrapper">
+        <div class="logo__wrapper">
+            <a class="text-white h2" {% if request.path == liste_mission %}active{% else %} {% endif %} id="dashboard-nav" href=" {% url 'utilisateur:liste_mission' %}" role="tab">
+                <i class="bi bi-speedometer2"></i>
+            </a>
+        </div>
+        <div class="action-buttons">
+            <a  {% if request.path == list_de_demande_prolongement %}active{% else %} {% endif %}  id="payment-nav" href=" {% url 'utilisateur:list_de_demande_prolongement' %}">
+                <button class="action-button text-white h4">
+                    <i class="fa fa-paper-plane"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+            </a>
+            <a {% if request.path == declare_incident %}active{% else %} {% endif %}  id="payment-nav" href=" {% url 'utilisateur:declare_incident' %}" style="margin-right: 20px">
+                <button class="action-button text-white h4">
+                    <i class="bi bi-fire"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+            </a>
+           <button class="h4 avatar-profile" id="avatar-navbars">
+               <i class="bi bi-list " ></i>
+           </button>
+        </div>
+    </nav>
+    <div class="navigation__menu none" style="overflow-y:auto">
+        <div class="avatar-wrapper" style="background-image: url('{% static 'images/conducteur.png' %}');">
+            <div class="">
+
+            </div>
+            <button class="close-button avatar-profile" >
+                <i class="bi bi-list " ></i>
+            </button>
+            <div class=" avatar-name-wrapper">
+                <div class="row">
+                    <div class="avatar-name-alias">
+                    <div class="avatar-name" >
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <ul class="navigation__menu__items">
+            <li>
+                &#128640; Menu
+            </li>
+            <li class="separator">
+                <hr>
+            </li>
+            <li>
+                <a class="nav-link {% if request.path == list_de_demande_prolongement %}active{% else %} {% endif %} " id="dashboard-nav"  href=" {% url 'utilisateur:liste_mission' %}" role="tab" data-target="#orders-tab"  style="margin-right: 20px"><i class="bi bi-speedometer2"></i>Accueil</a>
+            </li>
+            <li class="separator">
+                <hr>
+            </li>
+            <li>
+                <a class="nav-link {% if request.path == list_de_demande_prolongement %}active{% else %} {% endif %} " id="orders-nav"  href=" {% url 'utilisateur:list_de_demande_prolongement' %}" role="tab" data-target="#orders-tab"  style="margin-right: 20px"><i class="fa fa-paper-plane"></i>Voir mes demandes</a>
+            </li>
+            <li class="separator">
+                <hr>
+            </li>
+            <li>
+                <a class="nav-link {% if request.path == list_de_demande_prolongement %}active{% else %} {% endif %} " id="orders-nav"  href=" {% url 'utilisateur:declare_incident' %}" role="tab" data-target="#orders-tab"  style="margin-right: 20px"> <i class="bi bi-fire"></i>Declarer un incident</a>
+
+            </li>
+            <li class="separator">
+                <hr>
+            </li>
+            <li>
+                <a class="nav-link {% if request.path == ChangerMotDePasseConducteur %}active{% else %} {% endif %} " id="orders-nav"  href=" {% url 'utilisateur:ChangerMotDePasseConducteur' %}" role="tab" data-target="#orders-tab"  style="margin-right: 20px"><i class="bi bi-file-lock2"></i>Changer mot de passe</a>
+            </li>
+            <li class="separator">
+                <hr>
+            </li>
+            <li>
+                <a class="nav-link" data-target="#orders-tab"><i class="bi bi-box-arrow-right"> Déconnexion (<span style="color: #1a88ff">{{ user.nom }} {{ user.prenom }}</span>)</i></a>
+            </li>
+            <li class="separator">
+                <hr>
+            </li>
+            <li>
+                <a class="nav-link" >
+            </li>
+            <li>
+                <span style="font-size: 10px"><i class="bi bi-shield-lock"></i> Vos informations sont protegés avec le <span style="color: #149832">chiffrement de bout en bout</span></span>
+            </li>
+        </ul>
+        <div class="version">Version 1.0.1</div>
+    </div>
        <div class="content">
            <div class="my-account">
                <div class="container-fluid">
                    <div class="row">
-                       <div class="col-md-3">
-                           <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                               <a class="nav-link  {% if request.path == liste_mission %}active{% else %} {% endif %} " id="dashboard-nav" href=" {% url 'utilisateur:liste_mission' %}" role="tab"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
-                                   <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z"/>
-                                   <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"/>
-                               </svg> Tableau de bord</a>
-                               <a class="nav-link {% if request.path == list_de_demande_prolongement %}active{% else %} {% endif %} " id="orders-nav"  href=" {% url 'utilisateur:list_de_demande_prolongement' %}" role="tab" data-target="#orders-tab"><i class="fa fa-paper-plane"></i>Voir mes demandes</a>
-                               <a class="nav-link {% if request.path == declare_incident %}active{% else %} {% endif %} " id="payment-nav" href=" {% url 'utilisateur:declare_incident' %}" role="tab"><i class="ri-alert-line  "></i>Signaler incident</a>
-                               {#                        <a class="nav-link" id="address-nav" data-toggle="pill" href="#address-tab" role="tab"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">#}
-                               {#                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>#}
-                               {#                        </svg> address</a>#}
-                               {#                        <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Account Details</a>#}
-                               <a class="nav-link {% if request.path == ChangerMotDePasseConducteur %}active{% else %} {% endif %} " id="orders-nav"  href=" {% url 'utilisateur:ChangerMotDePasseConducteur' %}" role="tab" data-target="#orders-tab"><i class="bi bi-lock"></i>Changer mot de passe</a>
-                               <a class="nav-link" href="{% url 'Model:Deconnexion' %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                                   <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-                                   <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
-                               </svg> Déconnexion</a>
-                           </div>
-                       </div>
-                       <div class="col-md-9">
+                       <div class="col">
                            <div class="tab-content">
                                <div class="tab-pane fade show {% if request.path == liste_mission %}active{% else %} {% endif %}  text-center " id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav" >
                                    <div>
-                                       <h1>Liste des missions</h1>
+                                       <h3>Liste des missions</h3>
                                    </div>
                                    {% if mission and prolongement %}
                                        {% for deplacement in mission %}
@@ -247,44 +337,6 @@
                                            {% endif %}
                                            </tbody>
                                        </table>
-                                   </div>
-                                   <div class="row justify-content-between mt-3">
-                                       <div id="user-list-page-info" class="col-md-6">
-                                           <span>Affichage de {{ demande.start_index }} à {{ demande.end_index }} sur {{ demande.paginator.count }} entrées</span>
-                                       </div>
-                                       <div class="col-md-6">
-                                           <nav aria-label="Page navigation example">
-                                               <ul class="pagination justify-content-end mb-0">
-                                                   {% if demande.has_previous %}
-                                                       <li class="page-item">
-                                                           <a class="page-link" href="?page={{ demande.previous_page_number }}">Précédent</a>
-                                                       </li>
-                                                   {% else %}
-                                                       <li class="page-item disabled">
-                                                           <span class="page-link">Précédent</span>
-                                                       </li>
-                                                   {% endif %}
-
-                                                   {% for num in demande.paginator.page_range %}
-                                                       {% if num == demande.number %}
-                                                           <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-                                                       {% else %}
-                                                           <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                                                       {% endif %}
-                                                   {% endfor %}
-
-                                                   {% if demande.has_next %}
-                                                       <li class="page-item">
-                                                           <a class="page-link" href="?page={{ demande.next_page_number }}">Suivant</a>
-                                                       </li>
-                                                   {% else %}
-                                                       <li class="page-item disabled">
-                                                           <span class="page-link">Suivant</span>
-                                                       </li>
-                                                   {% endif %}
-                                               </ul>
-                                           </nav>
-                                       </div>
                                    </div>
                                </div>
                                <div class="tab-pane fade show {% if request.path == declare_incident  %}active{% else %} {% endif %} text-center " id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
@@ -630,6 +682,18 @@
             $('#modal_prolongement_2').modal('show');
         }
     </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('{% static 'js/service-worker.js' %}').then(function(registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }, function(err) {
+                    console.log('Service Worker registration failed:', err);
+                });
+            });
+        }
+    </script>
+
 
     {% include 'footer_conducteur.html' %}
     </body>
