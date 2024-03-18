@@ -56,43 +56,59 @@ def rapport_entretien_mensuel_pdf(request):
             else:
                 html_content += "<p>Aucune donnée d'entretien disponible.</p>"
         else:
+            # Générer le contenu HTML du PDF
             html_content = f"""
             <html>
             <head><title>Rapport PDF</title></head>
             <body>
-            <h1>Rapport Carburant de {mois_lettre} {annee}</h1>
-
+            <h1>Rapport Incidents de {mois_lettre} {annee}</h1>
             """
-            carburant = Entretien.objects.filter(date_mise_a_jour__month=mois,
-                                                 date_mise_a_jour__year=annee)
 
-            for voiture in voitures:
+            # Filtrer les incidents pour le mois et l'année spécifiés
+            incidents = Incident.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
 
-                if carburant:
+            # Vérifier s'il y a des incidents pour ce mois et cette année
+            if incidents:
+                # Boucle sur chaque conducteur pour générer le rapport
+                for conducteur in conducteurs:
+
+                    # Filtrer les incidents pour ce conducteur
+                    incidents_conducteur = incidents.filter(conducteur=conducteur)
                     html_content += f"""
-                           <h1>Rapport  de {voiture}</h1>
-                             <table border="1">
-                             <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
-                         """
+                                                                  <h2>Rapport de {conducteur}</h2>
 
-                    for essence in carburant:
-                        if voiture == essence.vehicule:
-                         nbre_entretien = carburant.filter(vehicule=voiture).count()
-                         print(nbre_entretien)
+                                                              """
 
-                             # Calculer les totaux de carburant et d'entretien
-                         total_carburant = carburant.filter(vehicule=voiture).aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+                    # Vérifier s'il y a des incidents pour ce conducteur
+                    if incidents_conducteur:
 
-                         html_content += f"""
-                                    <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.type}</td><td>{essence.prix_entretient}</td><td>{essence.utilisateur}</td></tr>
-                                """
-                    html_content += f"""
+                        # Boucle sur chaque incident pour ce conducteur
+                        for incident in incidents_conducteur:
+                            html_content += f"""
+                                                <table border="1">
+                                                <tr><td>{incident.date_mise_a_jour.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
+                                            """
 
-                                <tr><td>Total</td><td></td><td>{nbre_entretien}</td></tr>
-                                 </table>
-                                """
-                else:
-                    html_content += "<p>Aucune donnée de carburant disponible.</p>"
+                            # Calculer le nombre total d'incidents pour ce conducteur
+                        total_incident = incidents_conducteur.count()
+                        # Calculer les totaux pour ce conducteur
+                        total_carburant = incidents_conducteur.filter(vehicule=incident.vehicule).count()
+                        html_content += f"""
+                            <tr><td>Total</td><td>{total_carburant}</td><td>{total_incident}</td></tr>
+                        """
+                    else:
+                        html_content += "<tr><td colspan='3'>Aucun incident trouvé pour ce conducteur.</td></tr>"
+
+                    html_content += "</table>"
+
+            else:
+                html_content += "<p>Aucun incident trouvé pour ce mois et cette année.</p>"
+
+            # Fermer les balises HTML
+            html_content += """
+            </body>
+            </html>
+            """
 
         # Créer un objet HttpResponse avec le contenu du PDF
         response = HttpResponse(content_type='application/pdf')
