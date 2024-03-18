@@ -14,11 +14,8 @@
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.env" />
-      <excludeFolder url="file://$MODULE_DIR$/venv" />
-    </content>
-    <orderEntry type="inheritedJdk" />
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="Python 3.10" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="select2" level="application" />
     <orderEntry type="library" name="@popperjs/core" level="application" />
@@ -27,6 +24,10 @@
     <orderEntry type="library" name="pdfmake" level="application" />
     <orderEntry type="library" name="jquery-3.6.4" level="application" />
     <orderEntry type="library" name="html2pdf.js" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="bootstrap-icons" level="application" />
+    <orderEntry type="library" name="jquery-3.4.1" level="application" />
+    <orderEntry type="library" name="bootstrap.bundle" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
