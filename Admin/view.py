@@ -76,6 +76,7 @@ def rapport_entretien_mensuel_pdf(request):
                     entretiens_vehicule = entretiens.filter(vehicule=voiture)
                     html_content += f"""
                     <h2>Rapport de {voiture}</h2>
+                     <table border="1">
                     <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                                                               """
 
@@ -85,8 +86,7 @@ def rapport_entretien_mensuel_pdf(request):
                         # Boucle sur chaque incident pour ce conducteur
                         for entretien in entretiens_vehicule:
                             html_content += f"""
-                                                <table border="1">
-                                                <tr><td>{entretien.date_entretien}</td><td>{entretien.vehicule}</td><td>{entretien.description_incident}</td></tr>
+                                                <tr><td>{entretien.date_entretien}</td><td>{entretien.type}</td><td>{entretien.prix_entretient}</td><td>{entretien.utilisateur}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
