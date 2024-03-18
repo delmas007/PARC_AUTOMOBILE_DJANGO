@@ -19,19 +19,29 @@
          <div id="content-page" class="content-page">
             <div class="container-fluid">
                <div class="row d-flex justify-content-center">
-                  <div class="col-sm-12 col-lg-6">
+                  <div class="col-sm-12 col-lg-8">
                      <div class="iq-card">
-                        <div class="iq-card-header d-flex justify-content-between">
-                           <div class="iq-header-title">
-                              <h3 class="card-title"> Modifier les informations sur l'incident du véhicule {{ incident.vehicule.marque }}--{{ incident.vehicule.numero_immatriculation }} <i class="ri-alert-line"></i></h3>
-                           </div>
+                        <div class="card-header">
+                            <div class="iq-card-header d-flex justify-content-between">
+                               <div class="iq-header-title">
+                                  <h3 class="card-title"> Modifier les informations sur l'incident du véhicule {{ incident.vehicule.marque }}--{{ incident.vehicule.numero_immatriculation }}</h3>
+                               </div>
+                            </div>
                         </div>
                         <div class="iq-card-body">
                            <form class="form-horizontal" method="post" action="{% url 'incident:modifier_incident_interne' incident.pk %}" enctype="multipart/form-data">
                                {% csrf_token %}
+
+                               <div class="form-group row">
+                                   <label class="control-label col-sm-4 align-self-center mb-0" for="description_incident" style="font-weight: bold">Description de l'incident :</label>
+                                    <div class="col-sm-8">
+                                       {{ form.description_incident }}
+                                   </div>
+                               </div>
+
                                 <div class="form-group row" style="margin-top: 33px">
-                                        <label for="images" class="control-label col-sm-5 col-md-6 align-self-center mb-0" style="font-weight: bold">Sélectionner les images de l'incident du véhicule :</label>
-                                       <div class="form-control h-auto col-sm-7 col-md-6" style="border-radius: 10px;">
+                                        <label for="images" class="control-label col-sm-4 col-md-4 align-self-center mb-0" style="font-weight: bold; margin-right: 20px">Modifier les images de l'incident :</label>
+                                       <div class="form-control h-auto col-sm-7 col-md-7" style="border-radius: 10px;">
                                            <input placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{% if form.images.value %}{{ form.images.value }}{% endif %}" multiple >
                                        </div>
                                         {% if form.image.errors %}
@@ -39,21 +49,14 @@
                                         {% endif %}
                                 </div>
 
-                               <div class="form-group row">
-                                   <label class="control-label col-sm-4 align-self-center mb-0" for="description_incident" style="font-weight: bold">Description de l'incident :</label>
-                                    <div class="col-sm-8">
-                                       {{ form.description_incident }}
-                                   </div>
-{#                                   <textarea rows="4" cols="75" placeholder="Veuillez founir la description de l'incident" class="form-control" name="description_incident" id="description_incident"> </textarea>#}
-                               </div>
                                 <!-- Afficher les images existantes -->
-                           <div class="row">
-                               {% for photo in photos %}
-                                   <div class="col-md-6">
-                                        <img src="{{ photo.images.url }}" alt="Existing Image" class="img-thumbnail">
-                                   </div>
-                                {% endfor %}
-                           </div>
+                               <div class="row">
+                                   {% for photo in photos %}
+                                       <div class="col-md-6">
+                                            <img src="{{ photo.images.url }}" alt="Existing Image" class="img-fluid rounded" style="height: 500px; width: 500px; margin: 10px">
+                                       </div>
+                                    {% endfor %}
+                               </div>
 
                                <button type="submit" class="btn btn-primary" style="width: 100%">Modifier</button>
 
@@ -81,7 +84,7 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;">Incident enregistrer avec succès !</h5>
+                      <h5 class="modal-title" id="successModalLabel" style="display: flex; justify-content: center; align-items: center;">Incident modifier avec succès !</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>
@@ -136,7 +139,7 @@
                    </h1>
                </div>
                <div class="modal-body text-danger" style="font-size: 30px">
-                   Vous ne pouvez selectionner que 6 Images
+                   Vous ne pouvez sélectionner que 6 Images
                </div>
            </div>
        </div>

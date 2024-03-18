@@ -29,7 +29,7 @@ class IncidentSearchForm(forms.Form):
 class IncidentModifierForm(forms.ModelForm):
     class Meta:
         model = Incident
-        exclude = ['vehicule','conducteur', 'deplacement']
+        exclude = ['vehicule', 'conducteur', 'deplacement']
 
     def __init__(self, *args, **kwargs):
         super(IncidentModifierForm, self).__init__(*args, **kwargs)

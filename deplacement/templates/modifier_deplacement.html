@@ -19,62 +19,67 @@
         <div id="content-page" class="content-page">
             <div class="container-fluid">
                 <div class="row d-flex justify-content-center">
-                    <div class="col-sm-12 col-lg-6  ">
+                    <div class="col-sm-12 col-lg-8">
                         <div class="iq-card">
-                            <div class="iq-card-header d-flex justify-content-between">
-                                <div class="iq-header-title">
-                                    <h4 class="card-title">Modification du deplacement</h4>
+                            <div class="card-header">
+                                <div class="iq-card-header d-flex justify-content-between">
+                                    <div class="iq-header-title">
+                                        <h2 class="card-title">Modification du déplacement <i class="fa fa-paper-plane"></i></h2>
+                                    </div>
                                 </div>
                             </div>
                             <div class="iq-card-body">
                                 <form class="form-horizontal" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="id_vehicule">Vehicule:</label>
-                                        <div class="col-sm-10">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="id_vehicule">Véhicule :</label>
+                                        <div class="col-sm-9">
                                             {{ form.vehicule }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="selectConducteur">Conducteur:</label>
-                                        <div class="col-sm-10">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="selectConducteur">Conducteur :</label>
+                                        <div class="col-sm-9">
                                             {{ form.conducteur }}
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="date_depart">Date de depart:</label>
-                                        <div class="col-sm-10">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="date_depart">Date de départ :</label>
+                                        <div class="col-sm-9">
                                             <input type="date" class="form-control" id="date_depart"  name="date_depart" required value="{% if deplacement.date_depart %}{{ deplacement.date_depart|date:'Y-m-d' }}{% endif %}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="duree_deplacement">Durée: <br> (en jours)</label>
-                                        <div class="col-sm-10">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="duree_deplacement">Durée (en jours) :</label>
+                                        <div class="col-sm-9">
                                             <input type="number" min="1" class="form-control" id="duree_deplacement"  name="duree_deplacement" required value="{{ form.duree_deplacement.value }}">
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Photo de la jauge:</label>
-                                        <div class="form-control col-sm-10" style="border-radius: 10px">
-                                            <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="photo_jauge_depart" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
-                                        </div>
-                                        {% if form.photo_jauge_depart.errors %}
-                                            <p class="help-block">Veillez joindre une image</p>
-                                        {% endif %}
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="kilometrage_depart">Kilométrage:<br>(km/h)   </label>
-                                        <div class="col-sm-10">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="kilometrage_depart" >Kilométrage (km/h) :</label>
+                                        <div class="col-sm-9">
                                             <input type="number"  class="form-control" id="kilometrage_depart"  name="kilometrage_depart" value="{{ form.kilometrage_depart.value }}">
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Sélectionnez les images:</label>
-                                        <div class="form-control col-sm-10" style="border-radius: 10px">
+                                    <div class="form-group row" style="margin-top: 33px">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email" style="margin-right: 15px">Modifier les images :</label>
+                                        <div class="form-control col-sm-9" style="border-radius: 10px; padding-bottom: 35px">
                                             <input multiple placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="customFile" name="images"  value="{{ form.images.value }}">
                                         </div>
                                     </div>
+
+                                    <div class="form-group row">
+                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email" style="margin-right: 20px">Modifier la jauge :</label>
+                                        <div class="form-control col-sm-9" style="border-radius: 10px; padding-bottom: 35px">
+                                            <input  placeholder="Choisir une image" type="file" class="form-control-file" accept="image/*"  id="photo_jauge_depart" name="photo_jauge_depart"  value="{% if form.photo_jauge_depart.value %}{{ form.photo_jauge_depart.value }}{% endif %}">
+                                        </div>
+                                        {% if form.photo_jauge_depart.errors %}
+                                            <p class="help-block">Veuillez joindre une image</p>
+                                        {% endif %}
+                                    </div>
+
                                     <div class="form-group">
 
                                         <button type="submit" class="btn btn-primary" style="width: 100%">Enregistrer</button>
@@ -131,7 +136,7 @@
                     </h1>
                 </div>
                 <div class="modal-body text-danger" style="font-size: 30px">
-                    Vous ne pouvez selectionner que 6 Images
+                    Vous ne pouvez sélectionner que 6 Images
                 </div>
             </div>
         </div>

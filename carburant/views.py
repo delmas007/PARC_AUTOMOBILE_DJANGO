@@ -1,7 +1,7 @@
 from urllib import request
 
 from django.core.paginator import EmptyPage, Paginator
-from django.db.models import Q
+from django.db.models import Q, ExpressionWrapper, F, fields
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
@@ -14,7 +14,8 @@ def Ajouter_carburant(request):
     if request.method == 'POST':
         form = AjouterCarburantForm(request.POST)
         if form.is_valid():
-            carburant = form.save(commit=False)  # Je Récupere les données du formulaire sans les sauvegarder immédiatement
+            carburant = form.save(
+                commit=False)  # Je Récupere les données du formulaire sans les sauvegarder immédiatement
             carburant.utilisateur = request.user
             carburant.prix_total = carburant.quantite * carburant.type.prix  # Je Calculer le prix total
             carburant.save()
@@ -28,23 +29,27 @@ def Ajouter_carburant(request):
         'form': form,
     }
 
-    return render(request, 'Ajouter_carburant.html',  context)
+    return render(request, 'Ajouter_carburant.html', context)
 
 
 def liste_carburant(request):
-        carburant_list = Carburant.objects.all().order_by('date_mise_a_jour')
+    carburant_list = (
+        Carburant.objects.all().annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
 
-        paginator = Paginator(carburant_list.order_by('date_mise_a_jour'), 3)
-        try:
-            page = request.GET.get("page")
-            if not page:
-                page = 1
-            carburant_list = paginator.page(page)
-        except EmptyPage:
+    paginator = Paginator(carburant_list, 3)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        carburant_list = paginator.page(page)
+    except EmptyPage:
 
-            carburant_list = paginator.page(paginator.num_pages())
+        carburant_list = paginator.page(paginator.num_pages())
 
-        return render(request, 'Liste_carburant.html', {'carburants': carburant_list} )
+    return render(request, 'Liste_carburant.html', {'carburants': carburant_list})
 
 
 def Modifier_carburant(request, pk):
@@ -99,12 +104,15 @@ def carburant_search(request):
 
 
 def carburant_search(request):
-   form = CarburantSearchForm(request.GET)
-   carburant=Carburant.objects.all()
-   if form.is_valid():
+    form = CarburantSearchForm(request.GET)
+    carburant = (
+        Carburant.objects.all().annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
+    if form.is_valid():
         query = form.cleaned_data.get('q')
         if query:
-
             carburant = carburant.filter(
                 Q(vehicule__marque__marque__icontains=query) |
                 Q(type__nom__icontains=query) |
@@ -112,17 +120,22 @@ def carburant_search(request):
                 Q(vehicule__type_commercial__modele__icontains=query)
 
             )
-   paginator = Paginator(carburant.order_by('date_mise_a_jour'), 5)
-   page = request.GET.get("page", 1)
-   try:
-       carburants = paginator.page(page)
-   except EmptyPage:
-       carburants = paginator.page(paginator.num_pages)
+    paginator = Paginator(carburant, 5)
+    page = request.GET.get("page", 1)
+    try:
+        carburants = paginator.page(page)
+    except EmptyPage:
+        carburants = paginator.page(paginator.num_pages)
 
-   context = {'carburants': carburants, 'form': form}
+    context = {'carburants': carburants, 'form': form}
 
-   # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
-   if carburant.count() == 0 and form.is_valid():
-       context['no_results'] = True
+    # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
+    if carburant.count() == 0 and form.is_valid():
+        context['no_results'] = True
 
-   return render(request, 'Liste_carburant.html', context)
+    return render(request, 'Liste_carburant.html', context)
+
+
+def details_carburant(request, pk):
+    carburant = get_object_or_404(Carburant, id=pk)
+    return render(request, 'carburant_details.html', {'carburant': carburant})

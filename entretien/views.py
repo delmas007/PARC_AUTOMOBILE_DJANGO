@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Q
+from django.db.models import Q, ExpressionWrapper, F, fields
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
@@ -43,9 +43,13 @@ def Ajouter_Entretien(request):
 
 
 def liste_Entretien(request):
-    entretien_list = Entretien.objects.all().order_by('-date_mise_a_jour')
+    entretien_list = (
+        Entretien.objects.all().annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
 
-    paginator = Paginator(entretien_list.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(entretien_list, 5)
     try:
         page = request.GET.get("page")
         if not page:
@@ -60,7 +64,11 @@ def liste_Entretien(request):
 
 def entretien_search(request):
     form = IncidentSearchForm(request.GET)
-    entretien = Entretien.objects.all()
+    entretien = (
+        Entretien.objects.all().annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -71,7 +79,7 @@ def entretien_search(request):
                                          Q(vehicule__type_commercial__modele__icontains=query))
 
         context = {'entretiens': entretien, 'form': form}
-        paginator = Paginator(entretien.order_by('date_mise_a_jour'), 5)
+        paginator = Paginator(entretien, 5)
         try:
             page = request.GET.get("page")
             if not page:

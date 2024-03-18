@@ -89,52 +89,49 @@
 
                                 <div class="tableau" id="tableau" >
                                     <table class="table" id="table" style="left: auto; right: auto; padding: 20px">
-                                        <thead style="height: 100px; text-align: center; font-size: 25px">
+                                        <thead style="height: 100px; text-align: center; font-size: 25px; color: whitesmoke">
                                         <tr>
-                                            <th colspan="6">Informations du deplacement -<span style="font-size: 20px"></span> <i class="ri-roadster-line"></i></th>
+                                            <th colspan="6" class="text-white">Informations du déplacement en attente de départ <i class="fa fa-paper-plane"></i></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td><strong>VEHICULE :</strong></td>
-                                            <td class="center-text">{{ deplacement.vehicule }}</td>
+                                            <td><strong>VÉHICULE :</strong></td>
+                                            <td class="center-text">{{ deplacement.vehicule|title }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>CONDUCTEUR :</strong></td>
-                                            <td class="center-text">{{  deplacement.conducteur }}</td>
+                                            <td class="center-text">{{  deplacement.conducteur|title }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>DATE DE DEPART :</strong></td>
+                                            <td><strong>DATE DE DÉPART :</strong></td>
                                             <td class="center-text">{{ deplacement.date_depart }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>DUREE DE DEPLACEMENT :</strong></td>
-                                            <td class="center-text">{{ deplacement.duree_deplacement }}</td>
+                                            <td><strong>DURÉE DU DÉPLACEMENT :</strong></td>
+                                            <td class="center-text">{% if deplacement.duree_deplacement > 1 %} {{ deplacement.duree_deplacement }} jours {% else %} {{ deplacement.duree_deplacement }} jour {% endif %}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>KILOMETRAGE DE DEPART :</strong></td>
+                                            <td><strong>KILOMÉTRAGE DE DÉPART :</strong></td>
                                             <td class="center-text">{{ deplacement.kilometrage_depart }} Km/h</td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                <tr>
-                                            <td ><strong>JAUGE D'ESSENCE :</strong></td>
-                                            <td  class="center-text"></td>
-                                        </tr>
+
                                     <div class="imageContent"  style="align-items: center; text-align: center;">
                                     <div>
-                                        <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">JAUGE D'ESSENCE</label></div>
+                                        <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">JAUGE D'ESSENCE :</label></div>
                                         <img src="{{ deplacement.photo_jauge_depart.url }}" alt="Image de la jauge" style="height: 250px" onclick="showImagePopup('{{ deplacement.photo_jauge_depart.url }}')">
                                     </div>
-                                        <div>  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE AU DEPART</label></div>
+                                        <div>  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b; margin-top: 10px">PHOTOS DU VÉHICULE AU DÉPART :</label></div>
                                         {% for image in image %}
-                                            <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                            <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px; margin-bottom: 10px">
                                         {% endfor %}
 
                                     </div>
                                 </div>
                             </div>
-                            <a style="text-align: center; font-size: 50px; margin-left: 50%; margin-right: auto" class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier le deplacement" href="{% url 'deplacement:modifier_deplacement' pk=deplacement.pk %}"><i style="font-size: 60px" class="ri-edit-2-fill"></i></a>
+                            <a style="text-align: center; font-size: 50px; margin-left: 50%; margin-right: auto" class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier le déplacement" href="{% url 'deplacement:modifier_deplacement' pk=deplacement.pk %}"><i style="font-size: 60px" class="ri-edit-2-fill"></i></a>
                         </div>
 
                     </div>

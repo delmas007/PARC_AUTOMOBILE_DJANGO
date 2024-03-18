@@ -83,31 +83,31 @@
 
                                 <div class="tableau" id="tableau" >
                                     <table class="table" id="table" style="left: auto; right: auto; padding: 20px">
-                                        <thead style="height: 100px; text-align: center; font-size: 25px">
+                                        <thead style="height: 100px; text-align: center; font-size: 25px; color: whitesmoke">
                                         <tr>
-                                            <th colspan="3">Informations du déplacement <i class="ri-roadster-line"></i></th>
+                                            <th colspan="3" class="text-white">Informations du déplacement terminé <i class="bi bi-send-check-fill"></i></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td><strong>VEHICULE :</strong></td>
-                                            <td class="center-text">{{ etat_arrive.deplacement.vehicule }}</td>
+                                            <td><strong>VÉHICULE :</strong></td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.vehicule|title    }}</td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td><strong>CONDUCTEUR :</strong></td>
-                                            <td class="center-text">{{ etat_arrive.deplacement.conducteur }}</td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.conducteur|title }}</td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td><strong>TAILLE DU RESERVOIR :</strong></td>
-                                            <td class="center-text">{{ etat_arrive.deplacement.vehicule }} Litres</td>
+                                            <td class="center-text">{{ etat_arrive.deplacement.vehicule.taille_reservoir }} Litres</td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td><strong></strong></td>
-                                            <td class="center-text"><strong>DEPART</strong></td>
-                                            <td class="center-text"><strong>ARRIVE</strong></td>
+                                            <td class="center-text"><strong>DÉPART :</strong></td>
+                                            <td class="center-text"><strong>ARRIVÉE :</strong></td>
                                         </tr>
                                         <tr>
                                             <td><strong>DATE :</strong></td>
@@ -115,7 +115,7 @@
                                             <td class="center-text">{{ etat_arrive.date_arrive }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>KILOMETRAGE:</strong></td>
+                                            <td><strong>KILOMÉTRAGE :</strong></td>
                                             <td class="center-text">{{ etat_arrive.deplacement.kilometrage_depart }} Km/h</td>
                                             <td class="center-text">{{ etat_arrive.kilometrage_arrive }} Km/h</td>
                                         </tr>
@@ -126,11 +126,11 @@
                                         <div class="jaugeContent">
                                             <div style="overflow: auto;">
                                                 <div style="float: left; width: 50%;">
-                                                    <label style="display: block; text-align: center; text-decoration: underline; text-underline: #0b0b0b">JAUGE D'ESSENCE AU DÉPART</label>
+                                                    <label style="display: block; text-align: center; text-decoration: underline; text-underline: #0b0b0b">JAUGE D'ESSENCE AU DÉPART :</label>
                                                     <img class="jauge-image" src="{{ deplacement.photo_jauge_depart.url }}" alt="Image de la jauge" style="height: 250px; display: block; margin: 0 auto;" onclick="showImagePopup('{{ deplacement.photo_jauge_depart.url }}')">
                                                 </div>
                                                 <div style="float: right; width: 50%;">
-                                                    <label style="display: block; text-align: center; text-decoration: underline; text-underline: #0b0b0b">JAUGE D'ESSENCE À L'ARRIVÉE</label>
+                                                    <label style="display: block; text-align: center; text-decoration: underline; text-underline: #0b0b0b">JAUGE D'ESSENCE À L'ARRIVÉE :</label>
                                                     <img class="jauge-image" src="{{ etat_arrive.photo_jauge_arrive.url }}" alt="Image de la jauge" style="height: 250px; display: block; margin: 0 auto;" onclick="showImagePopup('{{ etat_arrive.photo_jauge_arrive.url }}')">
                                                 </div>
                                             </div>
@@ -139,16 +139,16 @@
 
 
                                             <div style="margin-bottom: 50px; margin-top: 35px">
-                                                <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE AU DEPART</label>
+                                                <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VÉHICULE AU DÉPART : </label>
                                                 {% for image in images %}
                                                     <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
                                                 {% endfor %}
                                             </div>
                                         </div>
                                         <div class="image2Content">
-                                            <div style="margin-top: 50px">  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VEHICULE A L'ARRIVEE</label>
+                                            <div style="margin-top: 50px">  <label style="display: block; text-align: center;text-decoration: underline;text-underline: #0b0b0b">PHOTOS DU VÉHICULE A L'ARRIVÉE</label>
                                                 {% for image in image %}
-                                                    <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px">
+                                                    <img src="{{ image.images.url }}" alt="profile-img" class="vehicule-image" onclick="showImagePopup2('{{ image.images.url }}')" style=" display: inline-block;white-space: nowrap;max-width: 20%; height: auto; margin-left: 150px; margin-top: 10px; margin-bottom: 10px">
                                                 {% endfor %}
                                             </div>
                                         </div>

@@ -1,6 +1,6 @@
 from datetime import timedelta, date
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, ExpressionWrapper, F, fields
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Model.models import Vehicule, Incident, Utilisateur, Photo
@@ -37,7 +37,11 @@ def enregistrer_incident(request):
 def liste_incidents_externe(request):
     aujourd_hui = date.today()
     une_semaine_avant = aujourd_hui - timedelta(days=7)
-    incidents_list = Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=False)
+    incidents_list = (
+        Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=False).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
     incidents = {}
     for item_incident in incidents_list:
         latest_photo = get_latest_photo(item_incident)
@@ -55,7 +59,11 @@ def liste_incidents_externe(request):
 def liste_incidents_interne(request):
     aujourd_hui = date.today()
     une_semaine_avant = aujourd_hui - timedelta(days=7)
-    incidents_list = Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=True)
+    incidents_list = (
+        Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=True).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
     incidents = {}
     for item_incident in incidents_list:
         latest_photo = get_latest_photo(item_incident)
@@ -80,8 +88,14 @@ def get_latest_photo(incident):
 
 @login_required(login_url='Connexion')
 def incidents_search(request):
+    aujourd_hui = date.today()
+    une_semaine_avant = aujourd_hui - timedelta(days=7)
     form = IncidentSearchForm(request.GET)
-    incidents_list = Incident.objects.filter(conducteur_id__isnull=True)
+    incidents_list = (
+        Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=True).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
     incidents = {}
 
     if form.is_valid():
@@ -112,8 +126,14 @@ def incidents_search(request):
 
 @login_required(login_url='Connexion')
 def incidents_externe_search(request):
+    aujourd_hui = date.today()
+    une_semaine_avant = aujourd_hui - timedelta(days=7)
     form = IncidentSearchForm(request.GET)
-    incidents_list = Incident.objects.filter(conducteur_id__isnull=False)
+    incidents_list = (
+        Incident.objects.filter(date_mise_a_jour__gte=une_semaine_avant, conducteur_id__isnull=False).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
     incidents = {}
 
     if form.is_valid():

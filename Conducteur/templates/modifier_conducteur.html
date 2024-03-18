@@ -86,38 +86,31 @@
     </div>
 </div>
 {% include 'footer.html' %}
+
 <script>
     {% if form.errors %}
     document.addEventListener('DOMContentLoaded', function() {
         $('#successModal').modal('show');
     });
     {% endif %}
+
 </script>
+
 <script>
 
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear()-18;
+    let today = new Date();
+    let dd = 31;
+    let mm = 12 //January is 0!
+    let yyyy = today.getFullYear()-18;
+    let years = today.getFullYear();
 
     today = yyyy + '-' + mm + '-' + dd;
+    todays = years + '-' + mm + '-' + dd;
 
     // Set the minimum date for date_expiration_assurance input
     document.getElementById("date_de_naissance").max = today;
+    document.getElementById("date_embauche").max = todays;
 
-
-</script>
-
-<script>
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set the minimum date for date_expiration_assurance input
-    document.getElementById("date_embauche").max = today;
 </script>
 
 <script>

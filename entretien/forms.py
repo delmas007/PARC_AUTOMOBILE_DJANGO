@@ -20,6 +20,13 @@ class EntretienForm(forms.ModelForm):
             'required': True,
         })
 
+        self.fields['description'].widget.attrs.update({
+            'class': "form-control",
+            'id': "description",
+            'rows': 4,
+            'required': True,
+        })
+
     class Meta:
         model = Entretien
         fields = '__all__'
@@ -33,6 +40,16 @@ class IncidentSearchForm(forms.Form):
 
 
 class EntretienModifierForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['description'].widget.attrs.update({
+            'class': "form-control",
+            'id': "description",
+            'rows': 4,
+            'required': True,
+        })
+
     class Meta:
         model = Entretien
         fields = ['description']

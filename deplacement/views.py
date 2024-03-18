@@ -11,7 +11,7 @@ from django.views.decorators.http import require_GET
 from Model.models import Deplacement, Photo, EtatArrive, Demande_prolongement, Conducteur, Vehicule
 from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm, DeplacementSearchForm
 from datetime import date, timedelta
-from django.db.models import Q, Exists, OuterRef
+from django.db.models import Q, Exists, OuterRef, ExpressionWrapper, F, fields
 import json
 
 
@@ -73,11 +73,15 @@ def enregistrer_deplacement(request):
 
 def liste_deplacement(request):
     aujourd_hui = date.today()
-    deplacement = Deplacement.objects.filter(Q(date_depart__gt=aujourd_hui))
+    deplacement = (
+        Deplacement.objects.filter(Q(date_depart__gt=aujourd_hui)).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
     deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
-    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 4)
+    paginator = Paginator(deplacement, 4)
     try:
         page = request.GET.get("page")
         if not page:
@@ -86,7 +90,7 @@ def liste_deplacement(request):
     except EmptyPage:
 
         deplacement = paginator.page(paginator.num_pages())
-    return render(request, 'afficher_deplacement.html', {'deplacements': deplacement })
+    return render(request, 'afficher_deplacement.html', {'deplacements': deplacement})
 
 
 def depart(request, pk):
@@ -102,8 +106,12 @@ def liste_deplacement_en_cours(request):
     prolongement = Demande_prolongement.objects.all()
 
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
-    deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
-        Q(id__in=deplacements_etat_arrive_ids))
+    deplacements = (
+        Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
+            Q(id__in=deplacements_etat_arrive_ids)).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
     deplacement_ids = deplacements.values_list('id', flat=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
     prolongement_arrive = Demande_prolongement.objects.filter(refuser=True)
@@ -113,7 +121,7 @@ def liste_deplacement_en_cours(request):
     prolongement_encours_ids = prolongement_encours.values_list('deplacement_id', flat=True)
     prolongement_arrive_ids = prolongement_arrive.values_list('deplacement_id', flat=True)
     prolongement_accepte_ids = prolongement_accepte.values_list('deplacement_id', flat=True)
-    paginator = Paginator(deplacements.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(deplacements, 5)
     try:
         page = request.GET.get("page")
         if not page:
@@ -138,10 +146,14 @@ def arrivee(request, pk):
 
 def liste_deplacement_arrive(request):
     aujourd_hui = date.today()
-    etatarrive = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
-        date_arrive__gt=aujourd_hui)
+    etatarrive = (
+        EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
+            date_arrive__gt=aujourd_hui).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
 
-    paginator = Paginator(etatarrive.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(etatarrive, 5)
     try:
         page = request.GET.get("page")
         if not page:
@@ -345,7 +357,11 @@ def refuse_prolongement(request, prolongement_id):
 def deplacement_search(request):
     form = DeplacementSearchForm(request.GET)
     aujourdhui = date.today()
-    deplacement = Deplacement.objects.filter(date_depart__gt=aujourdhui)
+    deplacement = (
+        Deplacement.objects.filter(Q(date_depart__gt=aujourdhui)).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -374,7 +390,7 @@ def deplacement_search(request):
                     Q(conducteur__utilisateur__prenom__icontains=query)
                 )
 
-    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(deplacement, 5)
     page = request.GET.get("page", 1)
     try:
         deplacements = paginator.page(page)
@@ -394,8 +410,12 @@ def deplacement_encours_search(request):
     form = DeplacementSearchForm(request.GET)
     aujourdhui = date.today()
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
-    deplacement = Deplacement.objects.filter(date_depart__lte=aujourdhui).exclude(
-        Q(id__in=deplacements_etat_arrive_ids))
+    deplacement = (
+        Deplacement.objects.filter(Q(date_depart__lte=aujourdhui)).exclude(
+            Q(id__in=deplacements_etat_arrive_ids)).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
     prolongement = Demande_prolongement.objects.all()
 
     deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourdhui)).exclude(
@@ -437,7 +457,7 @@ def deplacement_encours_search(request):
                     Q(conducteur__utilisateur__prenom__icontains=query)
                 )
 
-    paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(deplacement, 5)
     page = request.GET.get("page", 1)
     try:
         deplacements = paginator.page(page)
@@ -459,8 +479,12 @@ def deplacement_encours_search(request):
 def arrive_search(request):
     form = DeplacementSearchForm(request.GET)
     aujourd_hui = date.today()
-    arrivee = EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
-        date_arrive__gt=aujourd_hui)
+    arrivee = (
+        EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
+            date_arrive__gt=aujourd_hui).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -477,7 +501,7 @@ def arrive_search(request):
                     Q(deplacement__conducteur__utilisateur__nom__icontains=nom)
                 )
                 for prenom in prenoms:
-                    arrivee=arrivee.filter(deplacement__conducteur__utilisateur__prenom__icontains=prenom)
+                    arrivee = arrivee.filter(deplacement__conducteur__utilisateur__prenom__icontains=prenom)
 
             else:
                 # Si la requête ne contient pas exactement deux parties, recherchez normalement
@@ -489,7 +513,7 @@ def arrive_search(request):
                     Q(deplacement__conducteur__utilisateur__prenom__icontains=query)
                 )
 
-    paginator = Paginator(arrivee.order_by('date_mise_a_jour'), 5)
+    paginator = Paginator(arrivee, 5)
     page = request.GET.get("page", 1)
     try:
         etatarrives = paginator.page(page)
