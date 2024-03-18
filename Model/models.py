@@ -3,6 +3,7 @@ import uuid
 from datetime import timedelta
 
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.db.models import Sum
 from django.utils import timezone
 from django.db import models
 
@@ -155,6 +156,10 @@ class Vehicule(models.Model):
     def __str__(self):
         return f"{self.marque} {self.type_commercial} {self.numero_immatriculation}"
 
+    def total_carburant_consomme(self):
+        total_quantite = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('quantite')).get('total') or 0
+        total_prix = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('prix_total')).get('total') or 0
+        return {'quantite': total_quantite, 'prix': total_prix}
 
 class Deplacement(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
