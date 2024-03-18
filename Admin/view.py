@@ -42,11 +42,11 @@ def rapport_entretien_mensuel_pdf(request):
                 html_content += "<h2>Entretien</h2>"
                 html_content += """
                  <table border="1">
-                 <tr><th>Date</th><th>Type</th><th>Prix</th></tr>
+                 <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                  """
                 for reparation in entretien:
                     html_content += f"""
-                    <tr><td>{reparation.date_mise_a_jour.date()}</td><td>{reparation.prix_entretient}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
+                    <tr><td>{reparation.date_entretien}</td><td>{reparation.prix_entretient}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -61,38 +61,38 @@ def rapport_entretien_mensuel_pdf(request):
             <html>
             <head><title>Rapport PDF</title></head>
             <body>
-            <h1>Rapport Incidents de {mois_lettre} {annee}</h1>
+            <h1>Rapport Entretien de {mois_lettre} {annee}</h1>
             """
 
             # Filtrer les incidents pour le mois et l'année spécifiés
-            incidents = Incident.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
+            entretiens = Entretien.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
 
             # Vérifier s'il y a des incidents pour ce mois et cette année
-            if incidents:
+            if entretiens:
                 # Boucle sur chaque conducteur pour générer le rapport
-                for conducteur in conducteurs:
+                for voiture in voitures:
 
                     # Filtrer les incidents pour ce conducteur
-                    incidents_conducteur = incidents.filter(conducteur=conducteur)
+                    entretiens_vehicule = entretiens.filter(vehicule=voiture)
                     html_content += f"""
-                                                                  <h2>Rapport de {conducteur}</h2>
-
+                    <h2>Rapport de {voiture}</h2>
+                    <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                                                               """
 
                     # Vérifier s'il y a des incidents pour ce conducteur
-                    if incidents_conducteur:
+                    if entretiens_vehicule:
 
                         # Boucle sur chaque incident pour ce conducteur
-                        for incident in incidents_conducteur:
+                        for entretien in entretiens_vehicule:
                             html_content += f"""
                                                 <table border="1">
-                                                <tr><td>{incident.date_mise_a_jour.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
+                                                <tr><td>{entretien.date_entretien}</td><td>{entretien.vehicule}</td><td>{entretien.description_incident}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
-                        total_incident = incidents_conducteur.count()
+                        total_incident = entretiens_vehicule.count()
                         # Calculer les totaux pour ce conducteur
-                        total_carburant = incidents_conducteur.filter(vehicule=incident.vehicule).count()
+                        total_carburant = entretiens_vehicule.filter(vehicule=entretien.vehicule).count()
                         html_content += f"""
                             <tr><td>Total</td><td>{total_carburant}</td><td>{total_incident}</td></tr>
                         """
