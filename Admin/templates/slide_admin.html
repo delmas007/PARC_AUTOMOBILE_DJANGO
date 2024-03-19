@@ -80,7 +80,6 @@
                     <a href="#reinitialiser" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-lock"></i><span >Mot de passe</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="reinitialiser" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="{% if request.path == admin_password_reset_confirms_url %}active{% endif %}" ><a href="{% url 'admins:password_reset_confirms' %}"><i class="bi bi-lock"></i>Reinitialisation</a></li>
-                        <li class="{% if request.path == admin_ChangerMotDePasse_admin_url %}active{% endif %}" ><a href="{% url 'admins:ChangerMotDePasse_admin' %}"><i class="bi bi-lock"></i>Changer</a></li>
 
                     </ul>
                 </li>
