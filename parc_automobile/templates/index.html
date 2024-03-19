@@ -131,13 +131,13 @@
                                  <span class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown">
                                  <i class="ri-more-fill"></i>
                                  </span>
-                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" >
-                                    <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
-                                    <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                                    <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                    <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
-                                    <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                                 </div>
+{#                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" >#}
+{#                                    <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>#}
+{#                                    <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>#}
+{#                                    <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>#}
+{#                                    <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>#}
+{#                                    <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>#}
+{#                                 </div>#}
                               </div>
                            </div>
                         </div>
@@ -212,13 +212,6 @@
                                  <span class="dropdown-toggle text-primary" id="dropdownMenuButton5" data-toggle="dropdown">
                                  <i class="ri-more-fill"></i>
                                  </span>
-                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton5">
-                                    <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
-                                    <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                                    <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                    <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
-                                    <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                                 </div>
                               </div>
                            </div>
                         </div>
@@ -234,25 +227,41 @@
                                     </tr>
                                  </thead>
                                  <tbody>
-                                    {% for deplacement in deplacements_recents %}
+                                    {% for en_attente in deplacement_en_attente %}
                                         <tr>
-                                            <td>{{ deplacement.conducteur }}</td>
-                                            <td>{{ deplacement.vehicule }}</td>
-                                            <td>{{ deplacement.date_depart }}</td>
+                                            <td>{{ en_attente.conducteur|title }}</td>
+                                            <td>{{ en_attente.vehicule|title }}</td>
+                                            <td>{{ en_attente.date_depart }}</td>
                                             <td class="text-center">
-                                                {% if deplacement.date_depart > now  %}
                                                 <div class="badge badge-pill iq-bg-danger">
                                                     En attente
                                                 </div>
-                                                {% elif deplacement.date_depart <= now %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    {% for en_cours in deplacement_en_cours %}
+                                        <tr>
+                                            <td>{{ en_cours.conducteur|title }}</td>
+                                            <td>{{ en_cours.vehicule|title }}</td>
+                                            <td>{{ en_cours.date_depart }}</td>
+                                            <td class="text-center">
                                                 <div class="badge badge-pill iq-bg-warning">
                                                     En cours
                                                 </div>
-                                                {% else %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    {% for termine in deplacement_termine %}
+                                        <tr>
+                                            <td>{{ termine.deplacement.conducteur|title }}</td>
+                                            <td>{{ termine.deplacement.vehicule|title }}</td>
+                                            <td>{{ termine.deplacement.date_depart }}</td>
+                                            <td class="text-center">
                                                 <div class="badge badge-pill iq-bg-success">
                                                     Terminé
                                                 </div>
-                                                {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -277,12 +286,13 @@
                            </div>
                         </div>
                         <div class="iq-card-body">
-                          <div id="weather-info">
-                              <input type="text" id="cityInput" placeholder="Entrez une ville" class="form-control">
-                              <button class="btn btn-primary mt-2 mb-3" id="btnMeteo">Obtenir la météo</button>
-                            <h5 id="weather-city"></h5>
-                            <h5 id="weather-description" class="text-capitalize"></h5>
-                            <h5 id="temperature" class="text-danger"></h5>
+                          <div id="weather-info" class="text-center">
+                                <input type="text" id="cityInput" placeholder="Entrez une ville" class="form-control">
+                                <button class="btn btn-primary mt-2 mb-5" id="btnMeteo">Obtenir la météo</button>
+                                <h5 id="country" class="text-capitalize"></h5>
+                                <h5 id="weather-city"></h5>
+                                <h5 id="weather-description" class="text-capitalize"></h5>
+                                <h5 id="temperature" class="text-danger mt-2"></h5>
                           </div>
                         </div>
                      </div>
@@ -423,9 +433,10 @@
 
 
 <script>
+    const apiKey = '9745b272e6f312ca99794a979760245c';
+
     function recupererMeteo(ville) {
-            const apiKey = '9745b272e6f312ca99794a979760245c';
-            {#const city = "Abidjan";#}
+
             const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${ville}&appid=${apiKey}&units=metric&lang=fr`;
 
             $.ajax({
@@ -437,16 +448,65 @@
                   $('#weather-city').text(`Ville : ${data.name}`);
                   $('#weather-description').text(`Conditions météo : ${data.weather[0].description}`);
                   $('#temperature').text(`Température : ${data.main.temp} °C`);
-
-                console.log(data);
+                  recupererNomPays(data.sys.country);
               },
               error: () => {
-                alert('Merci de revenir plus tard.');
+                alert('Impossible de charger la météo pour l\'instant.');
               }
             });
     }
 
-    recupererMeteo('Abidjan');
+    function recupererNomPays(codePays) {
+
+          $.ajax(
+          {
+              url: `https://restcountries.com/v3/alpha/${codePays}`,
+              type: 'GET',
+              dataType: 'json',
+              success: (data) =>{
+                  let nom = data[0].translations.fra.common
+                  $('#country').text(`Pays : ${nom}`);
+              },
+              error: () => {
+                  $('#country').text(`Pays : Inconnu`);
+              }
+          }
+        )
+
+    }
+
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.watchPosition(
+            (position) => {
+                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${ position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=metric&lang=fr`;
+                $.ajax({
+                  url: apiUrl,
+                  type: 'GET',
+                  dataType: 'json',
+                  success: (data) => {
+                      $('#weather-info');
+                      $('#weather-city').text(`Ville : ${data.name}`);
+                      $('#weather-description').text(`Conditions météo : ${data.weather[0].description}`);
+                      $('#temperature').text(`Température : ${data.main.temp} °C`);
+                      recupererNomPays(data.sys.country);
+
+                  },
+                  error: () => {
+                    alert('Impossible de charger la météo pour l\'instant.');
+                }
+            });
+            }, erreur, options);
+          var options = {
+            enableHighAccuracy: true
+          }
+    }else {
+        recupererMeteo('Abidjan');
+    }
+
+    function erreur() {
+      recupererMeteo('Abidjan');
+    }
 
     $('#btnMeteo').on('click', ()=>{
         let villeChoisie = $('#cityInput').val();
@@ -455,5 +515,4 @@
 </script>
 
 </body>
-
 {% endblock %}

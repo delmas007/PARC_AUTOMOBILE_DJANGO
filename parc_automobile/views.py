@@ -1,7 +1,9 @@
 from datetime import date, timedelta
 import os
+
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Subquery, Q
+from django.db.models import Subquery, Q, ExpressionWrapper, F, fields
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -9,6 +11,7 @@ from Model.models import Demande_prolongement, EtatArrive, Conducteur, Vehicule,
 from Model.models import Incident
 
 
+@login_required(login_url='Connexion')
 def Accueil(request):
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
     aujourd_hui = date.today()
@@ -23,14 +26,37 @@ def Accueil(request):
     nombre_deplacements_en_cours = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids)).count()
 
+    deplacement_termine = (
+        EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
+            date_arrive__gt=aujourd_hui).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )[:2]
+
+    deplacement_en_cours = (
+        Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
+            Q(id__in=deplacements_etat_arrive_ids)).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )[:2]
+
+    deplacement_en_attente = (
+        Deplacement.objects.filter(Q(date_depart__gt=aujourd_hui)).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )[:2]
+
     # Récupérer les déplacements récents, par exemple, les 5 derniers
-    deplacements_recents = Deplacement.objects.order_by('-date_mise_a_jour')[:5]
+    deplacements_recents = Deplacement.objects.order_by('-date_mise_a_jour')[:3]
 
     deplacements_planifies = Deplacement.objects.filter(date_depart__isnull=False)
-    print(deplacements_planifies)
 
     # Récupérer les véhicules disponibles
-    vehicule_disponible = Vehicule.objects.filter(disponibilite=True)
+    vehicule_disponible = (
+        Vehicule.objects.filter(disponibilite=True).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
     # Configurer la pagination avec 6 véhicules par page
     paginator = Paginator(vehicule_disponible, 6)
     page = request.GET.get('page', 1)
@@ -54,6 +80,9 @@ def Accueil(request):
         'deplacements_planifies': deplacements_planifies,
         'now': aujourd_hui,
         'api_key': os.getenv('API_KEY'),
+        'deplacement_termine': deplacement_termine,
+        'deplacement_en_cours': deplacement_en_cours,
+        'deplacement_en_attente': deplacement_en_attente,
     }
 
     return render(request, 'index.html', context)
