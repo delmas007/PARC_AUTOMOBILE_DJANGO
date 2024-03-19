@@ -3,6 +3,7 @@ import os
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.serializers import serialize
 from django.db.models import Subquery, Q, ExpressionWrapper, F, fields
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -89,16 +90,18 @@ def Accueil(request):
 
 def deplacements_planifies(request):
     deplacements_planifies = Deplacement.objects.filter(date_depart__isnull=False)
-    conducteurs = Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True)
     out = []
     for event in deplacements_planifies:
+        conducteur = event.conducteur  # Récupérer l'objet Conducteur associé à l'événement
+        utilisateur = conducteur.utilisateur  # Récupérer l'objet Utilisateur associé au conducteur
+        nom_conducteur = f"{utilisateur.nom} {utilisateur.prenom}" if utilisateur else ''
+
         out.append({
             'title': f"{event.vehicule.marque}-{event.vehicule.type_commercial}-{event.vehicule.numero_immatriculation}",
             'id': event.id,
             'start': event.date_depart.strftime("%m/%d/%Y, %H:%M:%S"),
-            'end': (event.date_depart + timedelta(hours=event.duree_deplacement)).strftime("%m/%d/%Y, %H:%M:%S"),
             'duree': event.duree_deplacement,
-            # 'conducteur': conducteur
+            'conducteur': nom_conducteur
         })
 
     return JsonResponse(out, safe=False)
