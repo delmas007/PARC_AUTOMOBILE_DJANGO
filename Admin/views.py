@@ -194,7 +194,20 @@ def Carburant_search(request):
 
 
 def dashboard_admins(request):
-    return render(request, 'dashoard_admins.html')
+    vehicles = Vehicule.objects.all()
+    labels = [f"{vehicle.marque} {vehicle.type_commercial}" for vehicle in vehicles]
+    fuel_data = [vehicle.total_carburant_consomme() for vehicle in vehicles]
+    quantites = [data['quantite'] for data in fuel_data]
+    prix = [data['prix'] for data in fuel_data]
+
+    context = {
+        'labels': labels,
+        'quantites': quantites,
+        'prix': prix,
+    }
+
+    return render(request, 'dashoard_admins.html', context)
+
 
 
 def rapport_depense_admins(request):
