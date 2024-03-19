@@ -156,10 +156,10 @@
                                  <tbody>
                                     {% for vehicule in vehicule_disponible %}
                                         <tr>
-                                            <td>{{ vehicule.marque }}</td>
-                                            <td>{{ vehicule.type_commercial }}</td>
+                                            <td>{{ vehicule.marque|title }}</td>
+                                            <td>{{ vehicule.type_commercial|title }}</td>
                                             <td>{{ vehicule.numero_immatriculation }}</td>
-                                            <td>{{ vehicule.kilometrage }}</td>
+                                            <td>{{ vehicule.kilometrage }} km/h</td>
                                             <td class="text-center">
                                                 <div class="badge badge-pill iq-bg-warning" style="font-size: medium">
                                                     Oui
@@ -232,7 +232,7 @@
                                             <td>{{ en_attente.conducteur|title }}</td>
                                             <td>{{ en_attente.vehicule|title }}</td>
                                             <td>{{ en_attente.date_depart }}</td>
-                                            <td class="text-center">
+                                            <td class="text-center" style="font-size: 16px">
                                                 <div class="badge badge-pill iq-bg-danger">
                                                     En attente
                                                 </div>
@@ -245,7 +245,7 @@
                                             <td>{{ en_cours.conducteur|title }}</td>
                                             <td>{{ en_cours.vehicule|title }}</td>
                                             <td>{{ en_cours.date_depart }}</td>
-                                            <td class="text-center">
+                                            <td class="text-center" style="font-size: 16px">
                                                 <div class="badge badge-pill iq-bg-warning">
                                                     En cours
                                                 </div>
@@ -258,7 +258,7 @@
                                             <td>{{ termine.deplacement.conducteur|title }}</td>
                                             <td>{{ termine.deplacement.vehicule|title }}</td>
                                             <td>{{ termine.deplacement.date_depart }}</td>
-                                            <td class="text-center">
+                                            <td class="text-center" style="font-size: 16px">
                                                 <div class="badge badge-pill iq-bg-success">
                                                     Terminé
                                                 </div>
@@ -308,7 +308,6 @@
                               </div>
                            </div>
                            <div class="iq-card-body">
-{#                              <div id="home-chart-01"></div>#}
                                <div id="calendrier"></div>
                            </div>
                         </div>
@@ -326,13 +325,13 @@
            <div class="modal-dialog" role="document">
               <div class="modal-content">
                  <div class="modal-header">
-                    <h5 class="modal-title" id="eventDeplacementModalLabel">Voici tous les déplacemnts</h5>
+                    <h5 class="modal-title text-capitalize text-danger" id="eventDeplacementModalLabel"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                        <span aria-hidden="true">&times;</span>
                     </button>
                  </div>
                  <div class="modal-body">
-                    <p class="lead text-danger">Déplacement !</p>
+                    <p class="lead" id="body"></p>
                  </div>
                  <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -340,7 +339,6 @@
               </div>
            </div>
       </div>
-
       <!-- Wrapper END -->
       <!-- Footer -->
 
@@ -349,34 +347,12 @@
       <!-- Optional JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/fr.js"></script>
-
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/fr.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
-<script>
-   function loadVehicules(page) {
-      $.ajax({
-         url: location.href,
-         data: { page: page },
-         dataType: 'html',
-         success: function (data) {
-            const $data = $(data);
-            $('#vehicules-table').html($data.find('#vehicules-table').html());
-            $('#pagination-links').html($data.find('#pagination-links').html());
-         }
-      });
-   }
 
-   $(document).on('click', '.pagination a', function (e) {
-      e.preventDefault();
-      const page = $(this).attr('data-page');
-      loadVehicules(page);
-   });
-
-   // Chargement initial des véhicules
-   loadVehicules(1);
-</script>
 
 
 <script>
@@ -406,7 +382,23 @@
           locale: 'fr',
 
          eventClick: function (event) {
-            alert('Clic sur l\'événement : ' + event.title);
+             // Afficher une boîte de dialogue modale
+            $('#eventDeplacementModalLabel').text(`Déplacement de ${event.title}`);
+            $(this).attr('data-toggle', 'modal');
+            $(this).attr('data-target', '#eventDeplacement');
+             // Récupérer la date de départ de l'événement
+            let startDate = new Date(event.start);
+
+            // Définir les noms complets des jours de la semaine et des mois
+            let joursSemaine = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+            let mois = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+
+            // Créer une chaîne de format "Jeudi 22 mars"
+            let dateString = `${joursSemaine[startDate.getDay()]} ${startDate.getDate()} ${mois[startDate.getMonth()]}`;
+
+            // Mettre à jour le contenu de l'élément HTML avec la date formatée
+            $('#body').html(`Date de départ : ${dateString} <br> Durée : ${event.duree} jours <br> Conducteur : ${event.conducteur}`);
+
          },
 
           dayRender: function (date,cell) {
