@@ -281,7 +281,7 @@ def rapport_depense_mensuel_pdf(request):
                             }}
                     </style>
                     </head>
-                    <body>
+                    <body class="center">
                     <h1>Rapport Depense de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
 
@@ -355,7 +355,7 @@ def rapport_depense_mensuel_pdf(request):
                             }}
              </style>
             </head>
-            <body>
+            <body class="center">
             <h1>Rapport Depense de {mois_lettre} {annee}</h1>
             <table border="1">
             <tr><th>Voitures</th><th>Nombre de déplacements</th><th>Quantitié</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
@@ -382,7 +382,7 @@ def rapport_depense_mensuel_pdf(request):
                 if vehicule_max_entretien_id:
                     vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
                 else:
-                    vehicule_max_entretien = "Aucun donné carburant"
+                    vehicule_max_entretien = "Aucun donné entretien"
                 html_content += f"<tr> <td> {voiture} </td><td> {deplacement} </td><td> {carburant_quantite} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"
 
             html_content += f"""
@@ -457,7 +457,7 @@ def rapport_depense_pdf(request):
                                     }}
                                </style>
                                </head>
-                               <body>
+                               <body class="center">
                                <h1>Rapport Depense de {debut_date} à {fin_date}  de {vehicule}</h1>
                            """
 
@@ -483,7 +483,7 @@ def rapport_depense_pdf(request):
                 html_content += "<h2>Entretien</h2>"
                 html_content += """
                             <table border="1">
-                            <tr><th>Date</th><th>Type</th><th>Prix</th></tr>
+                            <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                             """
                 for reparation in entretiens:
                     html_content += f"""
@@ -531,7 +531,7 @@ def rapport_depense_pdf(request):
                             }}
                    </style>
                    </head>
-                   <body>
+                   <body class="center">
                   <h1>Rapport Depense de {debut_date} à {fin_date}</h1> <table border="1"> 
                   <tr><th>Voitures</th><th>Nombre de deplacements</th><th>Quantitié</th><th>Carburant</th><th>Nombre 
                   entretien</th><th>Entretien</th><th>Total</th></tr>
@@ -560,7 +560,7 @@ def rapport_depense_pdf(request):
                 if vehicule_max_entretien_id:
                     vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
                 else:
-                    vehicule_max_entretien = "Aucun donné carburant"
+                    vehicule_max_entretien = "Aucun donné entretien"
 
                 deplacement = Deplacement.objects.filter(vehicule=voiture, date_depart__range=(debut_date,fin_date)).count()
                 nbre_deplacements += deplacement
@@ -677,7 +677,7 @@ def rapport_carburant_mensuel_pdf(request):
                             }}
                     </style>
                     </head>
-                    <body>
+                    <body class="center">
                     <h1>Rapport Carburant de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
 
@@ -724,7 +724,7 @@ def rapport_carburant_mensuel_pdf(request):
                             }}
             </style>
             </head>
-            <body>
+            <body class="center">
             <h1>Rapport Carburant de {mois_lettre} {annee}</h1>
 
             """
@@ -820,7 +820,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                             }}
                     </style>
                     </head>
-                    <body>
+                    <body class="center">
                     <h1>Rapport Incident de {mois_lettre} {annee}  de {conducteur}</h1>
                 """
 
@@ -863,7 +863,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                             }}
             </style>
             </head>
-            <body>
+            <body class="center">
             <h1>Rapport Incidents de {mois_lettre} {annee}</h1>
             """
 
