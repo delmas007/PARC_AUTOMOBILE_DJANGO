@@ -62,7 +62,7 @@ def rapport_entretien_mensuel_pdf(request):
                             }}
                     </style>
                     </head>
-                    <body>
+                    <body class="center">
                     <h1>Rapport Entretien de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
 
@@ -109,7 +109,7 @@ def rapport_entretien_mensuel_pdf(request):
                             }}
             </style>
             </head>
-            <body>
+            <body class="center">
             <h1>Rapport Entretien de {mois_lettre} {annee}</h1>
             """
 
@@ -150,7 +150,7 @@ def rapport_entretien_mensuel_pdf(request):
                             <tr><td>Total</td><td>{total_vehicule}</td><td>{total_entretien}</td></tr>
                         """
                     else:
-                        html_content += "<tr><td colspan='3'>Aucun incident trouvé pour ce conducteur.</td></tr>"
+                        html_content += "<tr><td colspan='3'>Aucun entretien trouvé pour ce conducteur.</td></tr>"
 
                     html_content += "</table>"
 
@@ -219,7 +219,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                             }}
                     </style>
                     </head>
-                    <body>
+                    <body class="center">
                     <h1>Rapport Carburant de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
 
@@ -262,7 +262,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                             }}
             </style>
             </head>
-            <body>
+            <body class="center">
             <h1>Rapport Incidents de {mois_lettre} {annee}</h1>
             """
 
@@ -302,7 +302,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                             <tr><td>Total</td><td>{total_vehicule}</td><td>{total_incident}</td></tr>
                         """
                     else:
-                        html_content += "<tr><td colspan='3'>Aucun incident trouvé pour ce conducteur.</td></tr>"
+                        html_content += "<tr><td>Aucun incident trouvé pour ce vehicule.</td></tr>"
 
                     html_content += "</table>"
 

@@ -36,6 +36,7 @@
             {% url 'admins:rapport_entretien_mensuel_admins' as admin_rapport_entretien_mensuel_url %}
             {% url 'admins:rapport_carburant_mensuel_admins' as admin_rapport_carburant_mensuel_url %}
             {% url 'admins:rapport_incident_conducteur_mensuel_admins' as admin_rapport_incident_conducteur_mensuel_url %}
+            {% url 'admins:rapport_incident_vehicule_mensuel_admins' as admin_rapport_incident_vehicule_mensuel_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -63,14 +64,15 @@
 
                     </ul>
                 </li>
-                <li class="{% if request.path == admin_rapport_url or request.path == admin_rapport_mensuel_url or request.path == admin_rapport_incident_conducteur_mensuel_url or request.path == admin_rapport_entretien_mensuel_url or request.path == admin_rapport_carburant_mensuel_url %}active{% endif %}">
+                <li class="{% if request.path == admin_rapport_url or request.path == admin_rapport_mensuel_url or request.path == admin_rapport_incident_vehicule_mensuel_url or request.path == admin_rapport_incident_conducteur_mensuel_url or request.path == admin_rapport_entretien_mensuel_url or request.path == admin_rapport_carburant_mensuel_url %}active{% endif %}">
                     <a href="#rapport" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-file-earmark-bar-graph"></i><span > Rapport</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                     <ul id="rapport" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                        <li class="{% if request.path == admin_rapport_url %}active{% endif %}" ><a href="{% url 'admins:rapport_depense_admins' %}"><i class="bi bi-easel"></i>Depense Global</a></li>
+                        <li class="{% if request.path == admin_rapport_url %}active{% endif %}" ><a href="{% url 'admins:rapport_depense_admins' %}"><i class="bi bi-easel-fill"></i></i>Depense Global</a></li>
                         <li class="{% if request.path == admin_rapport_mensuel_url %}active{% endif %}" ><a href="{% url 'admins:rapport_depense_mensuel_admins' %}"><i class="bi bi-easel-fill"></i>Depense Mensuele</a></li>
                         <li class="{% if request.path == admin_rapport_entretien_mensuel_url %}active{% endif %}" ><a href="{% url 'admins:rapport_entretien_mensuel_admins' %}"><i class="bi bi-easel-fill"></i>Entretien Mensuele</a></li>
                         <li class="{% if request.path == admin_rapport_carburant_mensuel_url %}active{% endif %}" ><a href="{% url 'admins:rapport_carburant_mensuel_admins' %}"><i class="bi bi-easel-fill"></i>Carburant Mensuele</a></li>
                         <li class="{% if request.path == admin_rapport_incident_conducteur_mensuel_url %}active{% endif %}" ><a href="{% url 'admins:rapport_incident_conducteur_mensuel_admins' %}"><i class="bi bi-easel-fill"></i>Incident conducteur Mensuele</a></li>
+                        <li class="{% if request.path == admin_rapport_incident_vehicule_mensuel_url %}active{% endif %}" ><a href="{% url 'admins:rapport_incident_vehicule_mensuel_admins' %}"><i class="bi bi-easel-fill"></i>Incident vehicule Mensuele</a></li>
 
                     </ul>
                 </li>

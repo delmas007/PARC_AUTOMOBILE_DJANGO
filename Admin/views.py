@@ -17,7 +17,7 @@ from xhtml2pdf import pisa
 
 from Admin.forms import typeCarburantForm, CarburantSearchForm, UserRegistrationForm
 from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, Vehicule, Carburant, Entretien, \
-    Deplacement, Conducteur, Incident
+    Deplacement, Conducteur, Incident, EtatArrive
 from utilisateurs.forms import ChangerMotDePasse
 from vehicule.forms import VehiculSearchForm
 from secrets import compare_digest
@@ -281,7 +281,7 @@ def rapport_depense_mensuel_pdf(request):
                             }}
                     </style>
                     </head>
-                    <body>
+                    <body class="center">
                     <h1>Rapport Depense de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
 
@@ -355,7 +355,7 @@ def rapport_depense_mensuel_pdf(request):
                             }}
              </style>
             </head>
-            <body>
+            <body class="center">
             <h1>Rapport Depense de {mois_lettre} {annee}</h1>
             <table border="1">
             <tr><th>Voitures</th><th>Nombre de déplacements</th><th>Quantitié</th><th>Carburant</th><th>Entretien</th><th>Total</th></tr>
@@ -382,7 +382,7 @@ def rapport_depense_mensuel_pdf(request):
                 if vehicule_max_entretien_id:
                     vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
                 else:
-                    vehicule_max_entretien = "Aucun donné carburant"
+                    vehicule_max_entretien = "Aucun donné entretien"
                 html_content += f"<tr> <td> {voiture} </td><td> {deplacement} </td><td> {carburant_quantite} </td><td>{carburant_vehicule}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"
 
             html_content += f"""
@@ -457,7 +457,7 @@ def rapport_depense_pdf(request):
                                     }}
                                </style>
                                </head>
-                               <body>
+                               <body class="center">
                                <h1>Rapport Depense de {debut_date} à {fin_date}  de {vehicule}</h1>
                            """
 
@@ -483,7 +483,7 @@ def rapport_depense_pdf(request):
                 html_content += "<h2>Entretien</h2>"
                 html_content += """
                             <table border="1">
-                            <tr><th>Date</th><th>Type</th><th>Prix</th></tr>
+                            <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                             """
                 for reparation in entretiens:
                     html_content += f"""
@@ -531,7 +531,7 @@ def rapport_depense_pdf(request):
                             }}
                    </style>
                    </head>
-                   <body>
+                   <body class="center">
                   <h1>Rapport Depense de {debut_date} à {fin_date}</h1> <table border="1"> 
                   <tr><th>Voitures</th><th>Nombre de deplacements</th><th>Quantitié</th><th>Carburant</th><th>Nombre 
                   entretien</th><th>Entretien</th><th>Total</th></tr>
@@ -560,7 +560,7 @@ def rapport_depense_pdf(request):
                 if vehicule_max_entretien_id:
                     vehicule_max_entretien = Vehicule.objects.get(id=vehicule_max_entretien_id['vehicule'])
                 else:
-                    vehicule_max_entretien = "Aucun donné carburant"
+                    vehicule_max_entretien = "Aucun donné entretien"
 
                 deplacement = Deplacement.objects.filter(vehicule=voiture, date_depart__range=(debut_date,fin_date)).count()
                 nbre_deplacements += deplacement
@@ -644,14 +644,34 @@ def rapport_carburant_mensuel_pdf(request):
         voitures = Vehicule.objects.all()
         if vehicule_id:
 
-            vehicule = Vehicule.objects.get(id=vehicule_id)
-            # Récupérer les données de carburant et d'entretien
             carburant = Carburant.objects.filter(vehicule=vehicule_id, date_mise_a_jour__month=mois,
                                                  date_mise_a_jour__year=annee)
+
+
+            vehicule = Vehicule.objects.get(id=vehicule_id)
+
+
+            deplacement = Deplacement.objects.filter(vehicule=vehicule, date_depart__month=mois,
+                                                     date_depart__year=annee).order_by('date_depart')
+            if deplacement:
+                deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+
+
+
+                deplacement_first = deplacement.first()
+
+                deplacement_last = deplacement.filter(id__in=deplacements_etat_arrive_ids).last()
+                if deplacement_last:
+                    arrive = EtatArrive.objects.filter(deplacement=deplacement_last.id, date_arrive__month=mois,
+                                                       date_arrive__year=annee).last()
+
+
+                    total_kilometrage=arrive.kilometrage_arrive-deplacement_first.kilometrage_depart
 
             # Calculer les totaux de carburant et d'entretien
             total_carburant = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
             total_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
+
             html_content = f"""
                     <html>
                     <head>
@@ -677,7 +697,7 @@ def rapport_carburant_mensuel_pdf(request):
                             }}
                     </style>
                     </head>
-                    <body>
+                    <body class="center">
                     <h1>Rapport Carburant de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
 
@@ -690,11 +710,27 @@ def rapport_carburant_mensuel_pdf(request):
                     html_content += f"""
                     <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                 """
-                html_content += f"""
+                if deplacement:
+                    if deplacement_last:
+                        html_content += f"""
+                        
+                        <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                         <tr> <td colspan="4"><h2>KILOMETRAGE DU VEHICULE:{total_kilometrage}</h2></tr>
+                         </table>
+                        """
+                    else:
+                        html_content += f"""
+                        <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                         <tr> <td colspan="4"><h2>Deplacement en cours</h2></tr>
+                         </table>
+                        """
+                else:
+                        html_content += f"""
+                        <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                         <tr> <td colspan="4"><h2>Aucun déplacement effectué</h2></tr>
+                         </table>
+                        """
 
-                <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
-                 </table>
-                """
             else:
                 html_content += "<p>Aucune donnée de carburant disponible.</p>"
         else:
@@ -724,7 +760,7 @@ def rapport_carburant_mensuel_pdf(request):
                             }}
             </style>
             </head>
-            <body>
+            <body class="center">
             <h1>Rapport Carburant de {mois_lettre} {annee}</h1>
 
             """
@@ -736,6 +772,7 @@ def rapport_carburant_mensuel_pdf(request):
             for voiture in voitures:
                 carburant_voiture = carburant.filter(vehicule=voiture, date_mise_a_jour__month=mois,
                                                      date_mise_a_jour__year=annee)
+
                 html_content += f"""
                                            <h1>Rapport  de {voiture}</h1>
                                          """
@@ -749,20 +786,49 @@ def rapport_carburant_mensuel_pdf(request):
 
                     for essence in carburant_voiture:
                         if voiture == essence.vehicule:
-                            total_carburant = carburant_voiture.filter(vehicule=voiture).aggregate(Sum('prix_total'))[
-                                                  'prix_total__sum'] or 0
-                            total_quantite = carburant_voiture.filter(vehicule=voiture).aggregate(Sum('quantite'))[
-                                                 'quantite__sum'] or 0
-                            html_content += f"""
-                                    <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
-                                """
-                    html_content += f"""
+                            deplacement = Deplacement.objects.filter(vehicule=voiture, date_depart__month=mois,
+                                                                     date_depart__year=annee).order_by('date_depart')
+                            if deplacement:
+                                deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
 
-                                <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
-                                 </table>
-                                """
+
+
+                                deplacement_first = deplacement.first()
+
+                                deplacement_last = deplacement.filter(id__in=deplacements_etat_arrive_ids).last()
+                                if deplacement_last:
+                                    arrive = EtatArrive.objects.filter(deplacement=deplacement_last.id, date_arrive__month=mois,
+                                                                       date_arrive__year=annee).last()
+
+
+                                    total_kilometrage=arrive.kilometrage_arrive-deplacement_first.kilometrage_depart
+                                total_carburant = carburant_voiture.filter(vehicule=voiture).aggregate(Sum('prix_total'))[
+                                                      'prix_total__sum'] or 0
+                                total_quantite = carburant_voiture.filter(vehicule=voiture).aggregate(Sum('quantite'))[
+                                                     'quantite__sum'] or 0
+                                html_content += f"""
+                                        <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                                    """
+
+                    if deplacement:
+                        if deplacement_last:
+                            html_content += f"""
+                            <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                         <tr> <td colspan="4"><h2>KILOMETRAGE DU VEHICULE:{total_kilometrage}</h2></tr>
+                         </table>
+                        """
+
+                        else:
+                            html_content += f"""
+                                        <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                                         <tr> <td colspan="4"><h2>Aucun déplacement effectué</h2></tr>
+                                         </table>
+                                        """
+                    else:
+                        html_content += "<p>Aucune donnée de carburant disponible.</p>"
                 else:
-                    html_content += "<p>Aucune donnée de carburant disponible.</p>"
+                        html_content += "<p>Aucune donnée de carburant disponible.</p>"
+
 
         # Créer un objet HttpResponse avec le contenu du PDF
         response = HttpResponse(content_type='application/pdf')
@@ -820,7 +886,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                             }}
                     </style>
                     </head>
-                    <body>
+                    <body class="center">
                     <h1>Rapport Incident de {mois_lettre} {annee}  de {conducteur}</h1>
                 """
 
@@ -863,7 +929,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                             }}
             </style>
             </head>
-            <body>
+            <body class="center">
             <h1>Rapport Incidents de {mois_lettre} {annee}</h1>
             """
 
