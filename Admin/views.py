@@ -10,7 +10,7 @@ from datetime import date, datetime
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, ExpressionWrapper, fields, F, Sum
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from xhtml2pdf import pisa
@@ -223,9 +223,12 @@ def rapport_depense_mensuel_admins(request):
 
 
 def rapport_carburant_mensuel_admins(request):
-    vehicule = Vehicule.objects.all()
-    context = {'vehicule': vehicule}
-    return render(request, 'rapport_carburant_mensuel.html', context)
+    if request.method == 'POST':
+        return rapport_carburant_mensuel(request)
+    else:
+        vehicules = Vehicule.objects.all()
+        context = {'vehicules': vehicules}
+        return render(request, 'rapport_carburant_mensuel.html', context)
 
 
 def rapport_incident_conducteur_mensuel_admins(request):
@@ -844,6 +847,30 @@ def rapport_carburant_mensuel_pdf(request):
             return HttpResponse('Une erreur est survenue lors de la génération du PDF')
 
         return response
+
+
+def rapport_carburant_mensuel(request):
+    if request.method == 'POST':
+        mois = request.POST.get('mois')
+        annee = request.POST.get('annee')
+        # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
+        consommations_carburant = Carburant.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
+        # Calculer la consommation de carburant pour chaque véhicule
+        consommations_par_vehicule = {}
+        for consommation in consommations_carburant:
+            if consommation.vehicule not in consommations_par_vehicule:
+                consommations_par_vehicule[consommation.vehicule] = 0
+            consommations_par_vehicule[consommation.vehicule] += consommation.quantite
+
+        labels = []
+        data = []
+        for vehicule, consommation in consommations_par_vehicule.items():
+            labels.append(f"{vehicule.marque} - {vehicule.type_commercial}")
+            data.append(consommation)
+
+        return render(request, 'rapport_carburant_mensuel.html', {'labels': labels, 'data': data})
+
+    return render(request, 'rapport_carburant_mensuel.html')
 
 
 def rapport_incident_conducteur_mensuel_pdf(request):

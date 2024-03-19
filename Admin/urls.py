@@ -38,5 +38,4 @@ urlpatterns = [
     path('rapport_entretien_mensuel_pdf/', rapport_entretien_mensuel_admins, name='rapport_entretien_mensuel_admins'),
     path('rapport_incident_vehicule_mensuel_admins/', rapport_incident_vehicule_mensuel_admins, name='rapport_incident_vehicule_mensuel_admins'),
     path('rapport_incident_vehicule_mensuel-pdf/', rapport_incident_vehicule_mensuel_pdf, name='rapport_incident_vehicule_mensuel_pdf'),
-
 ]
