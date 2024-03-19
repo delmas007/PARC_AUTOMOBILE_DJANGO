@@ -275,18 +275,21 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                 for vehicule in vehicules:
 
                     # Filtrer les incidents pour ce conducteur
-                    incidents_vehicule = incidents.filter(conducteur=vehicule)
+                    incidents_vehicule = incidents.filter(vehicule=vehicule)
                     html_content += f"""
                                     <h2>Rapport de {vehicule}</h2>
                                     """
 
                     # Vérifier s'il y a des incidents pour ce conducteur
                     if incidents_vehicule:
+                        html_content += f"""
+                                        <table border="1">
+                                        <tr><th>Date</th><th>Conducteur</th><th>Description</th></tr>
+                                         """
 
                         # Boucle sur chaque incident pour ce conducteur
                         for incident in incidents_vehicule:
                             html_content += f"""
-                                                <table border="1">
                                                 <tr><td>{incident.date_mise_a_jour.date()}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
                                             """
 
@@ -317,9 +320,9 @@ def rapport_incident_vehicule_mensuel_pdf(request):
         if vehicule_id:
             conducteur = Vehicule.objects.get(id=vehicule_id)
             response[
-                'Content-Disposition'] = f'attachment; filename="Rapport de {mois_lettre} {annee}  de {conducteur}.pdf"'
+                'Content-Disposition'] = f'attachment; filename="Rapport Incident Véhicule de {mois_lettre} {annee}  de {conducteur}.pdf"'
         else:
-            response['Content-Disposition'] = f'attachment; filename="Rapport Carburant de {mois_lettre} {annee}.pdf"'
+            response['Content-Disposition'] = f'attachment; filename="Rapport Incident Véhicule de {mois_lettre} {annee}.pdf"'
         # Générer le PDF à partir du contenu HTML
         pisa_status = pisa.CreatePDF(html_content, dest=response)
         if pisa_status.err:

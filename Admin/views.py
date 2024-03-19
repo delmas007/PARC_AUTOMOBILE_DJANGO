@@ -306,7 +306,7 @@ def rapport_depense_mensuel_pdf(request):
                 html_content += "<h2>Entretien</h2>"
                 html_content += """
                  <table border="1">
-                 <tr><th>Date</th><th>Type</th><th>Prix</th></tr>
+                 <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                  """
                 for reparation in entretien:
                     html_content += f"""
@@ -893,7 +893,6 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                         # Boucle sur chaque incident pour ce conducteur
                         for incident in incidents_conducteur:
                             html_content += f"""
-                                                <table border="1">
                                                 <tr><td>{incident.date_mise_a_jour.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
                                             """
 
@@ -923,9 +922,9 @@ def rapport_incident_conducteur_mensuel_pdf(request):
         if conducteur_id:
             conducteur = Conducteur.objects.get(id=conducteur_id)
             response[
-                'Content-Disposition'] = f'attachment; filename="Rapport Incident de {mois_lettre} {annee}  de {conducteur}.pdf"'
+                'Content-Disposition'] = f'attachment; filename="Rapport Incident Conducteur de {mois_lettre} {annee}  de {conducteur}.pdf"'
         else:
-            response['Content-Disposition'] = f'attachment; filename="Rapport Incident de {mois_lettre} {annee}.pdf"'
+            response['Content-Disposition'] = f'attachment; filename="Rapport Incident Conducteur de {mois_lettre} {annee}.pdf"'
         # Générer le PDF à partir du contenu HTML
         pisa_status = pisa.CreatePDF(html_content, dest=response)
         if pisa_status.err:
