@@ -31,28 +31,49 @@ def rapport_entretien_mensuel_pdf(request):
         if vehicule_id:
 
             vehicule = Vehicule.objects.get(id=vehicule_id)
-            entretien = Entretien.objects.filter(vehicule=vehicule_id, date_mise_a_jour__month=mois,
-                                                 date_mise_a_jour__year=annee)
+            entretien = Entretien.objects.filter(vehicule=vehicule_id, date_entretien__month=mois,
+                                                 date_entretien__year=annee)
 
             total_entretien = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
             nbre_entretien = entretien.count()
 
             html_content = f"""
                     <html>
-                    <head><title>Rapport</title></head>
+                    <head>
+                    <title>Rapport</title>
+                    <style>
+                            table {{
+                                width: 100%;
+                                border-collapse: collapse;
+                            }}
+                            th, td {{
+                                border: 1px solid black;
+                                padding: 8px;
+                                text-align: center;
+                            }}
+                            th {{
+                                background-color: #f2f2f2;
+                            }}
+                            h1, h2 {{
+                                text-align: center;
+                            }}
+                            .center {{
+                                text-align: center;
+                            }}
+                    </style>
+                    </head>
                     <body>
                     <h1>Rapport Entretien de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
 
             if entretien:
-                html_content += "<h2>Entretien</h2>"
                 html_content += """
                  <table border="1">
                  <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                  """
                 for reparation in entretien:
                     html_content += f"""
-                    <tr><td>{reparation.date_entretien}</td><td>{reparation.prix_entretient}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
+                    <tr><td>{reparation.date_entretien}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -65,13 +86,35 @@ def rapport_entretien_mensuel_pdf(request):
             # Générer le contenu HTML du PDF
             html_content = f"""
             <html>
-            <head><title>Rapport PDF</title></head>
+            <head>
+            <title>Rapport PDF</title>
+            <style>
+                            table {{
+                                width: 100%;
+                                border-collapse: collapse;
+                            }}
+                            th, td {{
+                                border: 1px solid black;
+                                padding: 8px;
+                                text-align: center;
+                            }}
+                            th {{
+                                background-color: #f2f2f2;
+                            }}
+                            h1, h2 {{
+                                text-align: center;
+                            }}
+                            .center {{
+                                text-align: center;
+                            }}
+            </style>
+            </head>
             <body>
             <h1>Rapport Entretien de {mois_lettre} {annee}</h1>
             """
 
             # Filtrer les incidents pour le mois et l'année spécifiés
-            entretiens = Entretien.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
+            entretiens = Entretien.objects.filter(date_entretien__month=mois, date_entretien__year=annee)
 
             # Vérifier s'il y a des incidents pour ce mois et cette année
             if entretiens:
@@ -83,12 +126,15 @@ def rapport_entretien_mensuel_pdf(request):
                     entretiens_vehicule = entretiens.filter(vehicule=voiture)
                     html_content += f"""
                     <h2>Rapport de {voiture}</h2>
-                     <table border="1">
-                    <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
-                                                              """
+                    
+                                     """
 
                     # Vérifier s'il y a des incidents pour ce conducteur
                     if entretiens_vehicule:
+                        html_content += f"""
+                                        <table border="1">
+                                        <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
+                                        """
 
                         # Boucle sur chaque incident pour ce conducteur
                         for entretien in entretiens_vehicule:
@@ -97,7 +143,7 @@ def rapport_entretien_mensuel_pdf(request):
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
-                        total_entretien = entretiens_vehicule.count()
+                        total_entretien = entretiens_vehicule.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
                         # Calculer les totaux pour ce conducteur
                         total_vehicule = entretiens_vehicule.filter(vehicule=entretien.vehicule).count()
                         html_content += f"""
@@ -150,7 +196,29 @@ def rapport_incident_vehicule_mensuel_pdf(request):
 
             html_content = f"""
                     <html>
-                    <head><title>Rapport</title></head>
+                    <head>
+                    <title>Rapport</title>
+                    <style>
+                            table {{
+                                width: 100%;
+                                border-collapse: collapse;
+                            }}
+                            th, td {{
+                                border: 1px solid black;
+                                padding: 8px;
+                                text-align: center;
+                            }}
+                            th {{
+                                background-color: #f2f2f2;
+                            }}
+                            h1, h2 {{
+                                text-align: center;
+                            }}
+                            .center {{
+                                text-align: center;
+                            }}
+                    </style>
+                    </head>
                     <body>
                     <h1>Rapport Carburant de {mois_lettre} {annee}  de {vehicule}</h1>
                 """
@@ -171,7 +239,29 @@ def rapport_incident_vehicule_mensuel_pdf(request):
             # Générer le contenu HTML du PDF
             html_content = f"""
             <html>
-            <head><title>Rapport PDF</title></head>
+            <head>
+            <title>Rapport PDF</title>
+            <style>
+                            table {{
+                                width: 100%;
+                                border-collapse: collapse;
+                            }}
+                            th, td {{
+                                border: 1px solid black;
+                                padding: 8px;
+                                text-align: center;
+                            }}
+                            th {{
+                                background-color: #f2f2f2;
+                            }}
+                            h1, h2 {{
+                                text-align: center;
+                            }}
+                            .center {{
+                                text-align: center;
+                            }}
+            </style>
+            </head>
             <body>
             <h1>Rapport Incidents de {mois_lettre} {annee}</h1>
             """
