@@ -26,8 +26,8 @@
                     <li><a href="{% url 'conducteur:tous_les_conducteurs' %}" class="nav-link" style="color: #f799a3"><i class="ri-user-line"></i></a></li>
                     <li><a href="{% url 'deplacement:liste_deplacement' %}" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="fa fa-paper-plane"></i></a></li>
                     <li><a href="{% url 'incident:liste_incidents_interne' %}" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="ri-alert-line" style="font-size: 18px"></i></a></li>
-                    <li><a href="" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="bi bi-tools" style="font-size: 18px"></i></a></li>
-                    <li><a href="" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="bi bi-fuel-pump" style="font-size: 18px"></i></a></li>
+                    <li><a href="{% url 'entretien:liste_Entretien' %}" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="bi bi-tools" style="font-size: 18px"></i></a></li>
+                    <li><a href="{% url 'carburant:Liste_carburant' %}" class="nav-link router-link-exact-active router-link-active" style="color: #f799a3"><i class="bi bi-fuel-pump" style="font-size: 18px"></i></a></li>
                 </ul>
                 <div class="iq-search-bar d-none d-md-block">
                     <form action="#" class="searchbox">
@@ -41,8 +41,8 @@
                                 <li class="iq-bg-primary-hover rounded"><a href="{% url 'conducteur:tous_les_conducteurs' %}" class="nav-link"><i class="ri-user-line pr-2"></i>Conducteurs</a></li>
                                 <li class="iq-bg-primary-hover rounded"><a href="{% url 'deplacement:liste_deplacement' %}" class="nav-link"><i class="fa fa-paper-plane pr-2"></i>Déplacements</a></li>
                                 <li class="iq-bg-primary-hover rounded"><a href="{% url 'incident:liste_incidents_interne' %}" class="nav-link"><i class="ri-alert-line pr-2"></i>Incidents</a></li>
-                                <li class="iq-bg-primary-hover rounded"><a href="" class="nav-link"><i class="bi bi-tools" style=" margin-right: 5px"></i> Entretien</a></li>
-                                <li class="iq-bg-primary-hover rounded"><a href="" class="nav-link"><i class="bi bi-fuel-pump" style=" margin-right: 5px"></i> Carburant</a></li>
+                                <li class="iq-bg-primary-hover rounded"><a href="{% url 'entretien:liste_Entretien' %}" class="nav-link"><i class="bi bi-tools" style=" margin-right: 5px"></i> Entretien</a></li>
+                                <li class="iq-bg-primary-hover rounded"><a href="{% url 'carburant:Liste_carburant' %}" class="nav-link"><i class="bi bi-fuel-pump" style=" margin-right: 5px"></i> Carburant</a></li>
                             </ul>
                         </div>
                     </form>
