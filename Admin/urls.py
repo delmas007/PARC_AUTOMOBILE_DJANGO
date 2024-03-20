@@ -1,14 +1,14 @@
 from django.urls import path
 
 from Admin.view import rapport_entretien_mensuel_pdf, rapport_entretien_mensuel_admins, \
-    rapport_incident_vehicule_mensuel_admins, rapport_incident_vehicule_mensuel_pdf
+    rapport_incident_vehicule_mensuel_admins, rapport_incident_vehicule_mensuel_pdf, ProfilAdmin
 from Admin.views import inscription, employer_compte, active_emp, desactive_amp, gestionnaire_inactifs, \
     gestionnaire_a_search, gestionnaire_a_search_i, Ajouter_Carburant, liste_Carburant, \
     Carburant_search, dashboard_admins, rapport_depense_admins, rapport_depense_mensuel_admins, \
     rapport_depense_mensuel_pdf, rapport_depense_pdf, \
     CustomPasswordResetConfirmView, ChangerMotDePasse_admin, rapport_carburant_mensuel_pdf, \
     rapport_carburant_mensuel_admins, rapport_incident_conducteur_mensuel_admins, \
-    rapport_incident_conducteur_mensuel_pdf, rapport_carburant_mensuel
+    rapport_incident_conducteur_mensuel_pdf
 
 app_name = 'admins'
 
@@ -38,4 +38,6 @@ urlpatterns = [
     path('rapport_entretien_mensuel_pdf/', rapport_entretien_mensuel_admins, name='rapport_entretien_mensuel_admins'),
     path('rapport_incident_vehicule_mensuel_admins/', rapport_incident_vehicule_mensuel_admins, name='rapport_incident_vehicule_mensuel_admins'),
     path('rapport_incident_vehicule_mensuel-pdf/', rapport_incident_vehicule_mensuel_pdf, name='rapport_incident_vehicule_mensuel_pdf'),
+    path('Profil-Admin/', ProfilAdmin, name='ProfilAdmin'),
+
 ]

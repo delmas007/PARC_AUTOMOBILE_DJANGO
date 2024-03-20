@@ -14,6 +14,7 @@ def rapport_entretien_mensuel_admins(request):
     context = {'vehicule': vehicule}
     return render(request, 'rapport_entretien_mensuel.html', context)
 
+
 def rapport_incident_vehicule_mensuel_admins(request):
     vehicules = Vehicule.objects.all()
     context = {'vehicules': vehicules}
@@ -143,7 +144,8 @@ def rapport_entretien_mensuel_pdf(request):
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
-                        total_entretien = entretiens_vehicule.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+                        total_entretien = entretiens_vehicule.aggregate(Sum('prix_entretient'))[
+                                              'prix_entretient__sum'] or 0
                         # Calculer les totaux pour ce conducteur
                         total_vehicule = entretiens_vehicule.filter(vehicule=entretien.vehicule).count()
                         html_content += f"""
@@ -322,10 +324,15 @@ def rapport_incident_vehicule_mensuel_pdf(request):
             response[
                 'Content-Disposition'] = f'attachment; filename="Rapport Incident Véhicule de {mois_lettre} {annee}  de {conducteur}.pdf"'
         else:
-            response['Content-Disposition'] = f'attachment; filename="Rapport Incident Véhicule de {mois_lettre} {annee}.pdf"'
+            response[
+                'Content-Disposition'] = f'attachment; filename="Rapport Incident Véhicule de {mois_lettre} {annee}.pdf"'
         # Générer le PDF à partir du contenu HTML
         pisa_status = pisa.CreatePDF(html_content, dest=response)
         if pisa_status.err:
             return HttpResponse('Une erreur est survenue lors de la génération du PDF')
 
         return response
+
+
+def ProfilAdmin(request):
+    return render(request, 'Profil_admin.html')

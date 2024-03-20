@@ -32,7 +32,7 @@
                   <div class="iq-card">
                      <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
-                           <h4 class="card-title">Liste des carburants <i class="ri-roadster-line"></i> </h4>
+                           <h2 class="card-title">Liste des carburants <i class="bi bi-fuel-pump"></i></h2>
                         </div>
                      </div>
                      <div class="iq-card-body">
@@ -53,7 +53,7 @@
                                         </div>
                                         <div class="col-12 col-md-6 ms-0" style="margin-top: 0">
                                             {% if no_results %}
-                                                <p>Aucun résultat trouvé pour la recherche "{{ request.GET.q }}".</p>
+                                                <p>Aucun résultat trouvé pour la recherche <span class="text-danger">"{{ request.GET.q }}".</span></p>
                                             {% endif %}
                                         </div>
 
@@ -62,23 +62,23 @@
                               </div>
                            </div>
                            <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
-                             <thead>
-                                 <tr style="background-color: #8861d2; color:white">
+                             <thead class="text-center">
+                                 <tr class="table-danger">
                                      <th>Nom</th>
                                      <th>Prix</th>
                                  </tr>
                              </thead>
-                             <tbody>
+                             <tbody class="text-center">
                              {% if carburants %}
                                 {% for carburant in carburants %}
                                      <tr>
-                                         <td>{{ carburant.nom}}</td>
-                                         <td>{{ carburant.prix }}</td>
+                                         <td>{{ carburant.nom|title }}</td>
+                                         <td>{{ carburant.prix }} F CFA</td>
                                      </tr>
                                 {% endfor %}
                              {% else %}
                                  <tr>
-                                     <td colspan="10" class="text-center">Aucun véhicule disponible</td>
+                                     <td colspan="10" class="text-center">Aucun carburant disponible</td>
                                  </tr>
                              {% endif %}
                              </tbody>
@@ -87,7 +87,7 @@
                     <!-- Affichage de la pagination -->
                     <div class="row justify-content-between mt-3">
                         <div id="user-list-page-info" class="col-md-6">
-                            <span>Affichage de {{ carburants.start_index }} à {{ carburants.end_index }} sur {{ carburants.paginator.count }} entrées</span>
+                            <span>Affichage de {{ carburants.start_index }} à {{ carburants.end_index }} sur {{ carburants.paginator.count }} entrées.</span>
                         </div>
                         <div class="col-md-6">
                             <nav aria-label="Page navigation example">
@@ -133,51 +133,5 @@
    <!-- Wrapper END -->
     <!-- Footer -->
       {% include 'footer.html' %}
-
-      <!-- Modal de confirmation -->
-      <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="confirmDeleteModalLabel" style="display: flex; justify-content: center; align-items: center;">Confirmation de la suppression</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>
-                  <div class="modal-body">
-                      Êtes-vous sûr de vouloir supprimer ce véhicule ?
-                  </div>
-                  <div class="modal-footer" style="display: flex; justify-content: center; align-items: center;">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                      <button type="button" class="btn btn-danger" onclick="executeDelete()">Confirmer</button>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-      <script>
-          // Fonction pour afficher le modal de confirmation
-          function confirmDelete(linkElement) {
-              var vehicleId = linkElement.getAttribute('data-vehicle-id');
-              // Afficher le modal
-              $('#confirmDeleteModal').modal('show');
-
-              // Enregistrer l'ID du véhicule dans un champ caché du modal
-              $('#confirmDeleteModal').data('vehicle-id', vehicleId);
-          }
-
-          // Fonction pour exécuter la suppression
-          function executeDelete() {
-              // Récupérer l'ID du véhicule depuis le champ caché du modal
-              var vehicleId = $('#confirmDeleteModal').data('vehicle-id');
-
-              // Rediriger vers l'URL de suppression avec l'ID du véhicule
-              window.location.href = "{% url 'vehicule:supprimer_vehicule' 0 %}".replace(0, vehicleId);
-
-              // Fermer le modal
-              $('#confirmDeleteModal').modal('hide');
-          }
-
-      </script>
 </body>
 {% endblock %}
