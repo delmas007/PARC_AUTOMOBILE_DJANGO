@@ -483,7 +483,9 @@
                                                 data: prix,
                                                 backgroundColor: colors,
                                                 borderColor: colors,
-                                                borderWidth: 1
+                                                borderWidth: 1,
+                                                hidden: true
+
                                             }]
                                         },
                                         options: {
@@ -493,6 +495,24 @@
                                                         beginAtZero: true
                                                     }
                                                 }]
+                                            },
+                                            plugins: {
+                                                legend: {
+                                                    onClick: function (event, legendItem) {
+                                                        var index = legendItem.datasetIndex;
+                                                        var meta = this.chart.getDatasetMeta(index);
+                                                        if (index === 0) {
+                                                            // Si le premier dataset est cliqué, activer le premier et désactiver le second
+                                                            this.chart.data.datasets[0].hidden = false;
+                                                            this.chart.data.datasets[1].hidden = true;
+                                                        } else {
+                                                            // Si le second dataset est cliqué, activer le second et désactiver le premier
+                                                            this.chart.data.datasets[0].hidden = true;
+                                                            this.chart.data.datasets[1].hidden = false;
+                                                        }
+                                                        this.chart.update();
+                                                    }
+                                                }
                                             }
                                         }
                                     });
