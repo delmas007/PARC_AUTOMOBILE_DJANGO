@@ -11,25 +11,20 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Charger les variables d'environnement depuis le fichier .env
-load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-5dplaozet82k%woepm1wcx5pb(6qj52l0eg@^$4!b@+!_)(0)j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']  # Si debug est sur false on peut mettre * dans cette variable pour
-# faire des tests
+ALLOWED_HOSTS = ['192.168.11.135', '127.0.0.1']
 
 # Application definition
 
@@ -39,7 +34,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'livereload',
     'django.contrib.staticfiles',
     'Model',
     'vehicule',
@@ -48,8 +42,8 @@ INSTALLED_APPS = [
     'Admin',
     'utilisateurs',
     'incident',
-    'carburant',
     'entretien',
+    'carburant',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +54,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'livereload.middleware.LiveReloadScript',
 ]
 
 ROOT_URLCONF = 'parc_automobile.urls'
@@ -94,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'parc',
         'USER': 'postgres',
-        'PASSWORD': 'ivan',
+        'PASSWORD': '09102079Darius',
         'HOST': 'localhost',
         'PORT': '5432',
     }
