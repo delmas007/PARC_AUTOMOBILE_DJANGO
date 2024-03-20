@@ -10,7 +10,7 @@
       <jdbc-url>jdbc:postgresql://127.0.0.1:5432/parcs</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="Parc" uuid="a7e00912-11f3-4f57-887c-749e3a6c3b80">
+    <data-source source="LOCAL" name="Parc" uuid="a207e893-918c-44ee-b650-a1be46baff95">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

@@ -8,7 +8,7 @@ from Admin.views import inscription, employer_compte, active_emp, desactive_amp,
     rapport_depense_mensuel_pdf, rapport_depense_pdf, \
     CustomPasswordResetConfirmView, ChangerMotDePasse_admin, rapport_carburant_mensuel_pdf, \
     rapport_carburant_mensuel_admins, rapport_incident_conducteur_mensuel_admins, \
-    rapport_incident_conducteur_mensuel_pdf
+    rapport_incident_conducteur_mensuel_pdf, rapport_carburant_mensuel
 
 app_name = 'admins'
 

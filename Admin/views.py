@@ -1,4 +1,5 @@
 import calendar
+import json
 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
@@ -21,6 +22,9 @@ from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, 
 from utilisateurs.forms import ChangerMotDePasse
 from vehicule.forms import VehiculSearchForm
 from secrets import compare_digest
+from django.http import JsonResponse
+
+
 
 
 @csrf_protect
@@ -853,6 +857,7 @@ def rapport_carburant_mensuel(request):
     if request.method == 'POST':
         mois = request.POST.get('mois')
         annee = request.POST.get('annee')
+        voiture=Vehicule.objects.all()
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
         consommations_carburant = Carburant.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
         # Calculer la consommation de carburant pour chaque véhicule
@@ -868,9 +873,12 @@ def rapport_carburant_mensuel(request):
             labels.append(f"{vehicule.marque} - {vehicule.type_commercial}")
             data.append(consommation)
 
-        return render(request, 'rapport_carburant_mensuel.html', {'labels': labels, 'data': data})
+        return render(request, 'rapport_carburant_mensuel.html', {'labels': labels, 'data': data, 'vehicules':voiture})
 
     return render(request, 'rapport_carburant_mensuel.html')
+
+
+
 
 
 def rapport_incident_conducteur_mensuel_pdf(request):

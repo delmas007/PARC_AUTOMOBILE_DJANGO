@@ -4,6 +4,37 @@
     <body>
     <!-- loader Start -->
     <style>
+     /* Style pour les select */
+        select {
+            border-radius: 5px; /* Bord arrondi */
+            border: 1px solid #ccc; /* Bordure */
+            padding: 5px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            width: 100px; /* Largeur */
+        }
+
+        /* Style pour les inputs */
+        input[type="submit"] {
+            border-radius: 5px; /* Bord arrondi */
+            border: 1px solid #ccc; /* Bordure */
+            padding: 5px 10px; /* Espacement interne */
+            font-size: 160px; /* Taille de la police */
+            cursor: pointer; /* Curseur en main */
+        }
+        button {
+        border-radius: 5px; /* Bord arrondi */
+        border: 1px solid #ccc; /* Bordure */
+        font-size: 16px; /* Taille de la police */
+        cursor: pointer; /* Curseur en main */
+        background-color: #6A4ECCFF; /* Couleur de fond */
+        color: #FFFFFF;
+    }
+
+/* Au survol du bouton */
+    button:hover {
+        background-color: #858181; /* Couleur de fond au survol */
+    }
+
         .zoom-on-hover {
             transition: transform 0.3s ease-in-out; /* Ajoute une transition douce pour l'effet de zoom */
         }
@@ -12,6 +43,7 @@
             transform: scale(2); /* Applique le zoom au survol */
         }
     </style>
+
     <div id="loading">
         <div id="loading-center">
         </div>
@@ -29,14 +61,80 @@
 
         <div id="content-page" class="content-page">
             <div class="container-fluid">
+                   <form method="post">
+    <strong>Afficher la consommation de carburant des véhicules du :</strong>
+    {% csrf_token %}
+    <label for="mois"></label>
+<select name="mois" id="mois">
+<option value="1">Janvier</option>
+<option value="2">Février</option>
+<option value="3">Mars</option>
+<option value="4">Avril</option>
+<option value="5">Mai</option>
+<option value="6">Juin</option>
+<option value="7">Juillet</option>
+<option value="8">Août</option>
+<option value="9">Septembre</option>
+<option value="10">Octobre</option>
+<option value="11">Novembre</option>
+<option value="12">Décembre</option>
+</select>
+<label for="annee"></label>
+<select name="annee" id="annee">
+</select>
+<button type="submit">Afficher</button>
+
+</form>
+
+<canvas id="myChart" width="300" height="100"></canvas>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+                label: 'Consommation de carburant (L)',
+                data: {{ data|safe }},
+             backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(255, 159, 64, 0.2)',
+                      'rgba(255, 205, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+
+                    ],
+
+                borderColor: [
+                      'rgb(255, 99, 132)',
+                      'rgb(255, 159, 64)',
+                      'rgb(255, 205, 86)',
+                      'rgb(75, 192, 192)',
+                      'rgb(54, 162, 235)',
+
+                    ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
 
                 <div class="row">
+
                     <div class="col-sm-12">
                         <div class="iq-card">
 
                             <div class="iq-card-header d-flex justify-content-between">
                                 <div class="iq-header-title">
-                                    <h4 class="card-title">RAPPORT CARBURANT MENSUELLE  </h4>
+                                    <h4 class="card-title" > <strong>RAPPORT CARBURANT MENSUELLE</strong>  </h4>
                                 </div>
                             </div>
                             <div class="iq-card-body">
@@ -53,7 +151,7 @@
                                                             <label style="font-family: -apple-system; font-size: medium"> Vehicule</label>
                                                             <select class="form-control" id="vehicule" name="vehicule" style="width: 100%;">
                                                                 <option value="">Sélectionner un vehicule</option>
-                                                                {% for voiture in vehicule %}
+                                                                {% for voiture in vehicules %}
                                                                     <option value="{{ voiture.id }}">{{ voiture }} </option>
                                                                 {% endfor %}
                                                             </select>
@@ -98,64 +196,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-             <form method="post">
-        Afficher le litre carburant des véhicules du :
-        {% csrf_token %}
-        <label for="mois"></label>
-<select name="mois" id="mois">
-    <option value="1">Janvier</option>
-    <option value="2">Février</option>
-    <option value="3">Mars</option>
-    <option value="4">Avril</option>
-    <option value="5">Mai</option>
-    <option value="6">Juin</option>
-    <option value="7">Juillet</option>
-    <option value="8">Août</option>
-    <option value="9">Septembre</option>
-    <option value="10">Octobre</option>
-    <option value="11">Novembre</option>
-    <option value="12">Décembre</option>
-</select>
-<label for="annee"></label>
-<select name="annee" id="annee">
-</select>
-<button type="submit">Afficher</button>
-
-    </form>
-
-    <canvas id="myChart"></canvas>
-
-    <script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: {{ labels|safe }},
-                datasets: [{
-                    label: 'Consommation de carburant (L)',
-                    data: {{ data|safe }},
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
-
-
         </div>
     </div>
     <!-- Wrapper END -->
     <!-- Footer -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {% include 'footer.html' %}
 
     <script>
