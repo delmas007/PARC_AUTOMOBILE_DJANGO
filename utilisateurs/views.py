@@ -194,10 +194,6 @@ class Connexion_user(LoginView):
             return reverse('utilisateur:liste_mission')
 
 
-def Acceuil_conducteur(request):
-    return render(request, 'ut')
-
-
 def password_reset_request(request):
     if request.method == 'POST':
         form = PasswordResetForme(request.POST)
