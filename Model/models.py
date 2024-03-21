@@ -4,6 +4,8 @@ from datetime import timedelta
 
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.db.models import Sum
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils import timezone
 from django.db import models
 from django.utils.timesince import timesince
@@ -241,9 +243,20 @@ class Demande_prolongement(models.Model):
     kilometrage = models.IntegerField()
     lu = models.BooleanField(default=False)
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
+    date_premiere = models.DateField(blank=True, null=True)
+    premiere_enregistrement = models.BooleanField(default=False)
 
     def ajout(self):
         return self.deplacement.date_fin() + timedelta(days=self.duree)
+
+    @receiver(pre_save, sender=Deplacement)
+    def set_date_premiere(sender, instance, **kwargs):
+        if not instance.premiere_enregistrement:  # Si ce n'est pas déjà le premier enregistrement
+            instance.date_premiere = instance.date_depart
+            instance.premiere_enregistrement = True
+        elif instance.pk:  # Si l'objet existe déjà
+            original_instance = sender.objects.get(pk=instance.pk)
+            instance.date_premiere = original_instance.date_premiere
 
     def __str__(self):
         return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
@@ -263,9 +276,20 @@ class Carburant(models.Model):
     type = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
     prix_total = models.IntegerField()
     quantite = models.FloatField()
+    date_premiere = models.DateField(blank=True, null=True)
+    premiere_enregistrement = models.BooleanField(default=False)
 
     def prix_total_format(self):
         return "{:,.2f}".format(self.prix_total)
+
+    @receiver(pre_save, sender=Deplacement)
+    def set_date_premiere(sender, instance, **kwargs):
+        if not instance.premiere_enregistrement:  # Si ce n'est pas déjà le premier enregistrement
+            instance.date_premiere = instance.date_depart
+            instance.premiere_enregistrement = True
+        elif instance.pk:  # Si l'objet existe déjà
+            original_instance = sender.objects.get(pk=instance.pk)
+            instance.date_premiere = original_instance.date_premiere
 
 
 class Entretien(models.Model):
@@ -303,6 +327,17 @@ class Incident(models.Model):
     description_incident = models.TextField()
     utilisateurs = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='gestionnaire',
                                      blank=True)
+    date_premiere = models.DateField(blank=True, null=True)
+    premiere_enregistrement = models.BooleanField(default=False)
+
+    @receiver(pre_save, sender=Deplacement)
+    def set_date_premiere(sender, instance, **kwargs):
+        if not instance.premiere_enregistrement:  # Si ce n'est pas déjà le premier enregistrement
+            instance.date_premiere = instance.date_depart
+            instance.premiere_enregistrement = True
+        elif instance.pk:  # Si l'objet existe déjà
+            original_instance = sender.objects.get(pk=instance.pk)
+            instance.date_premiere = original_instance.date_premiere
 
 
 class Photo(models.Model):
