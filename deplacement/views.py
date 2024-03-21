@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 
+from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
@@ -332,11 +333,10 @@ def get_photos_demande_prolongement(request):
 
 def accept_prolongement(request, prolongement_id):
     prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
-
-    # Modifier les champs de la demande de prolongement
     prolongement.en_cours = False
     prolongement.refuser = False
     prolongement.accepter = True
+    prolongement.date_reponse = timezone.now()
     prolongement.save()
 
     return redirect('deplacement:liste_deplacement_en_cours')

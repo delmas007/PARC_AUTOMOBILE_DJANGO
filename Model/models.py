@@ -6,6 +6,7 @@ from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.db.models import Sum
 from django.utils import timezone
 from django.db import models
+from django.utils.timesince import timesince
 
 
 class MyUserManager(BaseUserManager):
@@ -228,6 +229,7 @@ class Location(models.Model):
 
 class Demande_prolongement(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
+    date_reponse = models.DateTimeField(blank=True, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     duree = models.IntegerField()
     motif = models.CharField(max_length=250, )
@@ -237,6 +239,7 @@ class Demande_prolongement(models.Model):
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True, )
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     kilometrage = models.IntegerField()
+    lu = models.BooleanField(default=False)
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
 
     def ajout(self):
@@ -244,6 +247,13 @@ class Demande_prolongement(models.Model):
 
     def __str__(self):
         return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
+
+    def time_since_reponse(self):
+        if self.date_reponse:
+            time_since_reponse = timesince(self.date_reponse)
+            return f"En ligne il y a {time_since_reponse}"
+        else:
+            return "Hors ligne (date de déconnexion non disponible)"
 
 
 class Carburant(models.Model):

@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, Subquery
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.templatetags.static import static
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView
@@ -276,11 +276,29 @@ def dismiss_notification(request):
     if request.method == 'GET':
         prolongement_id = request.GET.get('prolongement_id')
         if prolongement_id:
-            return HttpResponse("Notification supprimée avec succès")
+            prolongement = get_object_or_404(Demande_prolongement, id=prolongement_id)
+            prolongement.lu = True
+            prolongement.save()
+            return JsonResponse({"message": "Notification marquée comme lue"})
         else:
-            return HttpResponse("ID de prolongement manquant dans la requête")
+            return JsonResponse({"error": "ID de prolongement manquant dans la requête"}, status=400)
     else:
-        return HttpResponse("Méthode HTTP non autorisée")
+        return JsonResponse({"error": "Méthode HTTP non autorisée"}, status=405)
+
+
+def prolongement_lu_details(request):
+    if request.method == 'GET':
+        prolongement_id = request.GET.get('prolongement_id')
+        if prolongement_id:
+            try:
+                prolongement_details = Demande_prolongement.objects.get(id=prolongement_id)
+                return render(request, 'compte_conducteur.html', {'prolongement_details': prolongement_details})
+            except Demande_prolongement.DoesNotExist:
+                return HttpResponse("Le prolongement n'existe pas.")
+        else:
+            return HttpResponse("ID de prolongement manquant dans la requête.")
+    else:
+        return HttpResponse("Méthode HTTP non autorisée.")
 
 
 def prolongement(request):

@@ -156,6 +156,7 @@
     </style>
     <body>
     {% url 'utilisateur:liste_mission' as liste_mission %}
+    {% url 'utilisateur:prolongement_lu_details' as prolongement_lu_details %}
     {% url 'utilisateur:list_de_demande_prolongement' as list_de_demande_prolongement %}
     {% url 'utilisateur:declare_incident' as declare_incident %}
     {% url 'utilisateur:ChangerMotDePasseConducteur' as ChangerMotDePasseConducteur %}
@@ -197,20 +198,30 @@
             {% if request.path == ChangerMotDePasseConducteur %}
                 <span>Changer mot de passe</span>
             {% endif %}
+            {% if request.path == prolongement_lu_details %}
+                <span>Details demande</span>
+            {% endif %}
         </div>
         <div class="col"  style="flex-grow: 1;">
             <div class="notification-icon" onclick="toggleNotifi()">
                 <i class="fas fa-bell"></i>
-                <span class="badge">{% if prolongements_acceptes_refuse %}{{ prolongements_acceptes_refuse.count }}{% else %}0{% endif %}</span>
+                <span class="badge">{% if prolongements_non_lus %}{{ prolongements_non_lus.count }}{% else %}0{% endif %}</span>
             </div>
-            <div class="notifi-box" id="box">
-                <h2>Notifications</h2>
-                {% if prolongements_acceptes_refuse %}
-                    {% for prolongement in prolongements_acceptes_refuse %}
-                        <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('accepte_{{ prolongement.id }}')">
-                            <div class="text">
-                                <h4>{{ prolongement.conducteur }}</h4>
-                                <p>Votre demande de prolongement a été acceptée!</p>
+            <div class="notifi-box" id="box" style="overflow-y: auto">
+                <h2 style="position:fixed">Notifications</h2>
+                {% if prolongements_non_lus %}
+                    {% for prolongement in prolongements_non_lus %}
+                        <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
+                            <div class="post">
+                                <div class="user-blo">
+                                    <span class="username">
+                                         <a href="#">Deplacelement {{ prolongement.deplacement }}</a>
+                                     </span>
+                                    <span class="description">Recu {{ prolongement.time_since_reponse }}</span>
+                                </div>
+                                <p class="text">
+                                    {{ prolongement.motif|truncatewords:6  }}
+                                </p>
                             </div>
                         </div>
                     {% endfor %}
@@ -755,6 +766,23 @@
                                 {% endif %}
 
                             </div>
+                            <div class="tab-pane fade show {% if request.path == prolongement_lu_details %}active{% else %} {% endif %} text-center " id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
+                                <h6 style="color: #333;">Informations de la demande de prolongement</h6>
+                                {% if prolongement_details %}
+                                    <ul style="list-style-type: none; padding-left: 0;">
+                                        <li style="color: #555;">
+                                            La demande de prolongement que vous avez effectuée le {{ prolongement_details.date_mise_a_jour }} pour une durée de  {{ prolongement_details.duree }} jours
+                                            qui a pour motif "{{ prolongement_details.motif }}" a été
+                                            {% if prolongement_details.accepter %}
+                                                <span style="color: green;">acceptée</span>. Votre déplacement prendra fin le {{ prolongement_details.date_fin }}.
+                                            {% elif prolongement_details.refuser %}
+                                                <span style="color: red;">refusée</span>. Votre déplacement prendra fin le {{ prolongement_details.ajout }}.
+                                            {% endif %}
+                                        </li>
+                                    </ul>
+                                {% endif %}
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1129,7 +1157,7 @@
                 box.style.opacity = 0;
                 down = false;
             }else {
-                box.style.height  = '510px';
+                box.style.height  = '410px';
                 box.style.opacity = 1;
                 down = true;
             }
@@ -1140,18 +1168,25 @@
             fetch("{% url 'utilisateur:dismiss_notification' %}?prolongement_id=" + id)
                 .then(response => {
                     if (response.ok) {
-                        var notification = document.getElementById(id);
+                        var notification = document.getElementById('accepte_' + id);
                         if (notification) {
-                            notification.remove();
+                            notification.style.display = 'none';
+                            var badge = document.querySelector('.badge');
+                            if (badge) {
+                                var count = parseInt(badge.innerText);
+                                if (!isNaN(count) && count > 0) {
+                                    badge.innerText = count - 1;
+                                }
+                            }
                         }
-                    } else {
+                        window.location.href = "{% url 'utilisateur:prolongement_lu_details' %}?prolongement_id=" + id;
+                    }
+                    else {
                         console.error("Erreur lors de la suppression de la notification");
                     }
                 })
                 .catch(error => console.error("Erreur lors de la suppression de la notification:", error));
-            event.preventDefault();
         }
-
     </script>
     {% include 'footer_conducteur.html' %}
     </body>

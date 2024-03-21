@@ -53,7 +53,7 @@ class DeplacementForm(forms.ModelForm):
 
     class Meta:
         model = Deplacement
-        fields='__all__'
+        fields = '__all__'
 
     images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
     photo_jauge_depart = forms.ImageField(required=False)
@@ -89,9 +89,11 @@ class EtatArriveForm(forms.ModelForm):
         model = EtatArrive
         fields = ['deplacement_id', 'kilometrage_arrive', 'photo_jauge_arrive']
         images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=False)
-        photo_jauge_arrive= forms.ImageField(required=False)
+        photo_jauge_arrive = forms.ImageField(required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
 
 class DeplacementSearchForm(forms.Form):
     q = forms.CharField(

@@ -2,7 +2,7 @@
 from utilisateurs.views import Accueil_user, inscription_user, Connexion_user, Compte, vehicule_details, list_vehicule, \
     activate, password_reset_request, passwordResetConfirm, liste_mission, prolongement, \
     liste_demandes, declare_incident, sendIncident, ChangerMotDePassee, ChangerMotDePasseConducteur, ProfilUser, \
-    deplacement_s, erreur, dismiss_notification
+    deplacement_s, erreur, dismiss_notification, prolongement_lu_details
 from django.urls import path
 
 app_name = 'utilisateur'
@@ -28,5 +28,6 @@ urlpatterns = [
     path('recherche_prolongement/<str:prolongement_nom>/', deplacement_s, name='prolongementt'),
     path('erreur/', erreur, name='erreur'),
     path('dismiss_notification/', dismiss_notification, name='dismiss_notification'),
+    path('prolongement_lu_details/', prolongement_lu_details, name='prolongement_lu_details'),
 
 ]
