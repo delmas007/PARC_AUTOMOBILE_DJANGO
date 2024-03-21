@@ -160,6 +160,11 @@ class Vehicule(models.Model):
         total_quantite = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('quantite')).get('total') or 0
         total_prix = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('prix_total')).get('total') or 0
         return {'quantite': total_quantite, 'prix': total_prix}
+    def total_entretien(self, mois, annee):
+        total_prix = Entretien.objects.filter(vehicule=self, date_entretien__month=mois, date_entretien__year=annee).aggregate(total=Sum('prix_entretient')).get('total') or 0
+        total_quantite = Entretien.objects.filter(vehicule=self, date_entretien__month=mois, date_entretien__year=annee).count() or 0
+        return {'quantite': total_quantite, 'prix': total_prix}
+
 
 class Deplacement(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)

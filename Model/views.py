@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -20,9 +21,9 @@ class Connexion(LoginView):
             return reverse('Accueil')
 
 
-class Deconnexion(LogoutView):
-    def get_success_url(self):
-        return reverse('utilisateur:connexion_user')
+def deconnexion(request):
+    logout(request)
+    return redirect(reverse('utilisateur:connexion_user'))
 
 
 class Deconnexion2(LogoutView):

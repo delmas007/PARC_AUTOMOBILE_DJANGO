@@ -185,17 +185,21 @@ def inscription_user(request):
 #         form = ConnexionForm()
 #         return render(request, 'connexion_user.html', {'form': form})
 
-class Connexion_user(LoginView):
-    template_name = 'connexion_user.html'
-    form_class = ConnexionForm
+def Connexion_user(request):
+    if request.user.is_authenticated:
+        return redirect('utilisateur:liste_mission')
 
-    def get_success_url(self) -> str:
-        if self.request.user.roles.role == 'CONDUCTEUR':
-            return reverse('utilisateur:liste_mission')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('utilisateur:liste_mission')
+        else:
+            pass
 
-
-def Acceuil_conducteur(request):
-    return render(request, 'ut')
+    return render(request, 'connexion_user.html')
 
 
 def password_reset_request(request):
@@ -271,7 +275,7 @@ def passwordResetConfirm(request, uidb64, token):
     return redirect("Accueil")
 
 
-@login_required
+@login_required(login_url='utilisateur:connexion_user')
 def liste_mission(request):
     prolongement = Demande_prolongement.objects.filter(accepter=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)

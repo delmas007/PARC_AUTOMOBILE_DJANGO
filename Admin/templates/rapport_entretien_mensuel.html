@@ -27,6 +27,42 @@
         <!-- Page Content  -->
         <div id="content-page" class="content-page">
             <div class="container-fluid">
+                <form method="post">
+                    <strong>Afficher les depenses des véhicules du :</strong>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-1" style="width: 100%">
+                            <label for="mois"></label>
+                            <select  class="form-control" name="mois" id="mois">
+                                <option value="1">Janvier</option>
+                                <option value="2">Février</option>
+                                <option value="3">Mars</option>
+                                <option value="4">Avril</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juin</option>
+                                <option value="7">Juillet</option>
+                                <option value="8">Août</option>
+                                <option value="9">Septembre</option>
+                                <option value="10">Octobre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Décembre</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1" style="width: 100%">
+                            <label for="annee"></label>
+                            <select class="form-control" name="annee" id="annee">
+                            </select>
+                        </div>
+                        <div class="col-md-1" style="width: 100%">
+                            <button type="submit" class="mt-4">Afficher</button>
+                        </div>
+                    </div>
+                </form>
+                <canvas id="fuelConsumptionChart" width="300" height="100" style="margin-top: 20px"></canvas>
+
+                {% if  mois  and  annee  %}
+                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"><span id="data-type"> PRIX</span> ENTRETIEN DE {{ mois|upper }} {{ annee }}</div>
+                {% endif %}
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="iq-card">
@@ -40,8 +76,8 @@
                                     <div class="row justify-content-between">
                                         <div class="col-sm-12 col-md-12">
                                             <div id="user_list_datatable_info" class="dataTables_filter">
-                                              <form method="post" action="{% url 'admins:rapport_entretien_mensuel_pdf' %}">
-                                                <div class="row">
+                                                <form method="post" action="{% url 'admins:rapport_entretien_mensuel_pdf' %}">
+                                                    <div class="row">
 
                                                         {% csrf_token %}
 
@@ -49,7 +85,7 @@
                                                             <label style="font-family: -apple-system; font-size: medium"> Vehicule</label>
                                                             <select class="form-control" id="vehicule" name="vehicule" style="width: 100%;">
                                                                 <option value="">Sélectionner un vehicule</option>
-                                                                {% for voiture in vehicule %}
+                                                                {% for voiture in vehicules %}
                                                                     <option value="{{ voiture.id }}">{{ voiture }} </option>
                                                                 {% endfor %}
                                                             </select>
@@ -75,7 +111,7 @@
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label style="font-family: -apple-system; font-size: medium"> ANNEE</label>
-                                                            <select class="form-control" id="annee" name="annee" required style="width: 100%;">
+                                                            <select class="form-control" id="annees" name="annee" required style="width: 100%;">
 
                                                             </select>
                                                         </div>
@@ -85,8 +121,8 @@
                                                             <button type="reset">RESET</button>
                                                         </div>
 
-                                                </div>
-                                               </form>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -115,6 +151,96 @@
             option.text = annee;
             option.value = annee;
             selectAnnee.appendChild(option);
+        }
+        var selectAnnee = document.getElementById("annees");
+
+        // Obtention de l'année actuelle
+        var anneeActuelle = new Date().getFullYear();
+
+        // Boucle pour ajouter les options des années au select
+        for (var annee = anneeActuelle; annee >= 1900; annee--) {
+            var option = document.createElement("option");
+            option.text = annee;
+            option.value = annee;
+            selectAnnee.appendChild(option);
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('fuelConsumptionChart').getContext('2d');
+            var labels = {{ labels|safe }};
+            var quantites = {{ quantites|safe }};
+            var prix = {{ prix|safe }};
+            var backgroundColors = generateRandomColors(labels.length);
+
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Prix Total d'entretien (Fcfa)",
+                        data: prix,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors,
+                        borderWidth: 1,
+
+
+                    }, {
+                        label: 'Nombre d'+'entretien',
+                        data: quantites,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors,
+                        borderWidth: 1,
+                        hidden: true
+
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    plugins: {
+
+                        legend: {
+
+                            onClick: function (event, legendItem) {
+                                var index = legendItem.datasetIndex;
+                                var meta = this.chart.getDatasetMeta(index);
+                                if (index === 0) {
+                                    // Si le premier dataset est cliqué, activer le premier et désactiver le second
+                                    this.chart.data.datasets[0].hidden = false;
+                                    this.chart.data.datasets[1].hidden = true;
+                                    document.getElementById('data-type').textContent = 'PRIX';
+
+                                } else {
+                                    // Si le second dataset est cliqué, activer le second et désactiver le premier
+                                    this.chart.data.datasets[0].hidden = true;
+                                    this.chart.data.datasets[1].hidden = false;
+                                    document.getElementById('data-type').textContent = 'NOMBRE D\'';
+
+                                }
+                                this.chart.update();
+                            }
+
+                        }
+                    }
+                }
+            });
+        });
+        function generateRandomColors(numColors) {
+            var colors = [];
+            for (var i = 0; i < numColors; i++) {
+                var color = '#';
+                for (var j = 0; j < 6; j++) {
+                    color += '0123456789ABCDEF'[Math.floor(Math.random() * 16)];
+                }
+                colors.push(color);
+            }
+            return colors;
         }
     </script>
     </body>

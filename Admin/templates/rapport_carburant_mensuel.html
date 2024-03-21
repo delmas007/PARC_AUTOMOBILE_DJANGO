@@ -4,7 +4,7 @@
     <body>
     <!-- loader Start -->
     <style>
-     /* Style pour les select */
+        /* Style pour les select */
         select {
             border-radius: 5px; /* Bord arrondi */
             border: 1px solid #ccc; /* Bordure */
@@ -22,18 +22,18 @@
             cursor: pointer; /* Curseur en main */
         }
         button {
-        border-radius: 5px; /* Bord arrondi */
-        border: 1px solid #ccc; /* Bordure */
-        font-size: 16px; /* Taille de la police */
-        cursor: pointer; /* Curseur en main */
-        background-color: #6A4ECCFF; /* Couleur de fond */
-        color: #FFFFFF;
-    }
+            border-radius: 5px; /* Bord arrondi */
+            border: 1px solid #ccc; /* Bordure */
+            font-size: 16px; /* Taille de la police */
+            cursor: pointer; /* Curseur en main */
+            background-color: #6A4ECCFF; /* Couleur de fond */
+            color: #FFFFFF;
+        }
 
-/* Au survol du bouton */
-    button:hover {
-        background-color: #858181; /* Couleur de fond au survol */
-    }
+        /* Au survol du bouton */
+        button:hover {
+            background-color: #858181; /* Couleur de fond au survol */
+        }
 
         .zoom-on-hover {
             transition: transform 0.3s ease-in-out; /* Ajoute une transition douce pour l'effet de zoom */
@@ -61,71 +61,80 @@
 
         <div id="content-page" class="content-page">
             <div class="container-fluid">
-                   <form method="post">
-    <strong>Afficher la consommation de carburant des véhicules du :</strong>
-    {% csrf_token %}
-    <label for="mois"></label>
-<select name="mois" id="mois">
-<option value="1">Janvier</option>
-<option value="2">Février</option>
-<option value="3">Mars</option>
-<option value="4">Avril</option>
-<option value="5">Mai</option>
-<option value="6">Juin</option>
-<option value="7">Juillet</option>
-<option value="8">Août</option>
-<option value="9">Septembre</option>
-<option value="10">Octobre</option>
-<option value="11">Novembre</option>
-<option value="12">Décembre</option>
-</select>
-<label for="annee"></label>
-<select name="annee" id="annee">
-</select>
-<button type="submit">Afficher</button>
+                <form method="post">
+                    <strong>Afficher la consommation de carburant des véhicules du :</strong>
+                    {% csrf_token %}
+                    <label for="mois"></label>
+                    <select name="mois" id="mois">
+                        <option value="1">Janvier</option>
+                        <option value="2">Février</option>
+                        <option value="3">Mars</option>
+                        <option value="4">Avril</option>
+                        <option value="5">Mai</option>
+                        <option value="6">Juin</option>
+                        <option value="7">Juillet</option>
+                        <option value="8">Août</option>
+                        <option value="9">Septembre</option>
+                        <option value="10">Octobre</option>
+                        <option value="11">Novembre</option>
+                        <option value="12">Décembre</option>
+                    </select>
+                    <label for="annee"></label>
+                    <select name="annee" id="annee">
+                    </select>
+                    <button type="submit">Afficher</button>
 
-</form>
+                </form>
 
-<canvas id="myChart" width="300" height="100"></canvas>
+                <canvas id="myChart" width="300" height="100 " style="margin-top: 20px"></canvas>
+                {% if  mois  and  annee  %}
+                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> DEPENSE DE {{ mois|upper }} {{ annee }}</div>
+                {% endif %}
+                <script>
+                    // Fonction pour générer des couleurs aléatoires
+                    function generateRandomColors(numColors) {
+                        var colors = [];
+                        for (var i = 0; i < numColors; i++) {
+                            var color = '#';
+                            for (var j = 0; j < 6; j++) {
+                                color += '0123456789ABCDEF'[Math.floor(Math.random() * 16)];
+                            }
+                            colors.push(color);
+                        }
+                        return colors;
+                    }
 
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {{ labels|safe }},
-            datasets: [{
-                label: 'Consommation de carburant (L)',
-                data: {{ data|safe }},
-             backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(255, 159, 64, 0.2)',
-                      'rgba(255, 205, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var labels = {{ labels|safe }};
+                    var data = {{ data|safe }};
+                    var backgroundColors = generateRandomColors(labels.length);
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: backgroundColors,
+                                borderColor: backgroundColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                legend: {
+                                    display: false // Désactive la légende
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
 
-                    ],
 
-                borderColor: [
-                      'rgb(255, 99, 132)',
-                      'rgb(255, 159, 64)',
-                      'rgb(255, 205, 86)',
-                      'rgb(75, 192, 192)',
-                      'rgb(54, 162, 235)',
-
-                    ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>
+                </script>
 
                 <div class="row">
 
@@ -142,8 +151,8 @@
                                     <div class="row justify-content-between">
                                         <div class="col-sm-12 col-md-12">
                                             <div id="user_list_datatable_info" class="dataTables_filter">
-                                              <form method="post" action="{% url 'admins:rapport_carburant_mensuel_pdf' %}">
-                                                <div class="row">
+                                                <form method="post" action="{% url 'admins:rapport_carburant_mensuel_pdf' %}">
+                                                    <div class="row">
 
                                                         {% csrf_token %}
 
@@ -186,8 +195,8 @@
                                                             <button>GENERER</button>
                                                             <button type="reset">RESET</button>
                                                         </div>
-                                                </div>
-                                               </form>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -196,42 +205,42 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
-    </div>
-    <!-- Wrapper END -->
-    <!-- Footer -->
+        <!-- Wrapper END -->
+        <!-- Footer -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    {% include 'footer.html' %}
+        {% include 'footer.html' %}
 
-    <script>
-        // Sélection de l'élément select
-        var selectAnnee = document.getElementById("annees");
+        <script>
+            // Sélection de l'élément select
+            var selectAnnee = document.getElementById("annees");
 
-        // Obtention de l'année actuelle
-        var anneeActuelle = new Date().getFullYear();
+            // Obtention de l'année actuelle
+            var anneeActuelle = new Date().getFullYear();
 
-        // Boucle pour ajouter les options des années au select
-        for (var annee = anneeActuelle; annee >= 1900; annee--) {
-            var option = document.createElement("option");
-            option.text = annee;
-            option.value = annee;
-            selectAnnee.appendChild(option);
-        }
-    </script>
-     <script>
-        // Sélection de l'élément select
-        var selectAnnee = document.getElementById("annee");
+            // Boucle pour ajouter les options des années au select
+            for (var annee = anneeActuelle; annee >= 1900; annee--) {
+                var option = document.createElement("option");
+                option.text = annee;
+                option.value = annee;
+                selectAnnee.appendChild(option);
+            }
+        </script>
+        <script>
+            // Sélection de l'élément select
+            var selectAnnee = document.getElementById("annee");
 
-        // Obtention de l'année actuelle
-        var anneeActuelle = new Date().getFullYear();
+            // Obtention de l'année actuelle
+            var anneeActuelle = new Date().getFullYear();
 
-        // Boucle pour ajouter les options des années au select
-        for (var annee = anneeActuelle; annee >= 1900; annee--) {
-            var option = document.createElement("option");
-            option.text = annee;
-            option.value = annee;
-            selectAnnee.appendChild(option);
-        }
-    </script>
+            // Boucle pour ajouter les options des années au select
+            for (var annee = anneeActuelle; annee >= 1900; annee--) {
+                var option = document.createElement("option");
+                option.text = annee;
+                option.value = annee;
+                selectAnnee.appendChild(option);
+            }
+        </script>
     </body>
 {% endblock %}
