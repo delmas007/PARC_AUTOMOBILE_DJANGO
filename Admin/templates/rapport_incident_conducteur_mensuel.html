@@ -91,71 +91,78 @@
 
                 </form>
 
-                <canvas id="myChart" width="300" height="100 " style="margin-top: 20px"></canvas>
+            </div>
+            <div>
+                <canvas id="myChart" width="300" height="100" style="margin-top: 20px"></canvas>
                 {% if  mois  and  annee  %}
-                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> NOMBRE D'INCIDENT PAR CONDUCTEUR DE {{ mois|upper }} {{ annee }}</div>
+                    <div class="text-right">
+                        <button class="btn btn-primary " onclick="printCanvas()" >IMPRIMER</button>
+                    </div>
                 {% endif %}
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="iq-card">
-                            <div class="iq-card-header d-flex justify-content-between">
-                                <div class="iq-header-title">
-                                    <h4 class="card-title">RAPPORT INCIDENT CONDUCTEUR MENSUELLE  </h4>
-                                </div>
+            </div>
+            {% if  mois  and  annee  %}
+                <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> NOMBRE D'INCIDENT PAR CONDUCTEUR DE {{ mois|upper }} {{ annee }}</div>
+            {% endif %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="iq-card">
+                        <div class="iq-card-header d-flex justify-content-between">
+                            <div class="iq-header-title">
+                                <h4 class="card-title">RAPPORT INCIDENT CONDUCTEUR MENSUELLE  </h4>
                             </div>
-                            <div class="iq-card-body">
-                                <div>
-                                    <div class="row justify-content-between">
-                                        <div class="col-sm-12 col-md-12">
-                                            <div id="user_list_datatable_info" class="dataTables_filter">
-                                              <form method="post" action="{% url 'admins:rapport_incident_conducteur_mensuel_pdf' %}">
+                        </div>
+                        <div class="iq-card-body">
+                            <div>
+                                <div class="row justify-content-between">
+                                    <div class="col-sm-12 col-md-12">
+                                        <div id="user_list_datatable_info" class="dataTables_filter">
+                                            <form method="post" action="{% url 'admins:rapport_incident_conducteur_mensuel_pdf' %}">
                                                 <div class="row">
 
-                                                        {% csrf_token %}
+                                                    {% csrf_token %}
 
-                                                        <div class="col-md-4">
-                                                            <label style="font-family: -apple-system; font-size: medium"> Conducteur</label>
-                                                            <select class="form-control" id="conducteur" name="conducteur" style="width: 100%;">
-                                                                <option value="">Sélectionner un conducteur</option>
-                                                                {% for conducteur in conducteurs %}
-                                                                    <option value="{{ conducteur.id }}">{{ conducteur }} </option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label style="font-family: -apple-system; font-size: medium"> MOIS</label>
-                                                            <select class="form-control" id="mois" name="mois" required style="width: 100%;">
+                                                    <div class="col-md-4">
+                                                        <label style="font-family: -apple-system; font-size: medium"> Conducteur</label>
+                                                        <select class="form-control" id="conducteur" name="conducteur" style="width: 100%;">
+                                                            <option value="">Sélectionner un conducteur</option>
+                                                            {% for conducteur in conducteurs %}
+                                                                <option value="{{ conducteur.id }}">{{ conducteur }} </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label style="font-family: -apple-system; font-size: medium"> MOIS</label>
+                                                        <select class="form-control" id="mois" name="mois" required style="width: 100%;">
 
-                                                                <option value="1">Janvier</option>
-                                                                <option value="2">Février</option>
-                                                                <option value="3">Mars</option>
-                                                                <option value="4">Avril</option>
-                                                                <option value="5">Mai</option>
-                                                                <option value="6">Juin</option>
-                                                                <option value="7">Juillet</option>
-                                                                <option value="8">Août</option>
-                                                                <option value="9">Septembre</option>
-                                                                <option value="10">Octobre</option>
-                                                                <option value="11">Novembre</option>
-                                                                <option value="12">Décembre</option>
-                                                            </select>
+                                                            <option value="1">Janvier</option>
+                                                            <option value="2">Février</option>
+                                                            <option value="3">Mars</option>
+                                                            <option value="4">Avril</option>
+                                                            <option value="5">Mai</option>
+                                                            <option value="6">Juin</option>
+                                                            <option value="7">Juillet</option>
+                                                            <option value="8">Août</option>
+                                                            <option value="9">Septembre</option>
+                                                            <option value="10">Octobre</option>
+                                                            <option value="11">Novembre</option>
+                                                            <option value="12">Décembre</option>
+                                                        </select>
 
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label style="font-family: -apple-system; font-size: medium"> ANNEE</label>
-                                                            <select class="form-control" id="annees" name="annee" required style="width: 100%;">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label style="font-family: -apple-system; font-size: medium"> ANNEE</label>
+                                                        <select class="form-control" id="annees" name="annee" required style="width: 100%;">
 
-                                                            </select>
-                                                        </div>
+                                                        </select>
+                                                    </div>
 
-                                                        <div class="col-12 mt-5 text-right">
-                                                            <button>GENERER</button>
-                                                            <button type="reset">RESET</button>
-                                                        </div>
+                                                    <div class="col-12 mt-5 text-right">
+                                                        <button>GENERER</button>
+                                                        <button type="reset">RESET</button>
+                                                    </div>
 
                                                 </div>
-                                               </form>
-                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -165,6 +172,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- Wrapper END -->
     <!-- Footer -->
@@ -244,6 +252,30 @@
         });
 
 
+    </script>
+    <script>
+        function printCanvas() {
+            var canvas = document.getElementById('myChart');
+            var ctx = canvas.getContext('2d');
+
+            // Dessiner quelque chose sur le canvas si nécessaire
+
+            // Attendre un court délai pour permettre au canvas d'être correctement rendu
+            setTimeout(function() {
+                // Ouvrir une nouvelle fenêtre avec le contenu du canvas
+                var win = window.open('', '', 'width=' + canvas.width + ',height=' + canvas.height);
+                win.document.write('<html><head><title>Impression</title></head><body>');
+                win.document.write('<img src="' + canvas.toDataURL() + '" style="width:' + canvas.width + 'px; height:' + canvas.height + 'px;"/>');
+                win.document.write('</body></html>');
+                win.document.close();
+
+                // Attendre un court délai supplémentaire pour permettre au contenu d'être chargé dans la nouvelle fenêtre
+                setTimeout(function() {
+                    // Imprimer la fenêtre
+                    win.print();
+                }, 100);
+            }, 100);
+        }
     </script>
     </body>
 {% endblock %}

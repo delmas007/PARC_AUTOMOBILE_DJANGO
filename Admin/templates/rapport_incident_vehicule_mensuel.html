@@ -4,7 +4,7 @@
     <body>
     <!-- loader Start -->
     <style>
-            /* Style pour les select */
+        /* Style pour les select */
         select {
             border-radius: 5px; /* Bord arrondi */
             border: 1px solid #ccc; /* Bordure */
@@ -90,8 +90,14 @@
                     <button type="submit">Afficher</button>
 
                 </form>
-
-                <canvas id="myChart" width="300" height="100 " style="margin-top: 20px"></canvas>
+                <div>
+                    <canvas id="myChart" width="300" height="100" style="margin-top: 20px"></canvas>
+                    {% if  mois  and  annee  %}
+                        <div class="text-right">
+                            <button class="btn btn-primary " onclick="printCanvas()" >IMPRIMER</button>
+                        </div>
+                    {% endif %}
+                </div>
                 {% if  mois  and  annee  %}
                     <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> NOMBRE D'INCIDENT PAR VEHICULE DE {{ mois|upper }} {{ annee }}</div>
                 {% endif %}
@@ -108,8 +114,8 @@
                                     <div class="row justify-content-between">
                                         <div class="col-sm-12 col-md-12">
                                             <div id="user_list_datatable_info" class="dataTables_filter">
-                                              <form method="post" action="{% url 'admins:rapport_incident_vehicule_mensuel_pdf' %}">
-                                                <div class="row">
+                                                <form method="post" action="{% url 'admins:rapport_incident_vehicule_mensuel_pdf' %}">
+                                                    <div class="row">
 
                                                         {% csrf_token %}
 
@@ -153,8 +159,8 @@
                                                             <button type="reset">RESET</button>
                                                         </div>
 
-                                                </div>
-                                               </form>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -244,6 +250,30 @@
         });
 
 
+    </script>
+    <script>
+        function printCanvas() {
+            var canvas = document.getElementById('myChart');
+            var ctx = canvas.getContext('2d');
+
+            // Dessiner quelque chose sur le canvas si nécessaire
+
+            // Attendre un court délai pour permettre au canvas d'être correctement rendu
+            setTimeout(function() {
+                // Ouvrir une nouvelle fenêtre avec le contenu du canvas
+                var win = window.open('', '', 'width=' + canvas.width + ',height=' + canvas.height);
+                win.document.write('<html><head><title>Impression</title></head><body>');
+                win.document.write('<img src="' + canvas.toDataURL() + '" style="width:' + canvas.width + 'px; height:' + canvas.height + 'px;"/>');
+                win.document.write('</body></html>');
+                win.document.close();
+
+                // Attendre un court délai supplémentaire pour permettre au contenu d'être chargé dans la nouvelle fenêtre
+                setTimeout(function() {
+                    // Imprimer la fenêtre
+                    win.print();
+                }, 100);
+            }, 100);
+        }
     </script>
     </body>
 {% endblock %}
