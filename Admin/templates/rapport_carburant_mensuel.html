@@ -85,56 +85,25 @@
                     <button type="submit">Afficher</button>
 
                 </form>
-
-                <canvas id="myChart" width="300" height="100 " style="margin-top: 20px"></canvas>
                 {% if  mois  and  annee  %}
-                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> DEPENSE DE {{ mois|upper }} {{ annee }}</div>
+                    <div class="text-center">
+                        <button class="btn btn-primary " id="toggleDatasetButton" >CHANGER</button>
+                    </div>
+
                 {% endif %}
-                <script>
-                    // Fonction pour générer des couleurs aléatoires
-                    function generateRandomColors(numColors) {
-                        var colors = [];
-                        for (var i = 0; i < numColors; i++) {
-                            var color = '#';
-                            for (var j = 0; j < 6; j++) {
-                                color += '0123456789ABCDEF'[Math.floor(Math.random() * 16)];
-                            }
-                            colors.push(color);
-                        }
-                        return colors;
-                    }
+                <div>
+                <canvas id="fuelConsumptionChart" width="300" height="100" style="margin-top: 20px"></canvas>
+                {% if  mois  and  annee  %}
+                    <div class="text-right">
+                        <button class="btn btn-primary " onclick="printCanvas()" >IMPRIMER</button>
+                    </div>
+                {% endif %}
+                </div>
 
-                    var ctx = document.getElementById('myChart').getContext('2d');
-                    var labels = {{ labels|safe }};
-                    var data = {{ data|safe }};
-                    var backgroundColors = generateRandomColors(labels.length);
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                data: data,
-                                backgroundColor: backgroundColors,
-                                borderColor: backgroundColors,
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                legend: {
-                                    display: false // Désactive la légende
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
+                {% if  mois  and  annee  %}
+                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"><span id="data-type"> PRIX</span> CARBURANT PAR VEHICULE DE {{ mois|upper }} {{ annee }}</div>
+                {% endif %}
 
-
-                </script>
 
                 <div class="row">
 
@@ -242,5 +211,109 @@
                 selectAnnee.appendChild(option);
             }
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var ctx = document.getElementById('fuelConsumptionChart').getContext('2d');
+                var labels = {{ labels|safe }};
+                var quantites = {{ quantites|safe }};
+                var prix = {{ prix|safe }};
+                var backgroundColors = generateRandomColors(labels.length);
+
+                var chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Prix Total de carburant (Fcfa)",
+                            data: prix,
+                            backgroundColor: backgroundColors,
+                            borderColor: backgroundColors,
+                            borderWidth: 1,
+
+
+                        }, {
+                            label: 'Quantité de carburant (L)',
+                            data: quantites,
+                            backgroundColor: backgroundColors,
+                            borderColor: backgroundColors,
+                            borderWidth: 1,
+                            hidden: true
+
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        plugins: {
+
+                            legend: {
+                                display: false,
+
+                            }
+                        }
+                    }
+                });
+                document.getElementById('toggleDatasetButton').addEventListener('click', function() {
+                    var chartInstance = Chart.getChart(ctx);
+                    var firstDataset = chartInstance.data.datasets[0];
+                    var secondDataset = chartInstance.data.datasets[1];
+
+                    // Basculer la visibilité des datasets
+                    firstDataset.hidden = !firstDataset.hidden;
+                    secondDataset.hidden = !secondDataset.hidden;
+
+                    // Mettre à jour le texte en fonction du dataset affiché
+                    if (firstDataset.hidden) {
+                        document.getElementById('data-type').textContent = 'NOMBRE D\'';
+                    } else {
+                        document.getElementById('data-type').textContent = 'PRIX';
+                    }
+
+                    // Mettre à jour le graphique
+                    chartInstance.update();
+                });
+            });
+            function generateRandomColors(numColors) {
+                var colors = [];
+                for (var i = 0; i < numColors; i++) {
+                    var color = '#';
+                    for (var j = 0; j < 6; j++) {
+                        color += '0123456789ABCDEF'[Math.floor(Math.random() * 16)];
+                    }
+                    colors.push(color);
+                }
+                return colors;
+            }
+        </script>
+        <script>
+            function printCanvas() {
+                var canvas = document.getElementById('fuelConsumptionChart');
+                var ctx = canvas.getContext('2d');
+
+                // Dessiner quelque chose sur le canvas si nécessaire
+
+                // Attendre un court délai pour permettre au canvas d'être correctement rendu
+                setTimeout(function() {
+                    // Ouvrir une nouvelle fenêtre avec le contenu du canvas
+                    var win = window.open('', '', 'width=' + canvas.width + ',height=' + canvas.height);
+                    win.document.write('<html><head><title>Impression</title></head><body>');
+                    win.document.write('<img src="' + canvas.toDataURL() + '" style="width:' + canvas.width + 'px; height:' + canvas.height + 'px;"/>');
+                    win.document.write('</body></html>');
+                    win.document.close();
+
+                    // Attendre un court délai supplémentaire pour permettre au contenu d'être chargé dans la nouvelle fenêtre
+                    setTimeout(function() {
+                        // Imprimer la fenêtre
+                        win.print();
+                    }, 100);
+                }, 100);
+            }
+        </script>
+
     </body>
 {% endblock %}

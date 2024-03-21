@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from xhtml2pdf import pisa
 
 from Admin.views import rapport_carburant_mensuel
-from Admin.views2 import courbe_entretien_mensuel
+from Admin.views2 import courbe_entretien_mensuel, courbe_incident_vehicule_mensuel
 from Model.models import Vehicule, Carburant, Entretien, \
     Deplacement, Incident
 
@@ -22,6 +22,8 @@ def rapport_entretien_mensuel_admins(request):
 
 
 def rapport_incident_vehicule_mensuel_admins(request):
+    if request.method == 'POST':
+        return courbe_incident_vehicule_mensuel(request)
     vehicules = Vehicule.objects.all()
     context = {'vehicules': vehicules}
     return render(request, 'rapport_incident_vehicule_mensuel.html', context)

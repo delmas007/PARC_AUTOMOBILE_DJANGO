@@ -30,7 +30,7 @@
                 <form method="post">
 
 
-                            <strong>Afficher les depenses des véhicules du :</strong>
+                            <strong>Afficher les depenses sur les véhicules du :</strong>
                         {% csrf_token %}
                     <div class="row">
                         <div class="col-md-2" style="width: 100%">
@@ -52,7 +52,7 @@
                 <canvas id="myChart" width="300" height="100" style="margin-top: 20px"></canvas>
                 {% if  debut  and  fin  %}
 
-                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> DEPENSE DU {{ debut }} au {{ fin }}</div>
+                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> DEPENSE  PAR VEHICULE DU {{ debut }} au {{ fin }}</div>
                 {% endif %}
                 <div class="row">
                     <div class="col-sm-12">
