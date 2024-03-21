@@ -6,6 +6,7 @@ from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.db.models import Sum
 from django.utils import timezone
 from django.db import models
+from django.utils.timesince import timesince
 
 
 class MyUserManager(BaseUserManager):
@@ -156,13 +157,23 @@ class Vehicule(models.Model):
     def __str__(self):
         return f"{self.marque} {self.type_commercial} {self.numero_immatriculation}"
 
-    def total_carburant_consomme(self):
+    def total_carburant_consomme(self, mois, annee):
         total_quantite = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('quantite')).get('total') or 0
         total_prix = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('prix_total')).get('total') or 0
+        if mois and annee:
+            total_quantite = Carburant.objects.filter(vehicule=self, date_mise_a_jour__month=mois,
+                                                      date_mise_a_jour__year=annee).aggregate(total=Sum('quantite')) \
+                                 .get('total') or 0
+            total_prix = Carburant.objects.filter(vehicule=self, date_mise_a_jour__month=mois,
+                                                  date_mise_a_jour__year=annee).aggregate(total=Sum('prix_total')) \
+                             .get('total') or 0
         return {'quantite': total_quantite, 'prix': total_prix}
+
     def total_entretien(self, mois, annee):
-        total_prix = Entretien.objects.filter(vehicule=self, date_entretien__month=mois, date_entretien__year=annee).aggregate(total=Sum('prix_entretient')).get('total') or 0
-        total_quantite = Entretien.objects.filter(vehicule=self, date_entretien__month=mois, date_entretien__year=annee).count() or 0
+        total_prix = Entretien.objects.filter(vehicule=self, date_entretien__month=mois, date_entretien__year=annee) \
+                         .aggregate(total=Sum('prix_entretient')).get('total') or 0
+        total_quantite = Entretien.objects.filter(vehicule=self, date_entretien__month=mois,
+                                                  date_entretien__year=annee).count() or 0
         return {'quantite': total_quantite, 'prix': total_prix}
 
 
@@ -218,6 +229,7 @@ class Location(models.Model):
 
 class Demande_prolongement(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
+    date_reponse = models.DateTimeField(blank=True, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     duree = models.IntegerField()
     motif = models.CharField(max_length=250, )
@@ -227,6 +239,7 @@ class Demande_prolongement(models.Model):
     deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True, )
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     kilometrage = models.IntegerField()
+    lu = models.BooleanField(default=False)
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
 
     def ajout(self):
@@ -234,6 +247,13 @@ class Demande_prolongement(models.Model):
 
     def __str__(self):
         return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
+
+    def time_since_reponse(self):
+        if self.date_reponse:
+            time_since_reponse = timesince(self.date_reponse)
+            return f"En ligne il y a {time_since_reponse}"
+        else:
+            return "Hors ligne (date de déconnexion non disponible)"
 
 
 class Carburant(models.Model):

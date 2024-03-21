@@ -1,6 +1,7 @@
 from datetime import date, timezone
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.utils import timezone
 from datetime import timedelta
 
@@ -10,6 +11,17 @@ from Model.models import Demande_prolongement, EtatArrive, Incident, Deplacement
 
 
 def accueil_data(request):
+    prolongements_non_lus = None
+    if request.user.is_authenticated:
+        prolongements_non_lus = Demande_prolongement.objects.filter(
+            conducteur=request.user.conducteur,
+            lu=False
+        ).exclude(
+            accepter=False,
+            refuser=False
+        ).order_by(F('date_reponse').desc(nulls_last=True))
+    else:
+        prolongements_non_lus = Demande_prolongement.objects.none()
     deplacements_arrives_ids = EtatArrive.objects.values('deplacement_id')
     demande = Demande_prolongement.objects.filter(en_cours=True).order_by('-date_mise_a_jour')
     incidents = Incident.objects.filter(conducteur__isnull=False).exclude(
@@ -113,4 +125,8 @@ def accueil_data(request):
             'vehicules_et_jours_restants': vehicules_et_jours_restants,
             'vehicules_et_jours_restants_technique': vehicules_et_jours_restants_technique,
             'vehicules_proches_vidange': vehicules_proches_vidange, 'nombre_incident_externe': nombre_incident_externe,
-            'nombre_incident_interne': nombre_incident_interne, 'nombre_entretien': nombre_entretien, 'nombre_carburant': nombre_carburant, 'nombre_etatarrive': nombre_etatarrive, 'nombre_conducteurs': nombre_conducteurs, 'nombre_vehicule': nombre_vehicule}
+            'nombre_incident_interne': nombre_incident_interne, 'nombre_entretien': nombre_entretien,
+            'nombre_carburant': nombre_carburant, 'nombre_etatarrive': nombre_etatarrive,
+            'nombre_conducteurs': nombre_conducteurs, 'nombre_vehicule': nombre_vehicule, 'prolongements_non_lus': prolongements_non_lus}
+
+

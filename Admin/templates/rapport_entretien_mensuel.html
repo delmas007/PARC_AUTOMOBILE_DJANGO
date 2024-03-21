@@ -56,12 +56,29 @@
                         <div class="col-md-1" style="width: 100%">
                             <button type="submit" class="mt-4">Afficher</button>
                         </div>
+
                     </div>
                 </form>
+                {% if  mois  and  annee  %}
+                    <div class="text-center">
+                        <button class="btn btn-primary " id="toggleDatasetButton" >CHANGER</button>
+                    </div>
+
+                {% endif %}
+            <div>
                 <canvas id="fuelConsumptionChart" width="300" height="100" style="margin-top: 20px"></canvas>
+                {% if  mois  and  annee  %}
+                <div class="text-right">
+                    <button class="btn btn-primary " onclick="printCanvas()" >IMPRIMER</button>
+                </div>
+                {% endif %}
+            </div>
+
 
                 {% if  mois  and  annee  %}
-                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"><span id="data-type"> PRIX</span> ENTRETIEN DE {{ mois|upper }} {{ annee }}</div>
+                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline">
+                        <span id="data-type"> PRIX</span> ENTRETIEN PAR VEHICULE DE {{ mois|upper }} {{ annee }}
+                        </div>
                 {% endif %}
                 <div class="row">
                     <div class="col-sm-12">
@@ -173,9 +190,11 @@
             var prix = {{ prix|safe }};
             var backgroundColors = generateRandomColors(labels.length);
 
+
             var chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
+
                     labels: labels,
                     datasets: [{
                         label: "Prix Total d'entretien (Fcfa)",
@@ -206,31 +225,34 @@
                     plugins: {
 
                         legend: {
-
-                            onClick: function (event, legendItem) {
-                                var index = legendItem.datasetIndex;
-                                var meta = this.chart.getDatasetMeta(index);
-                                if (index === 0) {
-                                    // Si le premier dataset est cliqué, activer le premier et désactiver le second
-                                    this.chart.data.datasets[0].hidden = false;
-                                    this.chart.data.datasets[1].hidden = true;
-                                    document.getElementById('data-type').textContent = 'PRIX';
-
-                                } else {
-                                    // Si le second dataset est cliqué, activer le second et désactiver le premier
-                                    this.chart.data.datasets[0].hidden = true;
-                                    this.chart.data.datasets[1].hidden = false;
-                                    document.getElementById('data-type').textContent = 'NOMBRE D\'';
-
-                                }
-                                this.chart.update();
-                            }
+                            display: false,
 
                         }
                     }
                 }
             });
+            document.getElementById('toggleDatasetButton').addEventListener('click', function() {
+                var chartInstance = Chart.getChart(ctx);
+                var firstDataset = chartInstance.data.datasets[0];
+                var secondDataset = chartInstance.data.datasets[1];
+
+                // Basculer la visibilité des datasets
+                firstDataset.hidden = !firstDataset.hidden;
+                secondDataset.hidden = !secondDataset.hidden;
+
+                // Mettre à jour le texte en fonction du dataset affiché
+                if (firstDataset.hidden) {
+                    document.getElementById('data-type').textContent = 'NOMBRE D\'';
+                } else {
+                    document.getElementById('data-type').textContent = 'PRIX';
+                }
+
+                // Mettre à jour le graphique
+                chartInstance.update();
+            });
         });
+
+
         function generateRandomColors(numColors) {
             var colors = [];
             for (var i = 0; i < numColors; i++) {
@@ -243,5 +265,32 @@
             return colors;
         }
     </script>
+    <script>
+        function printCanvas() {
+            var canvas = document.getElementById('fuelConsumptionChart');
+            var ctx = canvas.getContext('2d');
+
+            // Dessiner quelque chose sur le canvas pour s'assurer qu'il est rendu
+
+
+            // Attendre un court délai pour permettre au canvas d'être correctement rendu
+            setTimeout(function() {
+                // Ouvrir une nouvelle fenêtre avec le contenu du canvas
+                var win = window.open('', '', 'width=' + canvas.width + ',height=' + canvas.height);
+                win.document.write('<html><head><title>Canvas Print</title></head><body>');
+                win.document.write('<img src="' + canvas.toDataURL() + '" style="width:100%; height:100%;"/>');
+                win.document.write('</body></html>');
+                win.document.close();
+
+                // Attendre un court délai supplémentaire pour permettre au contenu d'être chargé dans la nouvelle fenêtre
+                setTimeout(function() {
+                    // Imprimer la fenêtre
+                    win.print();
+
+                }, 100);
+            }, 100);
+        }
+    </script>
+
     </body>
 {% endblock %}

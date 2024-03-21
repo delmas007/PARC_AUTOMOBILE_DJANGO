@@ -1,9 +1,12 @@
 from datetime import date, timedelta
 from random import sample
+from urllib import request
+
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, Subquery
+from django.http import HttpResponse, JsonResponse
 from django.templatetags.static import static
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView
@@ -151,40 +154,6 @@ def inscription_user(request):
     return render(request, 'connexion_user.html', context=context)
 
 
-# class Connexion_user(LoginView):
-#     template_name = 'connexion_user.html'
-#     form_class = ConnexionForm
-#
-#     def get_success_url(self) -> str:
-#         if self.request.user.roles.role == 'CLIENT':
-#             return reverse('utilisateur:Accueil_user')
-#         if self.request.user.roles.role == 'CONDUCTEUR':
-#             return reverse('utilisateur:liste_mission')
-
-# def Connexion_user(request):
-#     if request.method == 'POST':
-#         if 'connexion' in request.POST:
-#             form = ConnexionForm(request, data=request.POST)
-#             if form.is_valid():
-#                 username = form.cleaned_data.get('username')
-#                 password = form.cleaned_data.get('password')
-#                 user = authenticate(request, username=username, password=password)
-#                 if user is not None:
-#                     login(request, user)
-#                     role = user.roles.role
-#                     if role == 'CLIENT':
-#                         return redirect('utilisateur:Accueil_utilisateur')
-#                     elif role == 'CONDUCTEUR':
-#                         return redirect('utilisateur:liste_mission')
-#             else:
-#                 return render(request, 'connexion_user.html', {'form': form})
-#         else:
-#             return inscription_user(request)
-#
-#     else:
-#         form = ConnexionForm()
-#         return render(request, 'connexion_user.html', {'form': form})
-
 def Connexion_user(request):
     if request.user.is_authenticated:
         return redirect('utilisateur:liste_mission')
@@ -275,30 +244,27 @@ def passwordResetConfirm(request, uidb64, token):
     return redirect("Accueil")
 
 
+def erreur(request):
+    return render(request, 'erreur.html')
+
+
 @login_required(login_url='utilisateur:connexion_user')
 def liste_mission(request):
+    if request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     prolongement = Demande_prolongement.objects.filter(accepter=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
     prolongement_accepter = Demande_prolongement.objects.filter(accepter=True)
     prolongement_refuse = Demande_prolongement.objects.filter(refuser=True)
     date_aujourdui = date.today()
-    # Récupérer l'utilisateur actuellement connecté
     utilisateur_actif = request.user
-
-    # Récupérer l'ID du conducteur actif à partir de l'utilisateur actif
     conducteur_actif_id = utilisateur_actif.conducteur_id
-
-    # Récuperation des id de de demande de prolongement dans une liste
     prolongement_encours_ids = prolongement_encours.values_list('deplacement_id', flat=True)
     prolongement_accepter_ids = prolongement_accepter.values_list('deplacement_id', flat=True)
     prolongement_refuse_ids = prolongement_refuse.values_list('deplacement_id', flat=True)
-    # Récupérer une sous-requête avec les IDs des déplacements ayant un état d'arrivée
     deplacements_arrives_ids = EtatArrive.objects.values('deplacement_id')
-
-    # Exclure les déplacements avec leurs IDs dans la sous-requête
     mission_list = Deplacement.objects.exclude(id__in=Subquery(deplacements_arrives_ids)).filter(
         conducteur_id=conducteur_actif_id).order_by('date_depart')
-
     return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui,
                                                       'prolongement_encours': prolongement_encours_ids,
                                                       'prolongement_accepter': prolongement_accepter_ids,
@@ -306,7 +272,38 @@ def liste_mission(request):
                                                       'prolongement': prolongement, })
 
 
+def dismiss_notification(request):
+    if request.method == 'GET':
+        prolongement_id = request.GET.get('prolongement_id')
+        if prolongement_id:
+            prolongement = get_object_or_404(Demande_prolongement, id=prolongement_id)
+            prolongement.lu = True
+            prolongement.save()
+            return JsonResponse({"message": "Notification marquée comme lue"})
+        else:
+            return JsonResponse({"error": "ID de prolongement manquant dans la requête"}, status=400)
+    else:
+        return JsonResponse({"error": "Méthode HTTP non autorisée"}, status=405)
+
+
+def prolongement_lu_details(request):
+    if request.method == 'GET':
+        prolongement_id = request.GET.get('prolongement_id')
+        if prolongement_id:
+            try:
+                prolongement_details = Demande_prolongement.objects.get(id=prolongement_id)
+                return render(request, 'compte_conducteur.html', {'prolongement_details': prolongement_details})
+            except Demande_prolongement.DoesNotExist:
+                return HttpResponse("Le prolongement n'existe pas.")
+        else:
+            return HttpResponse("ID de prolongement manquant dans la requête.")
+    else:
+        return HttpResponse("Méthode HTTP non autorisée.")
+
+
 def prolongement(request):
+    if request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = DemandeProlongementForm(request.POST, request.FILES)
         if form.is_valid():
@@ -335,6 +332,8 @@ def prolongement(request):
 
 @login_required
 def liste_demandes(request):
+    if request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     utilisateur_actif = request.user
     conducteur_actif = utilisateur_actif.conducteur_id
     arrive_list_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
@@ -355,6 +354,8 @@ def liste_demandes(request):
 
 
 def declare_incident(request):
+    if request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     date_aujourdui = date.today()
     # Récupérer l'utilisateur actuellement connecté
     utilisateur_actif = request.user
@@ -381,6 +382,8 @@ def declare_incident(request):
 
 
 def sendIncident(request):
+    if request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = DeclareIncidentForm(request.POST, request.FILES)
 
@@ -417,6 +420,8 @@ def sendIncident(request):
 
 
 def ChangerMotDePassee(request):
+    if request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = ChangerMotDePasse(request.user, request.POST)
         print(request.POST.get('passe'))
@@ -437,14 +442,14 @@ def ChangerMotDePassee(request):
 
 
 def ChangerMotDePasseConducteur(request):
+    if request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = ChangerMotDePasse(request.user, request.POST)
         print(request.POST.get('passe'))
         print(request.user.check_password(request.POST.get('passe')))
         if request.user.check_password(request.POST.get('passe')):
-            print('1111')
             if form.is_valid():
-                print('2222')
                 form.save()
                 messages.success(request, "Votre mot de passe a été changer.")
                 return redirect('utilisateur:connexion_user')
@@ -458,67 +463,6 @@ def ChangerMotDePasseConducteur(request):
 
 def ProfilUser(request):
     return render(request, 'Profil_user.html')
-
-
-# def ChangerMotDePassee(request):
-#     if request.method == 'POST':
-#         form = ChangerMotDePasse(request.user, request.POST)
-#         if request.user.check_password(form.cleaned_data['passe']):
-#             if form.is_valid():
-#                 user = request.user
-#                 old_password = form.cleaned_data['passe']
-#                 new_password1 = form.cleaned_data['new_password1']
-#                 new_password2 = form.cleaned_data['new_password2']
-#
-#                 # Vérifier si le mot de passe actuel est correct
-#                 if user.check_password(old_password):
-#                     # Vérifier si les nouveaux mots de passe correspondent
-#                     if new_password1 == new_password2:
-#                         # Définir le nouveau mot de passe et sauvegarder l'utilisateur
-#                         user.set_password(new_password1)
-#                         user.save()
-#
-#                         # Mise à jour de la session de l'authentification pour éviter la déconnexion de l'utilisateur
-#                         update_session_auth_hash(request, user)
-#
-#                         messages.success(request, "Votre mot de passe a été modifié avec succès.")
-#                         return redirect('Model:connexion')
-#                     else:
-#                         messages.error(request, "Les nouveaux mots de passe ne correspondent pas.")
-#                 else:
-#                     messages.error(request, "Le mot de passe actuel est incorrect.")
-#             else:
-#                 for error in list(form.errors.values()):
-#                     messages.error(request, error)
-#
-#                 print(form.errors)
-#     else:
-#         form = ChangerMotDePasse(request.user)
-#     return render(request, 'changerMotDePasse.html', {'form': form})
-
-# def deplacement_s(request, prolongement_id):
-#     form = DeplacementSearchForm(request.GET)
-#     aujourdhui = date.today()
-#     deplacement = Deplacement.objects.filter(date_depart__gte=aujourdhui)
-#
-#     if form.is_valid():
-#         if prolongement_id:
-#             deplacement = deplacement.filter(Q(conducteur__demande_prolongement=prolongement_id))
-#
-#     paginator = Paginator(deplacement.order_by('date_mise_a_jour'), 5)
-#     page = request.GET.get("page", 1)
-#     try:
-#         deplacements = paginator.page(page)
-#     except EmptyPage:
-#         deplacements = paginator.page(paginator.num_pages)
-#
-#     context = {'deplacements': deplacements, 'form': form}
-#
-#     # Ajouter la logique pour gérer les cas où aucun résultat n'est trouvé
-#     if deplacement.count() == 0 and form.is_valid():
-#         context['no_results'] = True
-#
-#     return render(request, 'afficher_deplacement_en_cours.html', context)
 
 
 def deplacement_s(request, prolongement_nom):

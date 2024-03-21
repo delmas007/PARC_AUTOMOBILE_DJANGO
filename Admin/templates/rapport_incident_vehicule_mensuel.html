@@ -93,7 +93,7 @@
 
                 <canvas id="myChart" width="300" height="100 " style="margin-top: 20px"></canvas>
                 {% if  mois  and  annee  %}
-                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> DEPENSE DE {{ mois|upper }} {{ annee }}</div>
+                    <div class="text-center mt-3 font-size-18 font-weight-bold bd-highlight" style="text-decoration: underline"> NOMBRE D'INCIDENT PAR VEHICULE DE {{ mois|upper }} {{ annee }}</div>
                 {% endif %}
                 <div class="row">
                     <div class="col-sm-12">
@@ -199,6 +199,51 @@
             option.value = annee;
             selectAnnee.appendChild(option);
         }
+    </script>
+    <script>
+        // Fonction pour générer des couleurs aléatoires
+        function generateRandomColors(numColors) {
+            var colors = [];
+            for (var i = 0; i < numColors; i++) {
+                var color = '#';
+                for (var j = 0; j < 6; j++) {
+                    color += '0123456789ABCDEF'[Math.floor(Math.random() * 16)];
+                }
+                colors.push(color);
+            }
+            return colors;
+        }
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var labels = {{ labels|safe }};
+        var data = {{ data|safe }};
+        var backgroundColors = generateRandomColors(labels.length);
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColors,
+                    borderColor: backgroundColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false // Désactive la légende
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
     </script>
     </body>
 {% endblock %}
