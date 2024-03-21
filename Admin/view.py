@@ -201,8 +201,8 @@ def rapport_incident_vehicule_mensuel_pdf(request):
 
             vehicule = Vehicule.objects.get(id=vehicule_id)
             # Récupérer les données de carburant et d'entretien
-            incidents = Incident.objects.filter(vehicule=vehicule_id, date_mise_a_jour__month=mois,
-                                                date_mise_a_jour__year=annee)
+            incidents = Incident.objects.filter(vehicule=vehicule_id, date_premiere__month=mois,
+                                                ddate_premiere__year=annee)
 
             html_content = f"""
                     <html>
@@ -240,7 +240,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                  """
                 for incident in incidents:
                     html_content += f"""
-                    <tr><td>{incident.date_mise_a_jour.date()}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
+                    <tr><td>{incident.date_premiere.date()}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
                 """
 
             else:
@@ -277,7 +277,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
             """
 
             # Filtrer les incidents pour le mois et l'année spécifiés
-            incidents = Incident.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
+            incidents = Incident.objects.filter(date_premiere__month=mois, date_premiere__year=annee)
 
             # Vérifier s'il y a des incidents pour ce mois et cette année
             if incidents:
@@ -300,7 +300,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                         # Boucle sur chaque incident pour ce conducteur
                         for incident in incidents_vehicule:
                             html_content += f"""
-                                                <tr><td>{incident.date_mise_a_jour.date()}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
+                                                <tr><td>{incident.date_premiere.date()}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
