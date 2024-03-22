@@ -188,21 +188,21 @@
         </div>
     </nav>
     <nav class="Entete" style=" justify-content: center; align-items: center;">
-        <div class="col" style="text-align: center; color: white; font-weight: bold; text-transform: uppercase; text-shadow: 4px 4px 0px #008000, 1px 1px 0px #0000FF; margin-left: 50px;">
+        <div class="col-5" style="text-align: center; color: white; font-weight: bold; margin-left: 50px;">
             {% if request.path == liste_mission %}
-                <span>Accueil</span>
+                <span>ACCUEIL</span>
             {% endif %}
             {% if request.path == declare_incident %}
-                <span>Incident</span>
+                <span>INCIDENT</span>
             {% endif %}
             {% if request.path == list_de_demande_prolongement %}
-                <span>Demande prolongement</span>
+                <span>DEMANDES</span>
             {% endif %}
             {% if request.path == ChangerMotDePasseConducteur %}
-                <span>Changer mot de passe</span>
+                <span style="font-size: 12px">Mot de passe</span>
             {% endif %}
             {% if request.path == prolongement_lu_details %}
-                <span>Details demande</span>
+                <span>DETAILS</span>
             {% endif %}
         </div>
         <div class="col"  style="flex-grow: 1;">
@@ -210,35 +210,37 @@
                 <i class="fas fa-bell"></i>
                 {% if prolongements_non_lus %}<span class="badge">{{ prolongements_non_lus.count }}</span>{% else %}{% endif %}
             </div>
-            <div class="notifi-box" id="box" style="overflow-y: auto">
-                <h2>Notifications</h2>
-                {% if prolongements_non_lus %}
-                    {% for prolongement in prolongements_non_lus %}
-                        <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
-                            <div class="post notif">
-                                <div class="user-blo">
-                                    <span class="username">
-                                         <a href="#">Deplacelement {{ prolongement.deplacement }}</a>
-                                     </span>
-                                    <span class="description">Recu {{ prolongement.time_since_reponse }}</span>
-                                </div>
-                                <p class="text">
-                                    {{ prolongement.motif|truncatewords:6  }}
-                                </p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    auccune notifiaction
-                {% endif %}
-            </div>
+
         </div>
         <div class="col">
             <a class="nav__link" id="avatar-navbars1" onclick="toggleMenu1()">
                 <i class="bi bi-gear" style="color: #39399b; font-size: 25px;"></i>
             </a>
         </div>
+        <div class="notifi-box" id="box" style="overflow-y: auto">
+            <h2>Notifications</h2>
+            {% if prolongements_non_lus %}
+                {% for prolongement in prolongements_non_lus %}
+                    <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
+                        <div class="post notif">
+                            <div class="user-blo">
+                                    <span class="username">
+                                         <a href="#">Deplacelement {{ prolongement.deplacement }}</a>
+                                     </span>
+                                <span class="description">Recu {{ prolongement.time_since_reponse }}</span>
+                            </div>
+                            <p class="text">
+                                {{ prolongement.motif|truncatewords:6  }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                auccune notifiaction
+            {% endif %}
+        </div>
     </nav>
+
     <div class="navigation__menu none" style="overflow-y:auto">
         <div class="avatar-wrapper" style="background-image: url('{% static 'images/conducteur.png' %}');">
             <div class="">
