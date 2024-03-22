@@ -1167,6 +1167,16 @@
                 .catch(error => console.error("Erreur lors de la suppression de la notification:", error));
         }
     </script>
+    <script>
+        var currentUrl = window.location.href;
+        var loginUrl = "url_de_la_page_de_connexion";
+        if (currentUrl === loginUrl) {
+            var divToHide = document.querySelector('.styles_preview__IERpK');
+            if (divToHide) {
+                divToHide.style.display = 'none';
+            }
+        }
+    </script>
     {% include 'footer_conducteur.html' %}
     </body>
 {% endblock %}
