@@ -264,7 +264,7 @@ class Demande_prolongement(models.Model):
     def time_since_reponse(self):
         if self.date_reponse:
             time_since_reponse = timesince(self.date_reponse)
-            return f"En ligne il y a {time_since_reponse}"
+            return f"il y a {time_since_reponse}"
         else:
             return "Hors ligne (date de déconnexion non disponible)"
 

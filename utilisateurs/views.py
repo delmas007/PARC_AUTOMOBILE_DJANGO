@@ -420,8 +420,6 @@ def sendIncident(request):
 
 
 def ChangerMotDePassee(request):
-    if request.user.roles.role != 'CONDUCTEUR':
-        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = ChangerMotDePasse(request.user, request.POST)
         print(request.POST.get('passe'))

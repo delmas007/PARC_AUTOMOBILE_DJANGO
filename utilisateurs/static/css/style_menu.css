@@ -40,6 +40,14 @@ body {
     font-size: var(--normal-font-size);
     background-color: var(--body-color);
     color: var(--text-color);
+    touch-action: manipulation; /* Pour améliorer les performances tactiles sur certains navigateurs mobiles */
+    -ms-touch-action: manipulation; /* Pour les navigateurs Internet Explorer */
+    user-scalable: no;
+    -ms-user-select: none; /* Empêche la sélection de texte sur Internet Explorer */
+    -webkit-user-select: none; /* Empêche la sélection de texte sur les navigateurs WebKit (Safari) */
+    -moz-user-select: none; /* Empêche la sélection de texte sur Firefox */
+    -khtml-user-select: none; /* Empêche la sélection de texte sur les navigateurs KHTML */
+    user-select: none;
 }
 
 ul {
