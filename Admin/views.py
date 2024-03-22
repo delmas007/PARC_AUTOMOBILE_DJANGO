@@ -257,8 +257,8 @@ def rapport_depense_mensuel_pdf(request):
 
             vehicule = Vehicule.objects.get(id=vehicule_id)
             # Récupérer les données de carburant et d'entretien
-            carburant = Carburant.objects.filter(vehicule=vehicule_id, date_mise_a_jour__month=mois,
-                                                 date_mise_a_jour__year=annee)
+            carburant = Carburant.objects.filter(vehicule=vehicule_id, date_premiere__month=mois,
+                                                 date_premiere__year=annee)
             entretien = Entretien.objects.filter(vehicule=vehicule_id, date_entretien__month=mois,
                                                  date_entretien__year=annee)
 
@@ -305,7 +305,7 @@ def rapport_depense_mensuel_pdf(request):
                  """
                 for essence in carburant:
                     html_content += f"""
-                    <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                    <tr><td>{essence.date_premiere.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -322,7 +322,7 @@ def rapport_depense_mensuel_pdf(request):
                  """
                 for reparation in entretien:
                     html_content += f"""
-                    <tr><td>{reparation.date_mise_a_jour.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
+                    <tr><td>{reparation.date_premiere.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -338,8 +338,8 @@ def rapport_depense_mensuel_pdf(request):
             else:
                 html_content += "<p>Aucune donnée d'entretien disponible.</p>"
         else:
-            carburant = Carburant.objects.filter(date_mise_a_jour__month=mois,
-                                                 date_mise_a_jour__year=annee)
+            carburant = Carburant.objects.filter(date_premiere__month=mois,
+                                                 date_premiere__year=annee)
             entretien = Entretien.objects.filter(date_entretien__month=mois,
                                                  date_entretien__year=annee)
             nbre_deplacements = 0
@@ -380,8 +380,8 @@ def rapport_depense_mensuel_pdf(request):
 
             """
             for voiture in voitures:
-                carburant = Carburant.objects.filter(vehicule=voiture, date_mise_a_jour__month=mois,
-                                                     date_mise_a_jour__year=annee)
+                carburant = Carburant.objects.filter(vehicule=voiture, date_premiere__month=mois,
+                                                     date_premiere__year=annee)
                 carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
                 carburant_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
                 entretien = Entretien.objects.filter(vehicule=voiture, date_entretien__month=mois,
@@ -446,7 +446,7 @@ def rapport_depense_pdf(request):
 
             vehicule = Vehicule.objects.get(id=vehicule_id)
             carburants = Carburant.objects.filter(vehicule=vehicule,
-                                                  date_mise_a_jour__date__range=(debut_date, fin_date))
+                                                  date_premiere__range=(debut_date, fin_date))
             entretiens = Entretien.objects.filter(vehicule=vehicule, date_entretien__range=(debut_date, fin_date))
             total_carburant = carburants.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
             total_entretien = entretiens.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
@@ -490,7 +490,7 @@ def rapport_depense_pdf(request):
                             """
                 for essence in carburants:
                     html_content += f"""
-                               <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                               <tr><td>{essence.date_premiere.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                            """
                 html_content += f"""
 
@@ -508,7 +508,7 @@ def rapport_depense_pdf(request):
                             """
                 for reparation in entretiens:
                     html_content += f"""
-                               <tr><td>{reparation.date_mise_a_jour.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
+                               <tr><td>{reparation.date_premiere.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
                            """
                 html_content += f"""
 
@@ -524,7 +524,7 @@ def rapport_depense_pdf(request):
             else:
                 html_content += "<p>Aucune donnée d'entretien disponible.</p>"
         else:
-            carburant = Carburant.objects.filter(date_mise_a_jour__date__range=(debut_date, fin_date))
+            carburant = Carburant.objects.filter(date_premiere__range=(debut_date, fin_date))
             entretien = Entretien.objects.filter(date_entretien__range=(debut_date, fin_date))
             nbre_deplacements = 0
             nbres_entretien = 0
@@ -566,7 +566,7 @@ def rapport_depense_pdf(request):
                    """
             for voiture in voitures:
                 carburant = Carburant.objects.filter(vehicule=voiture,
-                                                     date_mise_a_jour__date__range=(debut_date, fin_date))
+                                                     date_premiere__range=(debut_date, fin_date))
                 carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
                 carburant_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
                 entretien = Entretien.objects.filter(vehicule=voiture,
@@ -574,7 +574,7 @@ def rapport_depense_pdf(request):
                 nbre_entretien = entretien.count()
                 nbres_entretien += nbre_entretien
                 vehicule_max_carburant_id = Carburant.objects.filter(
-                    date_mise_a_jour__date__range=(debut_date, fin_date)).values('vehicule').annotate(
+                    date_premiere__range=(debut_date, fin_date)).values('vehicule').annotate(
                     total_carburant=Sum('prix_total')).order_by('-total_carburant').first()
                 if vehicule_max_carburant_id:
                     vehicule_max_carburant = Vehicule.objects.get(id=vehicule_max_carburant_id['vehicule'])
@@ -672,8 +672,8 @@ def rapport_carburant_mensuel_pdf(request):
         voitures = Vehicule.objects.all()
         if vehicule_id:
 
-            carburant = Carburant.objects.filter(vehicule=vehicule_id, date_mise_a_jour__month=mois,
-                                                 date_mise_a_jour__year=annee)
+            carburant = Carburant.objects.filter(vehicule=vehicule_id, date_premiere__month=mois,
+                                                 date_premiere__year=annee)
 
             vehicule = Vehicule.objects.get(id=vehicule_id)
 
@@ -732,7 +732,7 @@ def rapport_carburant_mensuel_pdf(request):
                  """
                 for essence in carburant:
                     html_content += f"""
-                    <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                    <tr><td>{essence.date_premiere.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                 """
                 if deplacement:
                     if deplacement_last:
@@ -789,14 +789,14 @@ def rapport_carburant_mensuel_pdf(request):
             <h1>Rapport Carburant de {mois_lettre} {annee}</h1>
 
             """
-            carburant = Carburant.objects.filter(date_mise_a_jour__month=mois,
-                                                 date_mise_a_jour__year=annee)
+            carburant = Carburant.objects.filter(date_premiere__month=mois,
+                                                 date_premiere__year=annee)
 
             # Calculer les totaux de carburant et d'entretien
 
             for voiture in voitures:
-                carburant_voiture = carburant.filter(vehicule=voiture, date_mise_a_jour__month=mois,
-                                                     date_mise_a_jour__year=annee)
+                carburant_voiture = carburant.filter(vehicule=voiture, date_premiere__month=mois,
+                                                     date_premiere__year=annee)
 
                 html_content += f"""
                                            <h1>Rapport  de {voiture}</h1>
@@ -831,7 +831,7 @@ def rapport_carburant_mensuel_pdf(request):
                             total_quantite = carburant_voiture.filter(vehicule=voiture).aggregate(Sum('quantite'))[
                                                  'quantite__sum'] or 0
                             html_content += f"""
-                                        <tr><td>{essence.date_mise_a_jour.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                                        <tr><td>{essence.date_premiere.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                                     """
 
                     if deplacement:
@@ -913,8 +913,8 @@ def rapport_incident_conducteur_mensuel_pdf(request):
 
             conducteur = Conducteur.objects.get(id=conducteur_id)
             # Récupérer les données de carburant et d'entretien
-            incidents = Incident.objects.filter(conducteur=conducteur_id, date_mise_a_jour__month=mois,
-                                                date_mise_a_jour__year=annee)
+            incidents = Incident.objects.filter(conducteur=conducteur_id, date_premiere__month=mois,
+                                                date_premiere__year=annee)
 
             html_content = f"""
                     <html>
@@ -952,7 +952,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                  """
                 for incident in incidents:
                     html_content += f"""
-                    <tr><td>{incident.date_mise_a_jour.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
+                    <tr><td>{incident.date_premiere.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
                 """
 
             else:
@@ -989,7 +989,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
             """
 
             # Filtrer les incidents pour le mois et l'année spécifiés
-            incidents = Incident.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
+            incidents = Incident.objects.filter(date_premiere__month=mois, date_premiere__year=annee)
 
             # Vérifier s'il y a des incidents pour ce mois et cette année
             if incidents:
@@ -1014,7 +1014,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                         # Boucle sur chaque incident pour ce conducteur
                         for incident in incidents_conducteur:
                             html_content += f"""
-                                                <tr><td>{incident.date_mise_a_jour.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
+                                                <tr><td>{incident.date_premiere.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur

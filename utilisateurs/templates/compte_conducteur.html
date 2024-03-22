@@ -153,6 +153,9 @@
             color: #aaa;
             font-size: 12px;
         }
+        .notif:hover{
+            background-color: #c52d2d;
+        }
     </style>
     <body>
     {% url 'utilisateur:liste_mission' as liste_mission %}
@@ -205,14 +208,14 @@
         <div class="col"  style="flex-grow: 1;">
             <div class="notification-icon" onclick="toggleNotifi()">
                 <i class="fas fa-bell"></i>
-                <span class="badge">{% if prolongements_non_lus %}{{ prolongements_non_lus.count }}{% else %}0{% endif %}</span>
+                {% if prolongements_non_lus %}<span class="badge">{{ prolongements_non_lus.count }}</span>{% else %}{% endif %}
             </div>
             <div class="notifi-box" id="box" style="overflow-y: auto">
-                <h2 style="position:fixed">Notifications</h2>
+                <h2>Notifications</h2>
                 {% if prolongements_non_lus %}
                     {% for prolongement in prolongements_non_lus %}
                         <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
-                            <div class="post">
+                            <div class="post notif">
                                 <div class="user-blo">
                                     <span class="username">
                                          <a href="#">Deplacelement {{ prolongement.deplacement }}</a>
@@ -609,32 +612,32 @@
                                  id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
                                 <div class="table-responsive" style="margin-top: 60px">
                                     {% if demande %}
-                                    <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
-                                        <thead>
-                                        <tr style="background-color: #8861d2; color:white">
-                                            <th>Durée</th>
-                                            <th>Motif</th>
-                                            <th>Status</th>
-                                            <th> </th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
+                                        <table id="user-list-table" class="table table-striped table-borderless mt-4" role="grid" aria-describedby="user-list-page-info">
+                                            <thead>
+                                            <tr style="background-color: #8861d2; color:white">
+                                                <th>Durée</th>
+                                                <th>Motif</th>
+                                                <th>Status</th>
+                                                <th> </th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
                                             {% for prolong in demande %}
                                                 <tr>
                                                     <td>{{ prolong.duree }}</td>
-                                                    <td>{{ prolong.motif }}</td>
+                                                    <td>{{ prolong.motif|truncatewords:6 }}{{ prolongement.motif|truncatewords:6  }}</td>
                                                     <td>
-                                                            <div class="response-demande-{% if prolong.accepter %}accepted{% elif prolong.refuser %}rejected{% else %}pending{% endif %}">
-                                                                <p class="message-text1 {% if prolong.accepter %} accepted {% elif prolong.refuser %} rejected  {% else %} pending{% endif %}"> {% if prolong.accepter %}Votre demande a été  acceptée ! ✅{% elif prolong.refuser %}Votre demande a été rufusée! ❌ {% else %}Traitements en cours...{% endif %}</p>
-                                                            </div>
+                                                        <div class="response-demande-{% if prolong.accepter %}accepted{% elif prolong.refuser %}rejected{% else %}pending{% endif %}">
+                                                            <p class="message-text1 {% if prolong.accepter %} accepted {% elif prolong.refuser %} rejected  {% else %} pending{% endif %}"> {% if prolong.accepter %}Votre demande a été  acceptée ! ✅{% elif prolong.refuser %}Votre demande a été rufusée! ❌ {% else %}Traitements en cours...{% endif %}</p>
+                                                        </div>
                                                     </td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
                                             {% endfor %}
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
                                     {% else %}
                                         <div class="no-requests">
                                             <p>Vous n'avez aucune demande en cours.</p>
@@ -768,7 +771,7 @@
                             </div>
                             <div class="tab-pane fade show {% if request.path == prolongement_lu_details %}active{% else %} {% endif %} text-center " id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
                                 <h6 style="color: #333;">Informations de la demande de prolongement</h6>
-                                {% if prolongement_details %}
+
                                     <ul style="list-style-type: none; padding-left: 0;">
                                         <li style="color: #555;">
                                             La demande de prolongement que vous avez effectuée le {{ prolongement_details.date_mise_a_jour }} pour une durée de  {{ prolongement_details.duree }} jours
@@ -780,7 +783,6 @@
                                             {% endif %}
                                         </li>
                                     </ul>
-                                {% endif %}
 
                             </div>
                         </div>

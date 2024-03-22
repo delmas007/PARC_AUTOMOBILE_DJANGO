@@ -16,7 +16,7 @@ def courbe_depense_mensuel(request):
         annee = request.POST.get('annee')
         voiture = Vehicule.objects.all()
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
-        prix_carburant = Carburant.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
+        prix_carburant = Carburant.objects.filter(date_premiere__month=mois, date_premiere__year=annee)
         prix_entretien = Entretien.objects.filter(date_entretien__month=mois, date_entretien__year=annee)
         # Calculer la consommation de carburant pour chaque véhicule
         prix_par_vehicule = {}
@@ -54,7 +54,7 @@ def courbe_depense_global(request):
             fin_date = date.today()
         voiture = Vehicule.objects.all()
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
-        prix_carburant = Carburant.objects.filter(date_mise_a_jour__date__range=(debut_date, fin_date))
+        prix_carburant = Carburant.objects.filter(date_premiere__range=(debut_date, fin_date))
         prix_entretien = Entretien.objects.filter(date_entretien__range=(debut_date, fin_date))
         # Calculer la consommation de carburant pour chaque véhicule
         prix_par_vehicule = {}
@@ -112,7 +112,7 @@ def courbe_incident_vehicule_mensuel(request):
         annee = request.POST.get('annee')
         voiture = Vehicule.objects.all()
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
-        nbre_incident = Incident.objects.filter(date_mise_a_jour__month=mois, date_mise_a_jour__year=annee)
+        nbre_incident = Incident.objects.filter(date_premiere__month=mois, date_premiere__year=annee)
 
         # Calculer la consommation de carburant pour chaque véhicule
         incident_par_vehicule = {}
@@ -139,8 +139,8 @@ def courbe_incident_conducteur_mensuel(request):
         annee = request.POST.get('annee')
         conducteurs = Conducteur.objects.all()
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
-        nbre_incident = Incident.objects.filter(conducteur__isnull=False, date_mise_a_jour__month=mois,
-                                                date_mise_a_jour__year=annee)
+        nbre_incident = Incident.objects.filter(conducteur__isnull=False, date_premiere__month=mois,
+                                                date_premiere__year=annee)
 
         # Calculer la consommation de carburant pour chaque véhicule
         incident_par_conducteur = {}
