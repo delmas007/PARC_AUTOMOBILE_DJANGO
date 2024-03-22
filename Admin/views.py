@@ -305,7 +305,7 @@ def rapport_depense_mensuel_pdf(request):
                  """
                 for essence in carburant:
                     html_content += f"""
-                    <tr><td>{essence.date_premiere.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                    <tr><td>{essence.date_premiere}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -322,7 +322,7 @@ def rapport_depense_mensuel_pdf(request):
                  """
                 for reparation in entretien:
                     html_content += f"""
-                    <tr><td>{reparation.date_premiere.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
+                    <tr><td>{reparation.date_entretien}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -490,7 +490,7 @@ def rapport_depense_pdf(request):
                             """
                 for essence in carburants:
                     html_content += f"""
-                               <tr><td>{essence.date_premiere.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                               <tr><td>{essence.date_premiere}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                            """
                 html_content += f"""
 
@@ -508,7 +508,7 @@ def rapport_depense_pdf(request):
                             """
                 for reparation in entretiens:
                     html_content += f"""
-                               <tr><td>{reparation.date_premiere.date()}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
+                               <tr><td>{reparation.date_entretien}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
                            """
                 html_content += f"""
 
@@ -732,7 +732,7 @@ def rapport_carburant_mensuel_pdf(request):
                  """
                 for essence in carburant:
                     html_content += f"""
-                    <tr><td>{essence.date_premiere.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                    <tr><td>{essence.date_premiere}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                 """
                 if deplacement:
                     if deplacement_last:
@@ -831,7 +831,7 @@ def rapport_carburant_mensuel_pdf(request):
                             total_quantite = carburant_voiture.filter(vehicule=voiture).aggregate(Sum('quantite'))[
                                                  'quantite__sum'] or 0
                             html_content += f"""
-                                        <tr><td>{essence.date_premiere.date()}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                                        <tr><td>{essence.date_premiere}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                                     """
 
                     if deplacement:
@@ -952,7 +952,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                  """
                 for incident in incidents:
                     html_content += f"""
-                    <tr><td>{incident.date_premiere.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
+                    <tr><td>{incident.date_premiere}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
                 """
 
             else:
@@ -1014,7 +1014,7 @@ def rapport_incident_conducteur_mensuel_pdf(request):
                         # Boucle sur chaque incident pour ce conducteur
                         for incident in incidents_conducteur:
                             html_content += f"""
-                                                <tr><td>{incident.date_premiere.date()}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
+                                                <tr><td>{incident.date_premiere}</td><td>{incident.vehicule}</td><td>{incident.description_incident}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur

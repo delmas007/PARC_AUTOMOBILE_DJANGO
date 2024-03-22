@@ -240,7 +240,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                  """
                 for incident in incidents:
                     html_content += f"""
-                    <tr><td>{incident.date_premiere.date()}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
+                    <tr><td>{incident.date_premiere}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
                 """
 
             else:
@@ -300,7 +300,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                         # Boucle sur chaque incident pour ce conducteur
                         for incident in incidents_vehicule:
                             html_content += f"""
-                                                <tr><td>{incident.date_premiere.date()}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
+                                                <tr><td>{incident.date_premiere}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
