@@ -1169,7 +1169,7 @@
     </script>
     <script>
         var currentUrl = window.location.href;
-        var loginUrl = "url_de_la_page_de_connexion";
+        var loginUrl = "{% url 'utilisateur:connexion_user' %}";
         if (currentUrl === loginUrl) {
             var divToHide = document.querySelector('.styles_preview__IERpK');
             if (divToHide) {
