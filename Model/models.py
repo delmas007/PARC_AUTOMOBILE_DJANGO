@@ -60,7 +60,7 @@ class type_entretien(models.Model):
 
 class type_carburant(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
-    nom = models.CharField()
+    nom = models.CharField(max_length=20)
     prix = models.IntegerField()
 
     def __str__(self):
@@ -80,7 +80,7 @@ class Conducteur(models.Model):
     date_embauche = models.DateField(blank=True, null=True)
     date_de_naissance = models.DateField(blank=True, null=True)
     numero_telephone = models.CharField(max_length=15, unique=True)
-    adresse = models.CharField(blank=True)
+    adresse = models.CharField(blank=True, max_length=20)
     disponibilite = models.BooleanField(default=True)
     num_cni = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to='ImagesConducteur/', null=True, blank=True)
