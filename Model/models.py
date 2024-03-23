@@ -159,17 +159,21 @@ class Vehicule(models.Model):
     def __str__(self):
         return f"{self.marque} {self.type_commercial} {self.numero_immatriculation}"
 
-    def total_carburant_consomme(self, mois, annee):
+    def total_carburant_consomme(self):
         total_quantite = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('quantite')).get('total') or 0
         total_prix = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('prix_total')).get('total') or 0
-        if mois and annee:
-            total_quantite = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
-                                                      date_premiere__year=annee).aggregate(total=Sum('quantite')) \
-                                 .get('total') or 0
-            total_prix = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
-                                                  date_premiere__year=annee).aggregate(total=Sum('prix_total')) \
-                             .get('total') or 0
         return {'quantite': total_quantite, 'prix': total_prix}
+
+    def total_carburant(self, mois, annee):
+        total_quantite = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
+                                                   date_premiere__year=annee).aggregate(total=Sum('quantite')) \
+                              .get('total') or 0
+        total_prix = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
+                                               date_premiere__year=annee).aggregate(total=Sum('prix_total')) \
+                          .get('total') or 0
+        return {'quantite': total_quantite, 'prix': total_prix}
+
+
 
     def total_entretien(self, mois, annee):
         total_prix = Entretien.objects.filter(vehicule=self, date_entretien__month=mois, date_entretien__year=annee) \

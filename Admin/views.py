@@ -883,7 +883,7 @@ def rapport_carburant_mensuel(request):
         annee = request.POST.get('annee')
         vehicule = Vehicule.objects.all()
         labels = [f"{vehicle}" for vehicle in vehicule]
-        fuel_data = [vehicle.total_carburant_consomme(mois, annee) for vehicle in vehicule]
+        fuel_data = [vehicle.total_carburant(mois, annee) for vehicle in vehicule]
         quantites = [data['quantite'] for data in fuel_data]
         prix = [data['prix'] for data in fuel_data]
 
