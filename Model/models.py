@@ -159,21 +159,14 @@ class Vehicule(models.Model):
     def __str__(self):
         return f"{self.marque} {self.type_commercial} {self.numero_immatriculation}"
 
-    def total_carburant_consomme(self):
-        total_quantite = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('quantite')).get('total') or 0
-        total_prix = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('prix_total')).get('total') or 0
-        return {'quantite': total_quantite, 'prix': total_prix}
-
     def total_carburant(self, mois, annee):
         total_quantite = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
-                                                   date_premiere__year=annee).aggregate(total=Sum('quantite')) \
-                              .get('total') or 0
+                                                  date_premiere__year=annee).aggregate(total=Sum('quantite')) \
+                             .get('total') or 0
         total_prix = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
-                                               date_premiere__year=annee).aggregate(total=Sum('prix_total')) \
-                          .get('total') or 0
+                                              date_premiere__year=annee).aggregate(total=Sum('prix_total')) \
+                         .get('total') or 0
         return {'quantite': total_quantite, 'prix': total_prix}
-
-
 
     def total_entretien(self, mois, annee):
         total_prix = Entretien.objects.filter(vehicule=self, date_entretien__month=mois, date_entretien__year=annee) \
@@ -253,9 +246,9 @@ class Demande_prolongement(models.Model):
         return self.deplacement.date_fin() + timedelta(days=self.duree)
 
 
-
 def __str__(self):
     return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
+
 
 def time_since_reponse(self):
     if self.date_reponse:
@@ -276,8 +269,6 @@ class Carburant(models.Model):
 
     def prix_total_format(self):
         return "{:,.2f}".format(self.prix_total)
-
-
 
 
 class Entretien(models.Model):
@@ -315,9 +306,7 @@ class Incident(models.Model):
     description_incident = models.TextField()
     utilisateurs = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='gestionnaire',
                                      blank=True)
-    date_premiere = models.DateField(auto_now_add=True, null=True,)
-
-
+    date_premiere = models.DateField(auto_now_add=True, null=True, )
 
 
 class Photo(models.Model):

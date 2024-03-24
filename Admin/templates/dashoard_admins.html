@@ -93,15 +93,17 @@
                         <div class="iq-card iq-card-block iq-card-stretch iq-card-height overflow-hidden">
                             <div class="iq-card-header d-flex justify-content-between">
                                 <div class="iq-header-title">
-                                    <h4 class="card-title"> Carburant par Véhicule</h4>
+                                    <h4 class="card-title"> <span id="data-type">QUANTITE DE </span> CARBURANT PAR VEHICULE DE {{ mois }}</h4>
                                 </div>
-
+                                <div class="text-center">
+                                        <button class="btn btn-primary " id="toggleDatasetButton" >CHANGER</button>
+                                </div>
                             </div>
                             <div class="iq-card-body">
 
-                            <canvas id="fuelConsumptionChart" ></canvas>
+                                <canvas id="fuelConsumptionChart" ></canvas>
 
-                        </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">
@@ -460,64 +462,71 @@
         });
     </script>
 
-     <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    var ctx = document.getElementById('fuelConsumptionChart').getContext('2d');
-                                    var labels = {{ labels|safe }};
-                                    var quantites = {{ quantites|safe }};
-                                    var prix = {{ prix|safe }};
-                                    var colors = ['#d98579', '#9B59B6', '#3498DB', '#2b93b2', '#F1C40F']; // Couleurs prédéfinies pour chaque barre
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('fuelConsumptionChart').getContext('2d');
+            var labels = {{ labels|safe }};
+            var quantites = {{ quantites|safe }};
+            var prix = {{ prix|safe }};
+            var colors = ['#d98579', '#9B59B6', '#3498DB', '#2b93b2', '#F1C40F']; // Couleurs prédéfinies pour chaque barre
 
-                                    var chart = new Chart(ctx, {
-                                        type: 'bar',
-                                        data: {
-                                            labels: labels,
-                                            datasets: [{
-                                                label: 'Quantité de Carburant (Litre)',
-                                                data: quantites,
-                                                backgroundColor: colors,
-                                                borderColor: colors,
-                                                borderWidth: 1
-                                            }, {
-                                                label: 'Prix Total de Carburant (Fcfa)',
-                                                data: prix,
-                                                backgroundColor: colors,
-                                                borderColor: colors,
-                                                borderWidth: 1,
-                                                hidden: true
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quantité de Carburant (Litre)',
+                        data: quantites,
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        borderWidth: 1
+                    }, {
+                        label: 'Prix Total de Carburant (Fcfa)',
+                        data: prix,
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        borderWidth: 1,
+                        hidden: true
 
-                                            }]
-                                        },
-                                        options: {
-                                            scales: {
-                                                yAxes: [{
-                                                    ticks: {
-                                                        beginAtZero: true
-                                                    }
-                                                }]
-                                            },
-                                            plugins: {
-                                                legend: {
-                                                    onClick: function (event, legendItem) {
-                                                        var index = legendItem.datasetIndex;
-                                                        var meta = this.chart.getDatasetMeta(index);
-                                                        if (index === 0) {
-                                                            // Si le premier dataset est cliqué, activer le premier et désactiver le second
-                                                            this.chart.data.datasets[0].hidden = false;
-                                                            this.chart.data.datasets[1].hidden = true;
-                                                        } else {
-                                                            // Si le second dataset est cliqué, activer le second et désactiver le premier
-                                                            this.chart.data.datasets[0].hidden = true;
-                                                            this.chart.data.datasets[1].hidden = false;
-                                                        }
-                                                        this.chart.update();
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    });
-                                });
-                            </script>
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    plugins: {
+                         legend: {
+                                display: false,
+
+                            }
+                    }
+                }
+            });
+             document.getElementById('toggleDatasetButton').addEventListener('click', function() {
+                    var chartInstance = Chart.getChart(ctx);
+                    var firstDataset = chartInstance.data.datasets[0];
+                    var secondDataset = chartInstance.data.datasets[1];
+
+                    // Basculer la visibilité des datasets
+                    firstDataset.hidden = !firstDataset.hidden;
+                    secondDataset.hidden = !secondDataset.hidden;
+
+                    // Mettre à jour le texte en fonction du dataset affiché
+                    if (firstDataset.hidden) {
+                        document.getElementById('data-type').textContent = 'PRIX';
+                    } else {
+                        document.getElementById('data-type').textContent = 'QUANTITE DE';
+                    }
+
+                    // Mettre à jour le graphique
+                    chartInstance.update();
+                });
+        });
+    </script>
 
     </body>
 
