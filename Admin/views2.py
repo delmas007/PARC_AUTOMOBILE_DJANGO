@@ -1,12 +1,12 @@
 import calendar
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
-from django.db.models import Sum
 from django.shortcuts import render
-
+from django.db.models import Q, ExpressionWrapper, fields, F, Sum
 from django.utils.translation import gettext as french
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from Model.models import Vehicule, Carburant, Entretien, Incident, Conducteur
+from Model.models import Vehicule, Carburant, Entretien, Incident, Conducteur, EtatArrive, Photo
 
 
 def courbe_depense_mensuel(request):
@@ -158,3 +158,70 @@ def courbe_incident_conducteur_mensuel(request):
                       {'labels': labels, 'data': data, 'conducteurs': conducteurs, 'mois': mois_lettre, 'annee': annee})
 
     return render(request, 'rapport_incident_conducteur_mensuel.html')
+
+
+def liste_deplacement_arrive_admin(request):
+    etatarrive = (
+        EtatArrive.objects.all().annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
+
+    paginator = Paginator(etatarrive, 5)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        etatarrive = paginator.page(page)
+    except EmptyPage:
+
+        etatarrive = paginator.page(paginator.num_pages())
+    return render(request, 'afficher_deplacement_arrive_admin.html', {'etatarrives': etatarrive})
+
+
+def liste_incidents_externe_admin(request):
+    aujourd_hui = date.today()
+    incidents_list = (
+        Incident.objects.filter(conducteur_id__isnull=False).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
+    incidents = {}
+    for item_incident in incidents_list:
+        latest_photo = get_latest_photo(item_incident)
+        incidents[item_incident.id] = {'incident': item_incident, 'latest_photo': latest_photo}
+    paginator = Paginator(list(incidents.values()), 3)
+    page = request.GET.get('page')
+    try:
+        incidents_page = paginator.page(page)
+    except PageNotAnInteger:
+        incidents_page = paginator.page(1)
+    return render(request, 'Liste_incidents_externe_admin.html', {'incidents': incidents_page, 'paginator': paginator})
+
+
+def liste_incidents_interne_admin(request):
+    incidents_list = (
+        Incident.objects.filter(conducteur_id__isnull=True).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
+        ).order_by('-hour')
+    )
+    incidents = {}
+    for item_incident in incidents_list:
+        latest_photo = get_latest_photo(item_incident)
+        incidents[item_incident.id] = {'incident': item_incident, 'latest_photo': latest_photo}
+
+    paginator = Paginator(list(incidents.values()), 3)
+
+    page = request.GET.get('page')
+    try:
+        incidents_page = paginator.page(page)
+    except PageNotAnInteger:
+        incidents_page = paginator.page(1)
+    except EmptyPage:
+        incidents_page = paginator.page(paginator.num_pages)
+
+    return render(request, 'Liste_incidents_interne_admin.html', {'incidents': incidents_page, 'paginator': paginator})
+
+
+def get_latest_photo(incident):
+    return Photo.objects.filter(incident=incident).order_by('-id').first()

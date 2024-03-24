@@ -37,6 +37,9 @@
             {% url 'admins:rapport_carburant_mensuel_admins' as admin_rapport_carburant_mensuel_url %}
             {% url 'admins:rapport_incident_conducteur_mensuel_admins' as admin_rapport_incident_conducteur_mensuel_url %}
             {% url 'admins:rapport_incident_vehicule_mensuel_admins' as admin_rapport_incident_vehicule_mensuel_url %}
+            {% url 'admins:liste_deplacement_arrive_admin' as admin_liste_deplacement_arrive_url %}
+            {% url 'admins:liste_incidents_interne_admin' as liste_incident_interne_admin_url %}
+            {% url 'admins:liste_incidents_externe_admin' as liste_incident_externe_admin_url %}
 
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
@@ -74,6 +77,20 @@
                         <li class="{% if request.path == admin_rapport_incident_conducteur_mensuel_url %}active{% endif %}" ><a href="{% url 'admins:rapport_incident_conducteur_mensuel_admins' %}"><i class="bi bi-easel-fill"></i>Incident conducteur Mensuelle</a></li>
                         <li class="{% if request.path == admin_rapport_incident_vehicule_mensuel_url %}active{% endif %}" ><a href="{% url 'admins:rapport_incident_vehicule_mensuel_admins' %}"><i class="bi bi-easel-fill"></i>Incident véhicule Mensuelle</a></li>
 
+                    </ul>
+                </li>
+                <li class="{% if request.path == admin_liste_deplacement_arrive_url %}active{% endif %}">
+                    <a href="#deplacement" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="bi bi-send-plus"></i><span >Deplacement</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="deplacement" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                        <li class="{% if request.path == admin_liste_deplacement_arrive_url %}active{% endif %}" ><a href="{% url 'admins:liste_deplacement_arrive_admin' %}"><i class="bi bi-check-circle"></i>List</a></li>
+
+                    </ul>
+                </li>
+                <li class="{% if request.path == liste_incident_externe_admin_url   or request.path == liste_incident_interne_admin_url  %}active{% endif %}">
+                    <a href="#incidents" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-alert-line" style="font-size: 27px"></i><span>Incidents</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="incidents" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                        <li class="{% if request.path == liste_incident_interne_admin_url %}active{% endif %}" ><a href="{% url 'admins:liste_incidents_interne_admin' %}"><i class="bi bi-list-check"></i> Liste incidents interne </a></li>
+                        <li class="{% if request.path == liste_incident_externe_admin_url %}active{% endif %}" ><a href="{% url 'admins:liste_incidents_externe_admin' %}"><i class="bi bi-list-check"></i> Liste incidents externe </a></li>
                     </ul>
                 </li>
                 <li class="{% if request.path == admin_password_reset_confirms_url or request.path == admin_ChangerMotDePasse_admin_url %}active{% endif %}">
