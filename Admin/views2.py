@@ -14,7 +14,8 @@ def courbe_depense_mensuel(request):
         mois = request.POST.get('mois')
         mois_lettre = french(calendar.month_name[int(mois)])
         annee = request.POST.get('annee')
-        voiture = Vehicule.objects.all()
+        vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+        voiture =  Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
         prix_carburant = Carburant.objects.filter(date_premiere__month=mois, date_premiere__year=annee)
         prix_entretien = Entretien.objects.filter(date_entretien__month=mois, date_entretien__year=annee)
@@ -52,7 +53,8 @@ def courbe_depense_global(request):
             fin_date = datetime.strptime(fin, '%Y-%m-%d').date()
         else:
             fin_date = date.today()
-        voiture = Vehicule.objects.all()
+        vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+        voiture =  Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
         prix_carburant = Carburant.objects.filter(date_premiere__range=(debut_date, fin_date))
         prix_entretien = Entretien.objects.filter(date_entretien__range=(debut_date, fin_date))

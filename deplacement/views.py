@@ -365,6 +365,7 @@ def get_photos_demande_prolongement(request):
 def accept_prolongement(request, prolongement_id):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
+
     prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
     prolongement.en_cours = False
     prolongement.refuser = False
