@@ -1,6 +1,7 @@
 import calendar
 
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
 from django.db.models import Sum
 from django.http import HttpResponse
@@ -12,7 +13,10 @@ from Model.models import Vehicule, Carburant, Entretien, \
     Deplacement, Incident
 
 
+@login_required(login_url='Connexion')
 def rapport_entretien_mensuel_admins(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
             return courbe_entretien_mensuel(request)
     else:
@@ -21,7 +25,10 @@ def rapport_entretien_mensuel_admins(request):
         return render(request, 'rapport_entretien_mensuel.html', context)
 
 
+@login_required(login_url='Connexion')
 def rapport_incident_vehicule_mensuel_admins(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         return courbe_incident_vehicule_mensuel(request)
     vehicules = Vehicule.objects.all()
@@ -355,6 +362,8 @@ def rapport_incident_vehicule_mensuel_pdf(request):
 
         return response
 
-
+@login_required(login_url='Connexion')
 def ProfilAdmin(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     return render(request, 'Profil_admin.html')
