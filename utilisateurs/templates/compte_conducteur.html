@@ -154,8 +154,13 @@
             font-size: 12px;
         }
         .notif:hover{
-            background-color: #c52d2d;
+            background-color: #9e60d9;
+            color:white;
         }
+        .blurred {
+            filter: blur(4px);
+        }
+
     </style>
     <body>
     {% url 'utilisateur:liste_mission' as liste_mission %}
@@ -212,27 +217,29 @@
             </div>
 
         </div>
-        <div class="notifi-box" id="box" style="overflow-y: auto">
+        <div class="notifi-box" id="box">
             <h2>Notifications</h2>
-            {% if prolongements_non_lus %}
-                {% for prolongement in prolongements_non_lus %}
-                    <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
-                        <div class="post notif">
-                            <div class="user-blo">
+            <div  style="overflow-y: auto">
+                {% if prolongements_non_lus %}
+                    {% for prolongement in prolongements_non_lus %}
+                        <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
+                            <div class="post notif">
+                                <div class="user-blo">
                                     <span class="username">
                                          <a href="#">Deplacelement {{ prolongement.deplacement }}</a>
                                      </span>
-                                <span class="description">Recu {{ prolongement.time_since_reponse }}</span>
+                                    <span class="description">Recu {{ prolongement.time_since_reponse }}</span>
+                                </div>
+                                <p class="text">
+                                    {{ prolongement.motif|truncatewords:6  }}
+                                </p>
                             </div>
-                            <p class="text">
-                                {{ prolongement.motif|truncatewords:6  }}
-                            </p>
                         </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                auccune notifiaction
-            {% endif %}
+                    {% endfor %}
+                {% else %}
+                    auccune notifiaction
+                {% endif %}
+            </div>
         </div>
     </nav>
     <header class="header hide-header" id="header">
@@ -1141,13 +1148,16 @@
     <script>
         var box = document.getElementById('box');
         const boxButton = document.querySelector('.notification-icon');
+        var contentContainer = document.getElementById('content-container');
         var down = false;
 
         function toggleNotifi() {
             if (down) {
                 closeBox();
+                contentContainer.classList.remove('blurred');
             } else {
                 openBox();
+                contentContainer.classList.add('blurred');
             }
         }
 
@@ -1168,6 +1178,7 @@
             const isClickInsideBoxButton = boxButton.contains(event.target);
             if (!isClickInsideBox && !isClickInsideBoxButton && down) {
                 closeBox();
+                contentContainer.classList.remove('blurred');
             }
         });
     </script>

@@ -314,7 +314,7 @@ def prolongement_lu_details(request):
         if prolongement_id:
             try:
                 prolongement_details = Demande_prolongement.objects.get(id=prolongement_id)
-                return render(request, 'compte_conducteur.html', {'prolongement_details': prolongement_details})
+                return render(request, 'prolongement_lu_details.html', {'prolongement_details': prolongement_details})
             except Demande_prolongement.DoesNotExist:
                 return HttpResponse("Le prolongement n'existe pas.")
         else:

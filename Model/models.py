@@ -232,11 +232,11 @@ class Demande_prolongement(models.Model):
     date_reponse = models.DateTimeField(blank=True, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     duree = models.IntegerField()
-    motif = models.CharField(max_length=250, )
+    motif = models.CharField(max_length=250)
     en_cours = models.BooleanField(default=True)
     accepter = models.BooleanField(default=False)
     refuser = models.BooleanField(default=False)
-    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True, )
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     kilometrage = models.IntegerField()
     lu = models.BooleanField(default=False)
@@ -246,17 +246,14 @@ class Demande_prolongement(models.Model):
     def ajout(self):
         return self.deplacement.date_fin() + timedelta(days=self.duree)
 
+    @property
+    def time_since_reponse(self):
+        if self.date_reponse:
+            time_since_reponse = timesince(self.date_reponse)
+            return f"il y a {time_since_reponse}"
 
-def __str__(self):
-    return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
-
-
-def time_since_reponse(self):
-    if self.date_reponse:
-        time_since_reponse = timesince(self.date_reponse)
-        return f"il y a {time_since_reponse}"
-    else:
-        return "Hors ligne (date de déconnexion non disponible)"
+    def __str__(self):
+        return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
 
 
 class Carburant(models.Model):

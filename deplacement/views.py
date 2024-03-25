@@ -365,7 +365,6 @@ def get_photos_demande_prolongement(request):
 def accept_prolongement(request, prolongement_id):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
-
     prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
     prolongement.en_cours = False
     prolongement.refuser = False
@@ -381,11 +380,10 @@ def refuse_prolongement(request, prolongement_id):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
     prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
-
-    # Modifier les champs de la demande de prolongement
     prolongement.en_cours = False
     prolongement.refuser = True
     prolongement.accepter = False
+    prolongement.date_reponse = timezone.now()
     prolongement.save()
 
     return redirect('deplacement:liste_deplacement_en_cours')
