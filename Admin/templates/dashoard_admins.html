@@ -38,9 +38,9 @@
                             <div class="iq-card-body">
                                 <div class="d-flex d-flex align-items-center justify-content-between">
                                     <div>
-                                       <h2>{% if nombre_vehicules %} {{nombre_vehicules}} {% else %} 0 {% endif %}</h2>
-                                       <p class="fontsize-sm m-0">Nombre de voitures</p>
-                                   </div>
+                                        <h2>{% if nombre_vehicules %} {{nombre_vehicules}} {% else %} 0 {% endif %}</h2>
+                                        <p class="fontsize-sm m-0">Nombre de voitures</p>
+                                    </div>
                                     <div class="rounded-circle iq-card-icon dark-icon-light iq-bg-primary "> <i class="ri-roadster-line"></i></div>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                                     <h4 class="card-title" style=" font-weight: bold;"> <span id="data-type">QUANTITE DE </span> CARBURANT PAR VEHICULE DE {{ mois }}</h4>
                                 </div>
                                 <div class="text-center">
-                                        <button class="btn btn-primary " id="toggleDatasetButton" >CHANGER</button>
+                                    <button class="btn btn-primary " id="toggleDatasetButton" >CHANGER</button>
                                 </div>
                             </div>
                             <div class="iq-card-body">
@@ -121,7 +121,7 @@
                         <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
                             <div class="iq-card-header d-flex justify-content-between">
                                 <div class="iq-header-title">
-                                    <h4 class="card-title">Le nombres de Déplacements par mois</h4>
+                                    <h4 class="card-title">Nombres de déplacements effectués par vehicule en {{ mois }}</h4>
                                 </div>
                                 <div class="iq-card-header-toolbar d-flex align-items-center">
                                     <div class="dropdown">
@@ -133,23 +133,21 @@
                                 </div>
                             </div>
                             <div class="iq-card-body">
-                                <div class="table-responsive">
-                                    <table class="table mb-0 table-borderless">
+                                <div class="table-responsive" style="height: 600px; overflow-y: auto ">
+                                    <table class="table mb-0 table-borderless" >
                                         <thead>
                                         <tr>
                                             <th scope="col">Véhicule</th>
                                             <th scope="col">Nombre de déplacement</th>
-                                            <th scope="col" class="text-center">Le Mois</th>
                                         </tr>
                                         </thead>
-                                       <tbody>
-                                            {% for vehicule in deplacements_par_vehicule %}
+                                        <tbody>
+                                        {% for vehicule in deplacements_par_vehicule %}
                                             <tr>
-                                                <td>{{ vehicule.marque }}-{{ vehicule.numero_immatriculation}}</td>
+                                                <td>{{ vehicule.vehicle}}</td>
                                                 <td>{{ vehicule.total_deplacements_mois }}</td>
-                                                <td class="text-center">{{ mois }}</td>
                                             </tr>
-                                            {% endfor %}
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -171,7 +169,7 @@
                                     </div>
                                 </div>
                             </div>
-                       <canvas id="pieChart" ></canvas>
+                            <canvas id="pieChart" ></canvas>
 
                         </div>
                     </div>
@@ -288,36 +286,36 @@
                         }]
                     },
                     plugins: {
-                         legend: {
-                                display: false,
+                        legend: {
+                            display: false,
 
-                            }
+                        }
                     }
                 }
             });
-             document.getElementById('toggleDatasetButton').addEventListener('click', function() {
-                    var chartInstance = Chart.getChart(ctx);
-                    var firstDataset = chartInstance.data.datasets[0];
-                    var secondDataset = chartInstance.data.datasets[1];
+            document.getElementById('toggleDatasetButton').addEventListener('click', function() {
+                var chartInstance = Chart.getChart(ctx);
+                var firstDataset = chartInstance.data.datasets[0];
+                var secondDataset = chartInstance.data.datasets[1];
 
-                    // Basculer la visibilité des datasets
-                    firstDataset.hidden = !firstDataset.hidden;
-                    secondDataset.hidden = !secondDataset.hidden;
+                // Basculer la visibilité des datasets
+                firstDataset.hidden = !firstDataset.hidden;
+                secondDataset.hidden = !secondDataset.hidden;
 
-                    // Mettre à jour le texte en fonction du dataset affiché
-                    if (firstDataset.hidden) {
-                        document.getElementById('data-type').textContent = 'PRIX';
-                    } else {
-                        document.getElementById('data-type').textContent = 'QUANTITE DE';
-                    }
+                // Mettre à jour le texte en fonction du dataset affiché
+                if (firstDataset.hidden) {
+                    document.getElementById('data-type').textContent = 'PRIX';
+                } else {
+                    document.getElementById('data-type').textContent = 'QUANTITE DE';
+                }
 
-                    // Mettre à jour le graphique
-                    chartInstance.update();
-                });
+                // Mettre à jour le graphique
+                chartInstance.update();
+            });
         });
     </script>
 
- <script>
+    <script>
         // Récupérer les données de répartition des types de carburant depuis Django
         const labels = {{ labels_circ|safe }};
         const data = {{ data|safe }} ;
@@ -327,7 +325,7 @@
 
         // Construire les datasets
         const datasets = [{
-           label: 'consommation de types de carburant (Litre)',
+            label: 'consommation de types de carburant (Litre)',
             data: data,
             backgroundColor: colors.slice(0, labels.length)
         }];

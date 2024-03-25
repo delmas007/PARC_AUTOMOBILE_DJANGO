@@ -10,8 +10,8 @@ from django.utils.translation import gettext as _
 from datetime import date, datetime
 
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Count
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Count, Subquery
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
@@ -26,7 +26,6 @@ from vehicule.forms import VehiculSearchForm
 from secrets import compare_digest
 from django.http import JsonResponse
 from django.utils.timezone import now
-
 
 
 @csrf_protect
@@ -209,8 +208,9 @@ def dashboard_admins(request):
     incidents_externe = Incident.objects.filter(conducteur_id__isnull=False).count()
     incidents_interne = Incident.objects.filter(conducteur_id__isnull=True).count()
     nombre_incidents = incidents_interne + incidents_externe
-
-    vehicles = Vehicule.objects.all()
+    vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+    vehicles = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
+    vehicules=Vehicule.objects.all()
     labels = [f"{vehicle.marque} {vehicle.type_commercial}" for vehicle in vehicles]
     mois = date.today().month
     mois_ = _(calendar.month_name[int(mois)])
@@ -227,11 +227,16 @@ def dashboard_admins(request):
     for carburant in types_carburant:
         total_quantite = Carburant.objects.filter(type=carburant).aggregate(Sum('quantite'))['quantite__sum'] or 0
         totals_carburant.append(total_quantite)
-        deplacements_par_vehicule = Vehicule.objects.annotate(
-            total_deplacements_mois=Count('deplacement', filter=Q(deplacement__date_depart__month=mois, deplacement__date_depart__year=annee),
-
-                                          distinct=True).filter(id__in=deplacements_etat_arrive_ids)
-        )
+    deplacements_par_vehicule = []
+    for vehicle in vehicules:
+        total_deplacements_mois = vehicle.deplacement_set.filter(
+            date_depart__month=mois,
+            date_depart__year=annee,
+            id__in=deplacements_etat_arrive_ids
+        ).count()
+        if total_deplacements_mois:
+            print(vehicle)
+            deplacements_par_vehicule.append({'vehicle': vehicle, 'total_deplacements_mois': total_deplacements_mois})
 
 
     context = {
@@ -1124,7 +1129,8 @@ def rapport_carburant_mensuel(request):
         mois = request.POST.get('mois')
         mois_lettre = _(calendar.month_name[int(mois)])
         annee = request.POST.get('annee')
-        vehicule = Vehicule.objects.all()
+        vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+        vehicule = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
         labels = [f"{vehicle}" for vehicle in vehicule]
         fuel_data = [vehicle.total_carburant(mois, annee) for vehicle in vehicule]
         quantites = [data['quantite'] for data in fuel_data]
