@@ -1201,6 +1201,19 @@
             }
         }
     </script>
+    <script>
+        function preventZoom() {
+            document.body.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.scale !== 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+        preventZoom();
+    </script>
     {% include 'footer_conducteur.html' %}
     </body>
 {% endblock %}
