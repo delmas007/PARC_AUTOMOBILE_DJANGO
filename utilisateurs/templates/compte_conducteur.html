@@ -188,7 +188,7 @@
         </div>
     </nav>
     <nav class="Entete" style=" justify-content: center; align-items: center;">
-        <div class="col-7" style="text-align: center; color: white; font-weight: bold; margin-left: 50px;">
+        <div id="entete-container" class="col-7" style="text-align: center; color: white; font-weight: bold; margin-left: 50px;">
             {% if request.path == liste_mission %}
                 <span>ACCUEIL</span>
             {% endif %}
@@ -206,8 +206,8 @@
             {% endif %}
         </div>
         <div class="col"  style="flex-grow: 1;">
-            <div class="notification-icon" onclick="toggleNotifi()">
-                <i class="fas fa-bell"></i>
+            <div class="notification-icon"  onclick="toggleNotifi()" >
+                <i class="fas fa-bell" ></i>
                 {% if prolongements_non_lus %}<span class="badge">{{ prolongements_non_lus.count }}</span>{% else %}{% endif %}
             </div>
 
@@ -1068,8 +1068,6 @@
             var vehiculeId = button.dataset.vehiculeId;
             document.getElementById('deplacement2_id').value = deplacementId;
             document.getElementById('vehicule_id').value = vehiculeId;
-
-            // Ouvrir le deuxième modal
             $('#modal_incident_2').modal('show');
         }
     </script>
@@ -1079,8 +1077,6 @@
             var vehiculeId = button.dataset.vehiculeId;
             document.getElementById('deplacement_id').value = deplacementId;
             document.getElementById('vehicule_id').value = vehiculeId;
-
-            // Ouvrir le deuxième modal
             $('#modal_prolongement_2').modal('show');
         }
     </script>
@@ -1108,7 +1104,6 @@
             };
             xhr.send();
         }
-
         document.querySelectorAll('.nav__link').forEach(function (link) {
             link.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -1144,6 +1139,39 @@
         }
     </script>
     <script>
+        var box = document.getElementById('box');
+        const boxButton = document.querySelector('.notification-icon');
+        var down = false;
+
+        function toggleNotifi() {
+            if (down) {
+                closeBox();
+            } else {
+                openBox();
+            }
+        }
+
+        function openBox() {
+            box.style.height = '410px';
+            box.style.opacity = 1;
+            down = true;
+        }
+
+        function closeBox() {
+            box.style.height = '0px';
+            box.style.opacity = 0;
+            down = false;
+        }
+
+        document.addEventListener('mousedown', function (event) {
+            const isClickInsideBox = box.contains(event.target);
+            const isClickInsideBoxButton = boxButton.contains(event.target);
+            if (!isClickInsideBox && !isClickInsideBoxButton && down) {
+                closeBox();
+            }
+        });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const collapseButtons = document.querySelectorAll('.card .btn-tool');
             collapseButtons.forEach(function(button) {
@@ -1151,22 +1179,7 @@
             });
         });
     </script>
-    <script>
-        var box  = document.getElementById('box');
-        var down = false;
-        function toggleNotifi(){
-            if (down) {
-                box.style.height  = '0px';
-                box.style.opacity = 0;
-                down = false;
-            }else {
-                box.style.height  = '410px';
-                box.style.opacity = 1;
-                down = true;
-            }
-        }
 
-    </script>
     <script>
         function dismissNotification(id) {
             fetch("{% url 'utilisateur:dismiss_notification' %}?prolongement_id=" + id)
@@ -1217,6 +1230,28 @@
         preventZoom();
 
     </script>
+    <script>
+        function loadEnteteContent(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById('entete-container').innerHTML = xhr.responseText;
+                } else {
+                    console.error('Erreur de chargement de l\'entête: ' + xhr.statusText);
+                }
+            };
+            xhr.send();
+        }
+        document.querySelectorAll('.entete__link').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                var url = link.getAttribute('href');
+                loadEnteteContent(url);
+            });
+        });
+    </script>
+
     {% include 'footer_conducteur.html' %}
     </body>
 {% endblock %}
