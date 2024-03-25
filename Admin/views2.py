@@ -2,7 +2,7 @@ import calendar
 from datetime import date, datetime, timedelta
 
 from django.shortcuts import render
-from django.db.models import Q, ExpressionWrapper, fields, F, Sum
+from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Subquery
 from django.utils.translation import gettext as french
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -85,7 +85,8 @@ def courbe_entretien_mensuel(request):
         mois = request.POST.get('mois')
         mois_lettre = french(calendar.month_name[int(mois)])
         annee = request.POST.get('annee')
-        vehicles = Vehicule.objects.all()
+        vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+        vehicles = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
         labels = [f"{vehicle}" for vehicle in vehicles]
         fuel_data = [vehicle.total_entretien(mois, annee) for vehicle in vehicles]
         quantites = [data['quantite'] for data in fuel_data]

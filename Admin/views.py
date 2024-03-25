@@ -10,7 +10,7 @@ from datetime import date, datetime
 
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Q, ExpressionWrapper, fields, F, Sum
+from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Subquery
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
@@ -197,7 +197,8 @@ def Carburant_search(request):
 
 
 def dashboard_admins(request):
-    vehicles = Vehicule.objects.all()
+    vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+    vehicles = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
     labels = [f"{vehicle.marque} {vehicle.type_commercial}" for vehicle in vehicles]
     mois = date.today().month
     mois_ = _(calendar.month_name[int(mois)])
@@ -1090,7 +1091,8 @@ def rapport_carburant_mensuel(request):
         mois = request.POST.get('mois')
         mois_lettre = _(calendar.month_name[int(mois)])
         annee = request.POST.get('annee')
-        vehicule = Vehicule.objects.all()
+        vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+        vehicule = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
         labels = [f"{vehicle}" for vehicle in vehicule]
         fuel_data = [vehicle.total_carburant(mois, annee) for vehicle in vehicule]
         quantites = [data['quantite'] for data in fuel_data]
