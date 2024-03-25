@@ -5,12 +5,13 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetConfirmView
+from django.utils.timezone import now
 from django.utils.translation import gettext as _
 from datetime import date, datetime
 
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Subquery
+from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
@@ -24,6 +25,8 @@ from utilisateurs.forms import ChangerMotDePasse
 from vehicule.forms import VehiculSearchForm
 from secrets import compare_digest
 from django.http import JsonResponse
+from django.utils.timezone import now
+
 
 
 @csrf_protect
@@ -197,8 +200,17 @@ def Carburant_search(request):
 
 
 def dashboard_admins(request):
-    vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
-    vehicles = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
+    deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
+    aujourd_hui = date.today()
+    nombre_deplacements_en_cours = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
+        Q(id__in=deplacements_etat_arrive_ids)).count()
+
+    nombre_vehicules = Vehicule.objects.filter(supprimer=False).count()
+    incidents_externe = Incident.objects.filter(conducteur_id__isnull=False).count()
+    incidents_interne = Incident.objects.filter(conducteur_id__isnull=True).count()
+    nombre_incidents = incidents_interne + incidents_externe
+
+    vehicles = Vehicule.objects.all()
     labels = [f"{vehicle.marque} {vehicle.type_commercial}" for vehicle in vehicles]
     mois = date.today().month
     mois_ = _(calendar.month_name[int(mois)])
@@ -208,11 +220,32 @@ def dashboard_admins(request):
     quantites = [data['quantite'] for data in fuel_data]
     prix = [data['prix'] for data in fuel_data]
 
+    types_carburant = type_carburant.objects.all()
+
+    totals_carburant = []
+    label = [carburant.nom for carburant in types_carburant]
+    for carburant in types_carburant:
+        total_quantite = Carburant.objects.filter(type=carburant).aggregate(Sum('quantite'))['quantite__sum'] or 0
+        totals_carburant.append(total_quantite)
+        deplacements_par_vehicule = Vehicule.objects.annotate(
+            total_deplacements_mois=Count('deplacement', filter=Q(deplacement__date_depart__month=mois, deplacement__date_depart__year=annee),
+
+                                          distinct=True).filter(id__in=deplacements_etat_arrive_ids)
+        )
+
+
     context = {
+        'labels_circ': label,
         'labels': labels,
+        'data': totals_carburant,
         'quantites': quantites,
         'prix': prix,
         'mois': mois_lettre,
+        'nombre_vehicules': nombre_vehicules,
+        'nombre_incidents': nombre_incidents,
+        'nombre_deplacements_en_cours': nombre_deplacements_en_cours,
+        'labels_entr': labels,
+        'deplacements_par_vehicule': deplacements_par_vehicule,
     }
 
     return render(request, 'dashoard_admins.html', context)
@@ -1091,8 +1124,7 @@ def rapport_carburant_mensuel(request):
         mois = request.POST.get('mois')
         mois_lettre = _(calendar.month_name[int(mois)])
         annee = request.POST.get('annee')
-        vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
-        vehicule = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
+        vehicule = Vehicule.objects.all()
         labels = [f"{vehicle}" for vehicle in vehicule]
         fuel_data = [vehicle.total_carburant(mois, annee) for vehicle in vehicule]
         quantites = [data['quantite'] for data in fuel_data]
