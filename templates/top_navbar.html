@@ -81,13 +81,6 @@
             </div>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto navbar-list">
-                            <!-- Icône de mode sombre/clair -->
-                    <li class="nav-item">
-                        <a href="#" class="search-toggle iq-waves-effect" id="darkModeToggle">
-                            <i class="bi bi-moon-fill"></i> <!-- Icône pour le mode sombre -->
-                            <i class="bi bi-sun" style="display: none;"></i> <!-- Icône pour le mode clair -->
-                        </a>
-                    </li>
 
                     {#        Notifications            #}
                     <li class="nav-item">
@@ -322,35 +315,6 @@
                 // Remplacez le contenu de lottie-beil avec l'icône de la cloche
                 lottieContainer.innerHTML = "";
                 lottieContainer.appendChild(bellIcon);
-            });
-        });
-    </script>
-<!-- Ajoutez ce style pour le mode sombre/clair -->
-<style>
-    #darkModeToggle {
-        cursor: pointer;
-        margin-right: 10px;
-    }
-</style>
-
-{#            //  mode sombre/clair#}
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let darkModeToggle = document.getElementById("darkModeToggle");
-            darkModeToggle.addEventListener("click", function() {
-                let moonIcon = darkModeToggle.querySelector(".bi-moon-fill");
-                let sunIcon = darkModeToggle.querySelector(".bi-sun");
-
-                // Basculer entre les icônes
-                if (moonIcon.style.display === "none") {
-                    moonIcon.style.display = "inline-block";
-                    sunIcon.style.display = "none";
-                    // Ajoutez ici le code pour activer le mode sombre
-                } else {
-                    moonIcon.style.display = "none";
-                    sunIcon.style.display = "inline-block";
-                    // Ajoutez ici le code pour activer le mode clair
-                }
             });
         });
     </script>

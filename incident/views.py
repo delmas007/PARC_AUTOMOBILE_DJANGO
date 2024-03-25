@@ -12,6 +12,8 @@ from django.contrib import messages
 
 @login_required(login_url='Connexion')
 def enregistrer_incident(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = IncidentFormGestionnaire(request.POST, request.FILES)
         if form.is_valid():
@@ -35,6 +37,8 @@ def enregistrer_incident(request):
 
 @login_required(login_url='Connexion')
 def liste_incidents_externe(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     aujourd_hui = date.today()
     une_semaine_avant = aujourd_hui - timedelta(days=7)
     incidents_list = (
@@ -57,6 +61,8 @@ def liste_incidents_externe(request):
 
 @login_required(login_url='Connexion')
 def liste_incidents_interne(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     aujourd_hui = date.today()
     une_semaine_avant = aujourd_hui - timedelta(days=7)
     incidents_list = (
@@ -88,6 +94,8 @@ def get_latest_photo(incident):
 
 @login_required(login_url='Connexion')
 def incidents_search(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     aujourd_hui = date.today()
     une_semaine_avant = aujourd_hui - timedelta(days=7)
     form = IncidentSearchForm(request.GET)
@@ -182,6 +190,8 @@ def incidents_externe_search(request):
 
 @login_required(login_url='Connexion')
 def incident_interne_detail(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     incident = get_object_or_404(Incident, id=pk)
     image = Photo.objects.filter(incident=incident)
     return render(request, 'incident_interne_details.html', {'incident': incident, 'image': image})
@@ -189,6 +199,8 @@ def incident_interne_detail(request, pk):
 
 @login_required(login_url='Connexion')
 def incident_externe_detail(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     incident = get_object_or_404(Incident, id=pk)
     image = Photo.objects.filter(incident=incident)
     return render(request, 'incident_externe_details.html', {'incident': incident, 'image': image})
@@ -196,6 +208,8 @@ def incident_externe_detail(request, pk):
 
 @login_required(login_url='Connexion')
 def modifier_incident_interne(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     incident = get_object_or_404(Incident, pk=pk)
     photos = Photo.objects.filter(incident=incident)
 

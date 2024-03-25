@@ -154,8 +154,13 @@
             font-size: 12px;
         }
         .notif:hover{
-            background-color: #c52d2d;
+            background-color: #9e60d9;
+            color:white;
         }
+        .blurred {
+            filter: blur(4px);
+        }
+
     </style>
     <body>
     {% url 'utilisateur:liste_mission' as liste_mission %}
@@ -188,30 +193,33 @@
         </div>
     </nav>
     <nav class="Entete" style=" justify-content: center; align-items: center;">
-        <div class="col" style="text-align: center; color: white; font-weight: bold; text-transform: uppercase; text-shadow: 4px 4px 0px #008000, 1px 1px 0px #0000FF; margin-left: 50px;">
+        <div id="entete-container" class="col-7" style="text-align: center; color: white; font-weight: bold; margin-left: 50px;">
             {% if request.path == liste_mission %}
-                <span>Accueil</span>
+                <span>ACCUEIL</span>
             {% endif %}
             {% if request.path == declare_incident %}
-                <span>Incident</span>
+                <span>INCIDENT</span>
             {% endif %}
             {% if request.path == list_de_demande_prolongement %}
-                <span>Demande prolongement</span>
+                <span>DEMANDES</span>
             {% endif %}
             {% if request.path == ChangerMotDePasseConducteur %}
-                <span>Changer mot de passe</span>
+                <span style="font-size: 12px">Mot de passe</span>
             {% endif %}
             {% if request.path == prolongement_lu_details %}
-                <span>Details demande</span>
+                <span>DETAILS</span>
             {% endif %}
         </div>
         <div class="col"  style="flex-grow: 1;">
-            <div class="notification-icon" onclick="toggleNotifi()">
-                <i class="fas fa-bell"></i>
+            <div class="notification-icon"  onclick="toggleNotifi()" >
+                <i class="fas fa-bell" ></i>
                 {% if prolongements_non_lus %}<span class="badge">{{ prolongements_non_lus.count }}</span>{% else %}{% endif %}
             </div>
-            <div class="notifi-box" id="box" style="overflow-y: auto">
-                <h2>Notifications</h2>
+
+        </div>
+        <div class="notifi-box" id="box">
+            <h2>Notifications</h2>
+            <div  style="overflow-y: auto">
                 {% if prolongements_non_lus %}
                     {% for prolongement in prolongements_non_lus %}
                         <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
@@ -234,6 +242,36 @@
             </div>
         </div>
     </nav>
+    <header class="header hide-header" id="header">
+        <div class="nav__menu" id="nav-menu">
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a href="{% url 'utilisateur:liste_mission' %}" class="nav__link {% if request.path == liste_mission %}active-link{% else %} {% endif %}" onclick="closeMenu1()">
+                        <i class="bi bi-house-fill"></i>
+                        <span class="nav__name">Accueil</span>
+                    </a>
+                </li>
+                <li class="nav__item ">
+                    <a href=" {% url 'utilisateur:list_de_demande_prolongement' %}" class="nav__link {% if request.path == list_de_demande_prolongement %}active-link{% else %} {% endif %} " onclick="closeMenu1()">
+                        <i class="bi bi-envelope"></i>
+                        <span class="nav__name">Demande</span>
+                    </a>
+                </li>
+                <li class="nav__item">
+                    <a href="{% url 'utilisateur:declare_incident' %}" class="nav__link {% if request.path == declare_incident %}active-link{% else %} {% endif %}" onclick="closeMenu1()">
+                        <i class="bi bi-browser-firefox"></i>
+                        <span class="nav__name">Incident</span>
+                    </a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" id="avatar-navbars1" onclick="toggleMenu1()">
+                        <i class="bi bi-gear"></i>
+                        <span class="nav__name">Parametres</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
     <div class="navigation__menu none" style="overflow-y:auto">
         <div class="avatar-wrapper" style="background-image: url('{% static 'images/conducteur.png' %}');">
             <div class="">
@@ -377,36 +415,6 @@
         </ul>
         <div class="version">Version 1.0.1</div>
     </div>
-    <header class="header hide-header" id="header">
-        <div class="nav__menu" id="nav-menu">
-            <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="{% url 'utilisateur:liste_mission' %}" class="nav__link {% if request.path == liste_mission %}active-link{% else %} {% endif %}" onclick="closeMenu1()">
-                        <i class="bi bi-house-fill"></i>
-                        <span class="nav__name">Accueil</span>
-                    </a>
-                </li>
-                <li class="nav__item ">
-                    <a href=" {% url 'utilisateur:list_de_demande_prolongement' %}" class="nav__link {% if request.path == list_de_demande_prolongement %}active-link{% else %} {% endif %} " onclick="closeMenu1()">
-                        <i class="bi bi-envelope"></i>
-                        <span class="nav__name">Demande</span>
-                    </a>
-                </li>
-                <li class="nav__item">
-                    <a href="{% url 'utilisateur:declare_incident' %}" class="nav__link {% if request.path == declare_incident %}active-link{% else %} {% endif %}" onclick="closeMenu1()">
-                        <i class="bi bi-browser-firefox"></i>
-                        <span class="nav__name">Incident</span>
-                    </a>
-                </li>
-                <li class="nav__item">
-                    <a class="nav__link" id="avatar-navbars1" onclick="toggleMenu1()">
-                        <i class="bi bi-gear"></i>
-                        <span class="nav__name">Parametres</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </header>
     <div class="content " id="content-container">
         <div class="my-account">
             <div class="container-fluid">
@@ -772,17 +780,17 @@
                             <div class="tab-pane fade show {% if request.path == prolongement_lu_details %}active{% else %} {% endif %} text-center " id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
                                 <h6 style="color: #333;">Informations de la demande de prolongement</h6>
 
-                                    <ul style="list-style-type: none; padding-left: 0;">
-                                        <li style="color: #555;">
-                                            La demande de prolongement que vous avez effectuée le {{ prolongement_details.date_mise_a_jour }} pour une durée de  {{ prolongement_details.duree }} jours
-                                            qui a pour motif "{{ prolongement_details.motif }}" a été
-                                            {% if prolongement_details.accepter %}
-                                                <span style="color: green;">acceptée</span>. Votre déplacement prendra fin le {{ prolongement_details.date_fin }}.
-                                            {% elif prolongement_details.refuser %}
-                                                <span style="color: red;">refusée</span>. Votre déplacement prendra fin le {{ prolongement_details.ajout }}.
-                                            {% endif %}
-                                        </li>
-                                    </ul>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li style="color: #555;">
+                                        La demande de prolongement que vous avez effectuée le {{ prolongement_details.date_mise_a_jour }} pour une durée de  {{ prolongement_details.duree }} jours
+                                        qui a pour motif "{{ prolongement_details.motif }}" a été
+                                        {% if prolongement_details.accepter %}
+                                            <span style="color: green;">acceptée</span>. Votre déplacement prendra fin le {{ prolongement_details.date_fin }}.
+                                        {% elif prolongement_details.refuser %}
+                                            <span style="color: red;">refusée</span>. Votre déplacement prendra fin le {{ prolongement_details.ajout }}.
+                                        {% endif %}
+                                    </li>
+                                </ul>
 
                             </div>
                         </div>
@@ -1067,8 +1075,6 @@
             var vehiculeId = button.dataset.vehiculeId;
             document.getElementById('deplacement2_id').value = deplacementId;
             document.getElementById('vehicule_id').value = vehiculeId;
-
-            // Ouvrir le deuxième modal
             $('#modal_incident_2').modal('show');
         }
     </script>
@@ -1078,8 +1084,6 @@
             var vehiculeId = button.dataset.vehiculeId;
             document.getElementById('deplacement_id').value = deplacementId;
             document.getElementById('vehicule_id').value = vehiculeId;
-
-            // Ouvrir le deuxième modal
             $('#modal_prolongement_2').modal('show');
         }
     </script>
@@ -1107,7 +1111,6 @@
             };
             xhr.send();
         }
-
         document.querySelectorAll('.nav__link').forEach(function (link) {
             link.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -1143,6 +1146,43 @@
         }
     </script>
     <script>
+        var box = document.getElementById('box');
+        const boxButton = document.querySelector('.notification-icon');
+        var contentContainer = document.getElementById('content-container');
+        var down = false;
+
+        function toggleNotifi() {
+            if (down) {
+                closeBox();
+                contentContainer.classList.remove('blurred');
+            } else {
+                openBox();
+                contentContainer.classList.add('blurred');
+            }
+        }
+
+        function openBox() {
+            box.style.height = '410px';
+            box.style.opacity = 1;
+            down = true;
+        }
+
+        function closeBox() {
+            box.style.height = '0px';
+            box.style.opacity = 0;
+            down = false;
+        }
+
+        document.addEventListener('mousedown', function (event) {
+            const isClickInsideBox = box.contains(event.target);
+            const isClickInsideBoxButton = boxButton.contains(event.target);
+            if (!isClickInsideBox && !isClickInsideBoxButton && down) {
+                closeBox();
+                contentContainer.classList.remove('blurred');
+            }
+        });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const collapseButtons = document.querySelectorAll('.card .btn-tool');
             collapseButtons.forEach(function(button) {
@@ -1150,21 +1190,7 @@
             });
         });
     </script>
-    <script>
-        var box  = document.getElementById('box');
-        var down = false;
-        function toggleNotifi(){
-            if (down) {
-                box.style.height  = '0px';
-                box.style.opacity = 0;
-                down = false;
-            }else {
-                box.style.height  = '410px';
-                box.style.opacity = 1;
-                down = true;
-            }
-        }
-    </script>
+
     <script>
         function dismissNotification(id) {
             fetch("{% url 'utilisateur:dismiss_notification' %}?prolongement_id=" + id)
@@ -1190,6 +1216,53 @@
                 .catch(error => console.error("Erreur lors de la suppression de la notification:", error));
         }
     </script>
+    <script>
+        var currentUrl = window.location.href;
+        var loginUrl = "{% url 'utilisateur:connexion_user' %}";
+        if (currentUrl === loginUrl) {
+            var divToHide = document.querySelector('.styles_preview__IERpK');
+            if (divToHide) {
+                divToHide.style.display = 'none';
+            }
+        }
+    </script>
+    <script>
+        function preventZoom() {
+            document.body.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.scale !== 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+        preventZoom();
+
+    </script>
+    <script>
+        function loadEnteteContent(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById('entete-container').innerHTML = xhr.responseText;
+                } else {
+                    console.error('Erreur de chargement de l\'entête: ' + xhr.statusText);
+                }
+            };
+            xhr.send();
+        }
+        document.querySelectorAll('.entete__link').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                var url = link.getAttribute('href');
+                loadEnteteContent(url);
+            });
+        });
+    </script>
+
     {% include 'footer_conducteur.html' %}
     </body>
 {% endblock %}

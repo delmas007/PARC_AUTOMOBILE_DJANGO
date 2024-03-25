@@ -159,16 +159,14 @@ class Vehicule(models.Model):
     def __str__(self):
         return f"{self.marque} {self.type_commercial} {self.numero_immatriculation}"
 
-    def total_carburant_consomme(self, mois, annee):
-        total_quantite = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('quantite')).get('total') or 0
-        total_prix = Carburant.objects.filter(vehicule=self).aggregate(total=Sum('prix_total')).get('total') or 0
-        if mois and annee:
-            total_quantite = Carburant.objects.filter(vehicule=self, date_mise_a_jour__month=mois,
-                                                      date_mise_a_jour__year=annee).aggregate(total=Sum('quantite')) \
-                                 .get('total') or 0
-            total_prix = Carburant.objects.filter(vehicule=self, date_mise_a_jour__month=mois,
-                                                  date_mise_a_jour__year=annee).aggregate(total=Sum('prix_total')) \
+    def total_carburant(self, mois, annee):
+        total_quantite = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
+                                                  date_premiere__year=annee).aggregate(total=Sum('quantite')) \
                              .get('total') or 0
+        total_prix = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
+                                              date_premiere__year=annee).aggregate(total=Sum('prix_total')) \
+                         .get('total') or 0
+
         return {'quantite': total_quantite, 'prix': total_prix}
 
     def total_entretien(self, mois, annee):
@@ -234,39 +232,28 @@ class Demande_prolongement(models.Model):
     date_reponse = models.DateTimeField(blank=True, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
     duree = models.IntegerField()
-    motif = models.CharField(max_length=250, )
+    motif = models.CharField(max_length=250)
     en_cours = models.BooleanField(default=True)
     accepter = models.BooleanField(default=False)
     refuser = models.BooleanField(default=False)
-    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True, )
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, blank=True, null=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     kilometrage = models.IntegerField()
     lu = models.BooleanField(default=False)
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
-    date_premiere = models.DateField(blank=True, null=True)
-    premiere_enregistrement = models.BooleanField(default=False)
+    date_premiere = models.DateField(auto_now_add=True, null=True)
 
     def ajout(self):
         return self.deplacement.date_fin() + timedelta(days=self.duree)
 
-    @receiver(pre_save, sender=Deplacement)
-    def set_date_premiere(sender, instance, **kwargs):
-        if not instance.premiere_enregistrement:  # Si ce n'est pas déjà le premier enregistrement
-            instance.date_premiere = instance.date_depart
-            instance.premiere_enregistrement = True
-        elif instance.pk:  # Si l'objet existe déjà
-            original_instance = sender.objects.get(pk=instance.pk)
-            instance.date_premiere = original_instance.date_premiere
-
-    def __str__(self):
-        return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
-
+    @property
     def time_since_reponse(self):
         if self.date_reponse:
             time_since_reponse = timesince(self.date_reponse)
             return f"il y a {time_since_reponse}"
-        else:
-            return "Hors ligne (date de déconnexion non disponible)"
+
+    def __str__(self):
+        return f"{self.conducteur.numero_permis_conduire} {self.conducteur.numero_permis_conduire}"
 
 
 class Carburant(models.Model):
@@ -276,20 +263,10 @@ class Carburant(models.Model):
     type = models.ForeignKey(type_carburant, on_delete=models.SET_NULL, blank=False, null=True)
     prix_total = models.IntegerField()
     quantite = models.FloatField()
-    date_premiere = models.DateField(blank=True, null=True)
-    premiere_enregistrement = models.BooleanField(default=False)
+    date_premiere = models.DateField(auto_now_add=True, null=True)
 
     def prix_total_format(self):
         return "{:,.2f}".format(self.prix_total)
-
-    @receiver(pre_save, sender=Deplacement)
-    def set_date_premiere(sender, instance, **kwargs):
-        if not instance.premiere_enregistrement:  # Si ce n'est pas déjà le premier enregistrement
-            instance.date_premiere = instance.date_depart
-            instance.premiere_enregistrement = True
-        elif instance.pk:  # Si l'objet existe déjà
-            original_instance = sender.objects.get(pk=instance.pk)
-            instance.date_premiere = original_instance.date_premiere
 
 
 class Entretien(models.Model):
@@ -327,17 +304,7 @@ class Incident(models.Model):
     description_incident = models.TextField()
     utilisateurs = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, related_name='gestionnaire',
                                      blank=True)
-    date_premiere = models.DateField(blank=True, null=True)
-    premiere_enregistrement = models.BooleanField(default=False)
-
-    @receiver(pre_save, sender=Deplacement)
-    def set_date_premiere(sender, instance, **kwargs):
-        if not instance.premiere_enregistrement:  # Si ce n'est pas déjà le premier enregistrement
-            instance.date_premiere = instance.date_depart
-            instance.premiere_enregistrement = True
-        elif instance.pk:  # Si l'objet existe déjà
-            original_instance = sender.objects.get(pk=instance.pk)
-            instance.date_premiere = original_instance.date_premiere
+    date_premiere = models.DateField(auto_now_add=True, null=True, )
 
 
 class Photo(models.Model):

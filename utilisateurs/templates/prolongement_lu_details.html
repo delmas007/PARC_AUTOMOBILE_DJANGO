@@ -1,0 +1,216 @@
+{% extends 'header_conducteur.html' %}
+{% load static %}
+{% block content %}
+    <style>
+
+        .modal-dialog.modal-custom .modal-content {
+            width: 100%;
+        }
+        .no-requests p:first-child {
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+        .no-requests p:last-child {
+            margin-top: 5px;
+            font-weight: bold;
+            color: #007bff;
+        }ponse-demande-accepted {
+                     background-color: #d4edda;
+                     border: 2px solid #28a745;
+                     background-color: #e2e3e5;
+                     border-radius: 8px;
+                     font-
+                 }
+        .notification-icon i {
+            color: #39399b;
+            font-size: 25px;
+        }
+
+        .notifi-box {
+            background-color: white;
+            width: 300px;
+            height: 0px;
+            opacity: 0;
+            position: absolute;
+            top: 63px;
+            right: 35px;
+            transition: 1s opacity, 250ms height;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+        .notifi-box h2 {
+            font-size: 14px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            color: #999;
+        }
+        .notifi-box h2 span {
+            color: #f00;
+        }
+        .notifi-item {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            padding: 15px 5px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        .notifi-item:hover {
+            background-color: #eee;
+        }
+        .notifi-item img {
+            display: block;
+            width: 50px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        .notifi-item .text h4 {
+            color: #777;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .notifi-item .text p {
+            color: #aaa;
+            font-size: 12px;
+        }
+        .notif:hover{
+            background-color: #9e60d9;
+            color:white;
+        }
+
+    </style>
+    <body>
+    {% url 'utilisateur:prolongement_lu_details' as prolongement_lu_details %}
+    <nav class="Entete" style=" justify-content: center; align-items: center;">
+    <div class="col-2">
+        <a href="{% url 'utilisateur:liste_mission' %}">
+            <i class="fas fa-arrow-left" style="color: #4c0ab8; font-size: 50px"></i> </a>
+    </div>
+        <div id="entete-container" class="col-7" style="text-align: center; color: white; font-weight: bold; margin-left: 50px;">
+                <span>DETAILS DE LA DEMANDE</span>
+        </div>
+        <div class="notifi-box" id="box">
+            <h2>Notifications</h2>
+            <div  style="overflow-y: auto">
+                {% if prolongements_non_lus %}
+                    {% for prolongement in prolongements_non_lus %}
+                        <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
+                            <div class="post notif">
+                                <div class="user-blo">
+                                    <span class="username">
+                                         <a href="#">Deplacelement {{ prolongement.deplacement }}</a>
+                                     </span>
+                                    <span class="description">Recu {{ prolongement.time_since_reponse }}</span>
+                                </div>
+                                <p class="text">
+                                    {{ prolongement.motif|truncatewords:6  }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    auccune notifiaction
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="content " id="content-container">
+        <div class="my-account">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show {% if request.path == prolongement_lu_details %}active{% else %} {% endif %} text-center " id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
+                                <h6 style="color: #333;">Informations de la demande de prolongement</h6>
+
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li style="color: #555;">
+                                        La demande de prolongement que vous avez effectuée le {{ prolongement_details.date_mise_a_jour }} pour une durée de  {{ prolongement_details.duree }} jours
+                                        qui a pour motif "{{ prolongement_details.motif }}" a été
+                                        {% if prolongement_details.accepter %}
+                                            <span style="color: green;">acceptée</span>. Votre déplacement prendra fin le {{ prolongement_details.date_fin }}.
+                                        {% elif prolongement_details.refuser %}
+                                            <span style="color: red;">refusée</span>. Votre déplacement prendra fin le {{ prolongement_details.ajout }}.
+                                        {% endif %}
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function dismissNotification(id) {
+            fetch("{% url 'utilisateur:dismiss_notification' %}?prolongement_id=" + id)
+                .then(response => {
+                    if (response.ok) {
+                        var notification = document.getElementById('accepte_' + id);
+                        if (notification) {
+                            notification.style.display = 'none';
+                            var badge = document.querySelector('.badge');
+                            if (badge) {
+                                var count = parseInt(badge.innerText);
+                                if (!isNaN(count) && count > 0) {
+                                    badge.innerText = count - 1;
+                                }
+                            }
+                        }
+                        window.location.href = "{% url 'utilisateur:prolongement_lu_details' %}?prolongement_id=" + id;
+                    }
+                    else {
+                        console.error("Erreur lors de la suppression de la notification");
+                    }
+                })
+                .catch(error => console.error("Erreur lors de la suppression de la notification:", error));
+        }
+    </script>
+    <script>
+        function preventZoom() {
+            document.body.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.scale !== 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+        preventZoom();
+
+    </script>
+    <script>
+        function loadEnteteContent(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById('entete-container').innerHTML = xhr.responseText;
+                } else {
+                    console.error('Erreur de chargement de l\'entête: ' + xhr.statusText);
+                }
+            };
+            xhr.send();
+        }
+        document.querySelectorAll('.entete__link').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                var url = link.getAttribute('href');
+                loadEnteteContent(url);
+            });
+        });
+    </script>
+    <script>
+        function goBackAndReload() {
+            window.history.back();
+            setTimeout(function() {
+                window.location.reload();
+            }, 500);
+        }
+    </script>
+
+    {% include 'footer_conducteur.html' %}
+    </body>
+{% endblock %}

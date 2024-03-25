@@ -31,9 +31,10 @@ from django.utils.html import strip_tags
 
 
 # Create your views here.
-
+@login_required(login_url='utilisateur:connexion_user')
 def Accueil_user(request):
-    print("azerty")
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     tous_les_vehicule = Vehicule.objects.all()
     vehicules = []
     for vehicule in tous_les_vehicule:
@@ -45,7 +46,10 @@ def Accueil_user(request):
     return render(request, 'index_user.html', context)
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def list_vehicule(request):
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     tous_les_vehicule = Vehicule.objects.all()
     vehicules = []
     for vehicule in tous_les_vehicule:
@@ -57,7 +61,10 @@ def list_vehicule(request):
     return render(request, 'vehicule_list.html', context)
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def vehicule_details(request, vehicule_id):
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     # photo = get_object_or_404(Photo, pk=vehicule_id)
     photo = Photo.objects.filter(vehicule_id=vehicule_id)
     vehicule = get_object_or_404(Vehicule, pk=vehicule_id)
@@ -66,7 +73,10 @@ def vehicule_details(request, vehicule_id):
     return render(request, 'detail.html', context)
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def Compte(request):
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         if request.user.is_authenticated:
             utilisateur = Utilisateur.objects.get(username=request.user.username)
@@ -171,7 +181,10 @@ def Connexion_user(request):
     return render(request, 'connexion_user.html')
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def password_reset_request(request):
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = PasswordResetForme(request.POST)
         if form.is_valid():
@@ -244,13 +257,19 @@ def passwordResetConfirm(request, uidb64, token):
     return redirect("Accueil")
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def erreur(request):
-    return render(request, 'erreur.html')
+    if request.user.roles.role == 'CONDUCTEUR':
+        redirect_url = reverse('utilisateur:connexion_user')
+    else:
+        redirect_url = reverse('Accueil')
+
+    return render(request, 'erreur.html', {'redirect_url': redirect_url})
 
 
 @login_required(login_url='utilisateur:connexion_user')
 def liste_mission(request):
-    if request.user.roles.role != 'CONDUCTEUR':
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
         return redirect('utilisateur:erreur')
     prolongement = Demande_prolongement.objects.filter(accepter=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
@@ -286,13 +305,16 @@ def dismiss_notification(request):
         return JsonResponse({"error": "Méthode HTTP non autorisée"}, status=405)
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def prolongement_lu_details(request):
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     if request.method == 'GET':
         prolongement_id = request.GET.get('prolongement_id')
         if prolongement_id:
             try:
                 prolongement_details = Demande_prolongement.objects.get(id=prolongement_id)
-                return render(request, 'compte_conducteur.html', {'prolongement_details': prolongement_details})
+                return render(request, 'prolongement_lu_details.html', {'prolongement_details': prolongement_details})
             except Demande_prolongement.DoesNotExist:
                 return HttpResponse("Le prolongement n'existe pas.")
         else:
@@ -301,8 +323,9 @@ def prolongement_lu_details(request):
         return HttpResponse("Méthode HTTP non autorisée.")
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def prolongement(request):
-    if request.user.roles.role != 'CONDUCTEUR':
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
         return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = DemandeProlongementForm(request.POST, request.FILES)
@@ -330,9 +353,9 @@ def prolongement(request):
     return render(request, 'compte_conducteur.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='utilisateur:connexion_user')
 def liste_demandes(request):
-    if request.user.roles.role != 'CONDUCTEUR':
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
         return redirect('utilisateur:erreur')
     utilisateur_actif = request.user
     conducteur_actif = utilisateur_actif.conducteur_id
@@ -353,8 +376,9 @@ def liste_demandes(request):
     return render(request, 'compte_conducteur.html', {'demande': demande_list})
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def declare_incident(request):
-    if request.user.roles.role != 'CONDUCTEUR':
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
         return redirect('utilisateur:erreur')
     date_aujourdui = date.today()
     # Récupérer l'utilisateur actuellement connecté
@@ -381,8 +405,9 @@ def declare_incident(request):
     return render(request, 'compte_conducteur.html', {'mission': mission_list})
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def sendIncident(request):
-    if request.user.roles.role != 'CONDUCTEUR':
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
         return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = DeclareIncidentForm(request.POST, request.FILES)
@@ -419,7 +444,10 @@ def sendIncident(request):
     return render(request, 'compte_conducteur.html', {'form': form})
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def ChangerMotDePassee(request):
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = ChangerMotDePasse(request.user, request.POST)
         print(request.POST.get('passe'))
@@ -439,8 +467,9 @@ def ChangerMotDePassee(request):
     return render(request, 'changerMotDePasse.html', {'form': form})
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def ChangerMotDePasseConducteur(request):
-    if request.user.roles.role != 'CONDUCTEUR':
+    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
         return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = ChangerMotDePasse(request.user, request.POST)
@@ -458,8 +487,10 @@ def ChangerMotDePasseConducteur(request):
     form = ChangerMotDePasse(request.user)
     return render(request, 'compte_conducteur.html', {'form': form})
 
-
+@login_required(login_url='Connexion')
 def ProfilUser(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     return render(request, 'Profil_user.html')
 
 

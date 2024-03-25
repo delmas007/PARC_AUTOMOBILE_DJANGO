@@ -9,11 +9,15 @@ from Admin.views import inscription, employer_compte, active_emp, desactive_amp,
     CustomPasswordResetConfirmView, ChangerMotDePasse_admin, rapport_carburant_mensuel_pdf, \
     rapport_carburant_mensuel_admins, rapport_incident_conducteur_mensuel_admins, \
     rapport_incident_conducteur_mensuel_pdf
+from Admin.views2 import liste_deplacement_arrive_admin, liste_incidents_interne_admin, liste_incidents_externe_admin
 
 app_name = 'admins'
 
 urlpatterns = [
     path('dashboard_admins/', dashboard_admins, name='dashboard_admins'),
+    path('liste_deplacement_arrive_admin/', liste_deplacement_arrive_admin, name='liste_deplacement_arrive_admin'),
+    path('liste_incidents_externe_admin/', liste_incidents_externe_admin, name='liste_incidents_externe_admin'),
+    path('liste_incidents_interne_admin/', liste_incidents_interne_admin, name='liste_incidents_interne_admin'),
     path('Ajout_gestionnaire/', inscription, name='Ajout_gestionnaire'),
     path('Ajouter_Carburant/', Ajouter_Carburant, name='Ajouter_Carburant'),
     path('Compte_gestionnaire/', employer_compte, name='Compte_gestionnaire'),

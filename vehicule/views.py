@@ -16,6 +16,8 @@ from django.core.serializers import serialize
 
 @login_required(login_url=reverse_lazy('Connexion'))
 def Ajouter_vehicule(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = VehiculeForm(request.POST, request.FILES)
         if form.is_valid():
@@ -43,6 +45,8 @@ def Ajouter_vehicule(request):
 
 @login_required(login_url=reverse_lazy('Connexion'))
 def liste_vehicules(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     vehicules_list = (
         Vehicule.objects.filter(supprimer=False)
         .annotate(hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField()))
@@ -99,6 +103,8 @@ def vehicul_search(request):
 
 @login_required(login_url=reverse_lazy('Connexion'))
 def supprimer_vehicule(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     vehicule = get_object_or_404(Vehicule, pk=pk)
     vehicule.supprimer = True
     vehicule.save()
@@ -107,6 +113,8 @@ def supprimer_vehicule(request, pk):
 
 @login_required(login_url=reverse_lazy('Connexion'))
 def modifier_vehicule(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     vehicule = get_object_or_404(Vehicule, pk=pk)
     photos = Photo.objects.filter(vehicule=pk)
 
@@ -140,6 +148,8 @@ def modifier_vehicule(request, pk):
 
 @login_required(login_url='Connexion')
 def ajouter_marque(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = marqueForm(request.POST)
         if form.is_valid():
@@ -159,6 +169,8 @@ def ajouter_marque(request):
 
 @login_required(login_url='Connexion')
 def ajouter_type(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = typeForm(request.POST)
         if form.is_valid():
@@ -184,7 +196,6 @@ def details_vehicule(request, vehicule_id):
     return render(request, 'vehicule_details.html', {'vehicule': vehicule, 'image': image})
 
 
-@login_required(login_url=reverse_lazy('Connexion'))
 @require_GET
 def get_modeles(request):
     marque_id = request.GET.get('marque_id')
