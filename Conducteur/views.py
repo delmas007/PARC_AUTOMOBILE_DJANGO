@@ -11,6 +11,8 @@ from .forms import ConducteurForm, ConducteurSearchForm
 
 @login_required(login_url='Connexion')
 def ajouter_conducteur(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         conducteur_form = ConducteurForm(request.POST, request.FILES)
         utilisateur_form = UserRegistrationForme(request.POST)
@@ -36,6 +38,8 @@ def ajouter_conducteur(request):
 
 @login_required(login_url='Connexion')
 def tous_les_conducteurs(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     conducteurs = Conducteur.objects.all().order_by('date_mise_a_jour')
     utilisateurs = (
         Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True).annotate(
@@ -56,6 +60,8 @@ def tous_les_conducteurs(request):
 
 @login_required(login_url='Connexion')
 def supprimer_conducteur(request, conducteur_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     utilisateurs = get_object_or_404(Utilisateur, conducteur=conducteur_id)
     conducteur = get_object_or_404(Conducteur, pk=conducteur_id)
     conducteur.supprimer = True
@@ -67,6 +73,8 @@ def supprimer_conducteur(request, conducteur_id):
 
 @login_required(login_url='Connexion')
 def modifier_conducteur(request, conducteur_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     global form
     conducteur = get_object_or_404(Conducteur, pk=conducteur_id)
     utilisateur = get_object_or_404(Utilisateur, conducteur=conducteur_id)
@@ -92,6 +100,8 @@ def modifier_conducteur(request, conducteur_id):
 
 @login_required(login_url='Connexion')
 def conducteur_search(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     form = ConducteurSearchForm(request.GET)
     utilisateurs = (
         Utilisateur.objects.exclude(conducteur_id__isnull=True).filter(is_active=True).annotate(
@@ -129,6 +139,8 @@ def conducteur_search(request):
 
 @login_required(login_url='Connexion')
 def details_conducteur(request, conducteur_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     conducteur = get_object_or_404(Conducteur, id=conducteur_id)
     utilisateur = get_object_or_404(Utilisateur, conducteur=conducteur_id)
     return render(request, 'conducteur_details.html', {'conducteur': conducteur, 'utilisateur': utilisateur})

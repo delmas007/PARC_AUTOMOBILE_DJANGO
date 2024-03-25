@@ -1,14 +1,10 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from datetime import datetime
-
 from django.utils import timezone
-from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
-
 from Model.models import Deplacement, Photo, EtatArrive, Demande_prolongement, Conducteur, Vehicule
 from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm, DeplacementSearchForm
 from datetime import date, timedelta
@@ -16,7 +12,10 @@ from django.db.models import Q, Exists, OuterRef, ExpressionWrapper, F, fields
 import json
 
 
+@login_required(login_url='Connexion')
 def enregistrer_deplacement(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     conducteurs = Conducteur.objects.all()
     vehicules = Vehicule.objects.all()
     date_aujourdhui = date.today()
@@ -72,7 +71,10 @@ def enregistrer_deplacement(request):
     return render(request, 'enregistrer_deplacement.html', {'form': form})
 
 
+@login_required(login_url='Connexion')
 def liste_deplacement(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     aujourd_hui = date.today()
     deplacement = (
         Deplacement.objects.filter(Q(date_depart__gt=aujourd_hui)).annotate(
@@ -94,7 +96,10 @@ def liste_deplacement(request):
     return render(request, 'afficher_deplacement.html', {'deplacements': deplacement})
 
 
+@login_required(login_url='Connexion')
 def depart(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, pk=pk)
     deplacement.depart = True
     deplacement.statut = 'en cours'
@@ -102,7 +107,10 @@ def depart(request, pk):
     return redirect('deplacement:liste_deplacement')
 
 
+@login_required(login_url='Connexion')
 def liste_deplacement_en_cours(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     aujourd_hui = date.today()
     prolongement = Demande_prolongement.objects.all()
 
@@ -137,7 +145,10 @@ def liste_deplacement_en_cours(request):
                    'prolongements': prolongement})
 
 
+@login_required(login_url='Connexion')
 def arrivee(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, pk=pk)
     deplacement.arrivee = True
     deplacement.statut = 'arrivée'
@@ -145,7 +156,10 @@ def arrivee(request, pk):
     return redirect('deplacement:liste_deplacement_en_cours')
 
 
+@login_required(login_url='Connexion')
 def liste_deplacement_arrive(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     aujourd_hui = date.today()
     etatarrive = (
         EtatArrive.objects.filter(date_arrive__gte=aujourd_hui - timedelta(days=7)).exclude(
@@ -166,7 +180,10 @@ def liste_deplacement_arrive(request):
     return render(request, 'afficher_deplacement_arrive.html', {'etatarrives': etatarrive})
 
 
+@login_required(login_url='Connexion')
 def modifier_deplacement(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, pk=pk)
     photos = Photo.objects.filter(deplacement=pk)
     vehicule = deplacement.vehicule
@@ -202,13 +219,19 @@ def modifier_deplacement(request, pk):
     return render(request, 'modifier_deplacement.html', {'form': form, 'deplacement': deplacement, 'photos': photos})
 
 
+@login_required(login_url='Connexion')
 def details_deplacement(request, deplacement_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, id=deplacement_id)
     image = Photo.objects.filter(deplacement=deplacement_id)
     return render(request, 'deplacement_details.html', {'deplacement': deplacement, 'image': image})
 
 
+@login_required(login_url='Connexion')
 def delete_deplacement(request, deplacement_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, id=deplacement_id)
     image = Photo.objects.filter(deplacement=deplacement_id)
     image.delete()
@@ -216,7 +239,10 @@ def delete_deplacement(request, deplacement_id):
     return redirect('deplacement:liste_deplacement')
 
 
+@login_required(login_url='Connexion')
 def enregistrer_etatArriver(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = EtatArriveForm(request.POST)
         if form.is_valid():
@@ -259,7 +285,10 @@ def enregistrer_etatArriver(request):
     return render(request, 'afficher_deplacement_en_cours.html', context)
 
 
+@login_required(login_url='Connexion')
 def details_arriver(request, etatarrive_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     etat_arrive = get_object_or_404(EtatArrive, id=etatarrive_id)
     deplacement_id = etat_arrive.deplacement.id
     deplacement = get_object_or_404(Deplacement, id=deplacement_id)
@@ -313,6 +342,7 @@ def get_deplacements_data2(request):
 #    return JsonResponse({'error': 'Demande de prolongement non trouvée pour cet ID de déplacement.'}, status=404)
 # else:
 #    return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
+
 def get_photos_demande_prolongement(request):
     if request.method == 'GET':
         id_deplacement = request.GET.get('id_deplacement')
@@ -331,7 +361,10 @@ def get_photos_demande_prolongement(request):
         return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
 
 
+@login_required(login_url='Connexion')
 def accept_prolongement(request, prolongement_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
     prolongement.en_cours = False
     prolongement.refuser = False
@@ -342,7 +375,10 @@ def accept_prolongement(request, prolongement_id):
     return redirect('deplacement:liste_deplacement_en_cours')
 
 
+@login_required(login_url='Connexion')
 def refuse_prolongement(request, prolongement_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
 
     # Modifier les champs de la demande de prolongement
