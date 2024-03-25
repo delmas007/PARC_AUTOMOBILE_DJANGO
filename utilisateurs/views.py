@@ -244,8 +244,14 @@ def passwordResetConfirm(request, uidb64, token):
     return redirect("Accueil")
 
 
+@login_required(login_url='utilisateur:connexion_user')
 def erreur(request):
-    return render(request, 'erreur.html')
+    if request.user.roles.role == 'CONDUCTEUR':
+        redirect_url = reverse('utilisateur:connexion_user')
+    else:
+        redirect_url = reverse('Accueil')
+
+    return render(request, 'erreur.html', {'redirect_url': redirect_url})
 
 
 @login_required(login_url='utilisateur:connexion_user')
