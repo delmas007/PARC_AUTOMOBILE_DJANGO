@@ -1227,21 +1227,6 @@
         }
     </script>
     <script>
-        function preventZoom() {
-            document.body.addEventListener('gesturestart', function(e) {
-                e.preventDefault();
-            });
-
-            document.body.addEventListener('touchmove', function(e) {
-                if (e.scale !== 1) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-        }
-        preventZoom();
-
-    </script>
-    <script>
         function loadEnteteContent(url) {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
