@@ -10,7 +10,7 @@ from datetime import date, datetime
 
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Q, ExpressionWrapper, fields, F, Sum
+from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Subquery
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
@@ -19,7 +19,7 @@ from xhtml2pdf import pisa
 from Admin.forms import typeCarburantForm, CarburantSearchForm, UserRegistrationForm
 from Admin.views2 import courbe_depense_mensuel, courbe_depense_global, courbe_incident_conducteur_mensuel
 from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, Vehicule, Carburant, Entretien, \
-    Deplacement, Conducteur, Incident, EtatArrive
+    Deplacement, Conducteur, Incident, EtatArrive, Demande_prolongement
 from utilisateurs.forms import ChangerMotDePasse
 from vehicule.forms import VehiculSearchForm
 from secrets import compare_digest
@@ -197,7 +197,8 @@ def Carburant_search(request):
 
 
 def dashboard_admins(request):
-    vehicles = Vehicule.objects.all()
+    vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+    vehicles = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
     labels = [f"{vehicle.marque} {vehicle.type_commercial}" for vehicle in vehicles]
     mois = date.today().month
     mois_ = _(calendar.month_name[int(mois)])
@@ -367,14 +368,15 @@ def rapport_depense_mensuel_pdf(request):
                 <tr><td>Total</td><td>{nbre_entretien}</td><td>{total_entretien}</td></tr>
                  </table>
                 """
+            else:
+                html_content += "<p>Aucune donnée d'entretien disponible.</p>"
+
             if carburant and entretien:
                 html_content += f"""
                 <table border="1" style="margin-top:20px">
                 <tr colspan="3"><td>TOTAL DEPENSE</td><td>{total_entretien + total_carburant}</td></tr>
                  </table>
                            """
-            else:
-                html_content += "<p>Aucune donnée d'entretien disponible.</p>"
         else:
             carburant = Carburant.objects.filter(date_premiere__month=mois,
                                                  date_premiere__year=annee)
@@ -1023,7 +1025,7 @@ def rapport_carburant_mensuel_pdf(request):
                     else:
                         html_content += f"""
                             <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
-                         <tr> <td colspan="4"><h2>Aucune deplacement effectué.</h2></tr>
+                         <tr> <td colspan="4"><h2>Aucun deplacement effectué.</h2></tr>
                          </table>
                         """
 
@@ -1089,7 +1091,8 @@ def rapport_carburant_mensuel(request):
         mois = request.POST.get('mois')
         mois_lettre = _(calendar.month_name[int(mois)])
         annee = request.POST.get('annee')
-        vehicule = Vehicule.objects.all()
+        vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
+        vehicule = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
         labels = [f"{vehicle}" for vehicle in vehicule]
         fuel_data = [vehicle.total_carburant(mois, annee) for vehicle in vehicule]
         quantites = [data['quantite'] for data in fuel_data]
