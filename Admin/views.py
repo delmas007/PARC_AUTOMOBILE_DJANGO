@@ -19,7 +19,7 @@ from xhtml2pdf import pisa
 from Admin.forms import typeCarburantForm, CarburantSearchForm, UserRegistrationForm
 from Admin.views2 import courbe_depense_mensuel, courbe_depense_global, courbe_incident_conducteur_mensuel
 from Model.models import Roles, Utilisateur, type_carburant, periode_carburant, Vehicule, Carburant, Entretien, \
-    Deplacement, Conducteur, Incident, EtatArrive
+    Deplacement, Conducteur, Incident, EtatArrive, Demande_prolongement
 from utilisateurs.forms import ChangerMotDePasse
 from vehicule.forms import VehiculSearchForm
 from secrets import compare_digest
@@ -367,14 +367,15 @@ def rapport_depense_mensuel_pdf(request):
                 <tr><td>Total</td><td>{nbre_entretien}</td><td>{total_entretien}</td></tr>
                  </table>
                 """
+            else:
+                html_content += "<p>Aucune donnée d'entretien disponible.</p>"
+
             if carburant and entretien:
                 html_content += f"""
                 <table border="1" style="margin-top:20px">
                 <tr colspan="3"><td>TOTAL DEPENSE</td><td>{total_entretien + total_carburant}</td></tr>
                  </table>
                            """
-            else:
-                html_content += "<p>Aucune donnée d'entretien disponible.</p>"
         else:
             carburant = Carburant.objects.filter(date_premiere__month=mois,
                                                  date_premiere__year=annee)
@@ -1023,7 +1024,7 @@ def rapport_carburant_mensuel_pdf(request):
                     else:
                         html_content += f"""
                             <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
-                         <tr> <td colspan="4"><h2>Aucune deplacement effectué.</h2></tr>
+                         <tr> <td colspan="4"><h2>Aucun deplacement effectué.</h2></tr>
                          </table>
                         """
 

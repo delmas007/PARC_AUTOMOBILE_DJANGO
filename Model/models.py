@@ -166,6 +166,7 @@ class Vehicule(models.Model):
         total_prix = Carburant.objects.filter(vehicule=self, date_premiere__month=mois,
                                               date_premiere__year=annee).aggregate(total=Sum('prix_total')) \
                          .get('total') or 0
+
         return {'quantite': total_quantite, 'prix': total_prix}
 
     def total_entretien(self, mois, annee):

@@ -17,7 +17,7 @@ def rapport_entretien_mensuel_admins(request):
             return courbe_entretien_mensuel(request)
     else:
         vehicule = Vehicule.objects.all()
-        context = {'vehicule': vehicule}
+        context = {'vehicules': vehicule}
         return render(request, 'rapport_entretien_mensuel.html', context)
 
 
@@ -202,7 +202,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
             vehicule = Vehicule.objects.get(id=vehicule_id)
             # Récupérer les données de carburant et d'entretien
             incidents = Incident.objects.filter(vehicule=vehicule_id, date_premiere__month=mois,
-                                                ddate_premiere__year=annee)
+                                                date_premiere__year=annee)
 
             html_content = f"""
                     <html>
@@ -236,11 +236,19 @@ def rapport_incident_vehicule_mensuel_pdf(request):
             if incidents:
                 html_content += """
                  <table border="1">
-                 <tr><th>Date</th><th>Conducteur</th><th>Description</th></tr>
+                 <tr><th>Date</th><th>Conducteur</th><th>Gestionnaire</th><th>Description</th></tr>
                  """
+
+
                 for incident in incidents:
+                    incident_conducteur = incident.conducteur
+                    if not incident.conducteur:
+                        incident_conducteur =" "
+                    incident_gestionnaire = incident.utilisateurs
+                    if not incident.utilisateurs:
+                        incident_gestionnaire =" "
                     html_content += f"""
-                    <tr><td>{incident.date_premiere}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
+                    <tr><td>{incident.date_premiere}</td><td>{incident_conducteur}</td><td>{incident_gestionnaire}</td><td>{incident.description_incident}</td></tr>
                 """
 
             else:
@@ -294,13 +302,19 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                     if incidents_vehicule:
                         html_content += f"""
                                         <table border="1">
-                                        <tr><th>Date</th><th>Conducteur</th><th>Description</th></tr>
+                                        <tr><th>Date</th><th>Conducteur</th><th>Gestionnaire</th><th>Description</th></tr>
                                          """
 
                         # Boucle sur chaque incident pour ce conducteur
                         for incident in incidents_vehicule:
+                            incident_conducteur = incident.conducteur
+                            if not incident.conducteur:
+                                incident_conducteur =" "
+                            incident_gestionnaire = incident.utilisateurs
+                            if not incident.utilisateurs:
+                                incident_gestionnaire =" "
                             html_content += f"""
-                                                <tr><td>{incident.date_premiere}</td><td>{incident.conducteur}</td><td>{incident.description_incident}</td></tr>
+                                                <tr><td>{incident.date_premiere}</td><td>{incident_conducteur}</td><td>{incident_gestionnaire}</td><td>{incident.description_incident}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
