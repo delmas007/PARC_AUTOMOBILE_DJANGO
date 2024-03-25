@@ -1,9 +1,11 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -16,6 +18,7 @@ from django.db.models import Q, Exists, OuterRef, ExpressionWrapper, F, fields
 import json
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def enregistrer_deplacement(request):
     conducteurs = Conducteur.objects.all()
     vehicules = Vehicule.objects.all()
@@ -72,6 +75,7 @@ def enregistrer_deplacement(request):
     return render(request, 'enregistrer_deplacement.html', {'form': form})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def liste_deplacement(request):
     aujourd_hui = date.today()
     deplacement = (
@@ -94,6 +98,7 @@ def liste_deplacement(request):
     return render(request, 'afficher_deplacement.html', {'deplacements': deplacement})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def depart(request, pk):
     deplacement = get_object_or_404(Deplacement, pk=pk)
     deplacement.depart = True
@@ -102,6 +107,7 @@ def depart(request, pk):
     return redirect('deplacement:liste_deplacement')
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def liste_deplacement_en_cours(request):
     aujourd_hui = date.today()
     prolongement = Demande_prolongement.objects.all()
@@ -137,6 +143,7 @@ def liste_deplacement_en_cours(request):
                    'prolongements': prolongement})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def arrivee(request, pk):
     deplacement = get_object_or_404(Deplacement, pk=pk)
     deplacement.arrivee = True
@@ -145,6 +152,7 @@ def arrivee(request, pk):
     return redirect('deplacement:liste_deplacement_en_cours')
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def liste_deplacement_arrive(request):
     aujourd_hui = date.today()
     etatarrive = (
@@ -166,6 +174,7 @@ def liste_deplacement_arrive(request):
     return render(request, 'afficher_deplacement_arrive.html', {'etatarrives': etatarrive})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def modifier_deplacement(request, pk):
     deplacement = get_object_or_404(Deplacement, pk=pk)
     photos = Photo.objects.filter(deplacement=pk)
@@ -202,12 +211,14 @@ def modifier_deplacement(request, pk):
     return render(request, 'modifier_deplacement.html', {'form': form, 'deplacement': deplacement, 'photos': photos})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def details_deplacement(request, deplacement_id):
     deplacement = get_object_or_404(Deplacement, id=deplacement_id)
     image = Photo.objects.filter(deplacement=deplacement_id)
     return render(request, 'deplacement_details.html', {'deplacement': deplacement, 'image': image})
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def delete_deplacement(request, deplacement_id):
     deplacement = get_object_or_404(Deplacement, id=deplacement_id)
     image = Photo.objects.filter(deplacement=deplacement_id)
@@ -216,6 +227,7 @@ def delete_deplacement(request, deplacement_id):
     return redirect('deplacement:liste_deplacement')
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def enregistrer_etatArriver(request):
     if request.method == 'POST':
         form = EtatArriveForm(request.POST)
@@ -259,6 +271,7 @@ def enregistrer_etatArriver(request):
     return render(request, 'afficher_deplacement_en_cours.html', context)
 
 
+@login_required(login_url=reverse_lazy('Connexion'))
 def details_arriver(request, etatarrive_id):
     etat_arrive = get_object_or_404(EtatArrive, id=etatarrive_id)
     deplacement_id = etat_arrive.deplacement.id
