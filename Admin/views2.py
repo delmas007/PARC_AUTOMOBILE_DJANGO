@@ -1,7 +1,8 @@
 import calendar
 from datetime import date, datetime, timedelta
 
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Subquery
 from django.utils.translation import gettext as french
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -9,13 +10,16 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Model.models import Vehicule, Carburant, Entretien, Incident, Conducteur, EtatArrive, Photo
 
 
+@login_required(login_url='Connexion')
 def courbe_depense_mensuel(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         mois = request.POST.get('mois')
         mois_lettre = french(calendar.month_name[int(mois)])
         annee = request.POST.get('annee')
         vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
-        voiture =  Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
+        voiture = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
         prix_carburant = Carburant.objects.filter(date_premiere__month=mois, date_premiere__year=annee)
         prix_entretien = Entretien.objects.filter(date_entretien__month=mois, date_entretien__year=annee)
@@ -43,7 +47,10 @@ def courbe_depense_mensuel(request):
     return render(request, 'rapport_depense_mensuel.html')
 
 
+@login_required(login_url='Connexion')
 def courbe_depense_global(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         debut = request.POST.get('date_debut_periode')
         fin = request.POST.get('date_fin_periode')
@@ -54,7 +61,7 @@ def courbe_depense_global(request):
         else:
             fin_date = date.today()
         vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
-        voiture =  Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
+        voiture = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
         # Filtrer les données de consommation de carburant pour le mois et l'année sélectionnés
         prix_carburant = Carburant.objects.filter(date_premiere__range=(debut_date, fin_date))
         prix_entretien = Entretien.objects.filter(date_entretien__range=(debut_date, fin_date))
@@ -82,7 +89,10 @@ def courbe_depense_global(request):
     return render(request, 'rapport_depense.html')
 
 
+@login_required(login_url='Connexion')
 def courbe_entretien_mensuel(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         mois = request.POST.get('mois')
         mois_lettre = french(calendar.month_name[int(mois)])
@@ -108,7 +118,10 @@ def courbe_entretien_mensuel(request):
     return render(request, 'rapport_entretien_mensuel.html')
 
 
+@login_required(login_url='Connexion')
 def courbe_incident_vehicule_mensuel(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         mois = request.POST.get('mois')
         mois_lettre = french(calendar.month_name[int(mois)])
@@ -135,7 +148,10 @@ def courbe_incident_vehicule_mensuel(request):
     return render(request, 'rapport_incident_vehicule_mensuel.html')
 
 
+@login_required(login_url='Connexion')
 def courbe_incident_conducteur_mensuel(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         mois = request.POST.get('mois')
         mois_lettre = french(calendar.month_name[int(mois)])
@@ -163,7 +179,10 @@ def courbe_incident_conducteur_mensuel(request):
     return render(request, 'rapport_incident_conducteur_mensuel.html')
 
 
+@login_required(login_url='Connexion')
 def liste_deplacement_arrive_admin(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     etatarrive = (
         EtatArrive.objects.all().annotate(
             hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())
@@ -182,7 +201,10 @@ def liste_deplacement_arrive_admin(request):
     return render(request, 'afficher_deplacement_arrive_admin.html', {'etatarrives': etatarrive})
 
 
+@login_required(login_url='Connexion')
 def liste_incidents_externe_admin(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     aujourd_hui = date.today()
     incidents_list = (
         Incident.objects.filter(conducteur_id__isnull=False).annotate(
@@ -202,7 +224,10 @@ def liste_incidents_externe_admin(request):
     return render(request, 'Liste_incidents_externe_admin.html', {'incidents': incidents_page, 'paginator': paginator})
 
 
+@login_required(login_url='Connexion')
 def liste_incidents_interne_admin(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     incidents_list = (
         Incident.objects.filter(conducteur_id__isnull=True).annotate(
             hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())

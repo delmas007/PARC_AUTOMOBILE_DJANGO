@@ -2,6 +2,7 @@ import calendar
 import json
 
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetConfirmView
@@ -28,8 +29,11 @@ from django.http import JsonResponse
 from django.utils.timezone import now
 
 
+@login_required(login_url='Connexion')
 @csrf_protect
 def inscription(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     context = {}
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
@@ -52,27 +56,36 @@ def inscription(request):
     return render(request, 'ajouter_gestionnaire.html', context=context)
 
 
-# @login_required
+@login_required(login_url='Connexion')
 def employer_compte(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     gestionnaires = Utilisateur.objects.filter(roles__role__in=[Roles.GESTIONNAIRE], is_active=True)
 
     return render(request, 'tous_les_gestionnaires.html', {'gestionnaires': gestionnaires})
 
 
 def gestionnaire_inactifs(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     gestionnaires2 = Utilisateur.objects.filter(roles__role__in=[Roles.GESTIONNAIRE], is_active=False)
     return render(request, 'tous_les_gestionnairess.html', {'gestionnaires2': gestionnaires2})
 
 
-# @login_required
+@login_required(login_url='Connexion')
 def active_emp(request, employer_id):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     employer = get_object_or_404(Utilisateur, id=employer_id)
     employer.is_active = True
     employer.save()
     return redirect('admins:gestionnaire_inactifs')
 
 
+@login_required(login_url='Connexion')
 def desactive_amp(request, employer_id):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     employer = get_object_or_404(Utilisateur, id=employer_id)
     employer.is_active = False
     employer.save()
@@ -80,6 +93,7 @@ def desactive_amp(request, employer_id):
     return redirect('admins:Compte_gestionnaire')
 
 
+@login_required(login_url='Connexion')
 def gestionnaire_a_search(request):
     form = VehiculSearchForm(request.GET)
     gestionnaire = Utilisateur.objects.filter(roles__role='GESTIONNAIRE').exclude(is_active=False)
@@ -99,6 +113,7 @@ def gestionnaire_a_search(request):
     return render(request, 'tous_les_gestionnaires.html', context)
 
 
+@login_required(login_url='Connexion')
 def gestionnaire_a_search_i(request):
     form = VehiculSearchForm(request.GET)
     gestionnaire = Utilisateur.objects.filter(roles__role='GESTIONNAIRE').exclude(is_active=True)
@@ -118,7 +133,10 @@ def gestionnaire_a_search_i(request):
     return render(request, 'tous_les_gestionnairess.html', context)
 
 
+@login_required(login_url='Connexion')
 def Ajouter_Carburant(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = typeCarburantForm(request.POST)
         print(request.POST.get("nom"))
@@ -152,7 +170,10 @@ def Ajouter_Carburant(request):
     return render(request, 'enregistrer_carburant.html', {'form': form})
 
 
+@login_required(login_url='Connexion')
 def liste_Carburant(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     carburant_list = (
         type_carburant.objects.all()
         .annotate(hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField()))
@@ -172,6 +193,7 @@ def liste_Carburant(request):
     return render(request, 'afficher_carburant.html', {'carburants': carburants})
 
 
+@login_required(login_url='Connexion')
 def Carburant_search(request):
     form = CarburantSearchForm(request.GET)
     carburant = type_carburant.objects.all()
@@ -198,7 +220,10 @@ def Carburant_search(request):
     return render(request, 'afficher_carburant.html', context)
 
 
+@login_required(login_url='Connexion')
 def dashboard_admins(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
     aujourd_hui = date.today()
     nombre_deplacements_en_cours = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
@@ -210,7 +235,7 @@ def dashboard_admins(request):
     nombre_incidents = incidents_interne + incidents_externe
     vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
     vehicles = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
-    vehicules=Vehicule.objects.all()
+    vehicules = Vehicule.objects.all()
     labels = [f"{vehicle.marque} {vehicle.type_commercial}" for vehicle in vehicles]
     mois = date.today().month
     mois_ = _(calendar.month_name[int(mois)])
@@ -235,9 +260,7 @@ def dashboard_admins(request):
             id__in=deplacements_etat_arrive_ids
         ).count()
         if total_deplacements_mois:
-            print(vehicle)
             deplacements_par_vehicule.append({'vehicle': vehicle, 'total_deplacements_mois': total_deplacements_mois})
-
 
     context = {
         'labels_circ': label,
@@ -256,7 +279,10 @@ def dashboard_admins(request):
     return render(request, 'dashoard_admins.html', context)
 
 
+@login_required(login_url='Connexion')
 def rapport_depense_admins(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         return courbe_depense_global(request)
     vehicule = Vehicule.objects.all()
@@ -264,7 +290,10 @@ def rapport_depense_admins(request):
     return render(request, 'rapport_depense.html', context)
 
 
+@login_required(login_url='Connexion')
 def rapport_depense_mensuel_admins(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         return courbe_depense_mensuel(request)
     vehicule = Vehicule.objects.all()
@@ -272,7 +301,10 @@ def rapport_depense_mensuel_admins(request):
     return render(request, 'rapport_depense_mensuel.html', context)
 
 
+@login_required(login_url='Connexion')
 def rapport_carburant_mensuel_admins(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         return rapport_carburant_mensuel(request)
     else:
@@ -281,7 +313,10 @@ def rapport_carburant_mensuel_admins(request):
         return render(request, 'rapport_carburant_mensuel.html', context)
 
 
+@login_required(login_url='Connexion')
 def rapport_incident_conducteur_mensuel_admins(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         return courbe_incident_conducteur_mensuel(request)
     conducteurs = Conducteur.objects.all()
@@ -795,7 +830,10 @@ def rapport_depense_pdf(request):
         return response
 
 
+@login_required(login_url='Connexion')
 def CustomPasswordResetConfirmView(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         username = request.POST.get('username')
         passe = request.POST.get('new_password')
@@ -823,7 +861,10 @@ def CustomPasswordResetConfirmView(request):
         return render(request, 'reinitialiser.html')
 
 
+@login_required(login_url='Connexion')
 def ChangerMotDePasse_admin(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = ChangerMotDePasse(request.user, request.POST)
         if request.user.check_password(request.POST.get('passe')):
@@ -1124,7 +1165,10 @@ def rapport_carburant_mensuel_pdf(request):
         return response
 
 
+@login_required(login_url='Connexion')
 def rapport_carburant_mensuel(request):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         mois = request.POST.get('mois')
         mois_lettre = _(calendar.month_name[int(mois)])
