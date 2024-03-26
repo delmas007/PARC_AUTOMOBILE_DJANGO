@@ -450,7 +450,7 @@ def sendIncident(request):
 
 @login_required(login_url='utilisateur:connexion_user')
 def ChangerMotDePassee(request):
-    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = ChangerMotDePasse(request.user, request.POST)
