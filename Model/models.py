@@ -246,6 +246,12 @@ class Demande_prolongement(models.Model):
     def ajout(self):
         return self.deplacement.date_fin() + timedelta(days=self.duree)
 
+    def date_fin(deplacement):
+        if deplacement.date_depart:
+            return deplacement.date_depart + timedelta(days=self.duree_deplacement)
+        else:
+            return None
+
     @property
     def time_since_reponse(self):
         if self.date_reponse:

@@ -2,10 +2,6 @@
 {% load static %}
 {% block content %}
     <style>
-
-        .modal-dialog.modal-custom .modal-content {
-            width: 100%;
-        }
         .no-requests p:first-child {
             margin-bottom: 5px;
             font-size: 1.1em;
@@ -14,13 +10,7 @@
             margin-top: 5px;
             font-weight: bold;
             color: #007bff;
-        }ponse-demande-accepted {
-                     background-color: #d4edda;
-                     border: 2px solid #28a745;
-                     background-color: #e2e3e5;
-                     border-radius: 8px;
-                     font-
-                 }
+        }
         .notification-icon i {
             color: #39399b;
             font-size: 25px;
@@ -92,7 +82,7 @@
             <div  style="overflow-y: auto">
                 {% if prolongements_non_lus %}
                     {% for prolongement in prolongements_non_lus %}
-                        <div class="notifi-item" id="accepte_{{ prolongement.id }}" onclick="dismissNotification('{{ prolongement.id }}')">
+                        <div class="notifi-item" id="accepte_{{ prolongement.id }}">
                             <div class="post notif">
                                 <div class="user-blo">
                                     <span class="username">
@@ -125,10 +115,10 @@
                                     <li style="color: #555;">
                                         La demande de prolongement que vous avez effectuée le {{ prolongement_details.date_mise_a_jour }} pour une durée de  {{ prolongement_details.duree }} jours
                                         qui a pour motif "{{ prolongement_details.motif }}" a été
-                                        {% if prolongement_details.accepter %}
-                                            <span style="color: green;">acceptée</span>. Votre déplacement prendra fin le {{ prolongement_details.date_fin }}.
-                                        {% elif prolongement_details.refuser %}
-                                            <span style="color: red;">refusée</span>. Votre déplacement prendra fin le {{ prolongement_details.ajout }}.
+                                        {% if prolongement_details.refuser %}
+                                            <span style="color: red;">refusée</span>. Votre déplacement prendra fin le {{ prolongement_details.deplacement.date_fin }}.
+                                        {% elif prolongement_details.accepter %}
+                                            <span style="color: green;">acceptée</span>. Votre déplacement prendra fin le {{ prolongement_details.ajout }}.
                                         {% endif %}
                                     </li>
                                 </ul>
@@ -140,76 +130,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function dismissNotification(id) {
-            fetch("{% url 'utilisateur:dismiss_notification' %}?prolongement_id=" + id)
-                .then(response => {
-                    if (response.ok) {
-                        var notification = document.getElementById('accepte_' + id);
-                        if (notification) {
-                            notification.style.display = 'none';
-                            var badge = document.querySelector('.badge');
-                            if (badge) {
-                                var count = parseInt(badge.innerText);
-                                if (!isNaN(count) && count > 0) {
-                                    badge.innerText = count - 1;
-                                }
-                            }
-                        }
-                        window.location.href = "{% url 'utilisateur:prolongement_lu_details' %}?prolongement_id=" + id;
-                    }
-                    else {
-                        console.error("Erreur lors de la suppression de la notification");
-                    }
-                })
-                .catch(error => console.error("Erreur lors de la suppression de la notification:", error));
-        }
-    </script>
-    <script>
-        function preventZoom() {
-            document.body.addEventListener('gesturestart', function(e) {
-                e.preventDefault();
-            });
-
-            document.body.addEventListener('touchmove', function(e) {
-                if (e.scale !== 1) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-        }
-        preventZoom();
-
-    </script>
-    <script>
-        function loadEnteteContent(url) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    document.getElementById('entete-container').innerHTML = xhr.responseText;
-                } else {
-                    console.error('Erreur de chargement de l\'entête: ' + xhr.statusText);
-                }
-            };
-            xhr.send();
-        }
-        document.querySelectorAll('.entete__link').forEach(function (link) {
-            link.addEventListener('click', function (event) {
-                event.preventDefault();
-                var url = link.getAttribute('href');
-                loadEnteteContent(url);
-            });
-        });
-    </script>
-    <script>
-        function goBackAndReload() {
-            window.history.back();
-            setTimeout(function() {
-                window.location.reload();
-            }, 500);
-        }
-    </script>
 
     {% include 'footer_conducteur.html' %}
     </body>

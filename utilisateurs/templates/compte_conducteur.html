@@ -442,7 +442,11 @@
                                                     <div class="card card-outline">
                                                         <div class="card-body ">
                                                             <div class="text-center">
-                                                                <img class=" img-fluid" src="{% static 'img/1.png' %}" alt="User  picture" style="max-height: 10ch;">
+                                                                {% for photo in photo_vehicules %}
+                                                                    {% if photo.vehicule == mission.vehicule %}
+                                                                        <img src="{{ photo.images.url }}" alt="Image du véhicule">
+                                                                    {% endif %}
+                                                                {% endfor %}
                                                             </div>
                                                             <p class="text-muted text-center h6">Le deplacement prendra
                                                                 fin normalement le
@@ -538,8 +542,11 @@
                                             </div>
                                             <div class="card-body box-profile" style="margin-right: 25px">
                                                 <div class="text-center">
-                                                    <img class=" img-fluid" src="{% static 'img/1.png' %}"
-                                                         alt="User  picture" style="max-height: 10ch;">
+                                                    {% for photo_vehicule in photo_vehicules %}
+                                                        {% if photo_vehicule.deplacement_id == deplacement.id %}
+                                                                <img src="{{ photo_vehicule.images.url }}" alt="Image du véhicule">
+                                                        {% endif %}
+                                                    {% endfor %}
                                                 </div>
                                                 <p class="text-muted text-center h6">Le deplacement prendra fin normalement le {{ deplacement.date_fin }}</p>
                                                 <ul class="list-group list-group-unbordered mb-3">
