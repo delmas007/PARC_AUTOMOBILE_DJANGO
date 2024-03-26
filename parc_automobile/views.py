@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers import serialize
 from django.db.models import Subquery, Q, ExpressionWrapper, F, fields
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from Model.models import Demande_prolongement, EtatArrive, Conducteur, Vehicule, Deplacement, Utilisateur
 from Model.models import Incident
@@ -14,6 +14,8 @@ from Model.models import Incident
 
 @login_required(login_url='Connexion')
 def Accueil(request):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
     aujourd_hui = date.today()
     incidents_externe = Incident.objects.filter(conducteur_id__isnull=False).count()

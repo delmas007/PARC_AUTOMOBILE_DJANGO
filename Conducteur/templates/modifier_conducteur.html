@@ -100,16 +100,25 @@
 
     let today = new Date();
     let dd = 31;
-    let mm = 12 //January is 0!
+    let mm = 12
     let yyyy = today.getFullYear()-18;
     let years = today.getFullYear();
 
     today = yyyy + '-' + mm + '-' + dd;
-    todays = years + '-' + mm + '-' + dd;
 
-    // Set the minimum date for date_expiration_assurance input
+
+
     document.getElementById("date_de_naissance").max = today;
-    document.getElementById("date_embauche").max = todays;
+
+
+     let todays = new Date();
+        let day = String(todays.getDate()).padStart(2, '0');
+        let month = String(todays.getMonth() + 1).padStart(2, '0');
+        let year = todays.getFullYear();
+
+        todays = year + '-' + month + '-' + day;
+
+        document.getElementById("date_embauche").max = todays;
 
 </script>
 
