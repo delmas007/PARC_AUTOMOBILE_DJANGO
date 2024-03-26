@@ -7,12 +7,11 @@ from Model.models import Carburant
 class AjouterCarburantForm(forms.ModelForm):
     class Meta:
         model = Carburant
-        fields = ['vehicule', 'type', 'quantite']
+        fields = ['vehicule', 'quantite']
 
     def __init__(self, *args, **kwargs):
         super(AjouterCarburantForm, self).__init__(*args, **kwargs)
         self.fields['vehicule'].widget.attrs.update({'class': 'form-control', 'id': 'selectVehicule'})
-        self.fields['type'].widget.attrs.update({'class': 'form-control', 'id': 'selectType'})
         self.fields['quantite'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter le litre de carburant', 'min': '1', 'required': 'required'})
 
     def clean_quantite(self):
@@ -23,12 +22,11 @@ class AjouterCarburantForm(forms.ModelForm):
 class ModifierCarburantForm(forms.ModelForm):
     class Meta:
         model = Carburant
-        fields = ['vehicule', 'type', 'quantite']
+        fields = ['vehicule', 'quantite']
 
     def __init__(self, *args, **kwargs):
         super(ModifierCarburantForm, self).__init__(*args, **kwargs)
         self.fields['vehicule'].widget.attrs.update({'class': 'form-control', 'id': 'selectVehicule'})
-        self.fields['type'].widget.attrs.update({'class': 'form-control', 'id': 'selectType'})
         self.fields['quantite'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ajouter le litre de carburant ', 'min': '1', 'required': 'required'})
 
     def clean_quantite(self):

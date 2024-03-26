@@ -2,10 +2,11 @@ from urllib import request
 
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Q, ExpressionWrapper, F, fields
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
-from Model.models import Carburant
+from Model.models import Carburant, Vehicule
 from carburant.forms import ModifierCarburantForm, AjouterCarburantForm, CarburantSearchForm
 
 
@@ -13,11 +14,27 @@ from carburant.forms import ModifierCarburantForm, AjouterCarburantForm, Carbura
 def Ajouter_carburant(request):
     if request.method == 'POST':
         form = AjouterCarburantForm(request.POST)
+
         if form.is_valid():
-            carburant = form.save(
-                commit=False)  # Je Récupere les données du formulaire sans les sauvegarder immédiatement
+            carburant = form.save(commit=False)
             carburant.utilisateur = request.user
-            carburant.prix_total = carburant.quantite * carburant.type.prix  # Je Calculer le prix total
+
+            # Récupérer l'objet Véhicule associé au formulaire
+            vehicule = form.cleaned_data.get('vehicule')
+
+
+            if isinstance(vehicule, Vehicule):
+                vehicule_id = vehicule.id
+            else:
+                return HttpResponseBadRequest("Véhicule non valide.")
+
+            carburant.vehicule_id = vehicule_id
+
+            type_carburant = vehicule.energie
+
+            prix_carburant = type_carburant.prix
+            carburant.type = type_carburant
+            carburant.prix_total = carburant.quantite * prix_carburant
             carburant.save()
 
             messages.success(request, 'Enregistrement des coûts liés au carburant !')
@@ -25,9 +42,7 @@ def Ajouter_carburant(request):
     else:
         form = AjouterCarburantForm()
 
-    context = {
-        'form': form,
-    }
+    context = {'form': form}
 
     return render(request, 'Ajouter_carburant.html', context)
 
@@ -139,3 +154,17 @@ def carburant_search(request):
 def details_carburant(request, pk):
     carburant = get_object_or_404(Carburant, id=pk)
     return render(request, 'carburant_details.html', {'carburant': carburant})
+
+
+def get_TypeCarburant(request):
+    vehicule_id = request.GET.get('vehicule_id')
+    if vehicule_id:
+        try:
+            vehicule = Vehicule.objects.get(pk=vehicule_id)
+            Type_de_carburant = vehicule.energie.nom
+            return JsonResponse({'Type_de_carburant': Type_de_carburant})
+        except Vehicule.DoesNotExist:
+            return JsonResponse({'error': 'Véhicule non trouvé'}, status=404)
+    else:
+        return JsonResponse({'error': 'ID de véhicule non fourni'}, status=400)
+
