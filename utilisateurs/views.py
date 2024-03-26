@@ -275,6 +275,7 @@ def erreur(request):
 def liste_mission(request):
     if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
         return redirect('utilisateur:erreur')
+
     prolongement = Demande_prolongement.objects.filter(accepter=True)
     prolongement_encours = Demande_prolongement.objects.filter(en_cours=True)
     prolongement_accepter = Demande_prolongement.objects.filter(accepter=True)
@@ -288,11 +289,19 @@ def liste_mission(request):
     deplacements_arrives_ids = EtatArrive.objects.values('deplacement_id')
     mission_list = Deplacement.objects.exclude(id__in=Subquery(deplacements_arrives_ids)).filter(
         conducteur_id=conducteur_actif_id).order_by('date_depart')
+    first_images = []
+
+    for deplacement in mission_list:
+        first_image = Photo.objects.filter(deplacement=deplacement).first()
+        if first_image:
+            first_images.append(first_image)
+            print(first_image)
+
     return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui,
                                                       'prolongement_encours': prolongement_encours_ids,
                                                       'prolongement_accepter': prolongement_accepter_ids,
                                                       'prolongement_refuse': prolongement_refuse_ids,
-                                                      'prolongement': prolongement, })
+                                                      'prolongement': prolongement, 'photo_vehicules': first_images})
 
 
 def dismiss_notification(request):
