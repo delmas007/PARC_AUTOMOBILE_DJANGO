@@ -19,25 +19,28 @@
         <div id="content-page" class="content-page">
             <div class="container-fluid">
                 <div class="row d-flex justify-content-center">
-                    <div class="col-sm-12 col-lg-6  ">
+                    <div class="col-sm-12 col-lg-7" style="margin-top: 50px">
                         <div class="iq-card">
-                            <div class="iq-card-header d-flex justify-content-between">
-                                <div class="iq-header-title">
-                                    <h4 class="card-title">Modifier prix du carburant</h4>
+                            <div class="card-header">
+                                <div class="iq-card-header d-flex justify-content-between">
+                                    <div class="iq-header-title">
+                                        <h2 class="card-title">Modifier le prix du carburant <i class="bi bi-fuel-pump"></i></h2>
+                                    </div>
                                 </div>
                             </div>
+
                             <div class="iq-card-body">
                                 <form class="form-horizontal" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">nom du carburant :</label>
-                                        <div class="col-sm-10">
+                                        <label class="control-label col-sm-3 align-self-center mb-0" for="email">Nom du carburant :</label>
+                                        <div class="col-sm-9">
                                          {{ form.nom }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email"> Prix du carburant :</label>
-                                        <div class="col-sm-10">
+                                        <label class="control-label col-sm-3 align-self-center mb-0" for="email"> Prix du carburant (F CFA) :</label>
+                                        <div class="col-sm-9">
                                             <input type="number" class="form-control" id="exampleInputdate"  min="1" name="prix">
                                         </div>
                                     </div>

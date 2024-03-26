@@ -207,4 +207,17 @@
       <!-- Footer -->
       {% include 'footer.html' %}
    </body>
+     <script>
+        // Bloquer le calendrier à la date du jour
+        let today = new Date();
+        let date = String(today.getDate()).padStart(2, '0');
+        let month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let year = today.getFullYear();
+
+        today = year + '-' + month + '-' + date;
+
+        // Mettre le minimum de l'input des dates
+        document.getElementById("date_expiration_assurance").min = today;
+        document.getElementById("date_visite_technique").min = today;
+    </script>
 {% endblock %}

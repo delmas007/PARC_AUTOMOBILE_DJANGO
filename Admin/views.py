@@ -60,15 +60,43 @@ def inscription(request):
 def employer_compte(request):
     if not request.user.roles or request.user.roles.role != 'ADMIN':
         return redirect('utilisateur:erreur')
-    gestionnaires = Utilisateur.objects.filter(roles__role__in=[Roles.GESTIONNAIRE], is_active=True)
+
+    gestionnaires = (
+        Utilisateur.objects.filter(roles__role__in=[Roles.GESTIONNAIRE], is_active=True).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())).order_by('-hour')
+        )
+
+    paginator = Paginator(gestionnaires, 4)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        gestionnaires = paginator.page(page)
+    except EmptyPage:
+        gestionnaires = paginator.page(paginator.num_pages())
 
     return render(request, 'tous_les_gestionnaires.html', {'gestionnaires': gestionnaires})
 
 
+@login_required(login_url='Connexion')
 def gestionnaire_inactifs(request):
     if not request.user.roles or request.user.roles.role != 'ADMIN':
         return redirect('utilisateur:erreur')
-    gestionnaires2 = Utilisateur.objects.filter(roles__role__in=[Roles.GESTIONNAIRE], is_active=False)
+
+    gestionnaires2 = (
+        Utilisateur.objects.filter(roles__role__in=[Roles.GESTIONNAIRE], is_active=False).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())).order_by('-hour')
+        )
+
+    paginator = Paginator(gestionnaires2, 4)
+    try:
+        page = request.GET.get("page")
+        if not page:
+            page = 1
+        gestionnaires2 = paginator.page(page)
+    except EmptyPage:
+        gestionnaires2 = paginator.page(paginator.num_pages())
+
     return render(request, 'tous_les_gestionnairess.html', {'gestionnaires2': gestionnaires2})
 
 
