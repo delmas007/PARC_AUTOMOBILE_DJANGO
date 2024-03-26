@@ -86,7 +86,7 @@
                                                         <td>{{ item.incident.description_incident|truncatewords:8|title}}</td>
                                                         <td>
                                                             <div class="flex align-items-center list-user-action">
-                                                                <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'incident:incident_externe_detail' item.incident.pk  %}" ><i class="ri-eye-line"></i></a>
+                                                                <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'admins:incident_externe_detail_admin' item.incident.pk  %}" ><i class="ri-eye-line"></i></a>
 
                                                             </div>
                                                         </td>

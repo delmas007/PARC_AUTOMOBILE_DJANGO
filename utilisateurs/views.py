@@ -257,12 +257,16 @@ def passwordResetConfirm(request, uidb64, token):
     return redirect("Accueil")
 
 
-@login_required(login_url='utilisateur:connexion_user')
 def erreur(request):
-    if request.user.roles.role == 'CONDUCTEUR':
-        redirect_url = reverse('utilisateur:connexion_user')
+    if request.user.is_authenticated:
+        if request.user.roles.role == 'CONDUCTEUR':
+            redirect_url = reverse('utilisateur:connexion_user')
+        elif request.user.roles.role == 'GESTIONNAIRE':
+            redirect_url = reverse('Accueil')
+        elif request.user.roles.role == 'ADMIN':
+            redirect_url = reverse('admins:dashboard_admins')
     else:
-        redirect_url = reverse('Accueil')
+        redirect_url = reverse('utilisateur:erreur')
 
     return render(request, 'erreur.html', {'redirect_url': redirect_url})
 
@@ -486,6 +490,7 @@ def ChangerMotDePasseConducteur(request):
             messages.error(request, "Le mot de passe actuel est incorrect.")
     form = ChangerMotDePasse(request.user)
     return render(request, 'compte_conducteur.html', {'form': form})
+
 
 @login_required(login_url='Connexion')
 def ProfilUser(request):

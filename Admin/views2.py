@@ -2,12 +2,12 @@ import calendar
 from datetime import date, datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q, ExpressionWrapper, fields, F, Sum, Subquery
 from django.utils.translation import gettext as french
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from Model.models import Vehicule, Carburant, Entretien, Incident, Conducteur, EtatArrive, Photo
+from Model.models import Vehicule, Carburant, Entretien, Incident, Conducteur, EtatArrive, Photo, Deplacement
 
 
 @login_required(login_url='Connexion')
@@ -202,6 +202,19 @@ def liste_deplacement_arrive_admin(request):
 
 
 @login_required(login_url='Connexion')
+def details_arriver_admin(request, etatarrive_id):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
+    etat_arrive = get_object_or_404(EtatArrive, id=etatarrive_id)
+    deplacement_id = etat_arrive.deplacement.id
+    deplacement = get_object_or_404(Deplacement, id=deplacement_id)
+    image = Photo.objects.filter(etat_arrive=etatarrive_id)
+    images = Photo.objects.filter(deplacement=deplacement_id)
+    return render(request, 'arriver_details_admin.html',
+                  {'etat_arrive': etat_arrive, 'deplacement': deplacement, 'image': image, 'images': images})
+
+
+@login_required(login_url='Connexion')
 def liste_incidents_externe_admin(request):
     if not request.user.roles or request.user.roles.role != 'ADMIN':
         return redirect('utilisateur:erreur')
@@ -249,6 +262,24 @@ def liste_incidents_interne_admin(request):
         incidents_page = paginator.page(paginator.num_pages)
 
     return render(request, 'Liste_incidents_interne_admin.html', {'incidents': incidents_page, 'paginator': paginator})
+
+
+@login_required(login_url='Connexion')
+def incident_interne_detail_admin(request, pk):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
+    incident = get_object_or_404(Incident, id=pk)
+    image = Photo.objects.filter(incident=incident)
+    return render(request, 'incident_interne_details_admin.html', {'incident': incident, 'image': image})
+
+
+@login_required(login_url='Connexion')
+def incident_externe_detail_admin(request, pk):
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
+        return redirect('utilisateur:erreur')
+    incident = get_object_or_404(Incident, id=pk)
+    image = Photo.objects.filter(incident=incident)
+    return render(request, 'incident_externe_details_admin.html', {'incident': incident, 'image': image})
 
 
 def get_latest_photo(incident):
