@@ -426,110 +426,7 @@
                                 <div>
                                     <h3>Liste des missions</h3>
                                 </div>
-                                {% if mission and prolongement %}
-                                    {% for deplacement in mission %}
-                                        {% for prolongements in prolongement %}
-                                            <div class="card card-primary card-outline direct-chat direct-chat-primary">
-                                                <div class="card-header">
-                                                    <h3 class="card-title">Deplacement {{ deplacement.id }}</h3>
-                                                    <div class="card-tools">
-                                                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body box-profile" style="margin-right: 25px">
-                                                    <div class="card card-outline">
-                                                        <div class="card-body ">
-                                                            <div class="text-center">
-                                                                {% for photo in photo_vehicules %}
-                                                                    {% if photo.vehicule == mission.vehicule %}
-                                                                        <img src="{{ photo.images.url }}" alt="Image du véhicule">
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </div>
-                                                            <p class="text-muted text-center h6">Le deplacement prendra
-                                                                fin normalement le
-                                                                {% if deplacement.id not in prolongement_encours and deplacement.id not in prolongement_refuse and deplacement.id not in prolongement_accepter %}
-                                                                    {{ deplacement.date_fin }}
-                                                                {% elif deplacement.id not in prolongement_encours and deplacement.id not in prolongement_refuse and deplacement.id in prolongement_accepter %}
-                                                                    {{ prolongements.ajout }}
-                                                                {% endif %}
-                                                            </p>
-                                                            <ul class="list-group list-group-unbordered mb-3">
-                                                                <li class="list-group-item">
-                                                                    <div class="row">
-                                                                        <div class="col-4"><b>Vehicule</b></div>
-                                                                        <div class="col"><a
-                                                                                class="float-right text-primary">{{ deplacement.vehicule }}</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    <div class="row">
-                                                                        <div class="col-4"><b>Date depart</b></div>
-                                                                        <div class="col"><a
-                                                                                class="float-right text-primary">{{ deplacement.date_depart }}</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    <div class="row">
-                                                                        <div class="col-4"><b>Durée</b></div>
-                                                                        <div class="col"><a
-                                                                                class="float-right text-primary">
-                                                                            {% if prolongements.deplacement.id == deplacement.id %}
-                                                                                {{ deplacement.duree_deplacement|add:prolongements.duree }}
-                                                                            {% else %}
-                                                                                {{ deplacement.duree_deplacement }}
-                                                                            {% endif %}
-                                                                        </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    <div class="row">
-                                                                        <div class="col-4"><b>Kilometrage</b></div>
-                                                                        <div class="col"><a
-                                                                                class="float-right text-primary">{{ deplacement.kilometrage_depart }}
-                                                                            Km/h</a></div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                            {% if deplacement.date_depart <= date_aujourdui %}
-                                                                {% if deplacement.id not in prolongement_encours and deplacement.id not in prolongement_refuse and deplacement.id not in prolongement_accepter %}
-                                                                    <button style="background-color: blueviolet; color: aliceblue;"
-                                                                            type="button"
-                                                                            class="btn mb-3 btn-info terminer-btn"
-                                                                            data-target="#modal_incident_2"
-                                                                            onclick="ouvrirModal1(this)"
-                                                                            data-deplacement-id="{{ deplacement.id }}"
-                                                                            data-vehicules-id="{{ deplacement.vehicule.id }}">
-                                                                        <b>Demander prolongement</b>
-                                                                    </button>
-                                                                {% elif deplacement.id in prolongement_encours and deplacement.id not in prolongement_refuse and deplacement.id not in prolongement_accepter %}
-                                                                    <span style="border:none; background-color: #2db92f; color: white; cursor: auto"
-                                                                          class="btn mb-3 btn-infot">
-                                                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                                            fill="currentColor" class="bi bi-file-check-fill"
-                                                                            viewBox="0 0 16 16">
-                                                                            <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m-1.146 6.854-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
-                                                                        </svg>
-                                                                         Demande déja faites
-                                                                     </span>
-                                                                {% elif deplacement.id not in prolongement_encours and deplacement.id  in prolongement_refuse or  deplacement.id  in prolongement_accepter %}
-                                                                    <div class="response-message">
-                                                                        <p class="message-text">Une réponse a été envoyée concernant votre demande. Veuillez consulter "Demande".</p>
-                                                                    </div>
-                                                                {% endif %}
-                                                            {% endif %}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    {% endfor %}
-                                {% elif mission %}
+                                {% if mission %}
                                     {% for deplacement in mission %}
                                         <div class="card card-primary card-outline direct-chat direct-chat-primary">
                                             <div class="card-header">
@@ -544,7 +441,7 @@
                                                 <div class="text-center">
                                                     {% for photo_vehicule in photo_vehicules %}
                                                         {% if photo_vehicule.deplacement_id == deplacement.id %}
-                                                                <img src="{{ photo_vehicule.images.url }}" alt="Image du véhicule">
+                                                            <img src="{{ photo_vehicule.images.url }}" alt="Image du véhicule">
                                                         {% endif %}
                                                     {% endfor %}
                                                 </div>
