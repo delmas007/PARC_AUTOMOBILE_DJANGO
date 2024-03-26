@@ -124,7 +124,11 @@ def desactive_amp(request, employer_id):
 @login_required(login_url='Connexion')
 def gestionnaire_a_search(request):
     form = VehiculSearchForm(request.GET)
-    gestionnaire = Utilisateur.objects.filter(roles__role='GESTIONNAIRE').exclude(is_active=False)
+
+    gestionnaire = (
+        Utilisateur.objects.filter(roles__role='GESTIONNAIRE').exclude(is_active=False).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())).order_by('-hour')
+        )
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -133,9 +137,18 @@ def gestionnaire_a_search(request):
                                                Q(email__icontains=query) |
                                                Q(prenom__icontains=query))
 
+        paginator = Paginator(gestionnaire, 4)
+        try:
+            page = request.GET.get("page")
+            if not page:
+                page = 1
+            gestionnaire = paginator.page(page)
+        except EmptyPage:
+            gestionnaire = paginator.page(paginator.num_pages())
+
         context = {'gestionnaires': gestionnaire, 'form': form}
         # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
-        if not gestionnaire.exists() and form.is_valid():
+        if not gestionnaire and form.is_valid():
             context['no_results'] = True
 
     return render(request, 'tous_les_gestionnaires.html', context)
@@ -144,7 +157,11 @@ def gestionnaire_a_search(request):
 @login_required(login_url='Connexion')
 def gestionnaire_a_search_i(request):
     form = VehiculSearchForm(request.GET)
-    gestionnaire = Utilisateur.objects.filter(roles__role='GESTIONNAIRE').exclude(is_active=True)
+
+    gestionnaire = (
+        Utilisateur.objects.filter(roles__role='GESTIONNAIRE').exclude(is_active=True).annotate(
+            hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())).order_by('-hour')
+        )
 
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -153,9 +170,18 @@ def gestionnaire_a_search_i(request):
                                                Q(email__icontains=query) |
                                                Q(prenom__icontains=query))
 
+        paginator = Paginator(gestionnaire, 4)
+        try:
+            page = request.GET.get("page")
+            if not page:
+                page = 1
+            gestionnaire = paginator.page(page)
+        except EmptyPage:
+            gestionnaire = paginator.page(paginator.num_pages())
+
         context = {'gestionnaires2': gestionnaire, 'form': form}
         # Ajoutez la logique pour gérer les cas où aucun résultat n'est trouvé
-        if not gestionnaire.exists() and form.is_valid():
+        if not gestionnaire and form.is_valid():
             context['no_results'] = True
 
     return render(request, 'tous_les_gestionnairess.html', context)
