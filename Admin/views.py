@@ -1175,6 +1175,7 @@ def rapport_carburant_mensuel(request):
         annee = request.POST.get('annee')
         vehicules_ids_with_carburant = Carburant.objects.values('vehicule_id').distinct()
         vehicule = Vehicule.objects.filter(id__in=Subquery(vehicules_ids_with_carburant))
+        voiture = Vehicule.objects.all()
         labels = [f"{vehicle}" for vehicle in vehicule]
         fuel_data = [vehicle.total_carburant(mois, annee) for vehicle in vehicule]
         quantites = [data['quantite'] for data in fuel_data]
@@ -1184,7 +1185,7 @@ def rapport_carburant_mensuel(request):
             'labels': labels,
             'quantites': quantites,
             'prix': prix,
-            'vehicules': vehicule,
+            'vehicules': voiture,
             'mois': mois_lettre,
             'annee': annee
         }

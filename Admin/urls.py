@@ -9,7 +9,8 @@ from Admin.views import inscription, employer_compte, active_emp, desactive_amp,
     CustomPasswordResetConfirmView, ChangerMotDePasse_admin, rapport_carburant_mensuel_pdf, \
     rapport_carburant_mensuel_admins, rapport_incident_conducteur_mensuel_admins, \
     rapport_incident_conducteur_mensuel_pdf
-from Admin.views2 import liste_deplacement_arrive_admin, liste_incidents_interne_admin, liste_incidents_externe_admin
+from Admin.views2 import liste_deplacement_arrive_admin, liste_incidents_interne_admin, liste_incidents_externe_admin, \
+    details_arriver_admin, incident_interne_detail_admin, incident_externe_detail_admin
 
 app_name = 'admins'
 
@@ -43,5 +44,8 @@ urlpatterns = [
     path('rapport_incident_vehicule_mensuel_admins/', rapport_incident_vehicule_mensuel_admins, name='rapport_incident_vehicule_mensuel_admins'),
     path('rapport_incident_vehicule_mensuel-pdf/', rapport_incident_vehicule_mensuel_pdf, name='rapport_incident_vehicule_mensuel_pdf'),
     path('Profil-Admin/', ProfilAdmin, name='ProfilAdmin'),
+    path('details_arriver_admin/<int:etatarrive_id>/', details_arriver_admin, name='details_arriver_admin'),
+    path('detail_incidents_interne-<int:pk>/', incident_interne_detail_admin, name='incident_interne_detail_admin'),
+    path('detail_incidents_externe-<int:pk>/', incident_externe_detail_admin, name='incident_externe_detail_admin'),
 
 ]

@@ -14,7 +14,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.encoding import force_str, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_protect
@@ -164,21 +164,21 @@ def inscription_user(request):
     return render(request, 'connexion_user.html', context=context)
 
 
-def Connexion_user(request):
-    if request.user.is_authenticated:
-        return redirect('utilisateur:liste_mission')
+class Connexion_user(LoginView):
+    template_name = 'connexion_user.html'
 
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
+    def get_success_url(self):
+        return reverse_lazy('utilisateur:liste_mission')
+
+    def form_valid(self, form):
+        user = form.get_user()
+        login(self.request, user)
+        return super().form_valid(form)
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
             return redirect('utilisateur:liste_mission')
-        else:
-            pass
-
-    return render(request, 'connexion_user.html')
+        return super().get(request, *args, **kwargs)
 
 
 @login_required(login_url='utilisateur:connexion_user')
@@ -257,12 +257,16 @@ def passwordResetConfirm(request, uidb64, token):
     return redirect("Accueil")
 
 
-@login_required(login_url='utilisateur:connexion_user')
 def erreur(request):
-    if request.user.roles.role == 'CONDUCTEUR':
-        redirect_url = reverse('utilisateur:connexion_user')
+    if request.user.is_authenticated:
+        if request.user.roles.role == 'CONDUCTEUR':
+            redirect_url = reverse('utilisateur:connexion_user')
+        elif request.user.roles.role == 'GESTIONNAIRE':
+            redirect_url = reverse('Accueil')
+        elif request.user.roles.role == 'ADMIN':
+            redirect_url = reverse('admins:dashboard_admins')
     else:
-        redirect_url = reverse('Accueil')
+        redirect_url = reverse('utilisateur:erreur')
 
     return render(request, 'erreur.html', {'redirect_url': redirect_url})
 
@@ -486,6 +490,7 @@ def ChangerMotDePasseConducteur(request):
             messages.error(request, "Le mot de passe actuel est incorrect.")
     form = ChangerMotDePasse(request.user)
     return render(request, 'compte_conducteur.html', {'form': form})
+
 
 @login_required(login_url='Connexion')
 def ProfilUser(request):

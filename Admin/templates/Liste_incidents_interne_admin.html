@@ -86,8 +86,7 @@
                                                <td>{{ item.incident.description_incident|truncatewords:8|title}}</td>
                                                <td>
                                                    <div class="flex align-items-center list-user-action">
-                                                       <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier" href="{% url 'incident:modifier_incident_interne' item.incident.pk  %}"><i class="ri-pencil-line"></i></a>
-                                                       <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'incident:incident_interne_detail' item.incident.pk  %}" ><i class="ri-eye-line"></i></a>
+                                                       <a class="zoom-on-hover iq-bg-secondary" data-toggle="tooltip" data-placement="top" title="" href="{% url 'admins:incident_interne_detail_admin' item.incident.pk  %}" ><i class="ri-eye-line"></i></a>
 
                                                    </div>
                                                </td>
