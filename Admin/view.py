@@ -27,7 +27,7 @@ def rapport_entretien_mensuel_admins(request):
 
 @login_required(login_url='Connexion')
 def rapport_incident_vehicule_mensuel_admins(request):
-    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+    if not request.user.roles or request.user.roles.role != 'ADMIN':
         return redirect('utilisateur:erreur')
     if request.method == 'POST':
         return courbe_incident_vehicule_mensuel(request)
