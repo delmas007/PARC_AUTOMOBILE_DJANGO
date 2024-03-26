@@ -39,7 +39,8 @@
          <div id="content-page" class="content-page">
             <div class="container-fluid">
                <div class="row">
-                  <div class="col-sm-6 col-md-6 col-lg-2">
+
+                       <div  class="col-sm-6 col-md-6 col-lg-2" >
                      <div class="iq-card iq-card-block iq-card-stretch ">
                         <div class="iq-card-body">
                                 <div class="d-flex d-flex align-items-center justify-content-between">
@@ -47,11 +48,12 @@
                                        <h2>{% if nombre_vehicules %} {{nombre_vehicules}} {% else %} 0 {% endif %}</h2>
                                        <p class="fontsize-sm m-0">Nombre de voitures</p>
                                    </div>
-                                   <div class="rounded-circle iq-card-icon dark-icon-light iq-bg-primary "> <i class="ri-roadster-line"></i></div>
+                                    <a href="{% url 'vehicule:liste_vehicules' %} "> <div class="rounded-circle iq-card-icon dark-icon-light iq-bg-primary " > <i class="ri-roadster-line" ></i></div></a>
                                 </div>
                         </div>
                      </div>
                   </div>
+
                   <div class="col-sm-6 col-md-6 col-lg-2">
                      <div class="iq-card iq-card-block iq-card-stretch ">
 
@@ -61,7 +63,7 @@
                                   <h2>{% if nombre_conducteurs %} {{nombre_conducteurs}} {% else %} 0 {% endif %}</h2>
                                   <p class="fontsize-sm m-0">Nombre de conducteurs</p>
                               </div>
-                              <div class="rounded-circle iq-card-icon iq-bg-secondary"><i class="ri-user-line"></i></div>
+                            <a href="{% url 'conducteur:tous_les_conducteurs' %}">    <div class="rounded-circle iq-card-icon iq-bg-secondary"><i class="ri-user-line"></i></div></a>
                            </div>
                          </div>
                      </div>
@@ -74,7 +76,7 @@
                                   <h2>{% if nombre_incidents %} {{nombre_incidents}} {% else %} 0 {% endif %}</h2>
                                   <p class="fontsize-sm m-0">Nombre d'incidents</p>
                               </div>
-                              <div class="rounded-circle iq-card-icon iq-bg-danger"><i class="ri-alert-line"></i></div>
+                             <div class="rounded-circle iq-card-icon iq-bg-danger"><i class="ri-alert-line"></i></div>
                            </div>
                        </div>
                      </div>
@@ -87,7 +89,7 @@
                                   <h2>{% if nombre_deplacements_en_cours %} {{nombre_deplacements_en_cours}} {% else %} 0 {% endif %}</h2>
                                   <p class="fontsize-sm m-0">Déplacements en cours</p>
                               </div>
-                              <div class="rounded-circle iq-card-icon iq-bg-info "><i class="ri-send-plane-2-fill"></i></div>
+                                <a href="{% url 'deplacement:liste_deplacement_en_cours' %}">  <div class="rounded-circle iq-card-icon iq-bg-info "><i class="ri-send-plane-2-fill"></i></div></a>
                            </div>
                        </div>
                      </div>
@@ -100,7 +102,7 @@
                                   <h2>{% if nombre_deplacement_en_attente %} {{nombre_deplacement_en_attente}} {% else %} 0 {% endif %}</h2>
                                   <p class="fontsize-sm m-0">Déplacements en attente</p>
                               </div>
-                              <div class="rounded-circle iq-card-icon iq-bg-warning "><i class="fa fa-paper-plane"></i></div>
+                        <a href="{% url 'deplacement:liste_deplacement' %}">  <div class="rounded-circle iq-card-icon iq-bg-warning "><i class="fa fa-paper-plane"></i></div></a>
                            </div>
                        </div>
                      </div>
@@ -113,7 +115,7 @@
                                   <h2>{% if nombre_deplacement_termine %} {{nombre_deplacement_termine}} {% else %} 0 {% endif %}   </h2>
                                   <p class="fontsize-sm m-0">Déplacements total</p>
                               </div>
-                              <div class="rounded-circle iq-card-icon iq-bg-success "><i class="bi bi-send-check-fill"></i></div>
+                             <a href="{% url 'deplacement:liste_deplacement_arrive' %}">    <div class="rounded-circle iq-card-icon iq-bg-success "><i class="bi bi-send-check-fill"></i></div></a>
                            </div>
                        </div>
                      </div>
