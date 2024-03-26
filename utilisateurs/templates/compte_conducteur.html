@@ -161,6 +161,7 @@
             filter: blur(4px);
         }
 
+
     </style>
     <body>
     {% url 'utilisateur:liste_mission' as liste_mission %}
@@ -707,10 +708,9 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade " id="modal_prolongement_2" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
+        <div class="modal fade " id="modal_prolongement_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" style="overflow-y: auto">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-custom" role="document">
-                <div class="modal-content">
+            <div class="modal-content" style="overflow-y: auto">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalScrollableTitle">Demande de
                             prolongement {{ deplacement.id }}</h5>
@@ -787,11 +787,10 @@
 
                 </div>
             </div>
-        </div>
-        <div class="modal fade" id="modal_incident_2" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
+        </div >
+        <div class="modal fade" id="modal_incident_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" style="overflow-y: auto">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-                <div class="modal-content">
+                <div class="modal-content" style="overflow-y: auto">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalScrollableTitle">Signalement
                             d'incident {{ deplacement.id }}</h5>
