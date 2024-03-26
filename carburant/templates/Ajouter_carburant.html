@@ -41,7 +41,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="email">Type de carburant :</label>
                                         <div class="col-sm-9 mt-3">
-                                            {{ form.type }}
+                                          <input type="text" class="form-control" id="InputTypeCarburant" name="Type_de_carburant" readonly>
 
                                         </div>
                                     </div>
@@ -145,6 +145,27 @@
         document.getElementById("exampleInputdate").min = today;
     </script>
 
+    <script>
+        // Détecter le changement dans le champ de sélection de véhicules
+        $('#selectVehicule').change(function() {
+            var vehiculeId = $(this).val(); // Récupérer l'ID du véhicule sélectionné
+            $.ajax({
+                url: '{% url "carburant:get_TypeCarburant" %}', // URL de la vue pour obtenir le kilométrage actuel
+                type: 'GET',
+                data: {
+                    vehicule_id: vehiculeId
+                },
+                success: function(response) {
+                    // Mettre à jour le champ de formulaire du kilométrage avec la valeur reçue
+                    $('#InputTypeCarburant').val(response.Type_de_carburant);
+
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(errmsg);
+                }
+            });
+        });
+    </script>
 
 
 

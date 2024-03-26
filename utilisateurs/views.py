@@ -336,6 +336,9 @@ def prolongement_lu_details(request):
         return HttpResponse("Méthode HTTP non autorisée.")
 
 
+def aide(request):
+    return render(request, 'compte_conducteur.html')
+
 @login_required(login_url='utilisateur:connexion_user')
 def prolongement(request):
     if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
