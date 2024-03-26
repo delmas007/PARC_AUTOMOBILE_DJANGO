@@ -295,7 +295,6 @@ def liste_mission(request):
         first_image = Photo.objects.filter(deplacement=deplacement).first()
         if first_image:
             first_images.append(first_image)
-            print(first_image)
 
     return render(request, 'compte_conducteur.html', {'mission': mission_list, 'date_aujourdui': date_aujourdui,
                                                       'prolongement_encours': prolongement_encours_ids,
@@ -409,6 +408,13 @@ def declare_incident(request):
     mission_list = Deplacement.objects.filter(conducteur_id=conducteur_actif_id).filter(
         date_depart__lte=date_aujourdui).exclude(id__in=Subquery(deplacements_arrives_ids))
 
+    first_images = []
+
+    for deplacement in mission_list:
+        first_image = Photo.objects.filter(deplacement=deplacement).first()
+        if first_image:
+            first_images.append(first_image)
+
     paginator = Paginator(mission_list.order_by('date_depart'), 3)
     try:
         page = request.GET.get("page")
@@ -418,7 +424,7 @@ def declare_incident(request):
     except EmptyPage:
         mission_list = paginator.page(paginator.num_pages())
 
-    return render(request, 'compte_conducteur.html', {'mission': mission_list})
+    return render(request, 'compte_conducteur.html', {'mission': mission_list,'photo_vehicules': first_images})
 
 
 @login_required(login_url='utilisateur:connexion_user')

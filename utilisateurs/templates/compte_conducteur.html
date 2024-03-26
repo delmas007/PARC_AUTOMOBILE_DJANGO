@@ -578,12 +578,17 @@
                                             </div>
                                             <div class="card-body box-profile" style="margin-right: 25px">
                                                 <div class="text-center">
-                                                    <img class=" img-fluid" src="{% static 'img/1.png' %}"
-                                                         alt="User  picture" style="max-height: 10ch;">
+                                                    {% for photo_vehicule in photo_vehicules %}
+                                                        {% if photo_vehicule.deplacement_id == deplacement.id %}
+                                                            <img class=" img-fluid" src="{{ photo_vehicule.images.url }}" alt="User  picture" style="max-height: 10ch;">
+                                                        {% endif %}
+                                                    {% endfor %}
+
+
                                                 </div>
 
                                                 <p class="text-muted text-center h6">
-                                                    En cas d'incident sur ce deplacement vous pouvez le declarer en appuyant sur le bouton "declarer un incident"</p>
+                                                     En cas d'incident sur ce deplacement vous pouvez le declarer en appuyant sur le bouton "declarer un incident"</p>
 
                                                 <ul class="list-group list-group-unbordered mb-3">
                                                     <li class="list-group-item">
