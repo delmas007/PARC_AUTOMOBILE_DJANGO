@@ -14,9 +14,16 @@ class ConducteurClientForm(forms.ModelForm):
 
 
 class PasswordResetForme(PasswordResetForm):
-    class Meta:
-        model = Utilisateur
-        fields = 'email'
+    def __init__(self, *args, **kwargs):
+        super(PasswordResetForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({
+            'type': "email",
+            'class': "form-control mb-0",
+            'id': "exampleInputEmail1",
+            'placeholder': "name@example.com",
+            'required': True,
+            'name': 'email',
+        })
 
 
 class notificationSearchForm(forms.Form):
