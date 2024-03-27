@@ -211,14 +211,14 @@
                 <span>DETAILS</span>
             {% endif %}
         </div>
-        <div class="col"  style="flex-grow: 1;">
+        <div class="col "  style="flex-grow: 1;">
             <div class="notification-icon"  onclick="toggleNotifi()" >
                 <i class="fas fa-bell" ></i>
                 {% if prolongements_non_lus %}<span class="badge">{{ prolongements_non_lus.count }}</span>{% else %}{% endif %}
             </div>
 
         </div>
-        <div class="notifi-box" id="box">
+        <div class="notifi-box none" id="box">
             <h2>Notifications</h2>
             <div  style="overflow-y: auto">
                 {% if prolongements_non_lus %}
@@ -238,7 +238,7 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    auccune notifiaction
+                    aucune notification
                 {% endif %}
             </div>
         </div>
@@ -589,7 +589,7 @@
                                                 </div>
 
                                                 <p class="text-muted text-center h6">
-                                                     En cas d'incident sur ce deplacement vous pouvez le declarer en appuyant sur le bouton "declarer un incident"</p>
+                                                     En cas d'incident sur ce deplacement, vous pouvez le declarer en appuyant sur le bouton "declarer un incident"</p>
 
                                                 <ul class="list-group list-group-unbordered mb-3">
                                                     <li class="list-group-item">
@@ -1072,12 +1072,13 @@
         function openBox() {
             box.style.height = '410px';
             box.style.opacity = 1;
+            box.classList.remove('hide');
+            box.classList.remove('none');
             down = true;
         }
 
         function closeBox() {
-            box.style.height = '0px';
-            box.style.opacity = 0;
+            box.classList.add('hide');
             down = false;
         }
 
