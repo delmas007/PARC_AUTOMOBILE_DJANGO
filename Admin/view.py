@@ -179,21 +179,12 @@ def rapport_entretien_mensuel_pdf(request):
             </body>
             </html>
             """
-
-        # Créer un objet HttpResponse avec le contenu du PDF
-        response = HttpResponse(content_type='application/pdf')
         if vehicule_id:
             vehicule = Vehicule.objects.get(id=vehicule_id)
-            response[
-                'Content-Disposition'] = f'attachment; filename="Rapport Entretien de {mois_lettre} {annee}  de {vehicule}.pdf"'
+            titre = f"Rapport Entretien de {mois_lettre} {annee}  de {vehicule}"
         else:
-            response['Content-Disposition'] = f'attachment; filename="Rapport Entretien de {mois_lettre} {annee}.pdf"'
-        # Générer le PDF à partir du contenu HTML
-        pisa_status = pisa.CreatePDF(html_content, dest=response)
-        if pisa_status.err:
-            return HttpResponse('Une erreur est survenue lors de la génération du PDF')
-
-        return response
+            titre = f"Rapport Entretien de {mois_lettre} {annee}"
+        return render(request, 'rapport_details.html', {'html_content': html_content, 'titre': titre})
 
 
 def rapport_incident_vehicule_mensuel_pdf(request):
@@ -346,21 +337,12 @@ def rapport_incident_vehicule_mensuel_pdf(request):
             </html>
             """
 
-        # Créer un objet HttpResponse avec le contenu du PDF
-        response = HttpResponse(content_type='application/pdf')
         if vehicule_id:
-            conducteur = Vehicule.objects.get(id=vehicule_id)
-            response[
-                'Content-Disposition'] = f'attachment; filename="Rapport Incident Véhicule de {mois_lettre} {annee}  de {conducteur}.pdf"'
+            vehicule = Vehicule.objects.get(id=vehicule_id)
+            titre = f"Rapport Incident Véhicule de {mois_lettre} {annee}  de {vehicule}"
         else:
-            response[
-                'Content-Disposition'] = f'attachment; filename="Rapport Incident Véhicule de {mois_lettre} {annee}.pdf"'
-        # Générer le PDF à partir du contenu HTML
-        pisa_status = pisa.CreatePDF(html_content, dest=response)
-        if pisa_status.err:
-            return HttpResponse('Une erreur est survenue lors de la génération du PDF')
-
-        return response
+            titre = f"Rapport Incident Véhicule de {mois_lettre} {annee}"
+        return render(request, 'rapport_details.html', {'html_content': html_content, 'titre': titre})
 
 @login_required(login_url='Connexion')
 def ProfilAdmin(request):
