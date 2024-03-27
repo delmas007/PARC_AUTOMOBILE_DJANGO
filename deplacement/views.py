@@ -366,10 +366,13 @@ def accept_prolongement(request, prolongement_id):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
     prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
+    deplacement=Deplacement.objects.get(id=prolongement.deplacement.id)
+    deplacement.duree_deplacement=deplacement.duree_deplacement + prolongement.duree
     prolongement.en_cours = False
     prolongement.refuser = False
     prolongement.accepter = True
     prolongement.date_reponse = timezone.now()
+    deplacement.save()
     prolongement.save()
 
     return redirect('deplacement:liste_deplacement_en_cours')

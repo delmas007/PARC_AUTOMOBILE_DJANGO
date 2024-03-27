@@ -466,11 +466,7 @@
                                                         <div class="row">
                                                             <div class="col-4"><b>Durée</b></div>
                                                             <div class="col"><a class="float-right text-primary">
-                                                                {% if prolongements.deplacement.id == deplacement.id %}
-                                                                    {{ deplacement.duree_deplacement|add:prolongements.duree }}
-                                                                {% else %}
                                                                     {{ deplacement.duree_deplacement }}
-                                                                {% endif %}
                                                             </a>
                                                             </div>
                                                         </div>

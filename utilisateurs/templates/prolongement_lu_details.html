@@ -116,10 +116,11 @@
                                         La demande de prolongement que vous avez effectuée le {{ prolongement_details.date_mise_a_jour }} pour une durée de  {{ prolongement_details.duree }} jours
                                         qui a pour motif "{{ prolongement_details.motif }}" a été
                                         {% if prolongement_details.refuser %}
-                                            <span style="color: red;">refusée</span>. Votre déplacement prendra fin le {{ prolongement_details.deplacement.date_fin }}.
+                                            <span style="color: red;">refusée</span>
                                         {% elif prolongement_details.accepter %}
-                                            <span style="color: green;">acceptée</span>. Votre déplacement prendra fin le {{ prolongement_details.ajout }}.
+                                            <span style="color: green;">acceptée</span>
                                         {% endif %}
+                                        . Votre déplacement prendra fin le {{ prolongement_details.deplacement.date_fin }}.
                                     </li>
                                 </ul>
 
