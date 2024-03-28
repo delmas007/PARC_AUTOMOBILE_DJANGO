@@ -118,7 +118,7 @@
                                                     {% csrf_token %}
                                                     <div class="col-md-4">
                                                         <label style="font-family: -apple-system; font-size: medium"> Vehicule</label>
-                                                        <select class="form-control" id="vehicule" name="vehicule" style="width: 100%;">
+                                                        <select class="form-control" id="Selectvehicule" name="vehicule" style="width: 100%;">
                                                             <option value="">Sélectionner un vehicule</option>
                                                             {% for voiture in vehicule %}
                                                                 <option value="{{ voiture.id }}">{{ voiture }} </option>
@@ -279,5 +279,9 @@
         }, 100);
     }
 </script>
+ <script>
+
+        $('#Selectvehicule').select2();
+    </script>
 </body>
 {% endblock %}

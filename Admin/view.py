@@ -1,4 +1,5 @@
 import calendar
+import locale
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -18,7 +19,7 @@ def rapport_entretien_mensuel_admins(request):
     if not request.user.roles or request.user.roles.role != 'ADMIN':
         return redirect('utilisateur:erreur')
     if request.method == 'POST':
-            return courbe_entretien_mensuel(request)
+        return courbe_entretien_mensuel(request)
     else:
         vehicule = Vehicule.objects.all()
         context = {'vehicules': vehicule}
@@ -88,8 +89,10 @@ def rapport_entretien_mensuel_pdf(request):
                  <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                  """
                 for reparation in entretien:
+                    date = reparation.date_entretien
+                    reparation_date = date.strftime("%d %B %Y")
                     html_content += f"""
-                    <tr><td>{reparation.date_entretien}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
+                    <tr><td>{reparation_date}</td><td>{reparation.type}</td><td>{reparation.prix_entretient}</td><td>{reparation.utilisateur}</td></tr>
                 """
                 html_content += f"""
 
@@ -154,8 +157,10 @@ def rapport_entretien_mensuel_pdf(request):
 
                         # Boucle sur chaque incident pour ce conducteur
                         for entretien in entretiens_vehicule:
+                            date = entretien.date_entretien
+                            entretien_date = date.strftime("%d %B %Y")
                             html_content += f"""
-                                                <tr><td>{entretien.date_entretien}</td><td>{entretien.type}</td><td>{entretien.prix_entretient}</td><td>{entretien.utilisateur}</td></tr>
+                                                <tr><td>{entretien_date}</td><td>{entretien.type}</td><td>{entretien.prix_entretient}</td><td>{entretien.utilisateur}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
@@ -167,7 +172,7 @@ def rapport_entretien_mensuel_pdf(request):
                             <tr><td>Total</td><td>{total_vehicule}</td><td>{total_entretien}</td></tr>
                         """
                     else:
-                        html_content += "<tr><td colspan='3'>Aucun entretien trouvé pour ce conducteur.</td></tr>"
+                        html_content += "<tr><td colspan='3'>Aucun entretien trouvé pour ce vehicule.</td></tr>"
 
                     html_content += "</table>"
 
@@ -195,6 +200,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
         annee = request.POST.get('annee')
         mois_lettre = _(calendar.month_name[int(mois)])
         vehicules = Vehicule.objects.all()
+        locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
         if vehicule_id:
 
             vehicule = Vehicule.objects.get(id=vehicule_id)
@@ -237,16 +243,17 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                  <tr><th>Date</th><th>Conducteur</th><th>Gestionnaire</th><th>Description</th></tr>
                  """
 
-
                 for incident in incidents:
+                    date = incident.date_premiere
+                    incident_date = date.strftime("%d %B %Y")
                     incident_conducteur = incident.conducteur
                     if not incident.conducteur:
-                        incident_conducteur =" "
+                        incident_conducteur = " "
                     incident_gestionnaire = incident.utilisateurs
                     if not incident.utilisateurs:
-                        incident_gestionnaire =" "
+                        incident_gestionnaire = " "
                     html_content += f"""
-                    <tr><td>{incident.date_premiere}</td><td>{incident_conducteur}</td><td>{incident_gestionnaire}</td><td>{incident.description_incident}</td></tr>
+                    <tr><td>{incident_date}</td><td>{incident_conducteur}</td><td>{incident_gestionnaire}</td><td>{incident.description_incident}</td></tr>
                 """
 
             else:
@@ -292,6 +299,8 @@ def rapport_incident_vehicule_mensuel_pdf(request):
 
                     # Filtrer les incidents pour ce conducteur
                     incidents_vehicule = incidents.filter(vehicule=vehicule)
+                    incidents_interne_vehicule = incidents.filter(vehicule=vehicule, conducteur__isnull=True)
+                    incidents_externe_vehicule = incidents.filter(vehicule=vehicule, utilisateurs__isnull=True)
                     html_content += f"""
                                     <h2>Rapport de {vehicule}</h2>
                                     """
@@ -305,21 +314,24 @@ def rapport_incident_vehicule_mensuel_pdf(request):
 
                         # Boucle sur chaque incident pour ce conducteur
                         for incident in incidents_vehicule:
+                            date = incident.date_premiere
+                            incident_date = date.strftime("%d %B %Y")
                             incident_conducteur = incident.conducteur
                             if not incident.conducteur:
-                                incident_conducteur =" "
+                                incident_conducteur = " "
                             incident_gestionnaire = incident.utilisateurs
                             if not incident.utilisateurs:
-                                incident_gestionnaire =" "
+                                incident_gestionnaire = " "
                             html_content += f"""
-                                                <tr><td>{incident.date_premiere}</td><td>{incident_conducteur}</td><td>{incident_gestionnaire}</td><td>{incident.description_incident}</td></tr>
+                                                <tr><td>{incident_date}</td><td>{incident_conducteur}</td><td>{incident_gestionnaire}</td><td>{incident.description_incident}</td></tr>
                                             """
 
                             # Calculer le nombre total d'incidents pour ce conducteur
-                        total_incident = incidents_vehicule.count()
+
+                        total_incident = incidents_interne_vehicule.count()
 
                         # Calculer les totaux pour ce conducteur
-                        total_vehicule = incidents_vehicule.filter(vehicule=incident.vehicule).count()
+                        total_vehicule = incidents_externe_vehicule.count()
                         html_content += f"""
                             <tr><td>Total</td><td>{total_vehicule}</td><td>{total_incident}</td></tr>
                         """
@@ -343,6 +355,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
         else:
             titre = f"Rapport Incident Véhicule de {mois_lettre} {annee}"
         return render(request, 'rapport_details.html', {'html_content': html_content, 'titre': titre})
+
 
 @login_required(login_url='Connexion')
 def ProfilAdmin(request):

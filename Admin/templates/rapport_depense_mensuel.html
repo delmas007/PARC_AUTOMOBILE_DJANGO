@@ -126,7 +126,7 @@
 
                                                         <div class="col-md-4">
                                                             <label style="font-family: -apple-system; font-size: medium"> Vehicule</label>
-                                                            <select class="form-control" id="vehicule" name="vehicule" style="width: 100%;">
+                                                            <select class="form-control" id="Selectvehicule" name="vehicule" style="width: 100%;">
                                                                 <option value="">Sélectionner un vehicule</option>
                                                                 {% for voiture in vehicule %}
                                                                     <option value="{{ voiture.id }}">{{ voiture }} </option>
@@ -135,7 +135,7 @@
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label style="font-family: -apple-system; font-size: medium"> MOIS</label>
-                                                            <select class="form-control" id="mois" name="mois" required style="width: 100%;">
+                                                            <select class="form-control" id="mois2" name="mois" required style="width: 100%;">
 
                                                                 <option value="1">Janvier</option>
                                                                 <option value="2">Février</option>
@@ -279,6 +279,14 @@
                 }, 100);
             }, 100);
         }
+    </script>
+     <script>
+
+        $('#Selectvehicule').select2();
+        $('#annee').select2();
+        $('#annees').select2();
+        $('#mois').select2();
+        $('#mois2').select2();
     </script>
 
     </body>
