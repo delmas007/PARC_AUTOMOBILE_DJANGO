@@ -587,12 +587,13 @@ def rapport_depense_mensuel_pdf(request):
                 if total_depenses != 0:
                     vehicules_with_total_expenses.append({'vehicule': voiture, 'total_depenses': total_depenses})
 
-                # Récupérer le véhicule avec la plus grande somme de carburant et d'entretien
-                vehicule_plus_gros_depenses = max(vehicules_with_total_expenses, key=lambda x: x['total_depenses'])[
-                    'vehicule']
+                if vehicules_with_total_expenses:
+                    # Récupérer le véhicule avec la plus grande somme de carburant et d'entretien
+                    vehicule_plus_gros_depenses = max(vehicules_with_total_expenses, key=lambda x: x['total_depenses'])[
+                        'vehicule']
 
-                vehicule_plus_petit_depenses = min(vehicules_with_total_expenses, key=lambda x: x['total_depenses'])[
-                    'vehicule']
+                    vehicule_plus_petit_depenses = min(vehicules_with_total_expenses, key=lambda x: x['total_depenses'])[
+                        'vehicule']
                 html_content += f"<tr> <td> {voiture} </td><td> {deplacement} </td><td> {carburant_quantite} </td><td>{carburant_vehicule}</td><td>{nbre_entretien}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"
 
             html_content += f"""
@@ -885,12 +886,13 @@ def rapport_depense_pdf(request):
                 if total_depenses != 0:
                     vehicules_with_total_expenses.append({'vehicule': voiture, 'total_depenses': total_depenses})
 
-                # Récupérer le véhicule avec la plus grande somme de carburant et d'entretien
-                vehicule_plus_gros_depenses = max(vehicules_with_total_expenses, key=lambda x: x['total_depenses'])[
-                    'vehicule']
+                if vehicules_with_total_expenses:
+                    # Récupérer le véhicule avec la plus grande somme de carburant et d'entretien
+                    vehicule_plus_gros_depenses = max(vehicules_with_total_expenses, key=lambda x: x['total_depenses'])[
+                        'vehicule']
 
-                vehicule_plus_petit_depenses = min(vehicules_with_total_expenses, key=lambda x: x['total_depenses'])[
-                    'vehicule']
+                    vehicule_plus_petit_depenses = min(vehicules_with_total_expenses, key=lambda x: x['total_depenses'])[
+                        'vehicule']
 
                 html_content += f"""<tr> <td> {voiture} </td><td> {deplacement} </td><td> {carburant_quantite} </td><td>{carburant_vehicule}</td><td>{nbre_entretien}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
 

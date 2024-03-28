@@ -16,6 +16,12 @@
         button:hover {
             background-color: #858181; /* Couleur de fond au survol */
         }
+        .button-container {
+            position: fixed;
+            bottom: 20px; /* Position par rapport au bas de la fenêtre */
+            right: 20px; /* Position par rapport à droite */
+            z-index: 999; /* Pour être sûr que le conteneur soit au-dessus du reste du contenu */
+        }
     </style>
     <div class="wrapper">
         <!-- Sidebar  -->
@@ -24,13 +30,14 @@
         <div id="content-page" class="content-page">
 
             {{ html_content|safe }}
-        </div>
-        <div class="text-right mt-3" id ="bouton">
+            <div class="text-right mt-3 button-container" id ="bouton" >
             <button onclick="generatePDF()">TELECHARGER</button>
             <button onclick="printContent()">IMPRIMER</button>
         </div>
+        </div>
+
     </div>
-    <div style="display: none">
+    <div style="display: none;">
     {% include 'footer.html' %}
     </div>
 
