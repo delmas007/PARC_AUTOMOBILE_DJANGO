@@ -118,7 +118,7 @@ def rapport_entretien_mensuel_pdf(request):
                 <br>
                     <table border=1>
                     <tr><th>Type</th><th>Nombre</th><th>Prix Total</th></tr>
-                    <tr><th>Videnge</th><td>{nbre_vidange}</td><td>{total_vidange}</td></tr>
+                    <tr><th>Vidange</th><td>{nbre_vidange}</td><td>{total_vidange}</td></tr>
                     <tr><th>Visite</th><td>{nbre_visite}</td><td>{total_visite}</td></tr>
                     <tr><th>Autre</th><td>{nbre_autre}</td><td>{total_autre}</td></tr>
                      </table>
@@ -126,6 +126,9 @@ def rapport_entretien_mensuel_pdf(request):
             else:
                 html_content += "<p>Aucune donnée d'entretien disponible.</p>"
         else:
+            # Initialiser entretiens_vehicule en dehors de la boucle
+            entretiens_vehicule = None
+
             # Générer le contenu HTML du PDF
             html_content = f"""
                 <html>
@@ -154,7 +157,7 @@ def rapport_entretien_mensuel_pdf(request):
                 </head>
                 <body class="center">
                 <h1>Rapport Entretien de {mois_lettre} {annee}</h1>
-                """
+            """
 
             # Filtrer les incidents pour le mois et l'année spécifiés
             entretiens = Entretien.objects.filter(date_entretien__month=mois, date_entretien__year=annee)
@@ -182,63 +185,63 @@ def rapport_entretien_mensuel_pdf(request):
                     nbre_autre = autre.count() or 0
                     html_content += f"""
                         <h2>Rapport de {voiture}</h2>
-
-                                         """
+                    """
 
                     # Vérifier s'il y a des incidents pour ce conducteur
                     if entretiens_vehicule:
                         html_content += f"""
-                                            <table border="1">
-                                            <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
-                                            """
+                            <table border="1">
+                            <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
+                        """
 
                         # Boucle sur chaque incident pour ce conducteur
                         for entretien in entretiens_vehicule:
                             date = entretien.date_entretien
                             entretien_date = formats.date_format(date, format="l d F Y")
                             html_content += f"""
-                                                    <tr><td>{entretien_date}</td><td>{entretien.type}</td><td>{entretien.prix_entretient}</td><td>{entretien.utilisateur}</td></tr>
-                                                """
+                                <tr><td>{entretien_date}</td><td>{entretien.type}</td><td>{entretien.prix_entretient}</td><td>{entretien.utilisateur}</td></tr>
+                            """
 
-                            # Calculer le nombre total d'incidents pour ce conducteur
+                        # Calculer le nombre total d'incidents pour ce conducteur
                         total_entretien = entretiens_vehicule.aggregate(Sum('prix_entretient'))[
                                               'prix_entretient__sum'] or 0
                         # Calculer les totaux pour ce conducteur
                         total_vehicule = entretiens_vehicule.filter(vehicule=entretien.vehicule).count()
                         html_content += f"""
-                                <tr><td>Total</td><td>{total_vehicule}</td><td>{total_entretien}</td></tr>
-                            """
-
+                            <tr><td>Total</td><td>{total_vehicule}</td><td>{total_entretien}</td></tr>
+                        """
 
                     else:
                         html_content += "<tr><td colspan='3'>Aucun entretien trouvé pour ce vehicule.</td></tr>"
 
                     html_content += "</table>"
 
-
-
             else:
                 html_content += "<p>Aucun incident trouvé pour ce mois et cette année.</p>"
 
+            # Utilisez entretiens_vehicule pour vérifier s'il y a eu des entretiens de véhicules
             if entretiens_vehicule:
-                html_content += f"""
-
-                                                                           <br>
-                                                                           <br>
-                                                                           <br>
-                                                                               <table border=1>
-                                                                               <tr><th>Type</th><th>Nombre</th><th>Prix Total</th></tr>
-                                                                               <tr><th>Videnge</th><td>{nbre_vidange}</td><td>{total_vidange}</td></tr>
-                                                                               <tr><th>Visite</th><td>{nbre_visite}</td><td>{total_visite}</td></tr>
-                                                                               <tr><th>Autre</th><td>{nbre_autre}</td><td>{total_autre}</td></tr>
-                                                                                </table>
-                                                                               """
+                html_content_bas = f"""
+                    <br>
+                    <br>
+                    <br>
+                    <table border=1>
+                    <tr><th>Type</th><th>Nombre</th><th>Prix Total</th></tr>
+                    <tr><th>Vidange</th><td>{nbre_vidange}</td><td>{total_vidange}</td></tr>
+                    <tr><th>Visite</th><td>{nbre_visite}</td><td>{total_visite}</td></tr>
+                    <tr><th>Autre</th><td>{nbre_autre}</td><td>{total_autre}</td></tr>
+                    </table>
+                """
 
             # Fermer les balises HTML
             html_content += f"""
                 </body>
                 </html>
-                """
+            """
+
+            # Si entretiens_vehicule est défini, ajouter le tableau bas
+            if entretiens_vehicule:
+                html_content += html_content_bas
 
         # Créer un objet HttpResponse avec le contenu du PDF
         response = HttpResponse(content_type='application/pdf')

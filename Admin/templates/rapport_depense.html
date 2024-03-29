@@ -112,7 +112,7 @@
                                 <div class="row justify-content-between">
                                     <div class="col-sm-12 col-md-12">
                                         <div id="user_list_datatable_info" class="dataTables_filter">
-                                            <form method="post" action="{% url 'admins:rapport_depense_pdf' %}">
+                                            <form method="post" action="{% url 'admins:rapport_depense_pdf' %}" target="_blank">
                                                 <div class="row">
 
                                                     {% csrf_token %}
@@ -136,7 +136,7 @@
 
                                                     </div>
                                                     <div class="col-12 mt-5 text-right">
-                                                        <button type="submit">GENERER</button>
+                                                        <button type="submit">VISUALISER</button>
                                                         <button type="reset">RESET</button>
                                                     </div>
                                                 </div>
