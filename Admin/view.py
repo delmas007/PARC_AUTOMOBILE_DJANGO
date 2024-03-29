@@ -219,6 +219,36 @@ def rapport_entretien_mensuel_pdf(request):
             else:
                 html_content += "<p>Aucun incident trouvé pour ce mois et cette année.</p>"
 
+            html_content += f"""
+                        <br><br><br>
+                        <h1> RECAPITULATIF:</h1>
+                        <table border="1">
+                        <tr><th>Voiture</th><th>Montant entretien</th></tr>
+                        """
+            # Calculer le prix total pour chaque voiture
+            voitures_annotated_prix = voitures.annotate(
+                total_prix=Sum('entretien__prix_entretient')
+            )
+
+            # Filtrer les voitures sans données de carburant
+            voitures_annotated_prix = voitures_annotated_prix.exclude(total_prix=None)
+
+            # Ranger les voitures par rapport au prix total
+            voitures_ranger_par_prix = voitures_annotated_prix.order_by('-total_prix')
+            for voiture in voitures_ranger_par_prix:
+                entretien_voiture = entretiens.filter(vehicule=voiture, date_entretien__month=mois,
+                                                      date_entretien__year=annee)
+                if entretien_voiture:
+                    total_entretien = entretien_voiture.filter(vehicule=voiture).aggregate(Sum('prix_entretient'))[
+                                          'prix_entretient__sum'] or 0
+
+                    html_content += f"""
+                                                <tr><td>{voiture}</td><td>{total_entretien} FCFA</td></tr>
+                                                """
+
+            # Fermer la table précédente
+            html_content += "</table>"
+
             # Utilisez entretiens_vehicule pour vérifier s'il y a eu des entretiens de véhicules
             if entretiens_vehicule:
                 html_content_bas = f"""
@@ -438,7 +468,6 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                             html_content += f"""
                                                        <tr><td>{incident_date}</td><td>{incident_conducteur}</td><td>{incident_gestionnaire}</td><td>{description_incident}</td></tr>
                                                    """
-
 
                         # Ajouter le nombre d'incidents par conducteur au dictionnaire total_incidents_par_conducteur
                         for conducteur, nb_incidents in incidents_par_conducteur.items():

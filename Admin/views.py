@@ -502,42 +502,53 @@ def rapport_depense_mensuel_pdf(request):
                 <tr><th>Voitures</th><th>Nombre de déplacements</th><th>Quantitié Carburant</th><th>Montant Carburant</th><th>Nombre Entretien</th><th>Montant Entretien</th><th>Total</th></tr>
     
                    """
-              # Vérifie si les listes de carburant ou d'entretien ne sont pas vides
+            # Vérifie si les listes de carburant ou d'entretien ne sont pas vides
 
+            # Créer une liste pour stocker les lignes HTML
+            rows = []
 
+            # Boucler sur les voitures pour construire les lignes HTML
             for voiture in voitures:
-                    carburant = Carburant.objects.filter(vehicule=voiture, date_premiere__month=mois,
-                                                         date_premiere__year=annee)
-                    carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
-                    carburant_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
-                    entretien = Entretien.objects.filter(vehicule=voiture, date_entretien__month=mois,
-                                                         date_entretien__year=annee)
-                    entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+                carburant = Carburant.objects.filter(vehicule=voiture, date_premiere__month=mois,
+                                                     date_premiere__year=annee)
+                carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
+                carburant_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
+                entretien = Entretien.objects.filter(vehicule=voiture, date_entretien__month=mois,
+                                                     date_entretien__year=annee)
+                entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
 
+                deplacement = Deplacement.objects.filter(vehicule=voiture, date_depart__month=mois,
+                                                         date_depart__year=annee).count()
+                nbre_deplacements += deplacement
+                nbre_entretien = entretien.count()
+                nbres_entretien = nbre_entretien
 
+                total = carburant_vehicule + entretien_vehicule
+                html_row = f"<tr><td>{voiture}</td><td>{deplacement}</td><td>{carburant_quantite}</td><td>{carburant_vehicule}</td><td>{nbre_entretien}</td><td>{entretien_vehicule}</td><td>{total}</td></tr>"
+                rows.append((total, html_row))  # Ajouter un tuple contenant le total et la ligne HTML
 
+            # Trier les lignes par la somme des coûts de carburant et d'entretien (total) du plus grand au plus petit
+            sorted_rows = sorted(rows, key=lambda x: x[0], reverse=True)
 
-                    deplacement = Deplacement.objects.filter(vehicule=voiture, date_depart__month=mois,
-                                                             date_depart__year=annee).count()
-                    nbre_deplacements += deplacement
-                    nbres_entretien = 0
-                    nbre_entretien = entretien.count()
-                    nbres_entretien += nbre_entretien
+            # Construire le contenu HTML en utilisant les lignes triées
+            html_content += "<table>"
+            for total, html_row in sorted_rows:
+                html_content += html_row
 
-                    html_content += f"<tr> <td> {voiture} </td><td> {deplacement} </td><td> {carburant_quantite} </td><td>{carburant_vehicule}</td><td>{nbre_entretien}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"
-
+            # Fermer la table
             html_content += f"""
-                                      <tr><td>Total</td><td>{nbre_deplacements}</td><td>{total_quantite}</td><td>{total_carburant}</td><td>{nbres_entretien}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
-                                      </table>
-                                      </body>
-                                      </html>
-                                      """
-            if carburant:
-                    for type in types:
-                        variation_first = variations.filter(carburant=type, date_debut__month__lte=mois,
-                                                            date_debut__year__lte=annee).order_by('date_debut')
+                <tr><td>Total</td><td>{nbre_deplacements}</td><td>{total_quantite}</td><td>{total_carburant}</td><td>{nbres_entretien}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
+                </table>
+                </body>
+                </html>
+            """
 
-                        html_content += f"""
+            if carburant:
+                for type in types:
+                    variation_first = variations.filter(carburant=type, date_debut__month__lte=mois,
+                                                        date_debut__year__lte=annee).order_by('date_debut')
+
+                    html_content += f"""
                            <br>
                            <br>
                            <br>
@@ -546,32 +557,30 @@ def rapport_depense_mensuel_pdf(request):
                                                                                    <table border="1">
                                                                                    <tr><th>NOM</th><th>PRIX</th><th>PERIODE</th></tr>
                                                                                    """
-                        for variation in variation_first:
-                            date1 = variation.date_debut.date()
-                            variation_date = formats.date_format(date1, format("l d F Y"))
-                            date_fin_info = ""
-                            if variation.date_fin:
-                                date2 = variation.date_fin.date()
-                                variation_fin = formats.date_format(date2, format("l d F Y"))
-                                date_fin_info = f" au {variation_fin}"
-                            if variation.date_fin:
-                                if variation.date_fin.month == int(mois) and variation.date_fin.year == int(
-                                        annee) or not variation.date_fin:
-                                    html_content += f"""
+                    for variation in variation_first:
+                        date1 = variation.date_debut.date()
+                        variation_date = formats.date_format(date1, format("l d F Y"))
+                        date_fin_info = ""
+                        if variation.date_fin:
+                            date2 = variation.date_fin.date()
+                            variation_fin = formats.date_format(date2, format("l d F Y"))
+                            date_fin_info = f" au {variation_fin}"
+                        if variation.date_fin:
+                            if variation.date_fin.month == int(mois) and variation.date_fin.year == int(
+                                    annee) or not variation.date_fin:
+                                html_content += f"""
                                                                                     <tr><td>{variation.carburant.nom}</td><td>{variation.prix}</td><td>{variation_date} {date_fin_info}</td></tr>
                                                                                                     """
-                            else:
-                                html_content += f"""
+                        else:
+                            html_content += f"""
                                                                                     <tr>
                                                                                         <td>{variation.carburant.nom}</td>
                                                                                         <td>{variation.prix}</td>
                                                                                         <td>{variation_date} {date_fin_info}</td>
                                                                                     </tr>
                                                                                 """
-                        html_content += f"""
+                    html_content += f"""
                                                                         </table>"""
-
-
 
         # Créer un objet HttpResponse avec le contenu du PDF
         response = HttpResponse(content_type='application/pdf')
@@ -654,8 +663,8 @@ def rapport_depense_pdf(request):
                             <tr><th>Date</th><th>Litre</th><th>Prix</th><th>Gestionnaire</th></tr>
                             """
                 for essence in carburants:
-                    date_essence= essence.date_premiere
-                    essence_date= formats.date_format(date_essence,format("l d F Y"))
+                    date_essence = essence.date_premiere
+                    essence_date = formats.date_format(date_essence, format("l d F Y"))
                     html_content += f"""
                                <tr><td>{essence_date}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
                            """
@@ -708,7 +717,7 @@ def rapport_depense_pdf(request):
                             <tr><th>Date</th><th>Type</th><th>Prix</th><th>Gestionnaire</th></tr>
                             """
                 for reparation in entretiens:
-                    date1 =reparation.date_entretien
+                    date1 = reparation.date_entretien
                     reparation_date = formats.date_format(date1, format("l d F Y"))
 
                     html_content += f"""
@@ -768,29 +777,38 @@ def rapport_depense_pdf(request):
                   entretien</th><th>Entretien</th><th>Total</th></tr>
 
                    """
+            # Créer une liste pour stocker les lignes HTML
+            rows = []
+
+            # Boucle sur les voitures pour construire les lignes HTML
             for voiture in voitures:
-                carburant = Carburant.objects.filter(vehicule=voiture,
-                                                     date_premiere__range=(debut_date, fin_date))
+                carburant = Carburant.objects.filter(vehicule=voiture, date_premiere__range=(debut_date, fin_date))
                 carburant_vehicule = carburant.aggregate(Sum('prix_total'))['prix_total__sum'] or 0
-                carburant_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
-                entretien = Entretien.objects.filter(vehicule=voiture,
-                                                     date_entretien__range=(debut_date, fin_date))
+                entretien = Entretien.objects.filter(vehicule=voiture, date_entretien__range=(debut_date, fin_date))
+                entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
+                total = carburant_vehicule + entretien_vehicule
                 nbre_entretien = entretien.count()
-                nbres_entretien += nbre_entretien
-
-
                 deplacement = Deplacement.objects.filter(vehicule=voiture,
                                                          date_depart__range=(debut_date, fin_date)).count()
-                nbre_deplacements += deplacement
-                entretien_vehicule = entretien.aggregate(Sum('prix_entretient'))['prix_entretient__sum'] or 0
-                html_content += f"""<tr> <td> {voiture} </td><td> {deplacement} </td><td> {carburant_quantite} </td><td>{carburant_vehicule}</td><td>{nbre_entretien}</td><td>{entretien_vehicule}</td><td>{carburant_vehicule + entretien_vehicule}</td></tr>"""
+                carburant_quantite = carburant.aggregate(Sum('quantite'))['quantite__sum'] or 0
+                html_row = f"""<tr> <td> {voiture} </td><td> {deplacement} </td><td> {carburant_quantite} </td><td>{carburant_vehicule}</td><td>{nbre_entretien}</td><td>{entretien_vehicule}</td><td>{total}</td></tr>"""
+                rows.append((total, html_row))  # Ajouter un tuple contenant le total et la ligne HTML
 
+            # Trier les lignes par la somme des coûts de carburant et d'entretien (total) du plus grand au plus petit
+            sorted_rows = sorted(rows, key=lambda x: x[0], reverse=True)
+
+            # Construire le contenu HTML en utilisant les lignes triées
+            html_content += "<table>"
+            for total, html_row in sorted_rows:
+                html_content += html_row
+
+            # Fermer la table
             html_content += f"""
-                   <tr><td>Total</td><td>{nbre_deplacements}</td><td>{total_quantite}</td><td>{total_carburant}</td><td>{nbres_entretien}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
-                   </table>
-                   </body>
-                   </html>
-                   """
+                <tr><td>Total</td><td>{nbre_deplacements}</td><td>{total_quantite}</td><td>{total_carburant}</td><td>{nbres_entretien}</td><td>{total_entretien}</td><td>{total_carburant + total_entretien}</td></tr>
+                </table>
+                </body>
+                </html>
+            """
             if carburant:
                 for type in types:
                     variation_first = variations.filter(carburant=type, date_debut__lte=fin_date).order_by('date_debut')
@@ -967,19 +985,19 @@ def rapport_carburant_mensuel_pdf(request):
                     date = essence.date_premiere
                     essence_date = formats.date_format(date, format="l d F Y")
                     html_content += f"""
-                       <tr><td>{essence_date}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                       <tr><td>{essence_date}</td><td>{essence.quantite} LITRES</td><td>{essence.prix_total} FCFA</td><td>{essence.utilisateur}</td></tr>
                    """
                 if deplacement:
                     if deplacement_last:
                         html_content += f"""
 
-                           <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                           <tr><td>Total</td><td>{total_quantite} LITRES</td><td>{total_carburant} FCFA</td></tr>
                             <tr> <td colspan="4"><h2>KILOMETRAGE DU VEHICULE:{total_kilometrage}</h2></tr>
                             </table>
                            """
                     else:
                         html_content += f"""
-                           <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                           <tr><td>Total</td><td>{total_quantite} LITRES</td><td>{total_carburant} FCFA</td></tr>
                             <tr> <td colspan="4"><h2>Deplacement en cours</h2></tr>
                             </table>
                             <br>
@@ -988,7 +1006,7 @@ def rapport_carburant_mensuel_pdf(request):
                            """
                 else:
                     html_content += f"""
-                           <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                           <tr><td>Total</td><td>{total_quantite} LITRES</td><td>{total_carburant} FCFA</td></tr>
                             <tr> <td colspan="4"><h2>Aucun déplacement effectué</h2></tr>
                             </table>
                             <br>
@@ -1015,13 +1033,13 @@ def rapport_carburant_mensuel_pdf(request):
                         if variation.date_fin.month == int(mois) and variation.date_fin.year == int(
                                 annee) or not variation.date_fin:
                             html_content += f"""
-                                          <tr><td>{variation.carburant.nom}</td><td>{variation.prix}</td><td>{variation_date} {date_fin_info}</td></tr>
+                                          <tr><td>{variation.carburant.nom}</td><td>{variation.prix} FCFA</td><td>{variation_date} {date_fin_info}</td></tr>
                                                           """
                     else:
                         html_content += f"""
                                           <tr>
                                               <td>{variation.carburant.nom}</td>
-                                              <td>{variation.prix}</td>
+                                              <td>{variation.prix} FCFA</td>
                                               <td>{variation_date} {date_fin_info}</td>
                                           </tr>
                                       """
@@ -1105,35 +1123,69 @@ def rapport_carburant_mensuel_pdf(request):
                             date = essence.date_premiere
                             essence_date = formats.date_format(date, format="l d F Y")
                             html_content += f"""
-                                           <tr><td>{essence_date}</td><td>{essence.quantite}</td><td>{essence.prix_total}</td><td>{essence.utilisateur}</td></tr>
+                                           <tr><td>{essence_date}</td><td>{essence.quantite} LITRES</td><td>{essence.prix_total} FCFA</td><td>{essence.utilisateur}</td></tr>
                                        """
 
                     if deplacement:
                         if deplacement_last:
                             html_content += f"""
-                               <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                               <tr><td>Total</td><td>{total_quantite} LITRES</td><td>{total_carburant} FCFA</td></tr>
                             <tr> <td colspan="4"><h2>KILOMETRAGE DU VEHICULE:{total_kilometrage}</h2></tr>
                             </table>
                            """
 
                         else:
                             html_content += f"""
-                                           <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                                           <tr><td>Total</td><td>{total_quantite} LITRES</td><td>{total_carburant} FCFA</td></tr>
                                             <tr> <td colspan="4"><h2>Deplacement en cours</h2></tr>
                                             </table>
                                            """
                     else:
                         html_content += f"""
-                               <tr><td>Total</td><td>{total_quantite}</td><td>{total_carburant}</td></tr>
+                               <tr><td>Total</td><td>{total_quantite} LITRES</td><td>{total_carburant} FCFA</td></tr>
                             <tr> <td colspan="4"><h2>Aucun deplacement effectué.</h2></tr>
                             </table>
                            """
+
 
                 else:
                     html_content += f""" \
                                        <table border="1" >
                                        <tr> <td colspan="4"><h2>Aucune donnée de carburant disponible.</h2></tr>
                             </table>"""
+
+            html_content += f"""
+            <br><br><br>
+            <h1> RECAPITULATIF:</h1>
+            <table border="1">
+            <tr><th>Voiture</th><th>Quantite de carburant</th><th>Montant de carburant</th></tr>
+            """
+            # Calculer le prix total pour chaque voiture
+            voitures_annotated_prix = voitures.annotate(
+                total_prix=Sum('carburant__prix_total')
+            )
+
+            # Filtrer les voitures sans données de carburant
+            voitures_annotated_prix = voitures_annotated_prix.exclude(total_prix=None)
+
+            # Ranger les voitures par rapport au prix total
+            voitures_ranger_par_prix = voitures_annotated_prix.order_by('-total_prix')
+            for voiture in voitures_ranger_par_prix:
+                carburant_voiture = carburant.filter(vehicule=voiture, date_premiere__month=mois,
+                                                     date_premiere__year=annee)
+                if carburant_voiture:
+                    total_carburant = carburant_voiture.filter(vehicule=voiture).aggregate(Sum('prix_total'))[
+                                          'prix_total__sum'] or 0
+                    total_quantite = carburant_voiture.filter(vehicule=voiture).aggregate(Sum('quantite'))[
+                                         'quantite__sum'] or 0
+                    html_content += f"""
+                                    <tr><td>{voiture}</td><td>{total_quantite} Litres</td><td>{total_carburant} FCFA</td></tr>
+                                    """
+
+            # Fermer la table précédente
+            html_content += "</table>"
+
+
 
             if carburant:
                 for type in types:
@@ -1161,13 +1213,13 @@ def rapport_carburant_mensuel_pdf(request):
                             if variation.date_fin.month == int(mois) and variation.date_fin.year == int(
                                     annee) or not variation.date_fin:
                                 html_content += f"""
-                                                                                <tr><td>{variation.carburant.nom}</td><td>{variation.prix}</td><td>{variation_date} {date_fin_info}</td></tr>
+                                                                                <tr><td>{variation.carburant.nom}</td><td>{variation.prix} FCFA</td><td>{variation_date} {date_fin_info}</td></tr>
                                                                                                 """
                         else:
                             html_content += f"""
                                                                                 <tr>
                                                                                     <td>{variation.carburant.nom}</td>
-                                                                                    <td>{variation.prix}</td>
+                                                                                    <td>{variation.prix} FCFA</td>
                                                                                     <td>{variation_date} {date_fin_info}</td>
                                                                                 </tr>
                                                                             """
