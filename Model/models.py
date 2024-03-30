@@ -186,6 +186,7 @@ class Deplacement(models.Model):
     kilometrage_depart = models.IntegerField()
     duree_deplacement = models.IntegerField()
     photo_jauge_depart = models.ImageField(upload_to='photo_jauge/', blank=False)
+    description = models.CharField(max_length=100, null=True)
 
     def date_fin(self):
         if self.date_depart:

@@ -116,7 +116,7 @@
                                 <div class="row justify-content-between">
                                     <div class="col-sm-12 col-md-12">
                                         <div id="user_list_datatable_info" class="dataTables_filter">
-                                            <form method="post" action="{% url 'admins:rapport_incident_conducteur_mensuel_pdf' %}">
+                                            <form method="post" action="{% url 'admins:rapport_incident_conducteur_mensuel_pdf' %}" target="_blank">
                                                 <div class="row">
 
                                                     {% csrf_token %}
@@ -132,7 +132,7 @@
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label style="font-family: -apple-system; font-size: medium"> MOIS</label>
-                                                        <select class="form-control" id="mois" name="mois" required style="width: 100%;">
+                                                        <select class="form-control" id="mois2" name="mois" required style="width: 100%;">
 
                                                             <option value="1">Janvier</option>
                                                             <option value="2">Février</option>
@@ -157,7 +157,7 @@
                                                     </div>
 
                                                     <div class="col-12 mt-5 text-right">
-                                                        <button>GENERER</button>
+                                                        <button>VISUALISER</button>
                                                         <button type="reset">RESET</button>
                                                     </div>
 
@@ -276,6 +276,14 @@
                 }, 100);
             }, 100);
         }
+    </script>
+    <script>
+
+        $('#conducteur').select2();
+        $('#annee').select2();
+        $('#annees').select2();
+        $('#mois').select2();
+        $('#mois2').select2();
     </script>
     </body>
 {% endblock %}

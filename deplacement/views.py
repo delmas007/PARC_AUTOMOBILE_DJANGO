@@ -211,7 +211,8 @@ def modifier_deplacement(request, pk):
             'date_depart': deplacement.date_depart,
             'duree_deplacement': deplacement.duree_deplacement,
             'kilometrage_depart': deplacement.kilometrage_depart,
-            'photo_jauge_depart': deplacement.photo_jauge_depart
+            'photo_jauge_depart': deplacement.photo_jauge_depart,
+            'description': deplacement.description
         })
         # if deplacement.photo_jauge_depart:
         #     initial_data['photo_jauge_depart'] = deplacement.image_jauge

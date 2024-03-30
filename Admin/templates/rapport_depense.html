@@ -112,13 +112,13 @@
                                 <div class="row justify-content-between">
                                     <div class="col-sm-12 col-md-12">
                                         <div id="user_list_datatable_info" class="dataTables_filter">
-                                            <form method="post" action="{% url 'admins:rapport_depense_pdf' %}">
+                                            <form method="post" action="{% url 'admins:rapport_depense_pdf' %}" target="_blank">
                                                 <div class="row">
 
                                                     {% csrf_token %}
                                                     <div class="col-md-4">
                                                         <label style="font-family: -apple-system; font-size: medium"> Vehicule</label>
-                                                        <select class="form-control" id="vehicule" name="vehicule" style="width: 100%;">
+                                                        <select class="form-control" id="Selectvehicule" name="vehicule" style="width: 100%;">
                                                             <option value="">Sélectionner un vehicule</option>
                                                             {% for voiture in vehicule %}
                                                                 <option value="{{ voiture.id }}">{{ voiture }} </option>
@@ -136,7 +136,7 @@
 
                                                     </div>
                                                     <div class="col-12 mt-5 text-right">
-                                                        <button type="submit">GENERER</button>
+                                                        <button type="submit">VISUALISER</button>
                                                         <button type="reset">RESET</button>
                                                     </div>
                                                 </div>
@@ -279,5 +279,9 @@
         }, 100);
     }
 </script>
+ <script>
+
+        $('#Selectvehicule').select2();
+    </script>
 </body>
 {% endblock %}
