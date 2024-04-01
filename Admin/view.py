@@ -501,7 +501,7 @@ def rapport_incident_vehicule_mensuel_pdf(request):
                 html_content += f"""<br><br><br>
                 <table border="1">
                 <tr><th>Total incidents internes</th><th>Total incidents externe</th></tr>
-                <tr><td>{total_incidents_externe} externes</td><td>{total_incidents_interne}</td></tr>
+                <tr><td>{total_incidents_interne}<td>{total_incidents_externe}</td></tr>
                 </table>
                 <br>
                 <br>
