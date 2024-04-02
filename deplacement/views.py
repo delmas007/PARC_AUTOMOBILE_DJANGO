@@ -53,7 +53,6 @@ def enregistrer_deplacement(request):
             photo_jauge_depart = request.FILES.get('photo_jauge_depart')
             if photo_jauge_depart:
                 deplacement.photo_jauge_depart = photo_jauge_depart
-            vehicule.kilometrage = deplacement.kilometrage_depart
             vehicule.save()
             deplacement.save()
             images = request.FILES.getlist('images')
@@ -186,7 +185,6 @@ def modifier_deplacement(request, pk):
         return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, pk=pk)
     photos = Photo.objects.filter(deplacement=pk)
-    vehicule = deplacement.vehicule
     if request.method == 'POST':
         form = deplacementModifierForm(request.POST, request.FILES, instance=deplacement)
         if form.is_valid():
@@ -198,8 +196,7 @@ def modifier_deplacement(request, pk):
                     Photo.objects.filter(deplacement=deplacement).delete()
                     for image in request.FILES.getlist('images'):
                         Photo.objects.create(deplacement=deplacement, images=image)
-            vehicule.kilometrage = deplacement.kilometrage_depart
-            vehicule.save()
+
             form.save()
 
             return redirect('deplacement:liste_deplacement')
@@ -210,7 +207,7 @@ def modifier_deplacement(request, pk):
             'conducteur': deplacement.conducteur,
             'date_depart': deplacement.date_depart,
             'duree_deplacement': deplacement.duree_deplacement,
-            'kilometrage_depart': deplacement.kilometrage_depart,
+            'kilometrage_depart': deplacement.vehicule.kilometrage,
             'photo_jauge_depart': deplacement.photo_jauge_depart,
             'description': deplacement.description
         })
@@ -307,7 +304,7 @@ def get_deplacements_data(request):
         # Filtrer les déplacements pour ceux ayant l'ID du conducteur spécifié
         deplacements = Deplacement.objects.filter(conducteur_id=conducteur_id).annotate(
             has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
-        ).filter(has_etat_arrive=False)
+        ).filter(has_etat_arrive=False).order_by('date_depart')
         data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement}
                 for deplacement in deplacements]
         return JsonResponse({'deplacements': data})
@@ -322,7 +319,7 @@ def get_deplacements_data2(request):
         # Filtrer les déplacements pour ceux ayant l'ID du conducteur spécifié
         deplacements = Deplacement.objects.filter(vehicule_id=vehicule_id).annotate(
             has_etat_arrive=Exists(EtatArrive.objects.filter(deplacement_id=OuterRef('pk')))
-        ).filter(has_etat_arrive=False)
+        ).filter(has_etat_arrive=False).order_by('date_depart')
         data = [{'date_depart': deplacement.date_depart, 'duree_deplacement': deplacement.duree_deplacement}
                 for deplacement in deplacements]
         return JsonResponse({'deplacements': data})
@@ -568,14 +565,14 @@ def arrive_search(request):
     return render(request, 'afficher_deplacement_arrive.html', context)
 
 
-def get_kilometrage_actuel(request):
-    vehicule_id = request.GET.get('vehicule_id')
-    if vehicule_id:
-        try:
-            vehicule = Vehicule.objects.get(pk=vehicule_id)
-            kilometrage_actuel = vehicule.kilometrage
-            return JsonResponse({'kilometrage_actuel': kilometrage_actuel})
-        except Vehicule.DoesNotExist:
-            return JsonResponse({'error': 'Véhicule non trouvé'}, status=404)
-    else:
-        return JsonResponse({'error': 'ID de véhicule non fourni'}, status=400)
+# def get_kilometrage_actuel(request):
+#     vehicule_id = request.GET.get('vehicule_id')
+#     if vehicule_id:
+#         try:
+#             vehicule = Vehicule.objects.get(pk=vehicule_id)
+#             kilometrage_actuel = vehicule.kilometrage
+#             return JsonResponse({'kilometrage_actuel': kilometrage_actuel})
+#         except Vehicule.DoesNotExist:
+#             return JsonResponse({'error': 'Véhicule non trouvé'}, status=404)
+#     else:
+#         return JsonResponse({'error': 'ID de véhicule non fourni'}, status=400)
