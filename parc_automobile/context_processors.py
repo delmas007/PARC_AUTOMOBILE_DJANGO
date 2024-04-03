@@ -119,6 +119,10 @@ def accueil_data(request):
     nombre_conducteurs = utilisateurs.count()
     vehicules_list = Vehicule.objects.filter(supprimer=False)
     nombre_vehicule = vehicules_list.count()
+    for deplacement in deplacements:
+        if deplacement.date_depart == date.today():
+            deplacement.kilometrage_depart = deplacement.vehicule.kilometrage
+            deplacement.save()
 
     return {'demandes': demande, 'inciden': incidents, 'totals': totals, 'nombre_deplacement': nombre_deplacement,
             'nombre_deplacement_en_cours': nombre_deplacement_en_cours, 'nombre_prolongement': nombre_prolongement,
@@ -127,6 +131,5 @@ def accueil_data(request):
             'vehicules_proches_vidange': vehicules_proches_vidange, 'nombre_incident_externe': nombre_incident_externe,
             'nombre_incident_interne': nombre_incident_interne, 'nombre_entretien': nombre_entretien,
             'nombre_carburant': nombre_carburant, 'nombre_etatarrive': nombre_etatarrive,
-            'nombre_conducteurs': nombre_conducteurs, 'nombre_vehicule': nombre_vehicule, 'prolongements_non_lus': prolongements_non_lus}
-
-
+            'nombre_conducteurs': nombre_conducteurs, 'nombre_vehicule': nombre_vehicule,
+            'prolongements_non_lus': prolongements_non_lus}

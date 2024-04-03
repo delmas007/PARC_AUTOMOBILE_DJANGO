@@ -704,9 +704,9 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade " id="modal_prolongement_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" style="overflow-y: auto">
+        <div class="modal fade " id="modal_prolongement_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-custom" role="document">
-            <div class="modal-content" style="overflow-y: auto">
+            <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalScrollableTitle">Demande de
                             prolongement {{ deplacement.id }}</h5>
@@ -714,7 +714,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="iq-card-body">
+                    <div class="iq-card-body" style="overflow-y: auto">
                         <form class="form-horizontal" id="DeplacementArriverForm" method="post"
                               enctype="multipart/form-data" action="{% url 'utilisateur:prolongement' %}">
                             {% csrf_token %}
@@ -784,9 +784,9 @@
                 </div>
             </div>
         </div >
-        <div class="modal fade" id="modal_incident_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" style="overflow-y: auto">
+        <div class="modal fade" id="modal_incident_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true" >
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-                <div class="modal-content" style="overflow-y: auto">
+                <div class="modal-content" >
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalScrollableTitle">Signalement
                             d'incident {{ deplacement.id }}</h5>
@@ -794,7 +794,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="iq-card-body">
+                    <div class="iq-card-body" style="overflow-y: auto">
                         <form class="form-horizontal" id="DeplacementArriverForm" method="post"
                               enctype="multipart/form-data" action="{% url 'utilisateur:sendIncident' %}">
                             {% csrf_token %}

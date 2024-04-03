@@ -183,7 +183,7 @@ class Deplacement(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True, null=True)
     date_depart = models.DateField(blank=True, null=True)
-    kilometrage_depart = models.IntegerField()
+    kilometrage_depart = models.IntegerField(null=True, blank=True)
     duree_deplacement = models.IntegerField()
     photo_jauge_depart = models.ImageField(upload_to='photo_jauge/', blank=False)
     description = models.CharField(max_length=100, null=True)

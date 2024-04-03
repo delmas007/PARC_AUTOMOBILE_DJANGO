@@ -56,13 +56,6 @@
                                             <input required type="number" class="form-control" id="exampleInputdate"  min="1" name="duree_deplacement">
                                         </div>
                                     </div>
-
-                                    <div class="form-group row">
-                                        <label class="control-label col-sm-2 align-self-center mb-0" for="email">Kilométrage ( Km ) :</label>
-                                        <div class="col-sm-10">
-                                            <input type="number"   class="form-control" id="InputKilo"  name="kilometrage_depart" required oninvalid="this.setCustomValidity('Veuillez entrer un kilométrage supérieur ou égale à la valeur actuelle:  '  + this.getAttribute('min') + '.')">
-                                        </div>
-                                    </div>
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="description">Description:</label>
                                         <div class="col-sm-10">
@@ -260,8 +253,9 @@
                                     var dateDebut = new Date(deplacement.date_depart);
                                     var dureeJours = deplacement.duree_deplacement;
                                     var dateFin = new Date(dateDebut);
+                                    var options = { year: 'numeric', month: 'long', day: 'numeric'};
                                     dateFin.setDate(dateDebut.getDate() + dureeJours);
-                                    textareaContent += '' + deplacement.date_depart + '     |     ' + dateFin.toLocaleDateString() + '\n';
+                                    textareaContent += '' + dateDebut.toLocaleDateString('fr-FR', options)  + '     |     ' + dateFin.toLocaleDateString('fr-FR', options) + '\n';
                                 });
                                 // Mettre à jour le contenu du textarea
                                 $('#textareaDeplacements').val(textareaContent);
@@ -308,9 +302,10 @@
                                     var dateDebut = new Date(deplacement.date_depart);
                                     var dureeJours = deplacement.duree_deplacement;
                                     var dateFin = new Date(dateDebut);
+                                    var options = { year: 'numeric', month: 'long', day: 'numeric' };
                                     dateFin.setDate(dateDebut.getDate() + dureeJours);
 
-                                    textareaContent += '' + deplacement.date_depart + '     |     ' + dateFin.toLocaleDateString() + '\n';
+                                    textareaContent += '' + dateDebut.toLocaleDateString('fr-FR', options) + '     |     ' + dateFin.toLocaleDateString('fr-FR', options) + '\n';
                                 });
                                 // Mettre à jour le contenu du textarea
                                 $('#textareaDeplacements2').val(textareaContent);
@@ -331,27 +326,7 @@
             })
         })
     </script>
-    <script>
-        // Détecter le changement dans le champ de sélection de véhicules
-        $('#selectVehicule').change(function() {
-            var vehiculeId = $(this).val(); // Récupérer l'ID du véhicule sélectionné
-            $.ajax({
-                url: '{% url "deplacement:get_kilometrage_actuel" %}', // URL de la vue pour obtenir le kilométrage actuel
-                type: 'GET',
-                data: {
-                    vehicule_id: vehiculeId
-                },
-                success: function(response) {
-                    // Mettre à jour le champ de formulaire du kilométrage avec la valeur reçue
-                    $('#InputKilo').val(response.kilometrage_actuel);
-                    $('#InputKilo').attr('min', response.kilometrage_actuel);
-                },
-                error: function(xhr, errmsg, err) {
-                    console.log(errmsg);
-                }
-            });
-        });
-    </script>
+
 
 
 

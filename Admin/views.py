@@ -773,8 +773,8 @@ def rapport_depense_pdf(request):
                    </head>
                    <body class="center">
                   <h1>Rapport Depense du {date_debut} à {date_fin}</h1> <table border="1"> 
-                  <tr><th>Voitures</th><th>Nombre de deplacements</th><th>Quantitié de carburant</th><th>Carburant</th><th>Nombre 
-                  entretien</th><th>Entretien</th><th>Total</th></tr>
+                  <tr><th>Voitures</th><th>Nombre de deplacements</th><th>Quantitié de carburant</th><th>Montant Carburant</th><th>Nombre 
+                  entretien</th><th>Montant Entretien</th><th>Total</th></tr>
 
                    """
             # Créer une liste pour stocker les lignes HTML

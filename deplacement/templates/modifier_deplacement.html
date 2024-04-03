@@ -60,7 +60,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-sm-2 align-self-center mb-0" for="kilometrage_depart" >Kilométrage (km/h) :</label>
                                         <div class="col-sm-9">
-                                            <input type="number"  class="form-control" id="kilometrage_depart"  name="kilometrage_depart" value="{{ form.kilometrage_depart.value }}">
+                                            <input type="number" disabled class="form-control" id="kilometrage_depart"  name="kilometrage_depart" value="{{ form.kilometrage_depart.value }}">
                                         </div>
                                     </div>
 
@@ -94,10 +94,9 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="form-horizontal">
+                        <div class="form-horizontal row">
                             <textarea class="col-md-6 mr-md-auto" rows="5" hidden="hidden" disabled id="textareaDeplacements"></textarea>
                             <textarea class="col-md-6 ml-md-auto" rows="5" hidden="hidden" disabled id="textareaDeplacements2" ></textarea>
-
                         </div>
                     </div>
                 </div>
@@ -187,7 +186,7 @@
     </script>
 
 
-    <script>
+     <script>
         $(document).ready(function() {
             $('#selectConducteur').change(function() {
                 var selectedConducteurId = $(this).val();
@@ -212,8 +211,9 @@
                                     var dateDebut = new Date(deplacement.date_depart);
                                     var dureeJours = deplacement.duree_deplacement;
                                     var dateFin = new Date(dateDebut);
+                                    var options = { year: 'numeric', month: 'long', day: 'numeric'};
                                     dateFin.setDate(dateDebut.getDate() + dureeJours);
-                                    textareaContent += '' + deplacement.date_depart + '     |     ' + dateFin.toLocaleDateString() + '\n';
+                                    textareaContent += '' + dateDebut.toLocaleDateString('fr-FR', options) + '     |     ' + dateFin.toLocaleDateString('fr-FR', options) + '\n';
                                 });
                                 // Mettre à jour le contenu du textarea
                                 $('#textareaDeplacements').val(textareaContent);
@@ -260,9 +260,10 @@
                                     var dateDebut = new Date(deplacement.date_depart);
                                     var dureeJours = deplacement.duree_deplacement;
                                     var dateFin = new Date(dateDebut);
+                                    var options = { year: 'numeric', month: 'long', day: 'numeric'};
                                     dateFin.setDate(dateDebut.getDate() + dureeJours);
 
-                                    textareaContent += '' + deplacement.date_depart + '     |     ' + dateFin.toLocaleDateString() + '\n';
+                                    textareaContent += '' + dateDebut.toLocaleDateString('fr-FR', options) + '     |     ' + dateFin.toLocaleDateString('fr-FR', options) + '\n';
                                 });
                                 // Mettre à jour le contenu du textarea
                                 $('#textareaDeplacements2').val(textareaContent);
@@ -282,26 +283,6 @@
                 }
             })
         })
-    </script>
-    <script>
-        // Détecter le changement dans le champ de sélection de véhicules
-        $('#selectVehicule').change(function() {
-            var vehiculeId = $(this).val(); // Récupérer l'ID du véhicule sélectionné
-            $.ajax({
-                url: '{% url "deplacement:get_kilometrage_actuel" %}', // URL de la vue pour obtenir le kilométrage actuel
-                type: 'GET',
-                data: {
-                    vehicule_id: vehiculeId
-                },
-                success: function(response) {
-                    // Mettre à jour le champ de formulaire du kilométrage avec la valeur reçue
-                    $('#kilometrage_depart').val(response.kilometrage_actuel);
-                },
-                error: function(xhr, errmsg, err) {
-                    console.log(errmsg);
-                }
-            });
-        });
     </script>
     </body>
 {% endblock %}
