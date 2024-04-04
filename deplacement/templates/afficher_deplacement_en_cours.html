@@ -28,7 +28,21 @@
         #dureeParagraph{
         }
 
+        .hiddenRefuserForm {
+            display: none;
+        }
 
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        textarea {
+            resize: vertical;
+        }
     </style>
     <!-- loader Start -->
     <div id="loading">
@@ -112,7 +126,7 @@
                                                     </td>
                                                     <td>
                                                         {% if deplacement.id in prolongement_encours and deplacement.id not in prolongement_arrive and deplacement.id not in prolongement_accepte %}
-                                                            <!-- Bouton prolongement avec attribut data-deplacement-id -->
+
                                                             <button type="button" class="btn mb-3 btn-info terminer-btn2 prolongement-btn" data-target="#prolongementModal{{ deplacement.id }}" data-toggle="modal" data-deplacement-id="{{ deplacement.id }}">
                                                                 <i class="ri-shuffle-fill"></i>
                                                                 Prolongement demandé
@@ -146,14 +160,21 @@
                                                                         <div class="modal-footer">
                                                                         <form action="{% url 'deplacement:accept_prolongement' prolongement.id %}" method="post">
                                                                             {% csrf_token %}
-                                                                            <button id="accepterButton"  type="submit" class="btn btn-success mr-auto">ACCEPTER</button>
+                                                                            <button id="accepterButton"  type="submit" class="btn btn-success mr-auto">ACCEPTER ✅</button>
                                                                         </form>
-                                                                        <form action="{% url 'deplacement:refuse_prolongement' prolongement.id %}" method="post">
-                                                                        {% csrf_token %}
-                                                                        <button id="refuserButton" type="submit" class="btn btn-danger">REFUSER</button>
+                                                                        <button type="button" class="btn btn-secondary refuserButton" data-prolongement-id="{{ prolongement.id }}">REFUSER ❌</button>
+                                                                        <div id="refuserFormContainer_{{ prolongement.id }}" class="hiddenRefuserForm" style="display: none;">
+                                                                            <form id="refuserForm_{{ prolongement.id }}" action="{% url 'deplacement:refuse_prolongement' prolongement.id %}" method="post">
+                                                                                {% csrf_token %}
+                                                                                <div class="form-group">
+                                                                                    <label for="motifRefus_{{ prolongement.id }}">Motif de refus :</label>
+                                                                                    <textarea id="motifRefus_{{ prolongement.id }}" name="motif_refus" class="form-control" rows="3" placeholder="Entrez le motif de refus"></textarea>
+                                                                                </div>
+                                                                                <button type="submit" class="btn text-white" style="background-color: #3ab0c3">ENVOYER ✅</button>
+                                                                            </form>
+                                                                        </div>
                                                                     {% endif %}
                                                                 {% endfor %}
-                                                                </form>
                                                                 </div>
                                                         </div>
                                                     </div>
@@ -423,9 +444,9 @@
                                     var img = document.createElement('img');
                                     img.src = photoUrl;
                                     img.classList.add('modal-photo');
-                                     img.addEventListener('click', function() {
-                                showImagePopup(photoUrl);
-                            });
+                                    img.addEventListener('click', function() {
+                                        showImagePopup(photoUrl);
+                                    });
                                     photoContainer.appendChild(img);
 
 
@@ -443,7 +464,7 @@
             });
         });
 
- function showImagePopup2(photo_jauge_demandeUrl) {
+        function showImagePopup2(photo_jauge_demandeUrl) {
             var popupImage = document.createElement('img');
             popupImage.src = photo_jauge_demandeUrl;
             popupImage.style.maxWidth = '80%';
@@ -469,41 +490,55 @@
             });
         }
         function showImagePopup(imageUrl) {
-    var popupContainer = document.createElement('div');
-    popupContainer.style.position = 'fixed';
-    popupContainer.style.top = '50%';
-    popupContainer.style.left = '50%';
-    popupContainer.style.transform = 'translate(-50%, -50%)';
-    popupContainer.style.background = 'rgba(255, 255, 255, 0.9)';
-    popupContainer.style.border = '1px solid #ccc';
-    popupContainer.style.padding = '20px';
-    popupContainer.style.zIndex = '9999';
+            var popupContainer = document.createElement('div');
+            popupContainer.style.position = 'fixed';
+            popupContainer.style.top = '50%';
+            popupContainer.style.left = '50%';
+            popupContainer.style.transform = 'translate(-50%, -50%)';
+            popupContainer.style.background = 'rgba(255, 255, 255, 0.9)';
+            popupContainer.style.border = '1px solid #ccc';
+            popupContainer.style.padding = '20px';
+            popupContainer.style.zIndex = '9999';
 
-    var img = document.createElement('img');
-    img.src = imageUrl;
-    img.style.maxWidth = '100%';
-    img.style.height = 'auto';
+            var img = document.createElement('img');
+            img.src = imageUrl;
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
 
-    // Append image to popup container
-    popupContainer.appendChild(img);
+            // Append image to popup container
+            popupContainer.appendChild(img);
 
-    // Close popup when clicked outside the image
-    popupContainer.addEventListener('click', function(event) {
-        if (event.target === popupContainer) {
-            document.body.removeChild(popupContainer);
+            // Close popup when clicked outside the image
+            popupContainer.addEventListener('click', function(event) {
+                if (event.target === popupContainer) {
+                    document.body.removeChild(popupContainer);
+                }
+            });
+
+            // Append popup container to body
+            document.body.appendChild(popupContainer);
+            popupContainer.addEventListener('click', function(event) {
+                if (event.target === popupContainer || event.target === img) {
+                    document.body.removeChild(popupContainer);
+                }
+            });
+
         }
-    });
 
-    // Append popup container to body
-    document.body.appendChild(popupContainer);
-     popupContainer.addEventListener('click', function(event) {
-        if (event.target === popupContainer || event.target === img) {
-            document.body.removeChild(popupContainer);
-        }
-    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.refuserButton').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var prolongementId = this.dataset.prolongementId;
+                    var button = this;
+                    var formContainer = document.getElementById('refuserFormContainer_' + prolongementId);
 
-}
-
+                    button.style.display = 'none'; // Cacher le bouton "Refuser"
+                    formContainer.style.display = 'block'; // Afficher le formulaire de refus
+                });
+            });
+        });
     </script>
 
 

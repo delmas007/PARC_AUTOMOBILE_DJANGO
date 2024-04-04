@@ -243,6 +243,7 @@ class Demande_prolongement(models.Model):
     lu = models.BooleanField(default=False)
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
     date_premiere = models.DateField(auto_now_add=True, null=True)
+    motif_refus = models.CharField(max_length=250, blank=True, null=True)
 
     @property
     def time_since_reponse(self):

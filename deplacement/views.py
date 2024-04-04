@@ -414,7 +414,6 @@ def accept_prolongement(request, prolongement_id):
     prolongement.date_reponse = timezone.now()
     deplacement.save()
     prolongement.save()
-
     return redirect('deplacement:liste_deplacement_en_cours')
 
 
@@ -427,6 +426,7 @@ def refuse_prolongement(request, prolongement_id):
     prolongement.refuser = True
     prolongement.accepter = False
     prolongement.date_reponse = timezone.now()
+    prolongement.motif_refus = request.POST.get('motif_refus')
     prolongement.save()
 
     return redirect('deplacement:liste_deplacement_en_cours')
