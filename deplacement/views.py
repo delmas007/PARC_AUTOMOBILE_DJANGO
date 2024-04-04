@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.http import require_GET
 from Model.models import Deplacement, Photo, EtatArrive, Demande_prolongement, Conducteur, Vehicule
-from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm, DeplacementSearchForm
+from deplacement.forms import DeplacementForm, deplacementModifierForm, EtatArriveForm, DeplacementSearchForm, \
+    deplacementModifierForm_cours
 from datetime import date, timedelta
 from django.db.models import Q, Exists, OuterRef, ExpressionWrapper, F, fields
 import json
@@ -180,6 +181,31 @@ def liste_deplacement_arrive(request):
 
 
 @login_required(login_url='Connexion')
+def modifier_deplacement_cours(request, pk):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
+    deplacement = get_object_or_404(Deplacement, pk=pk)
+    photos = Photo.objects.filter(deplacement=pk)
+    if request.method == 'POST':
+        form = deplacementModifierForm_cours(request.POST, request.FILES, instance=deplacement)
+        if form.is_valid():
+
+            form.save()
+
+            return redirect('deplacement:liste_deplacement_en_cours')
+    else:
+
+        form = deplacementModifierForm_cours(instance=deplacement, initial={
+            'vehicule': deplacement.vehicule,
+            'conducteur': deplacement.conducteur,
+        })
+        # if deplacement.photo_jauge_depart:
+        #     initial_data['photo_jauge_depart'] = deplacement.image_jauge
+
+    return render(request, 'modifier_deplacement_cours.html', {'form': form, 'deplacement': deplacement, 'photos': photos})
+
+
+@login_required(login_url='Connexion')
 def modifier_deplacement(request, pk):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
@@ -235,6 +261,16 @@ def delete_deplacement(request, deplacement_id):
     image.delete()
     deplacement.delete()
     return redirect('deplacement:liste_deplacement')
+
+@login_required(login_url='Connexion')
+def delete_deplacement_cours(request, deplacement_id):
+    if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
+        return redirect('utilisateur:erreur')
+    deplacement = get_object_or_404(Deplacement, id=deplacement_id)
+    image = Photo.objects.filter(deplacement=deplacement_id)
+    image.delete()
+    deplacement.delete()
+    return redirect('deplacement:liste_deplacement_en_cours')
 
 
 @login_required(login_url='Connexion')
