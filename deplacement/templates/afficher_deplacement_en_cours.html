@@ -116,14 +116,12 @@
                                                         {% if deplacement.date_depart == aujourd_hui %}
                                                         <div class="flex align-items-center list-user-action">
                                                             <a class="zoom-on-hover iq-bg-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Modifier le deplacement" href="{% url 'deplacement:modifier_deplacement_cours' pk=deplacement.pk %}"><i class="ri-pencil-line"></i></a>
-
                                                         </div>
                                                         {% endif %}
                                                     </td>
                                                     <td>
                                                         <div class="flex align-items-center list-user-action">
                                                             <a class="iq-bg-danger zoom-on-hover" data-toggle="tooltip" data-placement="top" title="" data-original-title="Annuler le deplacement" href="#" onclick="confirmDeleteModale(this)" data-deplacement-id="{{ deplacement.pk }}"><i class="bi bi-x"></i></a>
-
                                                         </div>
                                                     </td>
                                                     <td>
