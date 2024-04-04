@@ -17,24 +17,6 @@ import json
 def enregistrer_deplacement(request):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
-    conducteurs = Conducteur.objects.all()
-    vehicules = Vehicule.objects.all()
-    date_aujourdhui = date.today()
-    etatarrives = EtatArrive.objects.all()
-
-    # Définir une valeur par défaut si aucun véhicule n'est sélectionné
-    for conducteur in conducteurs:
-        deplacements = Deplacement.objects.filter(conducteur=conducteur)
-        for deplacement in deplacements:
-            if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(deplacement=deplacement).exists():
-                conducteur.disponibilite = False
-                conducteur.save()
-    for vehicule in vehicules:
-        deplacements = Deplacement.objects.filter(vehicule=vehicule)
-        for deplacement in deplacements:
-            if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(deplacement=deplacement).exists():
-                vehicule.disponibilite = False
-                vehicule.save()
 
     if request.method == 'POST':
 
@@ -130,6 +112,7 @@ def liste_deplacement_en_cours(request):
     prolongement_encours_ids = prolongement_encours.values_list('deplacement_id', flat=True)
     prolongement_arrive_ids = prolongement_arrive.values_list('deplacement_id', flat=True)
     prolongement_accepte_ids = prolongement_accepte.values_list('deplacement_id', flat=True)
+
     paginator = Paginator(deplacements, 5)
     try:
         page = request.GET.get("page")
@@ -142,7 +125,7 @@ def liste_deplacement_en_cours(request):
     return render(request, 'afficher_deplacement_en_cours.html',
                   {'deplacements': deplacement, 'prolongement_encours': prolongement_encours_ids,
                    'prolongement_arrive': prolongement_arrive_ids, 'prolongement_accepte': prolongement_accepte_ids,
-                   'prolongements': prolongement})
+                   'prolongements': prolongement, 'aujourd_hui': aujourd_hui,})
 
 
 @login_required(login_url='Connexion')
@@ -185,10 +168,17 @@ def modifier_deplacement_cours(request, pk):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, pk=pk)
+    ancien_deplacement = get_object_or_404(Deplacement, pk=pk)
     photos = Photo.objects.filter(deplacement=pk)
     if request.method == 'POST':
         form = deplacementModifierForm_cours(request.POST, request.FILES, instance=deplacement)
         if form.is_valid():
+            if ancien_deplacement.vehicule != deplacement.vehicule:
+                ancien_deplacement.vehicule.disponibilite = True
+                ancien_deplacement.vehicule.save()
+            if ancien_deplacement.conducteur != deplacement.conducteur:
+                ancien_deplacement.conducteur.disponibilite = True
+                ancien_deplacement.conducteur.save()
             deplacement.kilometrage_depart = deplacement.vehicule.kilometrage
             deplacement.conducteur.disponibilite = False
             deplacement.conducteur.save()
@@ -273,6 +263,10 @@ def delete_deplacement_cours(request, deplacement_id):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, id=deplacement_id)
+    deplacement.conducteur.disponibilite =True
+    deplacement.conducteur.save()
+    deplacement.vehicule.disponibilite =True
+    deplacement.vehicule.save()
     image = Photo.objects.filter(deplacement=deplacement_id)
     image.delete()
     deplacement.delete()

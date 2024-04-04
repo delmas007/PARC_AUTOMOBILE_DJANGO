@@ -597,4 +597,6 @@ def deplacement_s(request, prolongement_nom):
 def detail_prolongement(request, deplacement_id):
     image_deplacement = Photo.objects.filter(deplacement=deplacement_id)
     deplacement_details = get_object_or_404(Deplacement, pk=deplacement_id)
-    return render(request, 'detail_prolongement.html', {'deplacement_details': deplacement_details, 'image_deplacement':image_deplacement})
+    today = date.today()
+    return render(request, 'detail_prolongement.html', {'deplacement_details': deplacement_details, 'aujourdhui': today,
+                                                        'image_deplacement': image_deplacement})

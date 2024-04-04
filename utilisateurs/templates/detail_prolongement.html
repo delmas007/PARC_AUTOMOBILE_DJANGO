@@ -49,6 +49,14 @@
             color: var(--white);
             cursor: pointer;
         }
+        #return-button {
+            background-color: white;
+            border: 1px solid var(--primary);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            color: black;
+            cursor: pointer;
+        }
     </style>
     <nav class="Entete" style=" justify-content: center; align-items: center;">
         <div class="col-2">
@@ -131,12 +139,14 @@
                                     {% endif %}
                                 </div>
                                 <div class="dropzone-actions">
-                                    <button type="reset">
-                                        Retour
-                                    </button>
+                                  <button id="return-button" type="button" onclick="window.location.href='{% url 'utilisateur:liste_mission' %}'">
+                                      Retour
+                                  </button>
+                                    {% if deplacement_details.date_depart == aujourdhui %}
                                     <button id="submit-button" type="submit">
                                         Refuser déplacement
                                     </button>
+                                    {% endif %}
                                 </div>
                             </div>
 

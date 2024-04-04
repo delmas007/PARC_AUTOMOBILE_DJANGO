@@ -119,10 +119,29 @@ def accueil_data(request):
     nombre_conducteurs = utilisateurs.count()
     vehicules_list = Vehicule.objects.filter(supprimer=False)
     nombre_vehicule = vehicules_list.count()
+    conducteurs = Conducteur.objects.all()
+    vehicules = Vehicule.objects.all()
+    date_aujourdhui = date.today()
+    etatarrives = EtatArrive.objects.all()
     for deplacement in deplacements:
         if deplacement.date_depart == date.today():
             deplacement.kilometrage_depart = deplacement.vehicule.kilometrage
             deplacement.save()
+        # Définir une valeur par défaut si aucun véhicule n'est sélectionné
+        for conducteur in conducteurs:
+            deplacements = Deplacement.objects.filter(conducteur=conducteur)
+            for deplacement in deplacements:
+                if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(
+                        deplacement=deplacement).exists():
+                    conducteur.disponibilite = False
+                    conducteur.save()
+        for vehicule in vehicules:
+            deplacements = Deplacement.objects.filter(vehicule=vehicule)
+            for deplacement in deplacements:
+                if deplacement.date_depart <= date_aujourdhui and not etatarrives.filter(
+                        deplacement=deplacement).exists():
+                    vehicule.disponibilite = False
+                    vehicule.save()
 
     return {'demandes': demande, 'inciden': incidents, 'totals': totals, 'nombre_deplacement': nombre_deplacement,
             'nombre_deplacement_en_cours': nombre_deplacement_en_cours, 'nombre_prolongement': nombre_prolongement,
