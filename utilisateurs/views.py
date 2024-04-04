@@ -22,10 +22,11 @@ from django.contrib import messages
 
 import deplacement
 from Model.forms import UserRegistrationForm, ConnexionForm
-from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement, Entretien
+from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement, Entretien, \
+    Motif
 from deplacement.forms import DeplacementSearchForm
 from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse, DemandeProlongementForm, \
-    DeclareIncidentForm, notificationSearchForm
+    DeclareIncidentForm, notificationSearchForm, MotifForm
 from utilisateurs.tokens import account_activation_token
 from django.utils.html import strip_tags
 
@@ -598,5 +599,20 @@ def detail_prolongement(request, deplacement_id):
     image_deplacement = Photo.objects.filter(deplacement=deplacement_id)
     deplacement_details = get_object_or_404(Deplacement, pk=deplacement_id)
     today = date.today()
+    motif= Motif.objects.all()
+    deplacement_motif=motif.values_list('deplacement_id', flat=True)
     return render(request, 'detail_prolongement.html', {'deplacement_details': deplacement_details, 'aujourdhui': today,
-                                                        'image_deplacement': image_deplacement})
+                                                        'image_deplacement': image_deplacement, 'deplacement_motif': deplacement_motif})
+
+
+def ajouter_motif(request):
+    if request.method == 'POST':
+        form = MotifForm(request.POST)
+        if form.is_valid():
+            motif = form.save(commit=False)
+            deplacement_id = request.POST.get('deplacement_id')
+            descritption_modtif = request.POST.get('descritption_modtif')
+            motif.descritption_modtif = descritption_modtif
+            motif.deplacement_id = deplacement_id
+            motif.save()
+        return redirect('utilisateur:liste_mission')

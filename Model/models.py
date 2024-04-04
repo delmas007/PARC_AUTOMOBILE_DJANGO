@@ -198,6 +198,11 @@ class Deplacement(models.Model):
         return f"{self.vehicule} - {self.conducteur.numero_permis_conduire}"
 
 
+class Motif(models.Model):
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
+    descritption_modtif = models.CharField(max_length=100, null=True)
+
+
 class Demande_location(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)

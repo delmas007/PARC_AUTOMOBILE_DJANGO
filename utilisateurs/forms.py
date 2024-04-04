@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.forms.widgets import Input
 
-from Model.models import Conducteur, Utilisateur, Demande_prolongement, Incident, Vehicule, Deplacement
+from Model.models import Conducteur, Utilisateur, Demande_prolongement, Incident, Vehicule, Deplacement, Motif
 from django import forms
 
 
@@ -65,3 +65,9 @@ class DeclareIncidentForm(forms.ModelForm):
         model = Incident
         exclude = ['utilisateurs', 'vehicule', 'conducteur', 'deplacement']
         images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=True)
+
+
+class MotifForm(forms.ModelForm):
+    class Meta:
+        model = Motif
+        fields = ['descritption_modtif']

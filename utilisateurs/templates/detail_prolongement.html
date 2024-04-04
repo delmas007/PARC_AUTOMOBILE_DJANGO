@@ -248,7 +248,7 @@
                                   <button id="return-button" type="button" onclick="window.location.href='{% url 'utilisateur:liste_mission' %}'">
                                       Retour
                                   </button>
-                                    {% if deplacement_details.date_depart == aujourdhui %}
+                                    {% if deplacement_details.date_depart == aujourdhui and deplacement_details.id not in deplacement_motif %}
                                     <button class="show-modal" id="submit-button" type="submit">
                                         Refuser déplacement
                                     </button>
@@ -262,13 +262,15 @@
             </div>
         </div>
     </div>
-    <section>
+    <section id="deplacement_detail" data-deplacement-id="{{ deplacement_details.id }}">
         <span class="overlay"></span>
         <div class="modal-box">
-            <form>
-                <textarea placeholder="Veillez entrer le motif de votre annulation" name="" id="" cols="30" rows="10" ></textarea>
+            <form action="{% url 'utilisateur:ajouter_motif' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="deplacement_id" value="{{ deplacement_details.id }}">
+                <textarea id="message-input"  placeholder="Veillez entrer le motif de votre annulation" name="descritption_modtif" cols="30" rows="10" ></textarea>
                 <div class="buttons" style="align-items: center;">
-                    <button type="submit" style="margin-left: 0; margin-right: 0; width: 100%">Envoyer ✅</button>
+                    <button type="submit" style="margin-left: 0; margin-right: 0; width: 100%">Envoyer ✅ </button>
                 </div>
             </form>
         </div>
@@ -298,6 +300,31 @@
 
 
         </script>
+{#    <script>#}
+{#        $(document).ready(function() {#}
+{#            $('#message-form').on('submit', function(event) {#}
+{#                event.preventDefault();#}
+{#                var destinataireId = $('#deplacement_detail').data('deplacement-id');#}
+{#                var formData = $(this).serialize();#}
+{#                var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();#}
+{#                formData += '&deplacement_id=' + destinataireId;#}
+{#                alert("fff")#}
+{#                $.ajax({#}
+{#                    type: 'POST',#}
+{#                    url: '{% url 'utilisateur:ajouter_motif' %}',#}
+{#                    headers: {'X-CSRFToken': csrfToken},#}
+{#                    data: formData,#}
+{#                    success: function(response) {#}
+{##}
+{#                        $('#message-input').val('');#}
+{#                    },#}
+{#                    error: function(xhr, status, error) {#}
+{#                        console.error(error);#}
+{#                    }#}
+{#                });#}
+{#            });#}
+{#        });#}
+{#    </script>#}
         {% include 'footer_conducteur.html' %}
     </body>
 {% endblock %}
