@@ -433,6 +433,9 @@
                                             <div class="card-header">
                                                 <h3 class="card-title col-sm-4">Deplacement: {{ deplacement.description }}</h3>
                                                 <div class="card-tools">
+                                                    <a href="{% url 'utilisateur:detail_prolongement' deplacement.id %}"  title="Voir les détails de la mission" style="font-size: 20px">
+                                                        <i class="bi bi-eye-fill"></i>
+                                                    </a>
                                                     <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                                                         <i class="fas fa-minus"></i>
                                                     </button>

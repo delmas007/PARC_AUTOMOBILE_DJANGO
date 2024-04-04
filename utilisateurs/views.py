@@ -249,7 +249,8 @@ def passwordResetConfirm(request, uidb64, token):
             form = ChangerMotDePasse(user, request.POST)
             if form.is_valid():
                 form.save()
-                messages.success(request, "Votre mot de passe a été défini. Vous pouvez continuer et vous connecter maintenant.")
+                messages.success(request,
+                                 "Votre mot de passe a été défini. Vous pouvez continuer et vous connecter maintenant.")
                 return redirect('Connexion')
             else:
                 for error in list(form.errors.values()):
@@ -591,3 +592,9 @@ def deplacement_s(request, prolongement_nom):
         context['no_results'] = True
 
     return render(request, 'afficher_deplacement_en_cours.html', context)
+
+
+def detail_prolongement(request, deplacement_id):
+    image_deplacement = Photo.objects.filter(deplacement=deplacement_id)
+    deplacement_details = get_object_or_404(Deplacement, pk=deplacement_id)
+    return render(request, 'detail_prolongement.html', {'deplacement_details': deplacement_details, 'image_deplacement':image_deplacement})
