@@ -189,7 +189,11 @@ def modifier_deplacement_cours(request, pk):
     if request.method == 'POST':
         form = deplacementModifierForm_cours(request.POST, request.FILES, instance=deplacement)
         if form.is_valid():
-
+            deplacement.kilometrage_depart = deplacement.vehicule.kilometrage
+            deplacement.conducteur.disponibilite = False
+            deplacement.conducteur.save()
+            deplacement.vehicule.disponibilite = False
+            deplacement.vehicule.save()
             form.save()
 
             return redirect('deplacement:liste_deplacement_en_cours')
@@ -202,7 +206,8 @@ def modifier_deplacement_cours(request, pk):
         # if deplacement.photo_jauge_depart:
         #     initial_data['photo_jauge_depart'] = deplacement.image_jauge
 
-    return render(request, 'modifier_deplacement_cours.html', {'form': form, 'deplacement': deplacement, 'photos': photos})
+    return render(request, 'modifier_deplacement_cours.html',
+                  {'form': form, 'deplacement': deplacement, 'photos': photos})
 
 
 @login_required(login_url='Connexion')
@@ -222,7 +227,7 @@ def modifier_deplacement(request, pk):
                     Photo.objects.filter(deplacement=deplacement).delete()
                     for image in request.FILES.getlist('images'):
                         Photo.objects.create(deplacement=deplacement, images=image)
-
+            deplacement.kilometrage_depart = deplacement.vehicule.kilometrage
             form.save()
 
             return redirect('deplacement:liste_deplacement')
@@ -261,6 +266,7 @@ def delete_deplacement(request, deplacement_id):
     image.delete()
     deplacement.delete()
     return redirect('deplacement:liste_deplacement')
+
 
 @login_required(login_url='Connexion')
 def delete_deplacement_cours(request, deplacement_id):
@@ -400,8 +406,8 @@ def accept_prolongement(request, prolongement_id):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
     prolongement = get_object_or_404(Demande_prolongement, pk=prolongement_id)
-    deplacement=Deplacement.objects.get(id=prolongement.deplacement.id)
-    deplacement.duree_deplacement=deplacement.duree_deplacement + prolongement.duree
+    deplacement = Deplacement.objects.get(id=prolongement.deplacement.id)
+    deplacement.duree_deplacement = deplacement.duree_deplacement + prolongement.duree
     prolongement.en_cours = False
     prolongement.refuser = False
     prolongement.accepter = True
@@ -599,7 +605,6 @@ def arrive_search(request):
         context['no_results'] = True
 
     return render(request, 'afficher_deplacement_arrive.html', context)
-
 
 # def get_kilometrage_actuel(request):
 #     vehicule_id = request.GET.get('vehicule_id')
