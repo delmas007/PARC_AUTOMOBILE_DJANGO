@@ -248,11 +248,11 @@
                                   <button id="return-button" type="button" onclick="window.location.href='{% url 'utilisateur:liste_mission' %}'">
                                       Retour
                                   </button>
-                                    {% if deplacement_details.date_depart == aujourdhui and deplacement_details.id not in deplacement_motif %}
-                                    <button class="show-modal" id="submit-button" type="submit">
-                                        Refuser déplacement
-                                    </button>
-                                    {% endif %}
+{#                                    {% if deplacement_details.date_depart == aujourdhui and deplacement_details.id not in deplacement_motif %}#}
+{#                                    <button class="show-modal" id="submit-button" type="submit">#}
+{#                                        Signaler un problème#}
+{#                                    </button>#}
+{#                                    {% endif %}#}
                                 </div>
                             </div>
 
@@ -275,31 +275,31 @@
             </form>
         </div>
     </section>
-        <script>
-            const section = document.querySelector("section"),
-                overlay = document.querySelector(".overlay"),
-                modalBox = document.querySelector(".modal-box"),
-                contentContainer = document.getElementById('content-container'),
-                showBtn = document.querySelector(".show-modal"),
-                closeBtn = document.querySelector(".close-btn");
-
-            showBtn.addEventListener("click", () => {
-                section.classList.add("active");
-                contentContainer.classList.add('blurred');
-            });
-
-            overlay.addEventListener("click", () => {
-                section.classList.remove("active");
-                contentContainer.classList.remove('blurred');
-            });
-
-            closeBtn.addEventListener("click", () => {
-                section.classList.remove("active");
-                contentContainer.classList.remove('blurred');
-            });
-
-
-        </script>
+{#        <script>#}
+{#            const section = document.querySelector("section"),#}
+{#                overlay = document.querySelector(".overlay"),#}
+{#                modalBox = document.querySelector(".modal-box"),#}
+{#                contentContainer = document.getElementById('content-container'),#}
+{#                showBtn = document.querySelector(".show-modal"),#}
+{#                closeBtn = document.querySelector(".close-btn");#}
+{##}
+{#            showBtn.addEventListener("click", () => {#}
+{#                section.classList.add("active");#}
+{#                contentContainer.classList.add('blurred');#}
+{#            });#}
+{##}
+{#            overlay.addEventListener("click", () => {#}
+{#                section.classList.remove("active");#}
+{#                contentContainer.classList.remove('blurred');#}
+{#            });#}
+{##}
+{#            closeBtn.addEventListener("click", () => {#}
+{#                section.classList.remove("active");#}
+{#                contentContainer.classList.remove('blurred');#}
+{#            });#}
+{##}
+{##}
+{#        </script>#}
 {#    <script>#}
 {#        $(document).ready(function() {#}
 {#            $('#message-form').on('submit', function(event) {#}

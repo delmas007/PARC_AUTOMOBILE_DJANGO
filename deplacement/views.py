@@ -205,6 +205,7 @@ def modifier_deplacement(request, pk):
     if not request.user.roles or request.user.roles.role != 'GESTIONNAIRE':
         return redirect('utilisateur:erreur')
     deplacement = get_object_or_404(Deplacement, pk=pk)
+    ancien_deplacement = get_object_or_404(Deplacement, pk=pk)
     photos = Photo.objects.filter(deplacement=pk)
     if request.method == 'POST':
         form = deplacementModifierForm(request.POST, request.FILES, instance=deplacement)
@@ -217,6 +218,12 @@ def modifier_deplacement(request, pk):
                     Photo.objects.filter(deplacement=deplacement).delete()
                     for image in request.FILES.getlist('images'):
                         Photo.objects.create(deplacement=deplacement, images=image)
+            if ancien_deplacement.vehicule != deplacement.vehicule:
+                ancien_deplacement.vehicule.disponibilite = True
+                ancien_deplacement.vehicule.save()
+            if ancien_deplacement.conducteur != deplacement.conducteur:
+                ancien_deplacement.conducteur.disponibilite = True
+                ancien_deplacement.conducteur.save()
             deplacement.kilometrage_depart = deplacement.vehicule.kilometrage
             form.save()
 
