@@ -198,6 +198,11 @@ class Deplacement(models.Model):
         return f"{self.vehicule} - {self.conducteur.numero_permis_conduire}"
 
 
+class Motif(models.Model):
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
+    descritption_modtif = models.CharField(max_length=100, null=True)
+
+
 class Demande_location(models.Model):
     date_mise_a_jour = models.DateTimeField(verbose_name="Date de mise a jour", auto_now=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, null=True)
@@ -243,6 +248,7 @@ class Demande_prolongement(models.Model):
     lu = models.BooleanField(default=False)
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
     date_premiere = models.DateField(auto_now_add=True, null=True)
+    motif_refus = models.CharField(max_length=250, blank=True, null=True)
 
     @property
     def time_since_reponse(self):
