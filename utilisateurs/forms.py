@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.forms.widgets import Input
 
-from Model.models import Conducteur, Utilisateur, Demande_prolongement, Incident, Vehicule, Deplacement
+from Model.models import Conducteur, Utilisateur, Demande_prolongement, Incident, Vehicule, Deplacement, Motif
 from django import forms
 
 
@@ -14,9 +14,16 @@ class ConducteurClientForm(forms.ModelForm):
 
 
 class PasswordResetForme(PasswordResetForm):
-    class Meta:
-        model = Utilisateur
-        fields = 'email'
+    def __init__(self, *args, **kwargs):
+        super(PasswordResetForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({
+            'type': "email",
+            'class': "form-control mb-0",
+            'id': "exampleInputEmail1",
+            'placeholder': "name@example.com",
+            'required': True,
+            'name': 'email',
+        })
 
 
 class notificationSearchForm(forms.Form):
@@ -58,3 +65,9 @@ class DeclareIncidentForm(forms.ModelForm):
         model = Incident
         exclude = ['utilisateurs', 'vehicule', 'conducteur', 'deplacement']
         images = forms.FileField(widget=MultipleFileInput(attrs={'multiple': True}), required=True)
+
+
+class MotifForm(forms.ModelForm):
+    class Meta:
+        model = Motif
+        fields = ['descritption_modtif']

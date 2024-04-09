@@ -22,10 +22,11 @@ from django.contrib import messages
 
 import deplacement
 from Model.forms import UserRegistrationForm, ConnexionForm
-from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement, Entretien
+from Model.models import Roles, Utilisateur, Vehicule, Photo, EtatArrive, Deplacement, Demande_prolongement, Entretien, \
+    Motif
 from deplacement.forms import DeplacementSearchForm
 from utilisateurs.forms import ConducteurClientForm, PasswordResetForme, ChangerMotDePasse, DemandeProlongementForm, \
-    DeclareIncidentForm, notificationSearchForm
+    DeclareIncidentForm, notificationSearchForm, MotifForm
 from utilisateurs.tokens import account_activation_token
 from django.utils.html import strip_tags
 
@@ -181,14 +182,15 @@ class Connexion_user(LoginView):
         return super().get(request, *args, **kwargs)
 
 
-@login_required(login_url='utilisateur:connexion_user')
 def password_reset_request(request):
-    if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
-        return redirect('utilisateur:erreur')
     if request.method == 'POST':
         form = PasswordResetForme(request.POST)
-        if form.is_valid():
+        if form.is_valid() and Utilisateur.objects.filter(email=form.cleaned_data['email'],
+                                                          roles__role='ADMIN').exists():
             user_email = form.cleaned_data['email']
+            if not Utilisateur.objects.filter(email=user_email).exists():
+                messages.error(request, "Aucun utilisateur n'est associé à cette adresse e-mail.")
+                return redirect('Connexion')
             associated_user = get_user_model().objects.filter(Q(email=user_email)).first()
             if associated_user:
                 subject = "Password Reset request"
@@ -206,7 +208,6 @@ def password_reset_request(request):
                 if email.send():
                     messages.success(request,
                                      """
-                                     <h4>Réinitialisation du mot de passe envoyée</h4><hr>
                                      <p>
                                          Nous vous avons envoyé les instructions par e-mail pour définir votre mot de passe. Si un compte existe avec l’e-mail que vous avez entré,
                                           vous devriez les recevoir sous peu. <br>Si vous ne recevez pas le courriel, veuillez vous assurer d’avoir saisi l’adresse e-mail avec 
@@ -218,12 +219,20 @@ def password_reset_request(request):
                     messages.error(request, "Problème d’envoi de l’e-mail de réinitialisation du mot de passe, "
                                             "<b>PROBLÈME SERVEUR</b>")
 
-            return redirect('Model:connexion')
+            return redirect('Connexion')
+        else:
+            if not form.is_valid():
+                messages.error(request, "Veuillez saisir une adresse e-mail valide.")
+                return redirect('Connexion')
+            else:
+                messages.error(request,
+                               "Veuillez contacter votre administrateur pour obtenir un nouveau mot de passe !")
+                return redirect('Connexion')
 
     form = PasswordResetForme()
     return render(
         request=request,
-        template_name="email.html",
+        template_name="mot_de_passe.html",
         context={"form": form}
     )
 
@@ -241,15 +250,15 @@ def passwordResetConfirm(request, uidb64, token):
             form = ChangerMotDePasse(user, request.POST)
             if form.is_valid():
                 form.save()
-                messages.success(request, "Votre mot de passe a été défini. Vous pouvez continuer et <b>vous "
-                                          "connecter </b> maintenant.")
-                return redirect('Model:connexion')
+                messages.success(request,
+                                 "Votre mot de passe a été défini. Vous pouvez continuer et vous connecter maintenant.")
+                return redirect('Connexion')
             else:
                 for error in list(form.errors.values()):
                     messages.error(request, error)
 
         form = ChangerMotDePasse(user)
-        return render(request, 'password.html', {'form': form})
+        return render(request, 'confirme_mot_de_passe.html', {'form': form})
     else:
         messages.error(request, "Le lien a expiré")
 
@@ -338,6 +347,7 @@ def prolongement_lu_details(request):
 def aide(request):
     return render(request, 'compte_conducteur.html')
 
+
 @login_required(login_url='utilisateur:connexion_user')
 def prolongement(request):
     if not request.user.roles or request.user.roles.role != 'CONDUCTEUR':
@@ -424,7 +434,7 @@ def declare_incident(request):
     except EmptyPage:
         mission_list = paginator.page(paginator.num_pages())
 
-    return render(request, 'compte_conducteur.html', {'mission': mission_list,'photo_vehicules': first_images})
+    return render(request, 'compte_conducteur.html', {'mission': mission_list, 'photo_vehicules': first_images})
 
 
 @login_required(login_url='utilisateur:connexion_user')
@@ -583,3 +593,26 @@ def deplacement_s(request, prolongement_nom):
         context['no_results'] = True
 
     return render(request, 'afficher_deplacement_en_cours.html', context)
+
+
+def detail_prolongement(request, deplacement_id):
+    image_deplacement = Photo.objects.filter(deplacement=deplacement_id)
+    deplacement_details = get_object_or_404(Deplacement, pk=deplacement_id)
+    today = date.today()
+    motif= Motif.objects.all()
+    deplacement_motif=motif.values_list('deplacement_id', flat=True)
+    return render(request, 'detail_prolongement.html', {'deplacement_details': deplacement_details, 'aujourdhui': today,
+                                                        'image_deplacement': image_deplacement, 'deplacement_motif': deplacement_motif})
+
+
+def ajouter_motif(request):
+    if request.method == 'POST':
+        form = MotifForm(request.POST)
+        if form.is_valid():
+            motif = form.save(commit=False)
+            deplacement_id = request.POST.get('deplacement_id')
+            descritption_modtif = request.POST.get('descritption_modtif')
+            motif.descritption_modtif = descritption_modtif
+            motif.deplacement_id = deplacement_id
+            motif.save()
+        return redirect('utilisateur:liste_mission')

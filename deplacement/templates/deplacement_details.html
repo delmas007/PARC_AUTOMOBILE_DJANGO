@@ -108,12 +108,16 @@
                                             <td class="center-text">{{ deplacement.date_depart }}</td>
                                         </tr>
                                         <tr>
+                                            <td><strong>DESCRIPTION :</strong></td>
+                                            <td class="center-text">{{ deplacement.description }}</td>
+                                        </tr>
+                                        <tr>
                                             <td><strong>DURÉE DU DÉPLACEMENT :</strong></td>
                                             <td class="center-text">{% if deplacement.duree_deplacement > 1 %} {{ deplacement.duree_deplacement }} jours {% else %} {{ deplacement.duree_deplacement }} jour {% endif %}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>KILOMÉTRAGE DE DÉPART :</strong></td>
-                                            <td class="center-text">{{ deplacement.kilometrage_depart }} Km/h</td>
+                                            <td class="center-text">{{ deplacement.vehicule.kilometrage}} Km/h</td>
                                         </tr>
                                         </tbody>
                                     </table>

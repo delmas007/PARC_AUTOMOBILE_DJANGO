@@ -183,9 +183,10 @@ class Deplacement(models.Model):
     vehicule = models.ForeignKey(Vehicule, on_delete=models.SET_NULL, null=True)
     conducteur = models.ForeignKey(Conducteur, on_delete=models.SET_NULL, blank=True, null=True)
     date_depart = models.DateField(blank=True, null=True)
-    kilometrage_depart = models.IntegerField()
+    kilometrage_depart = models.IntegerField(null=True, blank=True)
     duree_deplacement = models.IntegerField()
     photo_jauge_depart = models.ImageField(upload_to='photo_jauge/', blank=False)
+    description = models.CharField(max_length=100, null=True)
 
     def date_fin(self):
         if self.date_depart:
@@ -195,6 +196,11 @@ class Deplacement(models.Model):
 
     def __str__(self):
         return f"{self.vehicule} - {self.conducteur.numero_permis_conduire}"
+
+
+class Motif(models.Model):
+    deplacement = models.ForeignKey(Deplacement, on_delete=models.SET_NULL, null=True)
+    descritption_modtif = models.CharField(max_length=100, null=True)
 
 
 class Demande_location(models.Model):
@@ -242,15 +248,7 @@ class Demande_prolongement(models.Model):
     lu = models.BooleanField(default=False)
     photo_jauge_demande = models.ImageField(upload_to='jaugeDemandeProlongement/', null=True, blank=True)
     date_premiere = models.DateField(auto_now_add=True, null=True)
-
-    def ajout(self):
-        return self.deplacement.date_fin() + timedelta(days=self.duree)
-
-    def date_fin(deplacement):
-        if deplacement.date_depart:
-            return deplacement.date_depart + timedelta(days=self.duree_deplacement)
-        else:
-            return None
+    motif_refus = models.CharField(max_length=250, blank=True, null=True)
 
     @property
     def time_since_reponse(self):

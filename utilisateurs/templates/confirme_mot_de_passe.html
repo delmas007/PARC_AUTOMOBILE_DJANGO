@@ -14,21 +14,19 @@
             <div class="row no-gutters">
                 <div class="col-sm-6 align-self-center">
                     <div class="sign-in-from">
-                        <h1 class="mb-0 dark-signin">Se Connecter <i class="bi bi-person-circle"></i></h1>
-                        <p class="lead" style="font-size: 15px">Entrer votre Nom d'utilisateur et votre mot de passe pour accéder à votre Espace.</p>
+                            <h1 class="mb-0 dark-signin">Changer mot de passe<i class="bi bi-person-circle"></i></h1>
                         <form class="mt-4" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="exampleInputEmail1" class="lead">Nom d'utilisateur :</label>
-                                <input type="text" class="form-control mb-0 w-75" id="exampleInputEmail1" name="username" placeholder="Entrer votre nom d'utilisateur :">
+                                <label for="exampleInputEmail1" class="lead">Mot de passe :</label>
+                                <input type="password" class="form-control mb-0 w-75" id="exampleInputEmail1" name="new_password1" placeholder="Entrer votre mot de passe :">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1" class="lead">Mot de passe :</label>
-                                <input type="password" class="form-control mb-0 w-75" id="exampleInputPassword1" name="password" placeholder="Mot de passe :">
+                                <label for="exampleInputPassword1" class="lead">Confirmez mot de passe :</label>
+                                <input type="password" class="form-control mb-0 w-75" id="exampleInputPassword1" name="new_password2" placeholder="Confirmez votre mot de passe :">
                             </div>
-                            <a href="{% url 'utilisateur:password_reset' %}" class="lead" id="forgetPassword" style="font-size: 15px" >Mot de passe oublié ?</a>
                             <div class="text-center w-100 mt-5">
-                                <button type="submit" class="btn btn-primary btn-lg" style="font-size: 20px; padding: 8px 16px;">Connexion</button>
+                                <button type="submit" class="btn btn-primary btn-lg" style="font-size: 20px; padding: 8px 16px;">Changer mot de passe</button>
                             </div>
                             {% include 'messaging.html' %}
 
@@ -63,25 +61,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="modal fade" id="forgetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgetPasswordModalLabel" aria-hidden="true">
-                   <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                         <div class="modal-header">
-                            <h5 class="modal-title" id="forgetPasswordModalLabel">Mot de passe oublié ?</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                               <span aria-hidden="true">&times;</span>
-                            </button>
-                         </div>
-                         <div class="modal-body">
-                            <p class="lead text-danger">Veuillez contacter votre administrateur pour obtenir un nouveau mot de passe !</p>
-                         </div>
-                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                         </div>
-                      </div>
-                   </div>
                 </div>
 
             </div>
