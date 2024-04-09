@@ -403,13 +403,13 @@
 
          },
 
-          dayRender: function (date,cell) {
+         /* dayRender: function (date,cell) {
              let today = $.fullCalendar.moment();
              let newdate = $.fullCalendar.formatDate(date, 'DD-MM-YYYY');
              if (date.get('date')===today.get('date')){
                     cell.css("background", 'yellow');
               }
-          },
+          },*/
 
           eventRender: function (event, element) {
             let eventStart = moment(event.start);
