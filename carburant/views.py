@@ -54,7 +54,7 @@ def liste_carburant(request):
         ).order_by('-hour')
     )
 
-    paginator = Paginator(carburant_list, 3)
+    paginator = Paginator(carburant_list, 15)
     try:
         page = request.GET.get("page")
         if not page:
@@ -135,7 +135,7 @@ def carburant_search(request):
                 Q(vehicule__type_commercial__modele__icontains=query)
 
             )
-    paginator = Paginator(carburant, 5)
+    paginator = Paginator(carburant, 15)
     page = request.GET.get("page", 1)
     try:
         carburants = paginator.page(page)
