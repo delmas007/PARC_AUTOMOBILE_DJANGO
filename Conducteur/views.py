@@ -46,7 +46,7 @@ def tous_les_conducteurs(request):
             hour=ExpressionWrapper(F('date_mise_a_jour'), output_field=fields.TimeField())).order_by('-hour')
         )
 
-    paginator = Paginator(utilisateurs, 4)
+    paginator = Paginator(utilisateurs, 15)
     try:
         page = request.GET.get("page")
         if not page:
@@ -119,7 +119,7 @@ def conducteur_search(request):
         else:
             utilisateurs = utilisateurs
 
-        paginator = Paginator(utilisateurs, 4)
+        paginator = Paginator(utilisateurs, 15)
         page = request.GET.get('page')
 
         try:

@@ -66,7 +66,7 @@ def liste_deplacement(request):
     deplacements_etat_arrive_ids = EtatArrive.objects.values_list('deplacement_id', flat=True)
     deplacements = Deplacement.objects.filter(Q(date_depart__lte=aujourd_hui)).exclude(
         Q(id__in=deplacements_etat_arrive_ids))
-    paginator = Paginator(deplacement, 4)
+    paginator = Paginator(deplacement, 15)
     try:
         page = request.GET.get("page")
         if not page:
@@ -113,7 +113,7 @@ def liste_deplacement_en_cours(request):
     prolongement_arrive_ids = prolongement_arrive.values_list('deplacement_id', flat=True)
     prolongement_accepte_ids = prolongement_accepte.values_list('deplacement_id', flat=True)
 
-    paginator = Paginator(deplacements, 5)
+    paginator = Paginator(deplacements, 15)
     try:
         page = request.GET.get("page")
         if not page:
@@ -151,7 +151,7 @@ def liste_deplacement_arrive(request):
         ).order_by('-hour')
     )
 
-    paginator = Paginator(etatarrive, 5)
+    paginator = Paginator(etatarrive, 15)
     try:
         page = request.GET.get("page")
         if not page:
@@ -469,7 +469,7 @@ def deplacement_search(request):
                     Q(conducteur__utilisateur__prenom__icontains=query)
                 )
 
-    paginator = Paginator(deplacement, 5)
+    paginator = Paginator(deplacement, 15)
     page = request.GET.get("page", 1)
     try:
         deplacements = paginator.page(page)
@@ -536,7 +536,7 @@ def deplacement_encours_search(request):
                     Q(conducteur__utilisateur__prenom__icontains=query)
                 )
 
-    paginator = Paginator(deplacement, 5)
+    paginator = Paginator(deplacement, 15)
     page = request.GET.get("page", 1)
     try:
         deplacements = paginator.page(page)
@@ -592,7 +592,7 @@ def arrive_search(request):
                     Q(deplacement__conducteur__utilisateur__prenom__icontains=query)
                 )
 
-    paginator = Paginator(arrivee, 5)
+    paginator = Paginator(arrivee, 15)
     page = request.GET.get("page", 1)
     try:
         etatarrives = paginator.page(page)

@@ -53,7 +53,7 @@ def liste_vehicules(request):
         .order_by('-hour')
     )
 
-    paginator = Paginator(vehicules_list, 2)
+    paginator = Paginator(vehicules_list, 15)
     try:
         page = request.GET.get("page")
         if not page:
@@ -83,7 +83,7 @@ def vehicul_search(request):
         else:
             vehicules = vehicules
 
-        paginator = Paginator(vehicules, 5)
+        paginator = Paginator(vehicules, 15)
         try:
             page = request.GET.get("page")
             if not page:

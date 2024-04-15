@@ -56,7 +56,7 @@ def liste_Entretien(request):
         ).order_by('-hour')
     )
 
-    paginator = Paginator(entretien_list, 5)
+    paginator = Paginator(entretien_list, 15)
     try:
         page = request.GET.get("page")
         if not page:
@@ -86,7 +86,7 @@ def entretien_search(request):
                                          Q(vehicule__type_commercial__modele__icontains=query))
 
         context = {'entretiens': entretien, 'form': form}
-        paginator = Paginator(entretien, 5)
+        paginator = Paginator(entretien, 15)
         try:
             page = request.GET.get("page")
             if not page:

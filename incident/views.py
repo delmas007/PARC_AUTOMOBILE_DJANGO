@@ -75,7 +75,7 @@ def liste_incidents_interne(request):
         latest_photo = get_latest_photo(item_incident)
         incidents[item_incident.id] = {'incident': item_incident, 'latest_photo': latest_photo}
 
-    paginator = Paginator(list(incidents.values()), 3)
+    paginator = Paginator(list(incidents.values()), 15)
 
     page = request.GET.get('page')
     try:
@@ -116,7 +116,7 @@ def incidents_search(request):
         latest_photo = get_latest_photo(incident)
         incidents[incident.id] = {'incident': incident, 'latest_photo': latest_photo}
 
-    paginator = Paginator(list(incidents.values()), 3)
+    paginator = Paginator(list(incidents.values()), 15)
 
     page = request.GET.get('page')
     try:
@@ -171,7 +171,7 @@ def incidents_externe_search(request):
         latest_photo = get_latest_photo(incident)
         incidents[incident.id] = {'incident': incident, 'latest_photo': latest_photo}
 
-    paginator = Paginator(list(incidents.values()), 3)
+    paginator = Paginator(list(incidents.values()), 15)
 
     page = request.GET.get('page')
     try:
